@@ -26,3 +26,30 @@ export const navItems: NavItem[] = [
     href: '/categories',
   },
 ];
+
+export const fakeCategories = [
+  {
+    id: '1',
+    name: 'Electronics',
+    image: '/images/categories/electrpmocs.png',
+    slug: 'electronics',
+  },
+  {
+    id: '2',
+    name: 'Shoes',
+    image: '/images/categories/shoes.png',
+    slug: 'shoes',
+  },
+  {
+    id: '3',
+    name: 'Watches',
+    image: '/images/categories/watches.png',
+    slug: 'watches',
+  },
+  {
+    id: '4',
+    name: 'Jewelry',
+    image: '/images/categories/jewelry.png',
+    slug: 'jewelry',
+  },
+];

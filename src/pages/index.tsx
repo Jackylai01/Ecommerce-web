@@ -1,10 +1,15 @@
-import { Box } from '@chakra-ui/react';
+import { Banner } from '@components/Home/Banner';
+import { TopCategories } from '@components/Home/TopCategories';
+import { Navbar } from '@components/Navbar/NavBar';
+import { fakeCategories } from '@helpers/products';
 import type { NextPage } from 'next';
 
 const HomePage: NextPage = () => {
   return (
     <>
-      <Box></Box>
+      <Navbar />
+      <Banner />
+      <TopCategories categories={fakeCategories} />
     </>
   );
 };
