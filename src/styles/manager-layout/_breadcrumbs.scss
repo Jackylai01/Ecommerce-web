@@ -1,0 +1,59 @@
+.breadcrumbs {
+  overflow-y: auto;
+  flex: 1;
+  margin-right: $margin_small;
+
+  @extend %flex-row-center;
+  @include pad-under-width() {
+    margin-top: $height_header;
+    padding: $margin_small 0;
+  }
+
+  > li {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-right: $margin_big;
+
+    &:nth-last-child(1) {
+      margin-right: 0;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    &::before {
+      position: absolute;
+      right: -35px;
+      content: '\e92a';
+      font-size: 1.5rem;
+      font-family: 'icomoon';
+      opacity: 0.5;
+    }
+  }
+
+  a {
+    display: flex;
+    padding: 12px;
+    border-radius: $radius-size_base;
+    background-color: $color_primary-dark;
+    box-shadow: $box-shadow_element;
+    color: $color_text-color;
+    text-decoration: none;
+    word-break: keep-all;
+    font-weight: 500;
+    opacity: 0.6;
+
+    > span {
+      margin-right: 5px;
+    }
+
+    &.active {
+      color: $color_white;
+      opacity: 1;
+
+      @include hoverBackgroundTransition($color_accent, $color_accent-light);
+    }
+  }
+}

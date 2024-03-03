@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://d2lgnge1jkbuts.cloudfront.net/
+
+# Sitemaps
+Sitemap: https://d2lgnge1jkbuts.cloudfront.net/sitemap.xml

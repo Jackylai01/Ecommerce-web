@@ -1,0 +1,35 @@
+.article-block {
+  flex: 1;
+  justify-content: space-between;
+
+  @extend %flex-column;
+
+  &__container {
+    border-bottom: $color_white solid 1px;
+  }
+
+  &__footer {
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: $color_line solid 1px;
+
+    @extend %flex-row-center;
+    @include phone-width {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  &__links {
+    margin-top: 10px;
+
+    > h3 {
+      font-size: 1.2rem;
+    }
+
+    a {
+      color: $color_accent;
+    }
+  }
+}

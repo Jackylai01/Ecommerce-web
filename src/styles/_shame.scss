@@ -1,0 +1,318 @@
+.icons {
+  li {
+    padding: 15px;
+    border: solid $color_text-accent 1px;
+
+    @extend %flex-row-center;
+  }
+
+  li > span:nth-child(1) {
+    margin-right: 10px;
+    font-size: 2rem;
+  }
+}
+
+// 根據之後問卷修改會有異動
+.answer-items {
+  &__header {
+    margin-top: 1rem;
+    padding: 12px 20px;
+    border-radius: $border-radius_layout;
+    background-color: $color_line;
+
+    @extend %flex-row-between;
+
+    > h2 {
+      font-size: 1rem;
+    }
+  }
+
+  &__questions {
+    margin-left: 2rem;
+    .answer-items__header {
+      margin-bottom: 1rem;
+    }
+  }
+
+  &__statistics {
+    @extend %flex-row-wrap;
+  }
+
+  &__options {
+    flex: 1;
+    margin-left: 1.5rem;
+    line-height: 1.5;
+    > li {
+      list-style-type: disc;
+    }
+  }
+
+  &__chart {
+    flex: 1;
+    height: 250px;
+  }
+
+  &__actions {
+    .btn {
+      @include layoutSpaceLeft();
+    }
+  }
+}
+
+.cms-table {
+  min-width: 45rem;
+  width: 100%;
+  th,
+  td {
+    padding: 20px 15px;
+    border: $color_line solid 1px;
+  }
+  a {
+    color: $color_accent;
+
+    &:checked,
+    &:visited {
+      color: $color_auxiliary-light;
+    }
+  }
+}
+
+.reserve-list {
+  overflow: auto;
+  width: calc(100% - 25rem);
+  border: $color_line solid 1px;
+  border-radius: 5px;
+  color: $color_accent;
+  text-align: center;
+  font-weight: 500;
+
+  @extend %flex-column;
+
+  > li {
+    position: relative;
+    min-width: 81rem;
+    border-bottom: $color_line solid 1px;
+
+    @extend %flex-row;
+
+    &:nth-last-child(1) {
+      border-bottom: none;
+    }
+
+    > span {
+      flex: 1;
+      padding: 20px 15px;
+      border-right: $color_line solid 1px;
+
+      &:nth-child(1) {
+        flex: 0 0 8rem;
+      }
+
+      &:nth-last-child(1) {
+        border-right: none;
+      }
+    }
+  }
+
+  &__header {
+    > span {
+      background-color: $color_primary;
+    }
+  }
+
+  &__reserve-items {
+    position: absolute;
+    padding: 10px;
+    padding-left: 9rem;
+    width: 100%;
+    height: 100%;
+
+    @extend %flex-row-center;
+  }
+
+  &__tag {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    border-radius: 50px;
+    background-color: $color_line;
+    text-align: center;
+  }
+}
+
+.custom-page-navbar {
+  position: fixed;
+  display: block;
+  visibility: hidden;
+  padding: 10px;
+  border-radius: 30px;
+  background-color: $color_text-color;
+
+  &.active {
+    visibility: visible;
+  }
+}
+
+.timeline {
+  position: relative;
+  padding-left: 0 !important;
+  font-weight: 500;
+
+  > li {
+    position: relative;
+    padding-left: 30px;
+    list-style-type: none !important;
+
+    @extend %flex-column;
+
+    &::before,
+    &::after {
+      position: absolute;
+      top: 0.5rem;
+      background-color: $color_accent-light;
+      content: '';
+    }
+
+    &::before {
+      left: 0;
+
+      @include square(13px, 13px);
+    }
+
+    &::after {
+      left: 5px;
+      width: 3px;
+      height: 100%;
+    }
+
+    &:nth-last-child(1)::after {
+      content: none;
+    }
+  }
+
+  &__title {
+    font-size: 1.25em;
+  }
+
+  &__info {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-left: 15px;
+    font-size: 1.1em;
+  }
+
+  // 自訂頁面刪除項目使用
+  &__clear {
+    position: absolute;
+    left: -10px;
+    z-index: 10;
+    background-color: $color_like;
+    color: $color_white;
+    font-size: 1rem;
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity 300ms;
+
+    @include square(30px, 30px);
+    @extend %inline-flex-center;
+
+    .timeline > li:hover & {
+      opacity: 1;
+    }
+  }
+}
+
+.identity-select {
+  display: flex;
+  margin: 0 -10px;
+
+  > button {
+    display: inline-flex;
+    align-items: center;
+    flex: 1;
+    margin: 10px;
+    padding: 30px;
+    min-height: 160px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+
+    &:nth-child(1) {
+      @include hoverBackgroundTransition($color_accent-light);
+    }
+
+    &:nth-child(2) {
+      @include hoverBackgroundTransition($color_auxiliary-light);
+    }
+
+    > span {
+      margin-right: 20px;
+      font-size: 4rem;
+    }
+  }
+}
+
+.stage-line {
+  flex-wrap: wrap;
+
+  @extend %flex-row-center;
+
+  > li {
+    color: $color_accent-light;
+
+    @extend %flex-row-center;
+
+    > span:nth-child(1) {
+      padding: 10px 20px;
+      border-radius: $border-radius_layout;
+      background-color: $color_line;
+    }
+
+    &.active {
+      > span:nth-child(1) {
+        color: $color_white;
+        cursor: pointer;
+
+        @include hoverBackgroundTransition($color_accent-light);
+      }
+
+      .icomoon-arrow-right {
+        margin: 10px;
+        background-color: $color_accent-light;
+        color: $color_white;
+        font-size: 1rem;
+
+        @include square(24px, 24px);
+        @extend %flex-center;
+      }
+    }
+  }
+}
+
+.gallery {
+  &__photos {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+
+    img {
+      width: 100%;
+    }
+
+    > li {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.message-board {
+  padding: 20px;
+  border: $color_line solid 1px;
+  border-radius: $border-radius_layout;
+  background-color: $color_primary-dark;
+}

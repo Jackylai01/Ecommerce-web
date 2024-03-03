@@ -1,0 +1,61 @@
+.router-list {
+  border: $color_line solid 1px;
+  border-radius: 10px;
+  ul {
+    margin-left: 3rem;
+  }
+  > li {
+    > .router-list__item {
+      padding-left: calc(2rem);
+      background-color: #f5f9f4cc;
+    }
+  }
+  &__item {
+    padding: 15px 20px;
+    border-bottom: $color_line solid 1px;
+    font-weight: 500;
+    font-size: 1.1rem;
+
+    @extend %flex-row-between;
+  }
+  &__actions {
+    position: relative;
+
+    > a {
+      background-color: $color_accent;
+      color: $color_white;
+      font-size: 0.8rem;
+      cursor: pointer;
+
+      @include layoutSpaceLeft(10px);
+      @extend %inline-flex-center;
+      @include square(30px, 30px);
+    }
+
+    &--sub {
+      position: absolute;
+      top: 40px; // button height + 10px
+      right: -10px;
+      z-index: $z-index_base;
+      display: none;
+      padding: 10px;
+      border-radius: $border-radius_layout;
+      background-color: $color_line;
+      white-space: nowrap;
+
+      &.active {
+        display: block;
+      }
+    }
+  }
+
+  &__page-link {
+    opacity: 0.5;
+    cursor: no-drop;
+    transform: rotate(180deg);
+    &.active {
+      opacity: 1;
+      cursor: pointer;
+    }
+  }
+}

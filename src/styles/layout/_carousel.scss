@@ -1,0 +1,79 @@
+.wrapper {
+  display: flex;
+  height: auto;
+  padding: 0 15px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  &__container {
+    max-width: 1200px;
+    position: relative;
+  }
+}
+
+.icon {
+  top: 50%;
+  height: 46px;
+  width: 46px;
+  position: absolute;
+  cursor: pointer;
+  font-size: 1.2rem;
+  text-align: center;
+  line-height: 46px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translateY(-50%);
+
+  &.icon-left {
+    left: -23px;
+  }
+
+  &.icon-right {
+    right: -23px;
+  }
+}
+
+.carousel {
+  display: flex;
+  font-size: 0px;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  scroll-behavior: smooth;
+
+  &__dragging {
+    cursor: grab;
+    scroll-behavior: auto;
+  }
+
+  &__image {
+    height: 340px;
+    object-fit: cover;
+    margin-left: 14px;
+    width: calc(100% / 2);
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
+.carousel .dragging {
+  cursor: grab;
+  scroll-behavior: auto;
+}
+.carousel .dragging img {
+  pointer-events: none;
+}
+
+@media screen and (max-width: 900px) {
+  .carousel__image {
+    width: calc(100% / 2);
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .carousel__image {
+    width: calc(100%);
+  }
+}

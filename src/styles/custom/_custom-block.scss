@@ -1,0 +1,518 @@
+.custom-block {
+  .ql-align-center {
+    text-align: center;
+  }
+
+  .ql-align-right {
+    text-align: right;
+  }
+
+  .ql-align-justify {
+    text-align: justify;
+  }
+
+  @for $count from 1 through 8 {
+    .ql-indent-#{$count} {
+      padding-left: 2em * $count;
+    }
+  }
+
+  ol,
+  ul {
+    padding-left: 1.5em;
+  }
+
+  ul li {
+    list-style-type: disc;
+  }
+
+  ol li {
+    list-style-type: auto;
+  }
+
+  blockquote {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 16px;
+    border-left: 4px solid #ccc;
+  }
+
+  strong {
+    font-weight: 700;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  &__empty {
+    width: 100%;
+    height: 300px;
+    border: $color_line dotted 4px;
+    border-radius: 30px;
+    background-color: $color_primary;
+
+    @extend %flex-center;
+  }
+
+  > * {
+    margin: 15px 0;
+  }
+
+  a {
+    color: $color_accent !important;
+
+    &:hover {
+      color: $color_accent-dark !important;
+    }
+
+    &:visited {
+      color: $color_accent-light !important;
+    }
+  }
+}
+
+.title {
+  &.center {
+    text-align: center;
+  }
+  &.right {
+    text-align: right;
+  }
+}
+
+.two__images {
+  gap: 30px;
+  flex-direction: row;
+  @extend %flex-center;
+}
+
+.post {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+
+  p {
+    width: 100%;
+    text-align: center;
+  }
+  img {
+    width: 100%;
+  }
+}
+
+.paragraph {
+  letter-spacing: 3px;
+  font-size: 1.15em;
+
+  &--center {
+    text-align: center;
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+}
+
+.post {
+  flex-wrap: wrap;
+  margin: 0 -10px;
+  padding: 20px 0;
+
+  @extend %flex-row-center;
+
+  > * {
+    margin: 0 10px;
+  }
+
+  &__aside,
+  img {
+    flex: 1 220px;
+  }
+
+  img {
+    max-width: 500px;
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  &__header {
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    width: 100%;
+    background: linear-gradient(to right, $color-gradient-accent-background);
+
+    h2 {
+      margin-bottom: 0;
+      color: $color_white;
+      font-size: 1.5em;
+    }
+  }
+
+  &--img-full {
+    img {
+      max-width: 100%;
+    }
+  }
+}
+
+.post-right {
+  @extend %flex-center;
+}
+
+.post-card {
+  position: relative;
+  padding: $padding_base $layout-size_big;
+  border: $color_line solid 1px;
+  border-radius: $border-radius_layout;
+  background-color: $color_primary;
+
+  @include phone-width() {
+    padding: $padding_small $padding_base;
+  }
+
+  &__no {
+    position: absolute;
+    left: 0;
+    width: 50px;
+    height: 3rem;
+    background: linear-gradient(to right, $color-gradient-accent-background);
+    color: $color_white;
+    font-weight: 500;
+
+    @extend %flex-center;
+    @include phone-width() {
+      position: relative;
+    }
+  }
+}
+
+.post-block {
+  padding: 20px 30px;
+  border-radius: $border-radius_layout;
+  background-color: $color_primary;
+}
+
+.image {
+  padding: 10px 0;
+  text-align: center;
+
+  img {
+    max-width: 100%;
+  }
+
+  &--small {
+    img {
+      margin: auto;
+      max-width: 50%;
+    }
+  }
+}
+
+.icon-items {
+  align-items: flex-start;
+  margin: -5px;
+  margin-bottom: 0.5rem;
+  padding-left: 0 !important;
+
+  @extend %flex-row-wrap;
+
+  > li {
+    flex: 1 1 220px;
+    flex-direction: column;
+    margin: 5px;
+    padding: $layout-size_small $layout-size_small * 2;
+    text-align: center;
+
+    @extend %inline-flex-center;
+  }
+
+  &__header {
+    background: linear-gradient(to right, $color-gradient-accent-background);
+    color: $color_white;
+    font-size: 4rem;
+
+    @include square(220px, 220px);
+    @extend %inline-flex-center;
+  }
+
+  &__aside {
+    margin-right: 10px;
+    background: linear-gradient(to right, $color-gradient-accent-background);
+    color: $color_white;
+    font-size: 2rem;
+
+    @include square(110px, 110px);
+    @extend %inline-flex-center;
+  }
+
+  &__aside-img {
+    margin-right: 10px;
+    width: 110px;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  &__article {
+    flex: 1;
+    margin-left: 10px;
+  }
+
+  // 這邊要改，因為文字編輯器會製造多的區塊
+  &__title {
+    margin: 10px 0;
+    color: $color_accent;
+  }
+
+  &__title h2 {
+    color: $color_accent;
+  }
+
+  &--row {
+    > li {
+      flex-direction: row;
+      padding: 0;
+      text-align: left;
+    }
+
+    .icon-items__title {
+      margin-top: 0;
+    }
+
+    &-reverse {
+      > li {
+        flex-direction: row-reverse;
+
+        .icon-items__aside {
+          margin-right: 0;
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}
+
+.links {
+  a {
+    color: $color_text-accent;
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+}
+
+.custom-links {
+  .links.is-edit {
+    padding-left: 0;
+
+    > li {
+      display: flex;
+      margin-bottom: 10px;
+      background-color: $color_white;
+      box-shadow: 0px 0px 8px -3px #504c4b;
+
+      input {
+        flex: 1;
+        border: none;
+
+        &:nth-child(4) {
+          flex: 3;
+          border-left: 1px solid $color_line;
+          border-radius: 0;
+        }
+      }
+
+      > span {
+        width: 60px;
+        border-radius: 0;
+        font-size: 1.3rem;
+
+        @extend %inline-flex-center;
+      }
+    }
+  }
+
+  .links--card:not(.is-edit) {
+    overflow: hidden;
+    margin: -10px;
+    padding-left: 0;
+
+    @extend %flex-row-wrap;
+
+    > li {
+      flex: 1 280px;
+      margin: 10px;
+      list-style-type: none;
+
+      a {
+        padding: 20px;
+        width: 100%;
+        height: 120px;
+        border: $color_accent solid 1px;
+        background-color: $color_white;
+        text-align: center;
+
+        @extend %inline-flex-center;
+        @include hoverActiveBorderBgTransition($color_accent);
+      }
+    }
+  }
+}
+
+.table-search-form {
+  margin-bottom: 10px;
+  width: 100%;
+  border: $color_line solid 1px;
+
+  &.header__search-form input {
+    border: none;
+  }
+}
+
+ul.dropdown-items,
+ul.card-items {
+  padding-left: 0;
+  > li {
+    list-style-type: none;
+  }
+}
+
+.dropdown-items {
+  display: flex;
+  flex-direction: column;
+
+  > li {
+    border: $color_line solid 1px;
+
+    @include layoutSpaceBottom(20px);
+  }
+
+  &__title,
+  &__info {
+    display: flex;
+    padding: 20px 25px;
+  }
+
+  &__title {
+    justify-content: space-between;
+    font-size: 1.2rem;
+    cursor: pointer;
+
+    @extend %flex-center;
+
+    &::after {
+      position: relative;
+      content: '';
+      transition: transform 300ms;
+      transform: rotate(180deg);
+
+      @extend %triangle_top;
+    }
+
+    li.active &::after {
+      transform: rotate(0deg);
+    }
+  }
+
+  &__info {
+    display: none;
+    border-top: $color_line solid 1px;
+    font-size: 1.1rem;
+
+    li.active & {
+      display: block;
+    }
+
+    li {
+      @include layoutSpaceBottom(5px);
+    }
+  }
+
+  &__empty {
+    padding: 40px;
+
+    @extend %inline-flex-center;
+  }
+
+  &.is-edit {
+    li {
+      position: relative;
+    }
+
+    .dropdown-items__clear {
+      position: absolute;
+      top: 20px;
+      left: -16px;
+      z-index: 10;
+      background-color: $color_like;
+      color: $color_white;
+      font-size: 1rem;
+      opacity: 0;
+      cursor: pointer;
+      transition: opacity 300ms;
+
+      @include square(30px, 30px);
+      @extend %inline-flex-center;
+    }
+
+    & > li:hover .dropdown-items__clear {
+      opacity: 1;
+    }
+
+    .dropdown-items__info {
+      display: block;
+    }
+  }
+}
+
+.table-container--edit {
+  min-width: 100%;
+  width: 80px;
+}
+
+.card-items {
+  overflow: hidden;
+  margin: -10px;
+  padding-left: 0;
+
+  @extend %flex-row-wrap;
+
+  > li {
+    position: relative;
+    flex: 1 280px;
+    margin: 10px;
+    padding: 20px;
+    height: 120px;
+    border: $color_accent solid 1px;
+    background-color: $color_white;
+    list-style-type: none;
+    text-align: center;
+
+    @extend %inline-flex-center;
+  }
+
+  &__clear {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    background-color: $color_like;
+    color: $color_white;
+    font-size: 1rem;
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity 300ms;
+
+    @include square(30px, 30px);
+    @extend %inline-flex-center;
+
+    .card-items > li:hover & {
+      opacity: 1;
+    }
+  }
+}

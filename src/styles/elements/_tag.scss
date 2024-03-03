@@ -1,0 +1,19 @@
+.tag {
+  padding: $element-padding_base;
+  border-radius: $border-radius_layout;
+  text-align: center;
+
+  @include backgroundTag();
+
+  &--security {
+    @include backgroundTag($color_security, lighten($color_security, 42));
+  }
+
+  &--notice {
+    @include backgroundTag($color_notice);
+  }
+
+  &--full {
+    width: 100%;
+  }
+}

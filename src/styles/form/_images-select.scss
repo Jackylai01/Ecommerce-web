@@ -1,0 +1,38 @@
+.images-select {
+  position: relative;
+  align-self: flex-start;
+  cursor: pointer;
+
+  &__cover {
+    border: $color_line solid 1px;
+    font-size: 4rem;
+    cursor: pointer;
+
+    @include hoverBackgroundTransition($color_primary);
+    @include square(300px, 10px);
+    @extend %flex-center;
+  }
+
+  &__img {
+    width: 400px;
+  }
+
+  &__footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 20px;
+    width: 100%;
+    height: 60px;
+    background-color: $color_white;
+    opacity: 0;
+    transition: opacity 300ms;
+
+    .images-select:hover & {
+      opacity: 0.8;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+.item-switch {
+  min-width: 220px;
+  color: $color_accent;
+  font-weight: 500;
+
+  @extend %flex-row-between;
+}

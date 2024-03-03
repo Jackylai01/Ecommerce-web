@@ -1,0 +1,64 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: $z-index_cover;
+  visibility: hidden;
+  overflow: auto;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba($color: $color_text-color, $alpha: 0.3);
+  opacity: 0;
+  transition: opacity 300ms, visibility 300ms;
+
+  &.active {
+    visibility: visible;
+    opacity: 1;
+
+    .modal__main {
+      transform: scale(1);
+    }
+  }
+
+  &__main {
+    margin: 5rem auto;
+    max-width: 800px;
+    width: 90%;
+    border-radius: $border-radius_layout;
+    background-color: $color_white;
+    box-shadow: $box-shadow_element;
+    transition: transform 300ms;
+    transform: scale(0);
+
+    @extend %flex-column;
+  }
+
+  &__header,
+  &__footer {
+    padding: $block-padding_base;
+  }
+
+  &__header {
+    justify-content: space-between;
+
+    @extend %flex-row-center;
+  }
+
+  &__header-actions {
+    > span {
+      cursor: pointer;
+    }
+  }
+
+  &__container {
+    overflow: auto;
+    padding: $layout-size_base;
+    max-height: 450px;
+    border-top: $color_line solid 1px;
+    border-bottom: $color_line solid 1px;
+  }
+
+  &__footer {
+    text-align: right;
+  }
+}

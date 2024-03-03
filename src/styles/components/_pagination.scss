@@ -1,0 +1,64 @@
+.pagination {
+  align-items: flex-end;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+
+  @extend %flex-row-between;
+
+  &__info,
+  &__control {
+    display: inline-flex;
+    flex-direction: column;
+    margin-top: $margin_base;
+  }
+
+  &__items {
+    flex-wrap: wrap;
+
+    @extend %flex-row-center;
+
+    a {
+      display: inline-flex;
+      border: $color_accent-light solid 1px;
+      color: $color_accent;
+      text-decoration: none;
+      letter-spacing: 0;
+      cursor: pointer;
+
+      @extend %flex-center;
+      @include square(42px, $radius-size_base);
+      @include hoverActiveColorBackgroundTransition(
+        $color_accent-light,
+        $color_white
+      );
+
+      > b {
+        position: absolute;
+        left: 100%;
+      }
+    }
+
+    & > li {
+      overflow: hidden;
+      margin-top: $margin_small;
+      margin-right: $margin_small;
+      font-weight: 500;
+
+      &:nth-child(1) {
+        transform: rotate(90deg);
+      }
+
+      &:nth-last-child(1) {
+        margin-right: 0;
+        transform: rotate(-90deg);
+      }
+    }
+  }
+
+  &__control {
+    align-items: flex-end;
+
+    select {
+    }
+  }
+}

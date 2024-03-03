@@ -1,0 +1,69 @@
+.page-header {
+  z-index: 10;
+  margin-top: $height_navbar;
+  padding: 20px 0;
+  height: $height_page-header-banner;
+  border-radius: $radius-size_big $radius-size_big 0 0;
+  // background: linear-gradient(to right, $color-gradient-accent-background);
+  background: linear-gradient(to right bottom, $color-gradient-accent),
+    center / cover no-repeat url('../../../public/images/demo-background.png');
+  background-color: $color_white;
+  color: $color_white;
+
+  @extend %layout-container;
+  @extend %flex-center;
+  @include phone-width {
+    height: auto;
+  }
+
+  &__container {
+    width: 85%;
+  }
+
+  h1 {
+    color: $color_white;
+    font-size: 2.5rem;
+  }
+
+  &__router {
+    margin-top: $margin_small;
+
+    > li {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      margin-right: $margin_big;
+      font-weight: 400;
+      font-size: 1.25rem;
+
+      &:last-child {
+        margin-right: 0;
+
+        &::before {
+          display: none;
+        }
+      }
+
+      &::before {
+        position: absolute;
+        right: -35px;
+        content: '\e92a';
+        font-size: 1.5rem;
+        font-family: 'icomoon';
+      }
+
+      > a {
+        overflow: hidden;
+        max-width: 10em;
+        color: $color_white;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition: opacity 300ms;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}

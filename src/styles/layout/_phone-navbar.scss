@@ -1,0 +1,90 @@
+.phone-navbar {
+  position: absolute;
+  z-index: $z-index_front;
+  width: 100%;
+  height: $height_navbar;
+  font-weight: 500;
+
+  @extend %flex-row-center;
+
+  a,
+  span {
+    color: $color_accent;
+  }
+
+  &__container {
+    position: relative;
+    align-items: center;
+    height: 100%;
+
+    @extend %flex-row-between;
+    @extend %layout-container;
+  }
+
+  &__logo {
+    display: inline-flex;
+    width: 5rem;
+
+    a {
+      display: flex;
+    }
+
+    img {
+      @include square(48px);
+    }
+  }
+
+  &__menu {
+    position: absolute;
+    top: 100%;
+    left: 10%;
+    display: none;
+    overflow: hidden auto;
+    padding: 20px 30px;
+    padding-left: 10px;
+    max-height: calc(100vh - 120px);
+    border: $color_line solid 1px;
+    border-radius: $radius-size_big;
+    background-color: $color_white;
+    box-shadow: $box-shadow_navbar-menu;
+    transition: transform 400ms;
+
+    @extend %layout-container;
+    @include phone-width() {
+      left: 5%;
+    }
+
+    &.active {
+      display: block;
+    }
+    > li,
+    ul > li {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-left: 20px;
+      padding: 10px 0;
+      border-bottom: $color_line solid 1px;
+
+      &:nth-last-child(1) {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+
+      ul {
+        display: none;
+        width: 100%;
+      }
+
+      &.active {
+        > .icomoon-add {
+          display: inline-block;
+          transform: rotate(135deg);
+        }
+        > ul {
+          display: block;
+        }
+      }
+    }
+  }
+}

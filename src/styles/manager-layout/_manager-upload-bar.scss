@@ -1,0 +1,26 @@
+.manager-upload-bar {
+  position: absolute;
+  bottom: 60px;
+  margin: $margin_base;
+  margin-left: 0;
+  padding: $padding_small $margin_base;
+  width: 100%;
+  border: 1px solid $color_line;
+  border-radius: $radius-size_base;
+
+  @extend %flex-row-center;
+
+  &__actions {
+    position: absolute;
+    right: $margin_base;
+
+    @extend %flex-row-center;
+
+    > li {
+      color: $color_accent;
+      cursor: pointer;
+
+      @include layoutSpaceLeft();
+    }
+  }
+}

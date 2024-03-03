@@ -1,0 +1,41 @@
+.carousel-list {
+  &__image {
+    position: relative;
+    width: 200px;
+    height: 120px;
+
+    > img {
+      display: block;
+      margin: auto;
+      max-width: 100%;
+      max-height: 120px;
+    }
+  }
+
+  &__actions {
+    justify-content: end;
+
+    @extend %flex-row-center;
+
+    > a {
+      > span {
+        color: $color_accent;
+        font-weight: bold;
+        font-size: 2rem;
+      }
+
+      &:first-child,
+      &:nth-child(2) {
+        transform: rotate(90deg);
+      }
+
+      &:nth-child(3),
+      &:last-child {
+        > span {
+          padding: 0.25rem;
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+}

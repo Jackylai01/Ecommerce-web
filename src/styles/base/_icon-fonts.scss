@@ -1,0 +1,489 @@
+@font-face {
+  font-weight: normal;
+  font-style: normal;
+  font-family: 'icomoon';
+  src: url('/fonts/icomoon.eot?ld5ps4');
+  src: url('/fonts/icomoon.eot?ld5ps4#iefix') format('embedded-opentype'),
+    url('/fonts/icomoon.ttf?ld5ps4') format('truetype'),
+    url('/fonts/icomoon.woff?ld5ps4') format('woff'),
+    url('/fonts/icomoon.svg?ld5ps4#icomoon') format('svg');
+
+  font-display: block;
+}
+
+[class^='icomoon-'],
+[class*=' icomoon-'] {
+  text-transform: none;
+  /* Enable Ligatures ================ */
+  letter-spacing: 0;
+  font-weight: normal;
+  font-style: normal;
+  font-variant: normal;
+  font-size: 1.5em;
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  line-height: 1;
+
+  speak: never;
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga=1';
+  -moz-font-feature-settings: 'liga';
+  -ms-font-feature-settings: 'liga' 1;
+  font-feature-settings: 'liga';
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icomoon-clipboard-list:before {
+  content: '\e901';
+}
+.icomoon-awesome-book:before {
+  content: '\e903';
+}
+.icomoon-business:before {
+  content: '\e909';
+}
+.icomoon-question-answer:before {
+  content: '\e90d';
+}
+.icomoon-photo-library:before {
+  content: '\e912';
+}
+.icomoon-library-books:before {
+  content: '\e915';
+}
+.icomoon-edit:before {
+  content: '\e916';
+}
+.icomoon-search:before {
+  content: '\e917';
+}
+.icomoon-local-library:before {
+  content: '\e918';
+}
+.icomoon-timelapse:before {
+  content: '\e919';
+}
+.icomoon-person-pin:before {
+  content: '\e91b';
+}
+.icomoon-swatch-book:before {
+  content: '\e91c';
+}
+.icomoon-file-invoice:before {
+  content: '\e91d';
+}
+.icomoon-source-tree:before {
+  content: '\e91e';
+}
+.icomoon-simple-webpack:before {
+  content: '\e91f';
+}
+.icomoon-analytics:before {
+  content: '\e921';
+}
+.icomoon-question-circle:before {
+  content: '\e922';
+}
+.icomoon-metro-library:before {
+  content: '\e924';
+}
+.icomoon-read-book:before {
+  content: '\e926';
+}
+.icomoon-book-reader:before {
+  content: '\e928';
+}
+.icomoon-arrow-left:before {
+  content: '\e929';
+}
+.icomoon-arrow-right:before {
+  content: '\e92a';
+}
+.icomoon-grid:before {
+  content: '\e92c';
+}
+.icomoon-list:before {
+  content: '\e92e';
+}
+.icomoon-cloud-upload:before {
+  content: '\e92f';
+}
+.icomoon-cloud-download:before {
+  content: '\e930';
+}
+.icomoon-pictures:before {
+  content: '\e931';
+}
+.icomoon-pin:before {
+  content: '\e934';
+}
+.icomoon-left-arrow:before {
+  content: '\e935';
+}
+.icomoon-add:before {
+  content: '\e936';
+}
+.icomoon-clear:before {
+  content: '\e937';
+}
+.icomoon-create:before {
+  content: '\e939';
+}
+.icomoon-daily-report:before {
+  content: '\e902';
+}
+.icomoon-monthly-report:before {
+  content: '\e904';
+}
+.icomoon-yearly-report:before {
+  content: '\e905';
+}
+.icomoon-prices-edit:before {
+  content: '\e906';
+}
+.icomoon-residue-search:before {
+  content: '\e907';
+}
+.icomoon-residue-edit:before {
+  content: '\e908';
+}
+.icomoon-aquatic-test-items:before {
+  content: '\e90a';
+}
+.icomoon-aquatic-products:before {
+  content: '\e90b';
+}
+.icomoon-admin-markets:before {
+  content: '\e90c';
+}
+.icomoon-arrow-dropdown:before {
+  content: '\e90e';
+}
+.icomoon-person:before {
+  content: '\e90f';
+}
+.icomoon-question:before {
+  content: '\e910';
+}
+.icomoon-home:before {
+  content: '\e911';
+}
+.icomoon-Mask-Group-18:before {
+  content: '\e900';
+}
+.icomoon-home2:before {
+  content: '\e93a';
+}
+.icomoon-office:before {
+  content: '\e913';
+}
+.icomoon-newspaper:before {
+  content: '\e914';
+}
+.icomoon-pencil:before {
+  content: '\e93b';
+}
+.icomoon-eyedropper:before {
+  content: '\e93c';
+}
+.icomoon-images:before {
+  content: '\e93d';
+}
+.icomoon-camera:before {
+  content: '\e93e';
+}
+.icomoon-headphones:before {
+  content: '\e93f';
+}
+.icomoon-music:before {
+  content: '\e940';
+}
+.icomoon-bullhorn:before {
+  content: '\e91a';
+}
+.icomoon-connection:before {
+  content: '\e942';
+}
+.icomoon-mic:before {
+  content: '\e943';
+}
+.icomoon-book:before {
+  content: '\e945';
+}
+.icomoon-books:before {
+  content: '\e920';
+}
+.icomoon-profile:before {
+  content: '\e923';
+}
+.icomoon-files-empty:before {
+  content: '\e946';
+}
+.icomoon-file-text2:before {
+  content: '\e947';
+}
+.icomoon-file-picture:before {
+  content: '\e949';
+}
+.icomoon-file-music:before {
+  content: '\e94a';
+}
+.icomoon-file-play:before {
+  content: '\e94c';
+}
+.icomoon-file-video:before {
+  content: '\e94d';
+}
+.icomoon-file-zip:before {
+  content: '\e92b';
+}
+.icomoon-copy:before {
+  content: '\e94e';
+}
+.icomoon-paste:before {
+  content: '\e92d';
+}
+.icomoon-stack:before {
+  content: '\e94f';
+}
+.icomoon-folder:before {
+  content: '\e950';
+}
+.icomoon-folder-open:before {
+  content: '\e952';
+}
+.icomoon-folder-plus:before {
+  content: '\e953';
+}
+.icomoon-folder-minus:before {
+  content: '\e954';
+}
+.icomoon-folder-download:before {
+  content: '\e933';
+}
+.icomoon-folder-upload:before {
+  content: '\e955';
+}
+.icomoon-barcode:before {
+  content: '\e956';
+}
+.icomoon-qrcode:before {
+  content: '\e938';
+}
+.icomoon-ticket:before {
+  content: '\e957';
+}
+.icomoon-coin-dollar:before {
+  content: '\e958';
+}
+.icomoon-lifebuoy:before {
+  content: '\e941';
+}
+.icomoon-address-book:before {
+  content: '\e944';
+}
+.icomoon-envelop:before {
+  content: '\e959';
+}
+.icomoon-pushpin:before {
+  content: '\e95a';
+}
+.icomoon-location:before {
+  content: '\e948';
+}
+.icomoon-compass2:before {
+  content: '\e95b';
+}
+.icomoon-map:before {
+  content: '\e94b';
+}
+.icomoon-history:before {
+  content: '\e95c';
+}
+.icomoon-bell:before {
+  content: '\e951';
+}
+.icomoon-stopwatch:before {
+  content: '\e95d';
+}
+.icomoon-calendar:before {
+  content: '\e95e';
+}
+.icomoon-laptop:before {
+  content: '\e95f';
+}
+.icomoon-mobile:before {
+  content: '\e960';
+}
+.icomoon-mobile2:before {
+  content: '\e961';
+}
+.icomoon-download:before {
+  content: '\e962';
+}
+.icomoon-upload:before {
+  content: '\e963';
+}
+.icomoon-floppy-disk:before {
+  content: '\e964';
+}
+.icomoon-drive:before {
+  content: '\e965';
+}
+.icomoon-database:before {
+  content: '\e966';
+}
+.icomoon-bubbles:before {
+  content: '\e96c';
+}
+.icomoon-users:before {
+  content: '\e972';
+}
+.icomoon-hour-glass:before {
+  content: '\e979';
+}
+.icomoon-binoculars:before {
+  content: '\e985';
+}
+.icomoon-key:before {
+  content: '\e98d';
+}
+.icomoon-key2:before {
+  content: '\e98e';
+}
+.icomoon-equalizer:before {
+  content: '\e992';
+}
+.icomoon-equalizer2:before {
+  content: '\e993';
+}
+.icomoon-cog:before {
+  content: '\e994';
+}
+.icomoon-aid-kit:before {
+  content: '\e998';
+}
+.icomoon-pie-chart:before {
+  content: '\e99a';
+}
+.icomoon-stats-dots:before {
+  content: '\e99b';
+}
+.icomoon-stats-bars:before {
+  content: '\e99c';
+}
+.icomoon-mug:before {
+  content: '\e9a2';
+}
+.icomoon-meter:before {
+  content: '\e9a6';
+}
+.icomoon-lab:before {
+  content: '\e9aa';
+}
+.icomoon-magnet:before {
+  content: '\e9ab';
+}
+.icomoon-bin:before {
+  content: '\e9ac';
+}
+.icomoon-target:before {
+  content: '\e9b3';
+}
+.icomoon-power-cord:before {
+  content: '\e9b7';
+}
+.icomoon-clipboard:before {
+  content: '\e9b8';
+}
+.icomoon-sphere:before {
+  content: '\e9c9';
+}
+.icomoon-earth:before {
+  content: '\e9ca';
+}
+.icomoon-link:before {
+  content: '\e9cb';
+}
+.icomoon-flag:before {
+  content: '\e9cc';
+}
+.icomoon-bookmarks:before {
+  content: '\e9d3';
+}
+.icomoon-star-empty:before {
+  content: '\e9d7';
+}
+.icomoon-star-full:before {
+  content: '\e9d9';
+}
+.icomoon-notification:before {
+  content: '\ea08';
+}
+.icomoon-question1:before {
+  content: '\ea09';
+}
+.icomoon-enter:before {
+  content: '\ea13';
+}
+.icomoon-exit:before {
+  content: '\ea14';
+}
+.icomoon-volume-high:before {
+  content: '\ea26';
+}
+.icomoon-paragraph-left:before {
+  content: '\ea77';
+}
+.icomoon-paragraph-center:before {
+  content: '\ea78';
+}
+.icomoon-paragraph-right:before {
+  content: '\ea79';
+}
+.icomoon-paragraph-justify:before {
+  content: '\ea7a';
+}
+.icomoon-embed2:before {
+  content: '\ea80';
+}
+.icomoon-share2:before {
+  content: '\ea82';
+}
+.icomoon-google:before {
+  content: '\ea88';
+}
+.icomoon-facebook1:before {
+  content: '\ea90';
+}
+.icomoon-facebook:before {
+  content: '\ea91';
+}
+.icomoon-instagram:before {
+  content: '\ea92';
+}
+.icomoon-telegram:before {
+  content: '\ea95';
+}
+.icomoon-twitter:before {
+  content: '\ea96';
+}
+.icomoon-youtube:before {
+  content: '\ea9d';
+}
+.icomoon-youtube2:before {
+  content: '\ea9e';
+}
+.icomoon-file-pdf:before {
+  content: '\eadf';
+}
+.icomoon-file-word:before {
+  content: '\eae1';
+}
+.icomoon-file-excel:before {
+  content: '\eae2';
+}

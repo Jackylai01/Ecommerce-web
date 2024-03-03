@@ -1,0 +1,129 @@
+.gallery {
+  display: flex;
+  flex-direction: column;
+
+  .btn {
+    margin: auto;
+    margin-top: 40px;
+  }
+
+  &__header {
+    align-items: center;
+    margin-bottom: $margin_base;
+    width: 100%;
+
+    @extend %flex-row-between;
+  }
+
+  &__aside {
+    color: $color_accent;
+
+    span {
+      font-size: 2rem;
+      cursor: pointer;
+    }
+  }
+
+  &__container {
+    overflow: hidden;
+  }
+
+  &__items {
+    display: flex;
+    transition: transform 300ms;
+
+    > li {
+      margin-right: 20px;
+
+      img {
+        height: 300px;
+      }
+
+      blockquote {
+        background-color: $color_white;
+      }
+    }
+  }
+
+  &__photos {
+    > li {
+      position: relative;
+      overflow: hidden;
+      max-height: 250px;
+      cursor: pointer;
+    }
+  }
+
+  &__modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    overflow: auto;
+    align-items: center;
+    flex-direction: column;
+    padding: 100px;
+    width: 100%;
+    height: 100%;
+    background-color: #21212145;
+  }
+
+  &__modal-img {
+    position: relative;
+    display: block;
+    padding: 20px;
+    max-width: 800px;
+    width: 80%;
+    border-radius: 20px;
+    background-color: $color_white;
+
+    img {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .icomoon-clear {
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      background-color: $color_white;
+      color: $color_accent;
+      font-size: 2rem;
+
+      @include square(60px, 60px);
+      @extend %inline-flex-center;
+    }
+  }
+
+  &__description {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 5px $padding_small;
+    min-height: 4.5em;
+    width: 100%;
+    background-color: rgba($color_line, 0.7);
+
+    @extend %inline-flex-center;
+
+    h3 {
+      text-align: center;
+      font-size: 1.3rem;
+    }
+  }
+
+  &__no-content {
+    flex-direction: column;
+    padding: $padding_big;
+    border: $color_line solid 1px;
+    border-radius: $radius-size_big;
+    background-color: $color_primary;
+
+    @extend %flex-center;
+
+    h3 {
+      margin-bottom: 20px;
+    }
+  }
+}

@@ -1,0 +1,42 @@
+.loader {
+  position: relative;
+  margin: 0 auto;
+  width: 200px;
+  height: 200px;
+
+  @extend %flex-center;
+
+  &__outer,
+  &__middle,
+  &__inner {
+    position: absolute;
+    border: 3px solid transparent;
+    border-top-color: $color_accent;
+    border-right-color: $color_accent;
+    border-radius: 50%;
+  }
+
+  &__outer {
+    width: 3.5em;
+    height: 3.5em;
+    animation: spin 2s linear infinite;
+  }
+
+  &__middle {
+    width: 2.2em;
+    height: 2.2em;
+    animation: spin 1.75s linear reverse infinite;
+  }
+
+  &__inner {
+    width: 1.2em;
+    height: 1.2em;
+    animation: spin 1.5s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

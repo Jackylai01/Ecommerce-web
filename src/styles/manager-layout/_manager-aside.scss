@@ -1,0 +1,217 @@
+.manager-aside {
+  position: fixed;
+  z-index: $z-index_front;
+  width: $width_main-aside;
+  height: 100%;
+  background-color: $color_primary;
+  box-shadow: 4px 0px 13px -4px #00000047;
+  transition: left 300ms;
+  z-index: 101;
+  background-color: rgb(27, 27, 27);
+
+  @include pad-under-width() {
+    left: -$width_main-aside - 20px;
+    left: -360px;
+    width: 340px;
+  }
+  @include phone-width() {
+    left: -110%;
+    width: 100%;
+  }
+
+  &.active {
+    left: 0;
+  }
+
+  &__menu {
+    position: fixed;
+    top: 15px;
+    left: 20px;
+    visibility: hidden;
+
+    @extend %flex-center;
+    @include square(40px, $radius-size_base);
+    @include pad-under-width() {
+      visibility: visible;
+    }
+
+    > span {
+      height: 4px;
+      border-radius: 10px;
+      background-color: $color_accent-light;
+      transition: transform 300ms, margin-top 100ms;
+
+      @extend %absolute-layout_full-width;
+
+      &:nth-child(1) {
+        margin-top: -20px;
+      }
+      &:nth-child(3) {
+        margin-top: 20px;
+      }
+    }
+
+    &.active {
+      top: 20px;
+
+      > span {
+        &:nth-child(1) {
+          left: -2px;
+          margin-top: -15px;
+          width: 50%;
+          transform: rotate(135deg);
+        }
+
+        &:nth-child(2) {
+          width: 90%;
+        }
+
+        &:nth-child(3) {
+          left: -2px;
+          margin-top: 15px;
+          width: 50%;
+          transform: rotate(-135deg);
+        }
+      }
+    }
+  }
+
+  &__header {
+    height: $height_header;
+    background-color: $color_white;
+
+    @extend %flex-center;
+
+    img {
+      height: #{$height_header - 10px};
+    }
+  }
+
+  &__navbar {
+    overflow: auto;
+    padding: $padding_small 0;
+    height: calc(100% - #{$height_header});
+
+    > section > sub,
+    &-sub {
+      margin: $margin_small $margin_base;
+      margin-bottom: 1rem;
+      color: $color_accent;
+      font-weight: 500;
+      font-size: 1.25rem;
+      color: $color_white;
+
+      @extend %flex-center;
+    }
+
+    a {
+      position: relative;
+      padding: $margin_small $margin_base;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 400ms;
+      color: $color_white;
+      @extend %flex-row-center;
+
+      &::before {
+        width: $radius-size_base;
+        border-radius: $radius-size_base;
+        background-color: $color_white;
+        opacity: 0;
+        transition: opacity 300ms;
+        color: $color_white;
+        @extend %full-pseudo-element;
+      }
+
+      &.active,
+      &:hover {
+        background-color: rgba($color_white, 0.1);
+        color: rgb(37, 233, 255);
+
+        &::before {
+          opacity: 1;
+        }
+      }
+
+      > span {
+        display: inline-flex;
+        margin-right: $padding_small;
+        border-radius: 0 $radius-size_base $radius-size_base 0;
+        background-color: black;
+        box-shadow: $box-shadow_element;
+        font-size: 1.75rem;
+
+        @extend %flex-center;
+        @include square(48px, $radius-size_base);
+      }
+
+      > b {
+        flex: 1;
+        font-size: 0.95rem;
+      }
+    }
+  }
+
+  &__extra-block {
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    overflow: auto;
+    padding: $padding_small 0;
+    padding-bottom: 80px;
+    width: 100%;
+    height: calc(100% - #{$height_header});
+    background-color: $color_primary;
+    transition: left 300ms;
+
+    &.active {
+      left: 0;
+    }
+  }
+
+  &__extra-container {
+    overflow: auto;
+    padding: 10px;
+    max-height: 100%;
+    width: 100%;
+  }
+
+  &__extra-list {
+    ol {
+      margin-left: $margin_base;
+
+      > li {
+        margin: 5px;
+      }
+    }
+  }
+
+  &__extra-back-btn,
+  &__extra-up-btn {
+    position: absolute;
+    right: 10%;
+    bottom: 10px;
+    left: 10%;
+    padding: 15px 10px;
+    width: 80%;
+    border-radius: $border-radius_layout;
+    color: $color_white;
+    cursor: pointer;
+
+    @include hoverBackgroundTransition($color_accent);
+    @extend %flex-center;
+  }
+
+  &__extra-up-btn {
+    left: 5%;
+    visibility: hidden;
+    width: 90%;
+    opacity: 0;
+    transition: opacity 300ms, visible 300ms;
+
+    &.active {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}

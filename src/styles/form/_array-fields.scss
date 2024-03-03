@@ -1,0 +1,101 @@
+.array-fields {
+  margin: 0 10px;
+  margin-top: 10px;
+  width: 100%;
+
+  &__container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+
+    @extend %flex-row;
+
+    &::before,
+    &::after {
+      position: absolute;
+      bottom: 0;
+      z-index: -1;
+      background-color: $color_accent;
+      content: '';
+    }
+
+    &::before {
+      left: 23px;
+      width: 2px;
+      height: 100%;
+    }
+
+    &::after {
+      left: 20px;
+
+      @include square($border-radius_layout, $border-radius_layout);
+    }
+  }
+
+  &__append-btn {
+    margin-right: 8px;
+    border: none;
+    color: $color_white;
+    cursor: pointer;
+
+    @include hoverBackgroundTransition($color_accent);
+    @include square(48px, $border-radius_layout);
+  }
+
+  &__items {
+    width: 100%;
+
+    &--hideable {
+      li {
+        overflow: hidden;
+        height: 150px; // header + first field
+
+        &.active {
+          height: unset;
+        }
+      }
+    }
+  }
+
+  &__item-header {
+    padding: 12px 20px;
+    border-radius: $border-radius_layout;
+    background-color: $color_line;
+
+    @extend %flex-row-between;
+
+    > h2 {
+      font-size: 1rem;
+    }
+
+    &--hideable {
+      cursor: pointer;
+
+      > h2 {
+        &::before {
+          display: inline-block;
+          content: '\e90e';
+          font-family: 'icomoon';
+          transition: transform 300ms;
+          transform: rotate(-90deg);
+        }
+
+        &.active {
+          &::before {
+            transform: unset;
+          }
+        }
+      }
+    }
+  }
+
+  &__item-actions {
+    > button {
+      margin-left: 8px;
+      border: none;
+      cursor: pointer;
+
+      @extend %inline-flex-center;
+    }
+  }
+}

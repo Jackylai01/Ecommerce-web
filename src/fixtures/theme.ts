@@ -1,0 +1,23 @@
+import { extendTheme } from '@chakra-ui/react';
+
+const theme = extendTheme({
+  breakpoints: {
+    sm: '30em',
+    md: '48em',
+    lg: '64em',
+    xl: '80em',
+  },
+  fonts: {
+    body: "'Noto Sans TC', sans-serif",
+    heading: "'Noto Sans TC', sans-serif",
+  },
+  components: {
+    Text: {
+      baseStyle: {
+        color: 'black',
+      },
+    },
+  },
+});
+
+export default theme;

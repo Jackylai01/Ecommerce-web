@@ -1,0 +1,248 @@
+.form {
+  font-size: 0.85rem;
+
+  input[type='text'],
+  input[type='password'],
+  input[type='email'],
+  input[type='phone'],
+  input[type='number'],
+  input[type='date'],
+  input[type='time'],
+  input[type='datetime-local'],
+  textarea,
+  select {
+    @extend %input-block_base;
+  }
+
+  textarea {
+    min-height: 300px;
+    border-radius: 20px;
+    font-size: 1rem;
+  }
+
+  &__input {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    > b {
+      margin-bottom: 7px;
+      font-weight: 500;
+    }
+
+    &--all-checked {
+      align-items: center;
+      flex-direction: row;
+      padding: 10px;
+      border: 1px solid $color_line;
+      border-radius: $radius-size_base;
+      background-color: $color_primary-dark;
+
+      input {
+        margin-right: 5px;
+
+        @include square(18px);
+      }
+
+      b {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__checkbox {
+    padding: 10px;
+    font-weight: 500;
+    font-size: 1rem;
+
+    @extend %flex-row-center;
+
+    > input[type='checkbox'] {
+      margin-right: 8px;
+
+      @include square(1.5rem);
+    }
+  }
+
+  &__star {
+    color: $color_notice;
+    font-size: 1.5rem;
+    cursor: pointer;
+
+    > input {
+      display: none;
+    }
+  }
+
+  &__items {
+    margin: 10px;
+    font-size: 1rem;
+
+    > label {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 0;
+
+      > input {
+        margin-right: $margin_small;
+
+        @include square(18px);
+
+        &:checked {
+          background-color: $color_accent;
+        }
+      }
+    }
+  }
+
+  &__file-upload {
+    position: relative;
+
+    > span {
+      margin-right: $margin_small;
+      vertical-align: bottom;
+    }
+
+    > input[type='file'] {
+      opacity: 0;
+      cursor: pointer;
+
+      @extend %full-pseudo-element;
+    }
+  }
+
+  &__radio {
+    @extend %flex-row-center;
+
+    > input[type='checkbox'] {
+      display: none;
+
+      &:checked + span {
+        background-color: $color_accent-light;
+
+        &::before {
+          left: 27px;
+          background-color: $color_white;
+        }
+      }
+    }
+
+    > span {
+      position: relative;
+      margin-right: 0.5rem;
+      width: 50px;
+      height: 25px;
+      border: $color_line solid 1px;
+      border-radius: $radius-size_over;
+      background-color: $color_white;
+      cursor: pointer;
+      transition: background-color 300ms;
+
+      @extend %flex-row-center;
+
+      &::before {
+        position: absolute;
+        left: 5px;
+        display: inline-block;
+        background-color: $color_text-color-light;
+        content: '';
+        transition: background-color 300ms, left 300ms;
+
+        @include square(18px, $isCircle: true);
+      }
+    }
+  }
+
+  &__tab {
+    position: relative;
+    width: 100%;
+
+    input {
+      padding-right: 60px;
+      width: 100%;
+    }
+
+    &-items {
+      position: absolute;
+      z-index: 1;
+      overflow: auto;
+      padding-left: 10px;
+      max-width: 60%;
+      height: 48px;
+      word-break: keep-all;
+
+      @extend %flex-row-center;
+
+      > li {
+        margin: 5px;
+        padding: 5px 10px;
+        height: calc(100% - 16px);
+        border-radius: 8px;
+        background-color: $color_accent;
+        color: $color_white;
+        letter-spacing: 0;
+        line-height: 1;
+        cursor: pointer;
+
+        @extend %flex-row-center;
+
+        > span {
+          margin-left: 5px;
+          font-size: 1rem;
+        }
+      }
+    }
+
+    &-button {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 48px;
+      height: 100%;
+      border-radius: 0 8px 8px 0;
+      background-color: $color_accent;
+      color: $color_white;
+      cursor: pointer;
+
+      @extend %flex-center;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap;
+
+    > * {
+      flex: 1;
+      margin: 5px;
+      min-width: 120px;
+    }
+  }
+
+  &__error-message {
+    margin-top: 5px;
+    color: $color_like;
+  }
+
+  &__other-value {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+
+    input {
+      flex: 1;
+    }
+  }
+}
+
+.icons-select {
+  background-color: $color_accent;
+  color: $color_white;
+  font-size: 1.5em;
+  cursor: pointer;
+
+  @include square(60px, 5px);
+  @extend %inline-flex-center;
+}

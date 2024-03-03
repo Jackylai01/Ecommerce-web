@@ -1,0 +1,26 @@
+.footer {
+  padding: $layout-size_base 0;
+  min-height: 8rem;
+  background-color: $color_accent;
+  color: $color_white;
+
+  @extend %flex-column-between;
+
+  &__container {
+    flex-wrap: wrap;
+
+    @extend %flex-row-between;
+    @extend %layout-container;
+
+    span {
+      margin-bottom: 5px;
+      min-width: 220px;
+    }
+  }
+
+  &__links {
+    > a {
+      @include layoutSpaceLeft();
+    }
+  }
+}

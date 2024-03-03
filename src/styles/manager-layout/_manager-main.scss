@@ -1,0 +1,52 @@
+.manager-main {
+  position: relative;
+  left: $width_main-aside;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: calc(100% - #{$width_main-aside});
+  background-color: $color_white;
+
+  @include pad-under-width() {
+    left: 0;
+    width: 100%;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    @extend %layout-margin_main;
+    @include phone-width() {
+      margin-top: $margin_small;
+    }
+  }
+
+  &__block {
+    margin-bottom: $margin_big;
+
+    h2 {
+      align-items: center;
+
+      @extend %flex-row-between;
+    }
+  }
+
+  &__title {
+    margin-bottom: $margin_base;
+  }
+  &__actions {
+    position: fixed;
+    bottom: 0;
+    z-index: $z-index_cover;
+    justify-content: flex-end;
+    width: calc(100% - #{$width_main-aside});
+    height: $height_manager-actions;
+    border-top: $color_line solid 1px;
+    background-color: $color_white;
+    box-shadow: 5px 3px 6px 1px #0000005c;
+
+    @extend %flex-row;
+  }
+}

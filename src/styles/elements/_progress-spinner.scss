@@ -1,0 +1,23 @@
+$circle-size: 30px;
+$circle-line-width: 2px;
+
+.progress-spinner {
+  position: relative;
+  margin-right: $margin_small;
+  width: $circle-size;
+  height: $circle-size;
+  border-radius: 50%;
+  background: $color_line;
+  transition: background 300ms;
+
+  @extend %flex-center;
+
+  &::before {
+    position: absolute;
+    width: $circle-size - ($circle-line-width * 2);
+    height: $circle-size - ($circle-line-width * 2);
+    border-radius: 50%;
+    background-color: $color_white;
+    content: '';
+  }
+}

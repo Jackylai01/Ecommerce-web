@@ -1,0 +1,15 @@
+.calendar {
+  border: 1px solid $color-white;
+
+  th,
+  td {
+    text-align: center;
+    line-height: 1.25;
+
+    > b {
+      display: block;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+  }
+}

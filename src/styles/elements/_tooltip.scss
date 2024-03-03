@@ -1,0 +1,25 @@
+.tooltip {
+  position: relative;
+
+  &:hover {
+    .tooltip__text {
+      visibility: visible;
+    }
+  }
+
+  &__text {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    z-index: $z-index_front;
+    visibility: hidden;
+    padding: 0.35rem 0.6rem;
+    border-radius: $border-radius_layout;
+    background-color: $color_accent-light;
+    color: $color_white;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 1rem;
+    transform: translateX(-50%);
+  }
+}

@@ -1,0 +1,103 @@
+.album {
+  > li {
+    position: relative;
+    padding: $padding_base;
+    height: 235px;
+    border: 1px solid $color_line;
+    background-color: transparent;
+    cursor: unset;
+
+    a {
+      width: 100%;
+      height: 100%;
+      @extend %inline-flex-center;
+    }
+    // &:hover {
+    //   > .album__tooltip {
+    //     opacity: 0.75;
+    //   }
+    // }
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  &--full {
+    > li {
+      padding: 0;
+
+      > img {
+        display: block;
+        margin: auto;
+        opacity: 0.75;
+      }
+    }
+  }
+
+  // &__tooltip {
+  //   position: absolute;
+  //   top: 40%;
+  //   padding: 0.5rem;
+  //   border-radius: $radius-size_base;
+  //   background-color: $color_white;
+  //   opacity: 0;
+  //   transition: opacity 500ms;
+  // }
+
+  &__buttons {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 5px;
+    padding: 10px 15px 5px 15px;
+    border-radius: $radius-size_base;
+    background-color: rgba($color: $color_line, $alpha: 0.75);
+
+    @extend %flex-center;
+  }
+
+  &__button {
+    cursor: pointer;
+
+    @include layoutSpaceLeft();
+
+    &--danger {
+      color: $color_like;
+    }
+
+    &--accent {
+      color: $color_accent;
+    }
+
+    &--notice {
+      color: $color_notice;
+    }
+
+    &--text {
+      color: $color_text-color;
+    }
+
+    &--white {
+      color: $color_white;
+    }
+  }
+
+  &__info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 5px $padding_small;
+    min-height: 4.5em;
+    width: 100%;
+    background-color: rgba($color_line, 0.7);
+
+    @extend %inline-flex-center;
+
+    h3 {
+      text-align: center;
+      font-size: 1.3rem;
+    }
+  }
+}

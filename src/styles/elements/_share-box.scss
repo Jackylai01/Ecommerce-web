@@ -1,0 +1,10 @@
+.share-box {
+  @extend %flex-row;
+
+  > li {
+    @include layoutSpaceLeft();
+    a {
+      color: $color_accent;
+    }
+  }
+}

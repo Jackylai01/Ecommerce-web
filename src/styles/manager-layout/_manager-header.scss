@@ -1,0 +1,107 @@
+.manager-header {
+  min-height: $height_header;
+  border-bottom: $color_line solid 1px;
+
+  @extend %layout-margin_main;
+  @extend %flex-row-between;
+  @include pad-under-width() {
+    border-bottom: none;
+  }
+
+  &__user {
+    position: relative;
+    box-sizing: border-box;
+
+    @extend %flex-row-center;
+    @include pad-under-width() {
+      position: fixed;
+      left: 0;
+      justify-content: flex-end;
+      padding: $margin_small $margin_base;
+      width: 100%;
+      border-bottom: solid $color_line 1px;
+      background-color: white;
+    }
+
+    &-main {
+      height: 100%;
+      cursor: pointer;
+
+      @extend %flex-row-center;
+    }
+
+    &-avatar {
+      background-color: $color_accent-light;
+      box-shadow: $box-shadow_element;
+      color: $color_white;
+
+      @extend %flex-center;
+      @include square(48px, $radius-size_base);
+    }
+
+    &-info {
+      padding: 0 $padding_small;
+      word-break: keep-all;
+      font-weight: 500;
+
+      @extend %flex-column;
+
+      > b {
+        font-size: 1.15rem;
+      }
+
+      > sub {
+        color: $color_accent-light;
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  &__user-dropdown {
+    top: 100%;
+    left: inherit;
+    z-index: $z-index_cover;
+    visibility: hidden;
+    min-width: 180px;
+    border-radius: $radius-size_base;
+    background-color: $color_line-light;
+    box-shadow: $box-shadow_element;
+    opacity: 0;
+    transition: opacity 300ms, transform 300ms, visibility 300ms;
+    transform: translateY(-5px);
+
+    @extend %absolute-layout_full-width;
+
+    .manager-header__user.active & {
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  &__actions {
+    > li {
+      &:nth-last-child(1) {
+        border-top: solid $color_line 1px;
+      }
+    }
+
+    a {
+      padding: $padding_small;
+      color: $color_accent;
+      text-decoration: none;
+      transition: transform 300ms;
+
+      @extend %flex-row-center;
+
+      &:hover,
+      &:active {
+        transform: translateX(5px);
+      }
+
+      > span {
+        margin-right: 5px;
+      }
+    }
+  }
+}

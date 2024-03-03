@@ -1,0 +1,22 @@
+.context-menu {
+  position: fixed;
+  display: none;
+  padding: $padding_small 0;
+  width: 200px;
+  border: 1px solid $color_line;
+  border-radius: $radius-size_base;
+  background-color: $color_white;
+
+  &.active {
+    display: block;
+  }
+
+  &__item {
+    padding: 10px $padding_base;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $color_line;
+    }
+  }
+}

@@ -1,0 +1,146 @@
+.faq-robot {
+  &__trigger {
+    position: fixed;
+    right: $margin_big;
+    bottom: $margin_big;
+    z-index: $z-index_front;
+    border: none;
+    cursor: pointer;
+    transition: transform 300ms;
+
+    @extend %flex-center;
+    @include square(70px, $isCircle: true);
+
+    > img {
+      height: 100%;
+    }
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+
+  &__container {
+    position: fixed;
+    right: $margin_big;
+    bottom: 120px;
+    z-index: $z-index_cover;
+    visibility: hidden;
+    max-width: 480px;
+    max-height: 500px;
+    width: 80%;
+    height: 80%;
+    border-radius: $border-radius_layout;
+    background-color: #eeeeee;
+    box-shadow: $box-shadow_element;
+    opacity: 0;
+    transition: transform 300ms, visibility 300ms, opacity 300ms;
+    transform: translateY(20px);
+
+    @extend %flex-column;
+
+    &.active {
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  &__header {
+    align-items: center;
+    padding: $block-padding_small;
+    border-bottom: $color_line solid 1px;
+    background-color: $color_accent;
+    color: $color_white;
+
+    @extend %flex-row-between;
+
+    > span {
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
+  }
+
+  &__message {
+    overflow: auto;
+    flex: 1;
+    padding: $padding_small;
+
+    > li {
+      display: flex;
+      margin-bottom: $margin_small;
+    }
+  }
+
+  &__message-avatar {
+    overflow: hidden;
+    margin-right: 15px;
+    background-color: $color_white;
+
+    @include square(50px, $isCircle: true);
+
+    img {
+      height: 100%;
+    }
+  }
+
+  &__message-main {
+    flex: 1;
+    padding: 15px 20px;
+    border-radius: 10px;
+    border-top-left-radius: 0;
+    background-color: $color_white;
+
+    a {
+      display: block;
+      padding: 6px 0;
+      border-bottom: $color_line solid 1px;
+      color: $color_accent;
+      font-size: 1.1rem;
+      cursor: pointer;
+
+      &:nth-last-child(1) {
+        border-bottom: none;
+      }
+    }
+  }
+
+  &__footer {
+    width: 100%;
+    border-top: $color_line solid 1px;
+    background-color: $color_white;
+  }
+
+  &__search-bar {
+    display: flex;
+
+    input,
+    button {
+      padding: 12px 20px;
+      outline: none;
+      border: none;
+      font-size: 1.1rem;
+    }
+
+    a {
+      padding: 12px;
+      color: #958c8c;
+
+      @extend %inline-flex-center;
+    }
+
+    input {
+      flex: 1;
+      margin: 10px 0;
+      border-radius: 5px;
+      background-color: $color_line;
+    }
+
+    button {
+      padding: 12px 10px;
+      background-color: transparent;
+      color: #958c8c;
+      font-size: 1.4rem;
+    }
+  }
+}

@@ -1,0 +1,40 @@
+.folder-links {
+  padding: 0 $layout-size_small;
+
+  a {
+    color: $color_accent;
+    font-weight: 500;
+  }
+
+  ol {
+    margin-left: $layout-size_small;
+  }
+
+  li {
+    margin-bottom: $layout-size_small;
+  }
+
+  &__dropdown {
+    margin-bottom: $layout-size_small;
+
+    @extend %flex-row-center;
+
+    > span {
+      color: $color_accent;
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: transform 300ms;
+      transform: rotate(-90deg);
+    }
+
+    &.active {
+      > span {
+        transform: none;
+      }
+
+      + ol {
+        margin-left: $layout-size_small * 2.5;
+      }
+    }
+  }
+}

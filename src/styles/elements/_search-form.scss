@@ -1,0 +1,93 @@
+.search-form {
+  position: relative;
+  display: flex;
+  margin-bottom: $padding_small;
+
+  > label {
+    position: relative;
+    display: inline-flex;
+    overflow: hidden;
+    flex: 1;
+    border-radius: $radius-size_base 0 0 $radius-size_base;
+
+    > b {
+      display: none;
+    }
+
+    > input {
+      flex: 1;
+      padding: $element-padding_base;
+      outline: none;
+      border: $color_line solid 1px;
+      border-radius: $radius-size_base 0 0 $radius-size_base;
+      letter-spacing: 2px;
+    }
+  }
+
+  button {
+    padding: $padding_small $padding_base;
+    border: none;
+    border-radius: 0 $radius-size_base $radius-size_base 0;
+    color: $color_white;
+    letter-spacing: 3px;
+    font-size: 1rem;
+    cursor: pointer;
+
+    @include hoverBackgroundTransition($color_accent-light, $color_accent);
+    @include phone-width() {
+      padding: $margin_small;
+    }
+  }
+
+  &__trigger {
+    position: absolute;
+    width: 48px;
+    height: 100%;
+    background-color: $color_accent-light;
+    color: $color_white;
+    cursor: pointer;
+
+    @extend %inline-flex-center;
+    > span {
+      transition: transform 300ms;
+    }
+
+    &.active {
+      > span {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &__filter {
+    position: absolute;
+    top: 110%;
+    z-index: 1;
+    visibility: hidden;
+    padding: $block-padding_small;
+    width: 100%;
+    border-radius: $border-radius_layout;
+    background-color: $color_white;
+    box-shadow: 0 0 10px -5px #00000085;
+    opacity: 0;
+    transition: visibility 300ms, opacity 300ms;
+
+    &.active {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  &__filter-footer {
+    justify-content: flex-end;
+    padding: $layout-size_small;
+
+    @extend %flex-row;
+  }
+
+  &--dropdown {
+    > label > input {
+      padding-left: 4rem;
+    }
+  }
+}

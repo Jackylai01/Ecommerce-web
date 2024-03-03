@@ -1,0 +1,14 @@
+.link {
+  text-decoration: none;
+  cursor: pointer;
+
+  @include hoverColorTransition($color_accent-light, $color_text-color);
+
+  &--underline {
+    text-decoration: underline;
+  }
+
+  &--light {
+    @include hoverColorTransition($color_notice);
+  }
+}

@@ -1,0 +1,38 @@
+$color_white: #ffffff;
+$color_black: #000000;
+
+// 強調色
+$color_accent-dark: #104068;
+$color_accent: #14578e;
+$color_accent-light: #1e78c1;
+
+// 輔助色
+$color_auxiliary: #197879;
+$color_auxiliary-light: #1d9395;
+
+// 主色
+$color_primary: #f8f8f4;
+$color_primary-dark: #d8dbdf;
+
+// 文字顏色
+$color_text-accent: #1a1a1c;
+$color_text-color: #1c1c1e;
+$color_text-color-light: #c4c4c4;
+
+// 邊框色彩
+$color_line: #ededed;
+$color_line-light: #fbfbfb;
+
+// 其他色彩
+$color_security: #5eb67d;
+$color_notice: #fdce63;
+$color_like: #af6037;
+
+// 其他色彩
+$color-gradient: $color_accent, $color_auxiliary;
+$color-gradient-accent: #2e61a8b3 0%, #66ac66b3 70%, #70ba5ab3 100%;
+$color-gradient-accent-background: #2e61a8 0%, #66ac66 70%, #70ba5a 100%;
+
+$box-shadow_element: 0px 0px 5px 2px rgba(0, 0, 0, 0.15);
+$block-shadow_element: 0px 2px 6px 0px rgb(0 0 0 / 15%);
+$box-shadow_navbar-menu: 2px 0px 10px 0px rgb(0 0 0 / 15%);

@@ -1,0 +1,98 @@
+.dropdown {
+  position: relative;
+
+  &__header {
+    z-index: 10;
+    justify-content: space-between;
+    padding: 8px 20px;
+    padding-right: 10px;
+    min-width: 130px;
+    border-radius: 20px;
+    background-color: $color_accent;
+    color: $color_white;
+    letter-spacing: 2px;
+    font-size: 0.85rem;
+    cursor: pointer;
+
+    @extend %flex-center;
+
+    > .material-icons {
+      font-size: 1.25rem;
+    }
+  }
+
+  &__container {
+    position: absolute;
+    top: calc(100% + 10px);
+    z-index: 1000;
+    visibility: hidden;
+    overflow: auto;
+    padding: 5px 0;
+    min-width: 7rem;
+    max-height: 10rem;
+    width: 100%;
+    border: $color_line solid 1px;
+    border-radius: 6px;
+    background-color: $color_white;
+    box-shadow: 2px 2px 8px -4px black;
+
+    &.active {
+      visibility: visible;
+    }
+
+    > li {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    &--label {
+      padding: 10px 0;
+
+      > li {
+        padding: 0;
+
+        > label {
+          display: block;
+          padding: 10px 15px;
+          cursor: pointer;
+
+          > input {
+            margin-right: 8px;
+          }
+
+          &.radio {
+            > input {
+              margin-right: 0;
+              width: 0;
+              height: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &--simple {
+    .dropdown__header {
+      padding: 0;
+      min-width: auto;
+      background-color: transparent;
+      color: $color_text-accent;
+    }
+    .material-icons {
+      font-size: 1rem;
+    }
+  }
+
+  &--select {
+    .dropdown__header {
+      padding: 15px 20px;
+      border: $color_line solid 1px;
+      border-radius: 40px;
+      background-color: transparent;
+      color: $color_text-color;
+      letter-spacing: 2px;
+      line-height: 1.5;
+    }
+  }
+}

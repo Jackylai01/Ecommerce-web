@@ -1,0 +1,15 @@
+.progress-bar {
+  width: 150px;
+  border-radius: $radius-size_base;
+  background-color: $color_line;
+  text-align: center;
+  font-size: 0.75rem;
+
+  &__inner {
+    padding: 5px;
+    border-radius: inherit;
+    background-color: $color_accent-light;
+    color: $color_white;
+    transition: 'width 1s ease-in-out';
+  }
+}

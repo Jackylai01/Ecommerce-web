@@ -1,0 +1,83 @@
+.btn {
+  padding: $block-padding_small;
+  border: none;
+  border-radius: $border-radius_layout;
+  color: $color_white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  @extend %inline-flex-center;
+  @include hoverBackgroundTransition(
+    $color_accent,
+    darken($color: $color_accent, $amount: 10)
+  );
+
+  > span {
+    margin-right: 5px;
+    font-size: 1rem;
+  }
+
+  &--small {
+    padding: 10px 20px;
+    border-radius: $radius-size_base;
+    font-size: 0.9rem;
+  }
+
+  &--large {
+    padding: 15px 40px;
+    font-size: 1rem;
+  }
+
+  &--full {
+    width: 100%;
+  }
+
+  &--radius {
+    border-radius: $radius-size_big * 2;
+  }
+
+  &--auxiliary {
+    @include hoverBackgroundTransition($color_auxiliary-light);
+  }
+
+  &--notice {
+    @include hoverBackgroundTransition($color_notice);
+  }
+
+  &--security {
+    @include hoverBackgroundTransition($color_security);
+  }
+
+  &--like {
+    @include hoverBackgroundTransition($color_like);
+  }
+
+  &--danger {
+    @include hoverBackgroundTransition(
+      $color_like,
+      darken($color: $color_like, $amount: 10)
+    );
+  }
+
+  &--accent-border {
+    @include hoverActiveBorderBgTransition($color_accent);
+  }
+
+  &--auxiliary-border {
+    @include hoverActiveBorderBgTransition($color_auxiliary-light);
+  }
+
+  &--notice-border {
+    @include hoverActiveBorderBgTransition($color_notice);
+  }
+
+  &--security-border {
+    @include hoverActiveBorderBgTransition($color_security);
+  }
+
+  &--danger-border {
+    @include hoverActiveBorderBgTransition($color_like);
+  }
+}

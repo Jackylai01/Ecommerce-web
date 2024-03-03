@@ -1,0 +1,29 @@
+.file-items {
+  margin: -10px;
+
+  @extend %flex-row-wrap;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  > li {
+    flex: 0 33.333%;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+
+    &.active {
+      background-color: $color_line;
+    }
+  }
+
+  &__cover {
+    overflow: hidden;
+    margin-bottom: 5px;
+    height: 160px;
+
+    @extend %flex-center;
+  }
+}

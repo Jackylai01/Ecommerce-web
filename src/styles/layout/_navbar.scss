@@ -1,0 +1,365 @@
+.navbar {
+  position: absolute;
+  z-index: $z-index_front;
+  width: 100%;
+  height: $height_navbar;
+  font-weight: 500;
+
+  @extend %flex-row-center;
+
+  a,
+  span {
+    color: $color_accent;
+  }
+
+  &__container {
+    position: relative;
+    align-items: center;
+    height: 100%;
+
+    @extend %flex-row-between;
+    @extend %layout-container;
+  }
+
+  &__logo {
+    display: inline-flex;
+    width: 5rem;
+
+    a {
+      display: flex;
+    }
+
+    img {
+      @include square(48px);
+    }
+  }
+
+  &__links {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+
+    > li {
+      align-items: center;
+      width: 100%;
+      height: 100%;
+
+      @extend %flex-row;
+      @include layoutSpaceLeft($margin_small);
+      @include pad-under-width() {
+        display: none;
+      }
+    }
+
+    > li:nth-last-child(1) {
+      @include pad-under-width() {
+        display: flex;
+      }
+    }
+  }
+
+  &__menu {
+    position: absolute;
+    top: $height_navbar;
+    z-index: $z-index_back;
+    overflow: hidden auto;
+    padding: 15px 30px;
+    padding-right: 24px;
+    padding-left: 5rem;
+    max-height: 70vh;
+    width: 100%;
+    border: $color_line solid 1px;
+    border-radius: $radius-size_big;
+    background-color: $color_white;
+    box-shadow: $box-shadow_navbar-menu;
+    opacity: 0;
+    transition: transform 300ms, opacity 300ms;
+    transform: translateY(-100%);
+
+    @include pad-under-width() {
+      padding: 15px 20px;
+    }
+
+    .navbar__container:hover &,
+    .navbar__container:active & {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  &__menu-links {
+    display: flex;
+    flex: 1;
+    font-size: 0.95rem;
+
+    @include pad-under-width() {
+      flex-direction: column;
+      max-height: calc(100vh - 140px);
+    }
+
+    > * {
+      width: 100%;
+
+      @extend %flex-column;
+      @include layoutSpaceLeft($margin_small);
+      @include pad-under-width() {
+        margin-left: 0;
+      }
+    }
+
+    li {
+      margin: 5px 0;
+    }
+  }
+
+  &__more-link {
+    flex-wrap: wrap;
+
+    @extend %flex-row-center;
+
+    & > a,
+    & > span {
+      max-width: calc(100% - 1.1em);
+    }
+
+    & > ul {
+      overflow: hidden;
+      margin-left: 0.5em;
+      max-height: 0;
+      width: 100%;
+      transition: max-height 500ms ease-in-out 100ms;
+    }
+
+    &:hover {
+      > ul {
+        max-height: 360px;
+      }
+
+      > .navbar__more-icon::after {
+        transform: none;
+      }
+    }
+  }
+
+  &__external {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $color_white;
+  }
+
+  &__more-icon {
+    position: relative;
+
+    @include square(1em);
+    @extend %flex-center;
+
+    &::before,
+    &::after {
+      position: absolute;
+      width: 60%;
+      height: 1px;
+      background-color: $color_accent;
+      content: '';
+    }
+
+    &::after {
+      transition: transform 300ms;
+      transform: rotate(90deg);
+    }
+  }
+
+  &__external-links {
+    padding: 15px 30px;
+
+    @extend %flex-row-wrap;
+
+    > li {
+      a {
+        display: inline-block;
+        margin-left: 10px;
+        padding: 10px 15px;
+
+        @include hoverActiveBorderBgTransition($color_accent);
+      }
+    }
+  }
+}
+
+// &__burger {
+//   justify-content: space-between;
+//   width: $width_navbar-burger;
+
+//   @extend %flex-row-center;
+// }
+
+// &__links {
+//   display: flex;
+//   align-items: center;
+//   flex: 1;
+//   height: 100%;
+
+//   @include pad-under-width() {
+//     display: none;
+//   }
+
+//   > li {
+//     align-items: center;
+//     width: 100%;
+//     height: 100%;
+
+//     @extend %flex-row;
+//     @include layoutSpaceLeft($margin_small);
+//   }
+// }
+
+// &__menu {
+//   position: absolute;
+//   top: calc($height_navbar + 1px);
+//   left: 0;
+//   z-index: $z-index_back;
+//   max-height: calc(100vh - $height_navbar);
+//   width: 100%;
+//   border-bottom: $color_line solid 1px;
+//   opacity: 0;
+//   transition: transform 300ms, opacity 300ms;
+//   transform: translateY(-100%);
+
+//   .navbar__container:hover &,
+//   .navbar__container:active & {
+//     opacity: 1;
+//     transform: none;
+//   }
+// }
+
+// &__menu-container {
+//   padding: $row-size_col-margin $width_navbar-logo-bar;
+//   padding-right: $width_navbar-burger;
+
+//   @extend %layout-container;
+//   @include pad-under-width() {
+//     overflow: auto;
+//     padding: 15px;
+//   }
+// }
+
+// &__menu-links {
+//   display: flex;
+//   flex: 1;
+//   font-size: 0.85rem;
+
+//   @include pad-under-width() {
+//     flex-direction: column;
+//     max-height: calc(100vh - 140px);
+//   }
+
+//   > * {
+//     width: 100%;
+
+//     @extend %flex-column;
+//     @include layoutSpaceLeft($margin_small);
+//   }
+
+//   li {
+//     margin: 5px 0;
+//   }
+// }
+
+// &__more-link {
+//   flex-wrap: wrap;
+
+//   @extend %flex-row-center;
+
+//   & > a,
+//   & > span {
+//     max-width: calc(100% - 1.1em);
+//   }
+
+//   & > ul {
+//     overflow: hidden;
+//     margin-left: 0.5em;
+//     max-height: 0;
+//     width: 100%;
+//     transition: max-height 500ms ease-in-out 100ms;
+//   }
+
+//   &:hover {
+//     > ul {
+//       max-height: 360px;
+//     }
+
+//     > .navbar__more-icon::after {
+//       transform: none;
+//     }
+//   }
+// }
+
+// &__external {
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+// }
+
+// &__external-links {
+//   padding: $row-size_col-margin 0;
+
+//   @extend %flex-row-wrap;
+//   @extend %layout-container;
+
+//   > li {
+//     a {
+//       display: inline-block;
+//       margin-left: 10px;
+//       padding: 10px 15px;
+
+//       @include hoverActiveBorderBgTransition($color_accent);
+//     }
+//   }
+// }
+
+// &__more-icon {
+//   position: relative;
+
+//   @include square(1em);
+//   @extend %flex-center;
+
+//   &::before,
+//   &::after {
+//     position: absolute;
+//     width: 60%;
+//     height: 1px;
+//     background-color: $color_text-color;
+//     content: '';
+//   }
+
+//   &::after {
+//     transition: transform 300ms;
+//     transform: rotate(90deg);
+//   }
+// }
+
+// &__footer {
+//   border-top: $color_line solid 1px;
+// }
+
+// &__footer-container {
+//   display: flex;
+//   overflow: auto;
+//   padding: $layout-size_small 0;
+//   word-break: keep-all;
+
+//   @extend %layout-container;
+//   @include pad-under-width() {
+//     padding: $layout-size_small 20px;
+//     width: 100%;
+//   }
+//   a {
+//     margin-right: 15px;
+//     font-size: 0.9rem;
+//   }
+// }

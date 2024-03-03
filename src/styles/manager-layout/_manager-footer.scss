@@ -1,0 +1,8 @@
+.manager-footer {
+  width: 100%;
+  background-color: $color_primary-dark;
+  text-align: center;
+
+  @extend %layout-padding_base;
+  @extend %flex-center;
+}

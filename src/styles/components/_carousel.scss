@@ -1,0 +1,139 @@
+.carousel {
+  width: 100%;
+
+  @extend %flex-center;
+
+  &__container {
+    width: 100%;
+  }
+
+  .slick-arrow {
+    z-index: 10;
+    width: 60px;
+    height: 60px;
+    &::before {
+      font-size: 3rem;
+    }
+  }
+  .slick-prev {
+    left: 60px;
+  }
+  .slick-next {
+    right: 60px;
+  }
+
+  &__item-block {
+    position: relative;
+    margin: 20px;
+  }
+
+  img {
+    width: auto;
+    height: 360px;
+  }
+
+  &__item {
+    position: absolute;
+    bottom: 0;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 30px 50px;
+    width: calc(100%);
+    height: 100%;
+    color: $color_white;
+    font-weight: 500;
+    font-size: 1.2rem;
+
+    @include phone-width() {
+      width: 100vw;
+    }
+    @extend %flex-column;
+
+    h3 {
+      margin-bottom: 10px;
+    }
+
+    h3,
+    a {
+      color: $color_white;
+    }
+
+    &--footer {
+      bottom: 0;
+      justify-content: flex-end;
+      height: auto;
+      background-color: rgba(255, 255, 255, 0.5);
+      color: $color_accent;
+      transition: background-color 400ms;
+
+      h3 {
+        font-size: 1.35rem;
+      }
+
+      h3,
+      a {
+        color: $color_accent;
+      }
+
+      li:hover & {
+        background-color: rgba(255, 255, 255, 0.95);
+      }
+    }
+  }
+
+  &__color-block {
+    width: 400px;
+    height: 360px;
+  }
+
+  &__item-footer {
+    @extend %flex-row-between;
+  }
+
+  // &__dots {
+  //   position: absolute;
+  //   bottom: -30px;
+  //   display: flex;
+
+  //   > li {
+  //     background-color: $color_accent;
+  //     opacity: 0.4;
+  //     cursor: pointer;
+  //     transition: opacity 300ms;
+
+  //     @include layoutSpaceLeft(5px);
+  //     @include square(10px, 10px);
+
+  //     &.active,
+  //     &:hover {
+  //       opacity: 1;
+  //     }
+  //   }
+  // }
+
+  // &__controls {
+  //   position: absolute;
+  //   z-index: $z-index_base;
+  //   width: calc(100% - 100px);
+  //   pointer-events: none;
+
+  //   @extend %flex-row-between;
+
+  //   > span {
+  //     width: 40px;
+  //     height: 80px;
+  //     background-color: $color_accent;
+  //     color: $color_white;
+  //     opacity: 0.6;
+  //     cursor: pointer;
+  //     transition: opacity 300ms;
+  //     pointer-events: all;
+
+  //     @extend %flex-center;
+
+  //     &:hover {
+  //       opacity: 1;
+  //     }
+  //   }
+  // }
+}

@@ -1,0 +1,36 @@
+.status-list {
+  overflow: hidden;
+  border: $color_line solid 1px;
+  border-radius: $border-radius_layout;
+
+  @extend %flex-column;
+
+  > li {
+    display: inline-flex;
+    border-top: $color_line solid 1px;
+
+    > * {
+      align-items: center;
+      flex: 0 0 160px;
+      padding: $row-size_col-margin;
+      border-right: $color_line solid 1px;
+
+      @extend %flex-row-between;
+
+      &.status-list__auto-width {
+        flex: 1;
+      }
+    }
+  }
+
+  &__header {
+    background-color: $color_primary;
+    color: darken($color: $color_primary, $amount: 40);
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  &__empty {
+    color: lighten($color_text-color, 30);
+  }
+}

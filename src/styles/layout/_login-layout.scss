@@ -1,0 +1,99 @@
+.login-layout {
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  min-height: 100vh;
+  background-position: right center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('../../../public/images/demo-img.png');
+
+  @include phone-width() {
+    background-position: center;
+  }
+
+  &::before {
+    background-image: linear-gradient(to right bottom, $color-gradient);
+    opacity: 0.3;
+
+    @extend %full-pseudo-element;
+  }
+
+  &__container {
+    align-items: flex-end;
+    flex-wrap: wrap;
+    width: 100%;
+
+    @extend %flex-row-between;
+  }
+
+  &__aside {
+    position: relative;
+    justify-content: center;
+    box-sizing: border-box;
+    padding-bottom: $padding_big;
+    width: $width_login-aside;
+    height: 100%;
+    background-color: $color_white;
+
+    @extend %flex-column-center;
+    @extend %layout-padding_base;
+    @include phone-width() {
+      width: 100%;
+      height: 100%;
+    }
+
+    p {
+      margin-top: 10px;
+      width: 100%;
+    }
+  }
+
+  &__logo {
+    margin-bottom: $padding_big;
+    width: $width_login-aside/2;
+  }
+
+  &__title {
+    margin-bottom: $margin_base;
+  }
+
+  &__copyright {
+    width: 80%;
+    text-align: center;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+  }
+
+  &__links {
+    position: relative;
+    flex-wrap: wrap;
+
+    @extend %flex-row-center;
+
+    > li {
+      margin-top: $margin_big;
+      margin-left: $margin_small;
+    }
+
+    a {
+      color: $color_white;
+      text-decoration: none;
+      font-size: 1.1rem;
+
+      @extend %inline-flex-center;
+    }
+  }
+
+  &__info {
+    position: relative;
+    color: $color_white;
+  }
+
+  &__actions {
+    > a,
+    > button {
+      @include layoutSpaceBottom();
+    }
+  }
+}

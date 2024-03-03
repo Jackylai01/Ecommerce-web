@@ -1,0 +1,42 @@
+$row-size_col-margin-small: 10px;
+$row-size_col-min: 240px;
+
+.row {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+
+  &__col {
+    flex: 1 $row-size_col-min;
+    box-sizing: border-box;
+    &--between {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  &__clear-row {
+    position: absolute;
+    top: 8px;
+    right: 5px;
+    color: $color_like;
+    cursor: pointer;
+  }
+
+  @for $itemNumber from 1 through 12 {
+    &__col--#{$itemNumber} {
+      margin-right: $row-size_col-margin-small;
+      margin-left: $row-size_col-margin-small;
+      flex: 0
+        0
+        calc(#{100% * ($itemNumber/12)} - #{$row-size_col-margin-small * 2});
+
+      width: calc(
+        #{100% * ($itemNumber/12)} - #{$row-size_col-margin-small * 2}
+      );
+      @include phone-width() {
+        flex: 1 $row-size_col-min;
+      }
+    }
+  }
+}

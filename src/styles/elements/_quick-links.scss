@@ -1,0 +1,48 @@
+.quick-links {
+  justify-content: space-between;
+  text-align: center;
+
+  @extend %flex-row-wrap;
+
+  > li {
+    flex-basis: 140px;
+
+    @extend %inline-flex-center;
+
+    a {
+      color: $color_accent;
+      transition: transform 300ms;
+
+      @extend %flex-column-center;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      > span {
+        position: relative;
+        background-color: $color_accent;
+        color: $color_white;
+        font-size: 2.8rem;
+
+        @include square(90px, 90px);
+        @extend %inline-flex-center;
+
+        &::after {
+          position: absolute;
+          bottom: -12px;
+          content: '';
+          transform: rotate(180deg);
+
+          @include triangle($color_accent, 14px, 10px);
+        }
+      }
+
+      > b {
+        margin-top: 20px;
+        font-weight: 500;
+        font-size: 1.1rem;
+      }
+    }
+  }
+}

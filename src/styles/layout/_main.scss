@@ -1,0 +1,81 @@
+.main {
+  flex: 1;
+
+  &__container {
+    position: relative;
+    padding: $padding_big 0;
+
+    @extend %layout-container;
+
+    &--paper {
+      margin-top: -10px;
+      margin-bottom: 40px;
+      padding: $padding_base;
+      background-color: $color_white;
+      box-shadow: $box-shadow_element;
+
+      @include phone-width() {
+        padding: 30px $padding_small;
+      }
+    }
+
+    // 設置有 aside 的 container
+    &--aside-layout {
+      @extend %flex-row-wrap;
+
+      .tab-list,
+      .article-block {
+        flex: 1;
+        margin-right: 20px;
+        @include phone-width {
+          margin-right: 0;
+        }
+      }
+    }
+
+    // 設置 container 為滿版區塊
+    &--full {
+      @extend %layout-container-padding;
+    }
+
+    // 設置 container 背景色為主色
+    &--primary {
+      background-color: $color_primary;
+    }
+  }
+
+  &__aside {
+    flex: 0 0 17.5rem;
+    border-left: $color_line solid 1px;
+  }
+
+  // 展示文字與圖片用
+  &__info-show {
+    text-align: center;
+
+    h1 {
+      color: $color_accent;
+      letter-spacing: 20px;
+      font-size: 4rem;
+    }
+
+    img {
+      max-width: 40rem;
+      width: 100%;
+    }
+  }
+
+  &--page-loading {
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    background-color: $color_white;
+
+    @extend %flex-center;
+  }
+
+  &--white-bg {
+    background-color: $color_white;
+  }
+}

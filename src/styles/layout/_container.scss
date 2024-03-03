@@ -1,0 +1,84 @@
+.container {
+  border: $color_line solid 1px;
+  border-radius: $radius-size_base;
+
+  @extend %layout-container;
+
+  &--full {
+    width: 100%;
+  }
+
+  &__header {
+    position: sticky;
+    top: 0;
+    z-index: $z-index_front;
+    width: 100%;
+    border-bottom: $color_line solid 1px;
+    background-color: $color_primary-dark;
+
+    @extend %flex-row-between;
+
+    &--children {
+      width: calc(100% + 60px);
+      margin-left: -30px;
+    }
+  }
+
+  &__title {
+    padding: $element-padding_base;
+    background-color: $color_black;
+    color: $color_white;
+    font-size: 1.25rem;
+  }
+
+  &__subtitle {
+    font-weight: normal;
+    font-size: 1rem;
+  }
+
+  &__actions {
+    display: inline-flex;
+  }
+
+  &__action {
+    padding: 0 $padding_base;
+    border: none;
+    color: $color_white;
+    background-color: $color_black;
+    text-decoration: none;
+    cursor: pointer;
+
+    @extend %inline-flex-center;
+    @include phone-width() {
+      padding: $padding_small;
+    }
+
+    &--auxiliary {
+      @include hoverBackgroundTransition($color_auxiliary-light);
+    }
+
+    &--notice {
+      @include hoverBackgroundTransition($color_notice);
+    }
+
+    &--security {
+      @include hoverBackgroundTransition($color_security);
+      color: $color_white;
+    }
+
+    &--like {
+      @include hoverBackgroundTransition($color_like);
+    }
+
+    &--hidden {
+      overflow: hidden;
+      padding: 0;
+      width: 0px;
+      height: 0px;
+    }
+  }
+
+  &__context {
+    margin: $margin_base;
+  }
+}

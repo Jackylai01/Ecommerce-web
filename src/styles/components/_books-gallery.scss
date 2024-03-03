@@ -1,0 +1,140 @@
+.books-gallery {
+  display: flex;
+
+  &__aside {
+    position: absolute;
+    top: 0;
+    width: 350px;
+    height: 100%;
+    background-color: $color_accent-light;
+
+    @include phone-width {
+      width: 100%;
+    }
+
+    > span {
+      position: absolute;
+      top: 60px;
+      z-index: 1000;
+      color: $color_white;
+      font-size: 3rem;
+      cursor: pointer;
+
+      @include phone-width {
+        top: 50px;
+      }
+
+      &:nth-child(1) {
+        right: 120px;
+
+        @include phone-width {
+          top: 50px;
+          right: 60px;
+        }
+      }
+      &:nth-child(2) {
+        right: 0;
+
+        @include phone-width {
+          top: 50px;
+        }
+      }
+    }
+  }
+
+  &__main {
+    position: relative;
+    z-index: $z-index_base;
+    padding-left: 350px;
+    width: 100%;
+
+    @include phone-width {
+      padding-left: 0;
+    }
+  }
+
+  &__header {
+    margin-bottom: 30px;
+    padding: 0 7%;
+
+    @extend %flex-row-between;
+    @include phone-width {
+      flex-direction: column;
+      h2 {
+        margin-bottom: 20px;
+        color: $color_white;
+      }
+      .btn {
+        border-color: $color_white;
+        color: $color_white;
+      }
+    }
+  }
+
+  &__container {
+    position: relative;
+    left: -175px;
+    overflow: hidden;
+    width: calc(100% + 175px);
+
+    @include phone-width {
+      left: 5%;
+      width: 90%;
+    }
+  }
+
+  &__books {
+    display: flex;
+    transition: transform 300ms;
+
+    img {
+      height: 280px;
+
+      @include phone-width {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    > li {
+      margin-right: 20px;
+      padding: 30px;
+      background-color: $color_white;
+
+      @extend %flex-row;
+      @include phone-width {
+        flex-direction: column;
+      }
+    }
+  }
+
+  &__book {
+    margin-right: 20px;
+  }
+
+  &__info {
+    min-width: 240px;
+
+    @extend %flex-column;
+
+    > * {
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      font-size: 1.2rem;
+
+      -webkit-line-clamp: 1;
+    }
+    h4 {
+      font-size: 1rem;
+    }
+
+    .btn {
+      margin-top: auto;
+    }
+  }
+}
