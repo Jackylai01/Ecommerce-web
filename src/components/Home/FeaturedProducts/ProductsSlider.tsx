@@ -1,12 +1,12 @@
 'use client';
-import { SwiperOptions } from 'swiper/types/swiper-options';
+import { Box } from '@chakra-ui/react';
+import { SwiperNavButtons } from '@components/SwiperNavButtons';
+import { IProduct } from '@models/requests/products';
+import { CSSProperties } from 'react';
 import { A11y, Autoplay, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Box } from '@chakra-ui/react';
-import { CSSProperties } from 'react';
+import { SwiperOptions } from 'swiper/types/swiper-options';
 import { ProductCard } from '../../../components/ProductCard';
-import { SwiperNavButtons } from '@src/components/SwiperNavButtons';
-import { IProduct } from '@src/model';
 
 const slideStyles: CSSProperties = {
   boxSizing: 'border-box',
@@ -29,14 +29,13 @@ export const ProductsSlider = ({ products }: ProductsSlider) => {
   };
 
   return (
-    <Box w="100%" h="100%">
+    <Box w='100%' h='100%'>
       <Swiper {...sliderSettings} style={{ width: '100%', height: '100%' }}>
         {products.map((product) => (
           <SwiperSlide key={product.id} style={slideStyles}>
             <ProductCard product={product} />
           </SwiperSlide>
         ))}
-
         <SwiperNavButtons />
       </Swiper>
     </Box>
