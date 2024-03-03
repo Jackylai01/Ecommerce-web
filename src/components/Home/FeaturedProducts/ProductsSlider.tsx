@@ -11,6 +11,8 @@ import { ProductCard } from '../../../components/ProductCard';
 const slideStyles: CSSProperties = {
   boxSizing: 'border-box',
   maxWidth: '350px',
+  display: 'flex',
+  flexDirection: 'column',
 };
 
 interface ProductsSlider {
