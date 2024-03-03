@@ -12,29 +12,32 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { AppContext } from '@src/context/AppContext';
-import { calculateItemsTotal } from '@src/helpers';
+
+import useAppSelector from '@hooks/useAppSelector';
+import { addItem, resetItems } from '@reducers/client/cart';
+
+import { calculateItemsTotal } from '@helpers/products';
 import Link from 'next/link';
-import { useContext, useRef } from 'react';
+import { useRef } from 'react';
 import { BsCart4 } from 'react-icons/bs';
+import { useDispatch } from 'react-redux';
 import { CartItem } from './CartItem';
 
 export const Cart = () => {
-  const {
-    state: { cart },
-    resetItems,
-    addItem,
-  } = useContext(AppContext);
+  const { cart } = useAppSelector((state) => state.clientCart);
+  const dispatch = useDispatch();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<any>();
 
   const handleCheckout = () => {
-    resetItems('checkout');
     cart.forEach((cartItem) => {
-      addItem('checkout', cartItem, cartItem.count);
+      dispatch(
+        addItem({ key: 'checkout', product: cartItem, count: cartItem.count }),
+      );
     });
-
+    // 重置购物车
+    dispatch(resetItems('cart'));
     onClose();
   };
 
@@ -43,26 +46,26 @@ export const Cart = () => {
       <Button
         ref={btnRef}
         onClick={onOpen}
-        variant="ghost"
-        color="brand.primary"
+        variant='ghost'
+        color='brand.primary'
         _hover={{
           bgColor: 'transparent',
         }}
-        pos="relative"
+        pos='relative'
       >
-        <BsCart4 /> <Text mx="1">Cart</Text>
+        <BsCart4 /> <Text mx='1'>Cart</Text>
         {cart.length !== 0 && (
           <Flex
-            pos="absolute"
-            top="0px"
-            right="5px"
-            bgColor="brand.primaryLight"
-            boxSize="15px"
-            rounded="full"
-            color="white"
-            fontSize="0.6rem"
-            align="center"
-            justify="center"
+            pos='absolute'
+            top='0px'
+            right='5px'
+            bgColor='brand.primaryLight'
+            boxSize='15px'
+            rounded='full'
+            color='white'
+            fontSize='0.6rem'
+            align='center'
+            justify='center'
           >
             {cart.length}
           </Flex>
@@ -70,16 +73,16 @@ export const Cart = () => {
       </Button>
       <Drawer
         isOpen={isOpen}
-        placement="right"
+        placement='right'
         onClose={onClose}
         finalFocusRef={btnRef}
-        size="lg"
+        size='lg'
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader color="brand.primary">
-            Cart ( {cart.length} Items )
+          <DrawerHeader color='brand.primary'>
+            Cart ({cart.length} Items)
           </DrawerHeader>
           <DrawerBody>
             {cart.length === 0 ? (
@@ -89,32 +92,29 @@ export const Cart = () => {
             )}
           </DrawerBody>
           {cart.length !== 0 && (
-            <DrawerFooter justifyContent="space-between">
+            <DrawerFooter justifyContent='space-between'>
               <Box>
                 <Button
-                  variant="outline"
+                  variant='outline'
                   mr={3}
-                  onClick={() => resetItems('cart')}
+                  onClick={() => dispatch(resetItems('cart'))}
                 >
                   Clear Cart
                 </Button>
-                <Link href="/checkout">
+                <Link href='/checkout' passHref>
                   <Button
-                    bgColor="brand.primary"
-                    color="white"
-                    _hover={{
-                      bgColor: 'brand.primaryLight',
-                    }}
-                    _active={{
-                      bgColor: 'brand.primaryLight',
-                    }}
+                    as='a'
+                    bgColor='brand.primary'
+                    color='white'
+                    _hover={{ bgColor: 'brand.primaryLight' }}
+                    _active={{ bgColor: 'brand.primaryLight' }}
                     onClick={handleCheckout}
                   >
                     Checkout
                   </Button>
                 </Link>
               </Box>
-              <Box fontWeight="bold">Total: $ {calculateItemsTotal(cart)}</Box>
+              <Box fontWeight='bold'>Total: $ {calculateItemsTotal(cart)}</Box>
             </DrawerFooter>
           )}
         </DrawerContent>

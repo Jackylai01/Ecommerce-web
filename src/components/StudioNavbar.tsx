@@ -1,15 +1,13 @@
-import { Flex } from '@chakra-ui/react';
-import { colors } from '@src/theme';
+import theme from '@fixtures/theme';
 import Link from 'next/link';
-import React, { CSSProperties } from 'react';
-import { NavbarProps } from 'sanity';
+import { CSSProperties } from 'react';
 
 const linkStyle: CSSProperties = {
   textDecoration: 'none',
-  color: colors.brand.primary,
+  color: theme.brand.primary,
 };
 
-export const StudioNavbar = (props: NavbarProps) => {
+export const StudioNavbar = () => {
   return (
     <div>
       <div
@@ -19,14 +17,13 @@ export const StudioNavbar = (props: NavbarProps) => {
           gap: '2rem',
         }}
       >
-        <Link href="/" style={linkStyle}>
+        <Link href='/' style={linkStyle}>
           Back Home
         </Link>
-        <Link href="/products" style={linkStyle}>
+        <Link href='/products' style={linkStyle}>
           View Products
         </Link>
       </div>
-      <>{props.renderDefault(props)}</>
     </div>
   );
 };

@@ -9,12 +9,12 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  Input,
   useDisclosure,
 } from '@chakra-ui/react';
-import { navItems } from '@src/helpers';
+
+import { navItems } from '@helpers/products';
 import Link from 'next/link';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { VscListFlat } from 'react-icons/vsc';
 import { AppLogo } from '../AppLogo';
 
@@ -29,7 +29,7 @@ export const NavMenu = () => {
       </Button>
       <Drawer
         isOpen={isOpen}
-        placement="left"
+        placement='left'
         onClose={onClose}
         finalFocusRef={btnRef}
       >
@@ -45,7 +45,7 @@ export const NavMenu = () => {
             {navItems.map((navItem) => (
               <Link href={navItem.href} key={navItem.label}>
                 <Box
-                  p="0.5rem"
+                  p='0.5rem'
                   _hover={{ bgColor: 'brand.primaryLight', color: 'white' }}
                 >
                   {navItem.label}
@@ -55,7 +55,7 @@ export const NavMenu = () => {
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
+            <Button variant='outline' mr={3} onClick={onClose}>
               Close
             </Button>
           </DrawerFooter>

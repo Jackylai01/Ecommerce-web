@@ -2,6 +2,7 @@ import adminAuth from './admin/auth';
 import customPage from './admin/custom-page';
 import adminUpload from './admin/upload';
 import clientAuth from './client/auth';
+import clientCart from './client/cart';
 import crudLayout from './crud-layout';
 import fileSelect from './file-select';
 import iconSelect from './icon-select';
@@ -16,6 +17,7 @@ const appReducer = {
   customPage,
   fileSelect,
   clientAuth,
+  clientCart,
 };
 
 export default appReducer;

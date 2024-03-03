@@ -1,7 +1,9 @@
 import { Button } from '@chakra-ui/react';
-import { AppContext } from '@src/context/AppContext';
-import { IProduct } from '@src/model';
-import React, { useContext } from 'react';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+
+import { IProduct } from '@models/requests/products';
+import { addItem, isAdded, removeItem } from '@reducers/client/cart';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 
 interface IAddToWishlistButtonProps {
@@ -9,33 +11,44 @@ interface IAddToWishlistButtonProps {
 }
 
 export const AddToWishlistButton = ({ product }: IAddToWishlistButtonProps) => {
-  const { addItem, removeItem, isAdded } = useContext(AppContext);
+  const dispatch = useAppDispatch();
+  const productIsAdded = useAppSelector((state) =>
+    isAdded(state, 'wishlist', product.id),
+  );
+
+  const handleAddItem = () => {
+    dispatch(addItem({ key: 'wishlist', product, count: 1 }));
+  };
+
+  const handleRemoveItem = () => {
+    dispatch(removeItem({ key: 'wishlist', productId: product.id }));
+  };
 
   return (
     <>
-      {isAdded('wishlist', product.id) ? (
+      {productIsAdded ? (
         <Button
-          pos="absolute"
-          variant="ghost"
-          bgColor="transparent"
-          color="red.400"
+          pos='absolute'
+          variant='ghost'
+          bgColor='transparent'
+          color='red.400'
           _hover={{ bgColor: 'transparent' }}
-          rounded="full"
-          title="Remove from Wishlist"
-          onClick={() => removeItem('wishlist', product.id)}
+          rounded='full'
+          title='Remove from Wishlist'
+          onClick={handleRemoveItem}
         >
           <BsHeartFill />
         </Button>
       ) : (
         <Button
-          pos="absolute"
-          variant="ghost"
-          bgColor="transparent"
-          color="red.400"
+          pos='absolute'
+          variant='ghost'
+          bgColor='transparent'
+          color='red.400'
           _hover={{ bgColor: 'transparent' }}
-          rounded="full"
-          title="Add to Wishlist"
-          onClick={() => addItem('wishlist', product)}
+          rounded='full'
+          title='Add to Wishlist'
+          onClick={handleAddItem}
         >
           <BsHeart />
         </Button>

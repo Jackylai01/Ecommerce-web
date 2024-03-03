@@ -10,27 +10,10 @@ import {
   Text,
   useOutsideClick,
 } from '@chakra-ui/react';
-import { IProduct } from '@src/model';
-import { client } from '@utils/sanity.client';
-import { groq } from 'next-sanity';
+import { IProduct } from '@models/requests/products';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { inputGroup } from './Style';
-
-const query: string = groq`
-    *[_type == "product" && (name match $searchText || description match $searchText) ] {
-      ...,
-      "id": _id,
-      "slug": slug.current,
-        "mainImage": mainImage.asset->url,
-        category->{
-            name,
-            "id": _id,
-            "image": image.asset->url
-        },
-        "gallery": gallery[].asset->url
-    }
-`;
 
 export const Search = () => {
   const ref = useRef<any>();
@@ -47,38 +30,18 @@ export const Search = () => {
     },
   });
 
-  const fetchProducts = async () => {
-    setIsLoading(true);
-    const products: IProduct[] = await client.fetch(query, {
-      searchText: `*${searchText}*`,
-    });
-    setProducts(products);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (searchText.trim().length >= 3) {
-        fetchProducts();
-      }
-    }, 1000);
-
-    return () => clearTimeout(timeout);
-  }, [searchText]);
-
   return (
-    <Box pos="relative" w={{ base: '100%', lg: '32rem' }} ref={ref}>
+    <Box pos='relative' w={{ base: '100%', lg: '32rem' }} ref={ref}>
       <InputGroup {...inputGroup}>
-        <InputLeftElement
-          pointerEvents="none"
-          children={<SearchIcon color="gray.400" />}
-        />
+        <InputLeftElement pointerEvents='none'>
+          <SearchIcon color='gray.400' />
+        </InputLeftElement>
         <Input
-          type="text"
-          placeholder="Search..."
-          focusBorderColor="brand.primaryLight"
-          borderWidth="1px"
-          borderColor="gray.400"
+          type='text'
+          placeholder='Search...'
+          focusBorderColor='brand.primaryLight'
+          borderWidth='1px'
+          borderColor='gray.400'
           value={searchText}
           onClick={() => setIsModalOpen(true)}
           onChange={(e) => setSearchText(e.target.value)}
@@ -87,14 +50,14 @@ export const Search = () => {
 
       {isModalOpen && (
         <Box
-          pos="absolute"
-          bg="white"
-          shadow="md"
-          padding="0.5rem"
-          w="100%"
-          boxSizing="border-box"
-          maxH="500px"
-          overflowY="auto"
+          pos='absolute'
+          bg='white'
+          shadow='md'
+          padding='0.5rem'
+          w='100%'
+          boxSizing='border-box'
+          maxH='500px'
+          overflowY='auto'
         >
           {products.length === 0 ? (
             isLoading ? (
@@ -121,22 +84,22 @@ const SearchedProductList = ({ products }: SearchedProductListProps) => {
       {products.map((product) => (
         <Link key={product.id} href={`/products/${product.slug}`}>
           <Box
-            borderBottomWidth="1px"
-            borderBottomColor="gray.200"
-            p="2"
+            borderBottomWidth='1px'
+            borderBottomColor='gray.200'
+            p='2'
             _hover={{ bgColor: 'gray.100' }}
           >
-            <Flex align="center">
+            <Flex align='center'>
               <Image
                 alt={product.name}
                 src={product.mainImage}
-                boxSize="24px"
-                mr="10px"
+                boxSize='24px'
+                mr='10px'
               />
               <Text>{product.name}</Text>
             </Flex>
-            <Flex justify="flex-end">
-              <Tag size="sm">{product.category.name}</Tag>
+            <Flex justify='flex-end'>
+              <Tag size='sm'>{product.category.name}</Tag>
             </Flex>
           </Box>
         </Link>
