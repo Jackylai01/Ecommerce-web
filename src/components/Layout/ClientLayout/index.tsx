@@ -12,7 +12,6 @@ import { clientDetailUserProfileAsync } from '@reducers/client/auth/actions';
 import { apiClientUsersTokenRefresh } from '@services/client/client-auth/client-users';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import ClientNavbar from './ClientNavbar';
 
 type Props = {
   children?: React.ReactNode;
@@ -87,7 +86,6 @@ const ClientLayout = ({ children }: Props) => {
   return (
     <>
       <Flex direction='column'>
-        <ClientNavbar />
         <Box>{children}</Box>
       </Flex>
     </>
