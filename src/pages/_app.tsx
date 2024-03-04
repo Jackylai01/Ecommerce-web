@@ -10,7 +10,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
-        <title>土地調查系統</title>
+        <title>電子商務系統</title>
       </Head>
       <ChakraProvider theme={theme}>
         <Layout>
