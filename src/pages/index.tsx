@@ -3,7 +3,6 @@ import { Footer } from '@components/Footer';
 import { Banner } from '@components/Home/Banner';
 import { FeaturedProducts } from '@components/Home/FeaturedProducts';
 import { TopCategories } from '@components/Home/TopCategories';
-import { Navbar } from '@components/Navbar/NavBar';
 import { fakeCategories, fakeProducts, fakeProducts1 } from '@helpers/products';
 import type { NextPage } from 'next';
 import 'swiper/css';
@@ -13,7 +12,6 @@ import 'swiper/css/pagination';
 const HomePage: NextPage = () => {
   return (
     <Box>
-      <Navbar />
       <Banner />
       <TopCategories categories={fakeCategories} />
       <FeaturedProducts title='Best Deals For You' products={fakeProducts} />
