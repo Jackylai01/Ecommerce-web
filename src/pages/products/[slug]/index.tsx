@@ -18,11 +18,12 @@ import { AddToCartButton } from '@components/Cart/AddToCartButton';
 import { CustomBreadcrumb } from '@components/CustomBreadcrumb';
 import { Quantity } from '@components/Quantity/Quantity';
 import { Rating } from '@components/Rating';
-import { getSubstring } from '@helpers/products';
+import { fakeProducts, getSubstring } from '@helpers/products';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { IBreadcrumbItem, IProduct } from '@models/requests/products';
 import { addItem, isAdded, resetItems } from '@reducers/client/cart';
+import { useRouter } from 'next/router';
 
 interface ProductDetailsProps {
   product: IProduct;
@@ -38,13 +39,21 @@ const items: IBreadcrumbItem[] = [
   },
 ];
 
-const ProductDetails = ({ product }: ProductDetailsProps) => {
+const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { slug } = router.query;
+
+  const product = fakeProducts.find((product) => product.slug === slug);
 
   const productIsAddedToCart = useAppSelector((state) =>
-    isAdded(state, 'cart', product.id),
+    product ? isAdded(state, 'cart', product.id) : false,
   );
+
+  if (!product) {
+    return <div>產品未找到</div>;
+  }
 
   const handleBuyNow = () => {
     dispatch(resetItems('checkout'));
@@ -55,7 +64,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
     <>
       <CustomBreadcrumb
         items={[
-          ...items, // 确保items定义在某处或移动到组件内
+          ...items,
           {
             name: product.category.name,
             link: `/categories/${product.category.id}`,
