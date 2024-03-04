@@ -42,9 +42,13 @@ export const AllProducts = ({
         mx='auto'
         justify={{ base: 'center', lg: 'space-between' }}
       >
-        {visibleProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {visibleProducts.length > 0 ? (
+          visibleProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))
+        ) : (
+          <div>No products found in this category.</div>
+        )}
       </Flex>
       {itemsPerPage < products.length && (
         <Flex

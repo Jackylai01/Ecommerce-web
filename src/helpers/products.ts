@@ -64,7 +64,7 @@ export const fakeProducts = [
     mainImage: '/images/categories/shoes.png',
     slug: 'product-1',
     category: {
-      id: 'cat1',
+      id: '1',
       name: 'Electronics',
       image: '/images/categories/shoes.png',
       slug: 'Electronics',
@@ -80,7 +80,7 @@ export const fakeProducts = [
     mainImage: '/images/categories/shoes.png',
     slug: 'product-1',
     category: {
-      id: 'cat1',
+      id: '2',
       name: 'Electronics',
       image: '/images/categories/shoes.png',
       slug: 'Electronics',
@@ -96,7 +96,7 @@ export const fakeProducts = [
     mainImage: '/images/categories/shoes.png',
     slug: 'product-1',
     category: {
-      id: 'cat1',
+      id: '3',
       name: 'Category 1',
       image: '/images/categories/shoes.png',
       slug: 'category-1',
@@ -112,7 +112,7 @@ export const fakeProducts = [
     mainImage: '/images/categories/shoes.png',
     slug: 'product-1',
     category: {
-      id: 'cat1',
+      id: '4',
       name: 'Category 1',
       image: '/images/categories/shoes.png',
       slug: 'category-1',
@@ -131,7 +131,7 @@ export const fakeProducts1 = [
     mainImage: '/path/to/image1.jpg',
     slug: 'product-1',
     category: {
-      id: 'cat1',
+      id: '1',
       name: 'Category 1',
       image: '/path/to/category1.jpg',
       slug: 'category-1',
@@ -147,7 +147,7 @@ export const fakeProducts1 = [
     mainImage: '/path/to/image1.jpg',
     slug: 'product-1',
     category: {
-      id: 'cat1',
+      id: '2',
       name: 'Category 1',
       image: '/path/to/category1.jpg',
       slug: 'category-1',
@@ -163,7 +163,7 @@ export const fakeProducts1 = [
     mainImage: '/path/to/image1.jpg',
     slug: 'product-1',
     category: {
-      id: 'cat1',
+      id: '3',
       name: 'Category 1',
       image: '/path/to/category1.jpg',
       slug: 'category-1',
@@ -179,7 +179,7 @@ export const fakeProducts1 = [
     mainImage: '/path/to/image1.jpg',
     slug: 'product-1',
     category: {
-      id: 'cat1',
+      id: '4',
       name: 'Category 1',
       image: '/path/to/category1.jpg',
       slug: 'category-1',
