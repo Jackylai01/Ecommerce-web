@@ -1,4 +1,4 @@
-import { Box, Flex, useMediaQuery } from '@chakra-ui/react';
+import { Box, useMediaQuery } from '@chakra-ui/react';
 import { AsideRouterType, allAdminRouter } from '@fixtures/admin-router';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 import { isAdminLoggedIn, loadAdminToken } from '@helpers/token';
@@ -10,9 +10,6 @@ import { adminRefreshTokenAsync } from '@reducers/admin/auth/actions';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import AdminAside from './AdminAside';
-import AdminHeader from './AdminHeader';
-import MobileNav from './MobileNav';
 
 type Props = {
   children?: React.ReactNode;
@@ -104,34 +101,9 @@ const AdminLayout = ({ children }: Props) => {
       <Head>
         <title>{pageInfo?.label && `${pageInfo?.label} - `}營運管理平台</title>
       </Head>
-      <Box
-        as='main'
-        w='100%'
-        display='flex'
-        justifyContent='flex-start'
-        flexDirection='column'
-        alignItems='flex-end'
-        minHeight='100vh'
-        overflow='hidden'
-        bg='#172034'
-      >
-        <AdminAside pageInfo={pageInfo} />
-        <Flex justifyContent='flex-end' w='100%'>
-          <AdminHeader />
-        </Flex>
-        <Box
-          w={isLargeScreen ? '80%' : '100%'}
-          display='flex'
-          flexDirection='column'
-          color='black'
-          alignItems='flex-start'
-          position='relative'
-          p='2rem'
-        >
-          <Box as='article' w='100%'>
-            {children}
-          </Box>
-          <MobileNav />
+      <Box w='100%' bg='#172034'>
+        <Box as='article' w='100%'>
+          {children}
         </Box>
       </Box>
     </>
