@@ -1,4 +1,4 @@
-import { Box, useMediaQuery } from '@chakra-ui/react';
+import { Box, Flex, useMediaQuery } from '@chakra-ui/react';
 import { AsideRouterType, allAdminRouter } from '@fixtures/admin-router';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 import { isAdminLoggedIn, loadAdminToken } from '@helpers/token';
@@ -10,6 +10,8 @@ import { adminRefreshTokenAsync } from '@reducers/admin/auth/actions';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import routes from 'src/routes';
+import Sidebar from './Sidebar';
 
 type Props = {
   children?: React.ReactNode;
@@ -21,6 +23,7 @@ const AdminLayout = ({ children }: Props) => {
   const [pageInfo, setPageInfo] = useState<AsideRouterType>();
   const [hasTriedRefreshing, setHasTriedRefreshing] = useState(false);
   const [isLargeScreen] = useMediaQuery('(min-width: 1400px)');
+  const [sidebarVariant, setSidebarVariant] = useState('transparent');
 
   const {
     userInfo,
@@ -101,11 +104,18 @@ const AdminLayout = ({ children }: Props) => {
       <Head>
         <title>{pageInfo?.label && `${pageInfo?.label} - `}營運管理平台</title>
       </Head>
-      <Box w='100%' bg='#172034'>
-        <Box as='article' w='100%'>
+      <Flex w='100%' justifyContent='space-between'>
+        <Box w='15%'>
+          <Sidebar
+            routes={routes}
+            logoText={'PURITY UI DASHBOARD'}
+            display='none'
+          />
+        </Box>
+        <Box as='article' w='85%' mr='1rem'>
           {children}
         </Box>
-      </Box>
+      </Flex>
     </>
   );
 };
