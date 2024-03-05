@@ -1,6 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import Layout from '@components/Layout';
-import { Navbar } from '@components/Navbar/NavBar';
 import theme from '@fixtures/theme';
 import wrapper from '@store';
 import '@styles/globals.scss';
@@ -14,7 +13,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <title>電子商務系統</title>
       </Head>
       <ChakraProvider theme={theme}>
-        <Navbar />
         <Layout>
           <Component {...pageProps} />
         </Layout>
