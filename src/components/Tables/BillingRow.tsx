@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
 
-function BillingRow(props) {
+function BillingRow(props: any) {
   const textColor = useColorModeValue('gray.700', 'white');
   const bgColor = useColorModeValue('#F8F9FA', 'gray.800');
   const nameColor = useColorModeValue('gray.500', 'white');

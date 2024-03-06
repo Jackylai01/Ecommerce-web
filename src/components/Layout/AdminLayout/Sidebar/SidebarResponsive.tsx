@@ -30,37 +30,31 @@ const SidebarResponsive = (props: any) => {
   const [state, setState] = useState<StateType>({});
   const mainPanel = React.useRef<HTMLDivElement | any>();
 
-  const createLinks = (routes: any) => {
-    const activeBg = useColorModeValue('white', 'gray.700');
-    const inactiveBg = useColorModeValue('white', 'gray.700');
-    const activeColor = useColorModeValue('gray.700', 'white');
-    const inactiveColor = useColorModeValue('gray.400', 'gray.400');
+  // 在这里调用 useColorModeValue
+  const activeBg = useColorModeValue('white', 'gray.700');
+  const inactiveBg = useColorModeValue('white', 'gray.700');
+  const activeColor = useColorModeValue('gray.700', 'white');
+  const inactiveColor = useColorModeValue('gray.400', 'gray.400');
+  let hamburgerColor = useColorModeValue('gray.500', 'gray.200');
 
+  const createLinks = (routes: any) => {
     return routes.map((prop: any, key: number) => {
       if (prop.redirect) {
         return null;
       }
       if (prop.category) {
-        var st = {} as any;
-        st[prop['state']] = !state[prop.state];
+        // 处理 category 逻辑，可能需要进一步调整以适应你的数据结构
         return (
           <div key={prop.name}>
             <Text
               color={activeColor}
               fontWeight='bold'
-              mb={{
-                xl: '12px',
-              }}
+              mb={{ xl: '12px' }}
               mx='auto'
-              ps={{
-                sm: '10px',
-                xl: '16px',
-              }}
+              ps={{ sm: '10px', xl: '16px' }}
               py='12px'
             >
-              {document.documentElement.dir === 'rtl'
-                ? prop.rtlName
-                : prop.name}
+              {prop.name}
             </Text>
             {createLinks(prop.views)}
           </div>
@@ -78,16 +72,9 @@ const SidebarResponsive = (props: any) => {
                   ? activeBg
                   : 'transparent'
               }
-              mb={{
-                xl: '12px',
-              }}
-              mx={{
-                xl: 'auto',
-              }}
-              ps={{
-                sm: '10px',
-                xl: '16px',
-              }}
+              mb={{ xl: '12px' }}
+              mx={{ xl: 'auto' }}
+              ps={{ sm: '10px', xl: '16px' }}
               py='12px'
               borderRadius='15px'
               _hover={{ bg: activeBg }}
@@ -97,9 +84,7 @@ const SidebarResponsive = (props: any) => {
                 transform: 'none',
                 borderColor: 'transparent',
               }}
-              _focus={{
-                boxShadow: 'none',
-              }}
+              _focus={{ boxShadow: 'none' }}
             >
               <Flex>
                 <IconBox
@@ -135,10 +120,8 @@ const SidebarResponsive = (props: any) => {
   };
 
   const { logoText, routes, ...rest } = props;
-
   var links = <>{createLinks(routes)}</>;
 
-  let hamburgerColor = useColorModeValue('gray.500', 'gray.200');
   if (props.secondary === true) {
     hamburgerColor = 'white';
   }

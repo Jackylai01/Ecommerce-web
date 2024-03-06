@@ -72,9 +72,10 @@ const Transactions = ({
           >
             NEWEST
           </Text>
-          {newestTransactions.map((row) => {
+          {newestTransactions.map((row, index) => {
             return (
               <TransactionRow
+                key={index}
                 name={row.name}
                 logo={row.logo}
                 date={row.date}
@@ -90,9 +91,10 @@ const Transactions = ({
           >
             OLDER
           </Text>
-          {olderTransactions.map((row) => {
+          {olderTransactions.map((row, index) => {
             return (
               <TransactionRow
+                key={index}
                 name={row.name}
                 logo={row.logo}
                 date={row.date}

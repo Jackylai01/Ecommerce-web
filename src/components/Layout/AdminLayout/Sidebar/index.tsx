@@ -8,14 +8,10 @@ const Sidebar = (props: any) => {
 
   const { logoText, routes, sidebarVariant } = props;
 
-  let sidebarBg = 'none';
-  let sidebarRadius = '0px';
-  let sidebarMargins = '0px';
-  if (sidebarVariant === 'opaque') {
-    sidebarBg = useColorModeValue('white', 'gray.700');
-    sidebarRadius = '16px';
-    sidebarMargins = '16px 0px 16px 16px';
-  }
+  const sidebarBg = useColorModeValue('white', 'gray.700');
+  const sidebarRadius = sidebarVariant === 'opaque' ? '16px' : '0px';
+  const sidebarMargins =
+    sidebarVariant === 'opaque' ? '16px 0px 16px 16px' : '0px';
 
   return (
     <Box ref={mainPanel}>

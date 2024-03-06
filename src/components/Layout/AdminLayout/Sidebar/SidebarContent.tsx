@@ -22,121 +22,152 @@ interface SideBarContentType {
   display?: string;
   sidebarVariant?: any;
 }
-interface StateType {
-  [key: string]: boolean;
-}
 
 const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
   const router = useRouter();
-  const [state, setState] = useState<StateType>({});
+  const [state, setState] = useState<Record<string, boolean>>({});
+
+  const activeBg = useColorModeValue('white', 'gray.700');
+  const inactiveBg = useColorModeValue('white', 'gray.700');
+  const activeColor = useColorModeValue('gray.700', 'white');
+  const inactiveColor = useColorModeValue('gray.400', 'gray.400');
 
   const activeRoute = (routeName: any) => {
     return router.pathname === routeName ? 'active' : '';
   };
 
-  const createLinks = (routes: any) => {
-    const activeBg = useColorModeValue('white', 'gray.700');
-    const inactiveBg = useColorModeValue('white', 'gray.700');
-    const activeColor = useColorModeValue('gray.700', 'white');
-    const inactiveColor = useColorModeValue('gray.400', 'gray.400');
-
-    return routes.map((prop: any, key: number) => {
-      if (prop.redirect) {
-        return null;
-      }
-      if (prop.category) {
-        let st = {} as any;
-        st[prop['state']] = !state[prop.state];
-        return (
-          <div key={prop.name}>
-            <Text
-              color={activeColor}
-              fontWeight='bold'
-              mb={{
-                xl: '12px',
-              }}
-              mx='auto'
-              ps={{
-                sm: '10px',
-                xl: '16px',
-              }}
-              py='12px'
-            >
-              {prop.name}
-            </Text>
-            {createLinks(prop.views)}
-          </div>
-        );
-      }
+  const links = routes.map((prop: any, key: number) => {
+    if (prop.redirect) return null;
+    if (prop.category) {
       return (
-        <Link href={prop.layout + prop.path} passHref key={key}>
-          <ChakraLink w='100%'>
-            <Button
-              boxSize='initial'
-              justifyContent='flex-start'
-              alignItems='center'
-              bg={
-                activeRoute(prop.layout + prop.path) === 'active'
-                  ? activeBg
-                  : 'transparent'
-              }
-              mb={{
-                xl: '12px',
-              }}
-              mx={{
-                xl: 'auto',
-              }}
-              ps={{
-                sm: '10px',
-                xl: '16px',
-              }}
-              py='12px'
-              borderRadius='15px'
-              _hover={{ bg: activeBg }}
-              w='100%'
-              _active={{
-                bg: 'inherit',
-                transform: 'none',
-                borderColor: 'transparent',
-              }}
-              _focus={{
-                boxShadow: 'none',
-              }}
-            >
-              <Flex>
-                <IconBox
+        <div key={prop.name}>
+          <Text
+            color={activeColor}
+            fontWeight='bold'
+            mb={{ xl: '12px' }}
+            mx='auto'
+            ps={{ sm: '10px', xl: '16px' }}
+            py='12px'
+          >
+            {prop.name}
+          </Text>
+          {prop.views.map((viewProp: any, viewKey: number) => (
+            <Link href={viewProp.layout + viewProp.path} passHref key={viewKey}>
+              <ChakraLink w='100%'>
+                <Button
+                  boxSize='initial'
+                  justifyContent='flex-start'
+                  alignItems='center'
                   bg={
-                    activeRoute(prop.layout + prop.path) === 'active'
-                      ? 'teal.300'
-                      : inactiveBg
+                    activeRoute(viewProp.layout + viewProp.path) === 'active'
+                      ? activeBg
+                      : 'transparent'
                   }
-                  color='white'
-                  h='30px'
-                  w='30px'
-                  me='12px'
+                  mb={{ xl: '12px' }}
+                  mx={{ xl: 'auto' }}
+                  ps={{ sm: '10px', xl: '16px' }}
+                  py='12px'
+                  borderRadius='15px'
+                  _hover={{ bg: activeBg }}
+                  _active={{
+                    bg: 'inherit',
+                    transform: 'none',
+                    borderColor: 'transparent',
+                  }}
+                  _focus={{ boxShadow: 'none' }}
                 >
-                  <Icon as={prop.icon} />
-                </IconBox>
-                <Text
-                  color={
-                    activeRoute(prop.layout + prop.path) === 'active'
-                      ? activeColor
-                      : inactiveColor
-                  }
-                  my='auto'
-                  fontSize='sm'
-                >
-                  {prop.name}
-                </Text>
-              </Flex>
-            </Button>
-          </ChakraLink>
-        </Link>
+                  <Flex>
+                    <IconBox
+                      bg={
+                        activeRoute(viewProp.layout + viewProp.path) ===
+                        'active'
+                          ? 'teal.300'
+                          : inactiveBg
+                      }
+                      color='white'
+                      h='30px'
+                      w='30px'
+                      me='12px'
+                    >
+                      <Icon as={viewProp.icon} />
+                    </IconBox>
+                    <Text
+                      color={
+                        activeRoute(viewProp.layout + viewProp.path) ===
+                        'active'
+                          ? activeColor
+                          : inactiveColor
+                      }
+                      my='auto'
+                      fontSize='sm'
+                    >
+                      {viewProp.name}
+                    </Text>
+                  </Flex>
+                </Button>
+              </ChakraLink>
+            </Link>
+          ))}
+        </div>
       );
-    });
-  };
+    }
 
-  const links = <>{createLinks(routes)}</>;
+    return (
+      <Link href={prop.layout + prop.path} passHref key={key}>
+        <ChakraLink w='100%'>
+          <Button
+            boxSize='initial'
+            justifyContent='flex-start'
+            alignItems='center'
+            bg={
+              activeRoute(prop.layout + prop.path) === 'active'
+                ? activeBg
+                : 'transparent'
+            }
+            mb={{ xl: '12px' }}
+            mx={{ xl: 'auto' }}
+            ps={{ sm: '10px', xl: '16px' }}
+            py='12px'
+            borderRadius='15px'
+            _hover={{ bg: activeBg }}
+            _active={{
+              bg: 'inherit',
+              transform: 'none',
+              borderColor: 'transparent',
+            }}
+            _focus={{ boxShadow: 'none' }}
+          >
+            <Flex>
+              <IconBox
+                bg={
+                  activeRoute(prop.layout + prop.path) === 'active'
+                    ? 'teal.300'
+                    : inactiveBg
+                }
+                color='white'
+                h='30px'
+                w='30px'
+                me='12px'
+              >
+                <Icon as={prop.icon} />
+              </IconBox>
+              <Text
+                color={
+                  activeRoute(prop.layout + prop.path) === 'active'
+                    ? activeColor
+                    : inactiveColor
+                }
+                my='auto'
+                fontSize='sm'
+              >
+                {prop.name}
+              </Text>
+            </Flex>
+          </Button>
+        </ChakraLink>
+      </Link>
+    );
+  });
 
   return (
     <>
