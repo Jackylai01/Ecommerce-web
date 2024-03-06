@@ -1,6 +1,7 @@
-import { HomeIcon } from '@components/Icons/Icons';
-
+import { CreditIcon, HomeIcon, StatsIcon } from '@components/Icons/Icons';
+import Billing from '@components/Layout/AdminLayout/Billing';
 import Dashboard from '@components/Layout/AdminLayout/Dashboard';
+import Tables from '@components/Layout/AdminLayout/Tables';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 
 var dashRoutes = [
@@ -12,30 +13,23 @@ var dashRoutes = [
     component: Dashboard,
     layout: `/${ADMIN_ROUTE}`,
   },
-  // // {
-  // //   path: '/tables',
-  // //   name: 'Tables',
-  // //   rtlName: 'لوحة القيادة',
-  // //   icon: <StatsIcon color='inherit' />,
-  // //   component: Tables,
-  // //   layout: '/admin',
-  // // },
-  // // {
-  // //   path: '/billing',
-  // //   name: 'Billing',
-  // //   rtlName: 'لوحة القيادة',
-  // //   icon: <CreditIcon color='inherit' />,
-  // //   component: Billing,
-  // //   layout: '/admin',
-  // // },
-  // // {
-  // //   path: '/rtl-support-page',
-  // //   name: 'RTL',
-  // //   rtlName: 'آرتيإل',
-  // //   icon: <SupportIcon color='inherit' />,
-  // //   component: RTLPage,
-  // //   layout: '/rtl',
-  // // },
+  {
+    path: '/tables',
+    name: 'Tables',
+    rtlName: 'لوحة القيادة',
+    icon: StatsIcon,
+    component: Tables,
+    layout: `/${ADMIN_ROUTE}`,
+  },
+  {
+    path: '/billing',
+    name: 'Billing',
+    rtlName: 'لوحة القيادة',
+    icon: CreditIcon,
+    component: Billing,
+    layout: `/${ADMIN_ROUTE}`,
+  },
+
   // {
   //   name: 'ACCOUNT PAGES',
   //   category: 'account',
