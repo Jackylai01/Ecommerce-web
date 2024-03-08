@@ -1,4 +1,4 @@
-import { Box, Flex, useMediaQuery } from '@chakra-ui/react';
+import { Box, Flex, Portal, useMediaQuery } from '@chakra-ui/react';
 import { AsideRouterType, allAdminRouter } from '@fixtures/admin-router';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 import { isAdminLoggedIn, loadAdminToken } from '@helpers/token';
@@ -11,6 +11,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import routes from 'src/routes';
+import MainPanel from '../MainPanel';
 import AdminNavbar from './AdminNavbar/AdminNavbar';
 import Sidebar from './Sidebar';
 
@@ -106,17 +107,26 @@ const AdminLayout = ({ children }: Props) => {
         <title>{pageInfo?.label && `${pageInfo?.label} - `}營運管理平台</title>
       </Head>
       <Flex w='100%' justifyContent='space-between'>
-        <Box w='15%'>
+        <Box>
           <Sidebar
             routes={routes}
             logoText={'PURITY UI DASHBOARD'}
             display='none'
           />
         </Box>
-        <Box as='article' w='85%' mr='1rem' mt='4rem'>
-          <AdminNavbar />
-          {children}
-        </Box>
+        <MainPanel
+          w={{
+            base: '100%',
+            xl: 'calc(100% - 275px)',
+          }}
+        >
+          <Box as='article'>
+            <Portal>
+              <AdminNavbar />
+            </Portal>
+            {children}
+          </Box>
+        </MainPanel>
       </Flex>
     </>
   );
