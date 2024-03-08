@@ -24,10 +24,12 @@ const CreditCard = ({
       backgroundImage={backgroundImage}
       backgroundRepeat='no-repeat'
       background='cover'
+      borderRed
       bgPosition='10%'
       p='16px'
       h={{ sm: '220px', xl: '100%' }}
       gridArea={{ md: '1 / 1 / 2 / 3', xl: '1 / 1 / 2 / 3' }}
+      borderRadius='20px'
     >
       <CardBody h='100%' w='100%'>
         <Flex

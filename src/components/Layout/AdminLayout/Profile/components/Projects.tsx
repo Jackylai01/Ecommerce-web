@@ -9,9 +9,6 @@ import {
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import CardHeader from '@components/Card/CardHeader';
-import imageArchitect1 from '@public/assets/img/ImageArchitect1.png';
-import imageArchitect2 from '@public/assets/img/ImageArchitect2.png';
-import imageArchitect3 from '@public/assets/img/ImageArchitect3.png';
 import avatar2 from '@public/assets/img/avatars/avatar2.png';
 import avatar4 from '@public/assets/img/avatars/avatar4.png';
 import avatar6 from '@public/assets/img/avatars/avatar6.png';
@@ -45,7 +42,7 @@ const Projects = ({ title, description }: ProductType) => {
           gap='24px'
         >
           <ProjectCard
-            image={imageArchitect1}
+            image='/assets/img/ImageArchitect1.png'
             name={'Project #1'}
             category={'Modern'}
             description={
@@ -54,7 +51,7 @@ const Projects = ({ title, description }: ProductType) => {
             avatars={[avatar2, avatar4, avatar6]}
           />
           <ProjectCard
-            image={imageArchitect2}
+            image='/assets/img/ImageArchitect2.png'
             name={'Project #2'}
             category={'Scandinavian'}
             description={
@@ -63,7 +60,7 @@ const Projects = ({ title, description }: ProductType) => {
             avatars={[avatar4, avatar2, avatar6, avatar4]}
           />
           <ProjectCard
-            image={imageArchitect3}
+            image='/assets/img/ImageArchitect3.png'
             name={'Project #3'}
             category={'Minimalist'}
             description={

@@ -1,8 +1,5 @@
 import { Flex, Grid, useColorModeValue } from '@chakra-ui/react';
 
-import React from 'react';
-import { FaCube, FaPenFancy } from 'react-icons/fa';
-import { IoDocumentsSharp } from 'react-icons/io5';
 import Conversations from './components/Conversations';
 import Header from './components/Header';
 import PlatformSettings from './components/PlatformSettings';
@@ -24,20 +21,6 @@ const Profile = () => {
         avatarImage='https://res.cloudinary.com/dqawkwte9/image/upload/v1709726207/nwjj0vb50pbh6sdkwwrk.png'
         name={'Esthera Jackson'}
         email={'esthera@simmmple.com'}
-        tabs={[
-          {
-            name: 'OVERVIEW',
-            icon: <FaCube size='100%' />,
-          },
-          {
-            name: 'TEAMS',
-            icon: <IoDocumentsSharp size='100%' />,
-          },
-          {
-            name: 'PROJECTS',
-            icon: <FaPenFancy size='100%' />,
-          },
-        ]}
       />
       <Grid templateColumns={{ sm: '1fr', xl: 'repeat(3, 1fr)' }} gap='22px'>
         <PlatformSettings

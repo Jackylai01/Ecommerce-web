@@ -196,7 +196,7 @@ export const rtlTimelineData = [
 
 export const tablesTableData = [
   {
-    logo: avatar1,
+    logo: '/assets/img/avatars/avatar1.png',
     name: 'Esthera Jackson',
     email: 'alexa@simmmple.com',
     subdomain: 'Manager',
@@ -205,7 +205,7 @@ export const tablesTableData = [
     date: '14/06/21',
   },
   {
-    logo: avatar2,
+    logo: '/assets/img/avatars/avatar2.png',
     name: 'Alexa Liras',
     email: 'laurent@simmmple.com',
     subdomain: 'Programmer',
@@ -214,7 +214,7 @@ export const tablesTableData = [
     date: '12/05/21',
   },
   {
-    logo: avatar3,
+    logo: '/assets/img/avatars/avatar3.png',
     name: 'Laurent Michael',
     email: 'laurent@simmmple.com',
     subdomain: 'Executive',
@@ -223,7 +223,7 @@ export const tablesTableData = [
     date: '07/06/21',
   },
   {
-    logo: avatar4,
+    logo: '/assets/img/avatars/avatar4.png',
     name: 'Freduardo Hill',
     email: 'freduardo@simmmple.com',
     subdomain: 'Manager',
@@ -232,7 +232,7 @@ export const tablesTableData = [
     date: '14/11/21',
   },
   {
-    logo: avatar5,
+    logo: '/assets/img/avatars/avatar5.png',
     name: 'Daniel Thomas',
     email: 'daniel@simmmple.com',
     subdomain: 'Programmer',
@@ -241,7 +241,7 @@ export const tablesTableData = [
     date: '21/01/21',
   },
   {
-    logo: avatar7,
+    logo: '/assets/img/avatars/avatar7.png',
     name: 'Mark Wilson',
     email: 'mark@simmmple.com',
     subdomain: 'Designer',

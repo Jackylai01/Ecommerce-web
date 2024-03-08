@@ -5,7 +5,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Flex,
-  Link,
   useColorModeValue,
 } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
@@ -127,39 +126,19 @@ export default function AdminNavbar(props: any) {
         }}
         alignItems={{ xl: 'center' }}
       >
-        <Box mb={{ sm: '8px', md: '0px' }}>
+        <Box mb={{ sm: '8px', md: '0px' }} flexWrap='wrap'>
           <Breadcrumb>
             <BreadcrumbItem color={mainText}>
               <BreadcrumbLink href='#' color={secondaryText}>
                 Pages
               </BreadcrumbLink>
             </BreadcrumbItem>
-
             <BreadcrumbItem color={mainText}>
               <BreadcrumbLink href='#' color={mainText}>
                 {brandText}
               </BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
-
-          <Link
-            color={mainText}
-            href='#'
-            bg='inherit'
-            borderRadius='inherit'
-            fontWeight='bold'
-            _hover={{ color: { mainText } }}
-            _active={{
-              bg: 'inherit',
-              transform: 'none',
-              borderColor: 'transparent',
-            }}
-            _focus={{
-              boxShadow: 'none',
-            }}
-          >
-            {brandText}
-          </Link>
         </Box>
         <Box ms='auto' w={{ sm: '100%', md: 'unset' }}>
           <AdminNavbarLinks
