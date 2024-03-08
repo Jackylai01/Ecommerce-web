@@ -31,11 +31,11 @@ const DashboardTableRow = (props: any) => {
 
       <Td>
         <AvatarGroup size='sm'>
-          {members.map((member: any) => {
+          {members.map((member: any, index: number) => {
             return (
               <Avatar
                 name='Ryan Florence'
-                key={member}
+                key={index}
                 src={member}
                 _hover={{ zIndex: '3', cursor: 'pointer' }}
               />

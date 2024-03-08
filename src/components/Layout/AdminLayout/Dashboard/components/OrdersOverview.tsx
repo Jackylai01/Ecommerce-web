@@ -33,12 +33,11 @@ const OrdersOverview = ({ title, amount, data }: OrdersOverviewType) => {
           {data.map((row, index, arr) => {
             return (
               <TimelineRow
-                key={row.title}
+                key={index}
                 logo={row.logo}
                 title={row.title}
                 date={row.date}
                 color={row.color}
-                index={index}
                 arrLength={arr.length}
               />
             );

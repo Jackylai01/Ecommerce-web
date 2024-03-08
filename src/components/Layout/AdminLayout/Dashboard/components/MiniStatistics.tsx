@@ -56,7 +56,7 @@ const MiniStatistics = ({
               </StatHelpText>
             </Flex>
           </Stat>
-          <IconBox as='box' h={'45px'} w={'45px'} bg={iconTeal}>
+          <IconBox h={'45px'} w={'45px'} bg={iconTeal}>
             {icon}
           </IconBox>
         </Flex>

@@ -24,7 +24,7 @@ const PaymentStatistics = ({
     <Card p='16px' display='flex' align='center' justify='center'>
       <CardBody>
         <Flex direction='column' align='center' w='100%' py='14px'>
-          <IconBox as='box' h={'60px'} w={'60px'} bg={iconTeal}>
+          <IconBox h={'60px'} w={'60px'} bg={iconTeal}>
             {icon}
           </IconBox>
           <Flex
