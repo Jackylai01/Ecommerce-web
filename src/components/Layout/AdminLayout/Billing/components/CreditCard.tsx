@@ -38,7 +38,7 @@ const CreditCard = ({
           w='100%'
         >
           <Flex justify='space-between' align='center'>
-            <Text fontSize='md' fontWeight='bold'>
+            <Text fontSize='md' fontWeight='bold' color='white'>
               {title}
             </Text>
             {icon}
@@ -46,20 +46,29 @@ const CreditCard = ({
           <Spacer />
           <Flex direction='column'>
             <Box>
-              <Text fontSize='xl' letterSpacing='2px' fontWeight='bold'>
+              <Text
+                fontSize='xl'
+                letterSpacing='2px'
+                fontWeight='bold'
+                color='white'
+              >
                 {number}
               </Text>
             </Box>
             <Flex mt='14px'>
               <Flex direction='column' me='34px'>
-                <Text fontSize='xs'>{validity.name}</Text>
-                <Text fontSize='xs' fontWeight='bold'>
+                <Text fontSize='xs' color='white'>
+                  {validity.name}
+                </Text>
+                <Text fontSize='xs' fontWeight='bold' color='white'>
                   {validity.date}
                 </Text>
               </Flex>
               <Flex direction='column'>
-                <Text fontSize='xs'>{cvv.name}</Text>
-                <Text fontSize='xs' fontWeight='bold'>
+                <Text fontSize='xs' color='white'>
+                  {cvv.name}
+                </Text>
+                <Text fontSize='xs' fontWeight='bold' color='white'>
                   {cvv.code}
                 </Text>
               </Flex>

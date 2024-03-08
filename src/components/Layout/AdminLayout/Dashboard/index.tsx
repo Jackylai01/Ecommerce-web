@@ -11,8 +11,6 @@ import {
   GlobeIcon,
   WalletIcon,
 } from '@components/Icons/Icons';
-import peopleImage from '@public/assets/img/people-image.png';
-import logoChakra from '@public/assets/svg/logo-white.svg';
 import dynamic from 'next/dynamic';
 import { dashboardTableData, timelineData } from 'src/variables/general';
 import ActiveUsers from './components/ActiveUsers';
@@ -75,14 +73,14 @@ const Dashboard = () => {
           }
           image={
             <Image
-              src={logoChakra}
+              src='/assets/svg/logo-white.svg'
               alt='chakra image'
               minWidth={{ md: '300px', lg: 'auto' }}
             />
           }
         />
         <WorkWithTheRockets
-          backgroundImage={peopleImage}
+          backgroundImage='/assets/img/people-image.png'
           title={'Work with the rockets'}
           description={
             'Wealth creation is a revolutionary recent positive-sum game. It is all about who takes the opportunity first.'

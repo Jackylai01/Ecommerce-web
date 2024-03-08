@@ -1,6 +1,5 @@
 import { Box, Flex, Grid, Icon } from '@chakra-ui/react';
 import { MastercardIcon, VisaIcon } from '@components/Icons/Icons';
-import BackgroundCard1 from '@public/assets/img/BackgroundCard1.png';
 import { FaPaypal, FaWallet } from 'react-icons/fa';
 import { RiMastercardFill } from 'react-icons/ri';
 import {
@@ -31,7 +30,7 @@ function Billing() {
             gap='26px'
           >
             <CreditCard
-              backgroundImage={BackgroundCard1}
+              backgroundImage='/assets/img/BackgroundCard1.png'
               title={'Purity UI'}
               number={'7812 2139 0823 XXXX'}
               validity={{

@@ -53,10 +53,15 @@ const WorkWithTheRockets = ({
             p='1.5rem 1.2rem 0.3rem 1.2rem'
             lineHeight='1.6'
           >
-            <Text fontSize='xl' fontWeight='bold' pb='.3rem'>
+            <Text fontSize='xl' fontWeight='bold' pb='.3rem' color='white'>
               {title}
             </Text>
-            <Text fontSize='sm' fontWeight='normal' w={{ lg: '92%' }}>
+            <Text
+              fontSize='sm'
+              fontWeight='normal'
+              w={{ lg: '92%' }}
+              color='white'
+            >
               {description}
             </Text>
             <Spacer />
