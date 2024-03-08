@@ -37,7 +37,6 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
   };
 
   const links = routes.map((prop: any, key: number) => {
-    if (prop.redirect) return null;
     if (prop.category) {
       return (
         <div key={prop.name}>
@@ -183,7 +182,7 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
             fontSize='11px'
           >
             <CreativeTimLogo w='32px' h='32px' me='10px' />
-            <Text fontSize='sm' mt='3px'>
+            <Text fontSize='sm' mt='3px' lineHeight='1.5'>
               {logoText}
             </Text>
           </ChakraLink>

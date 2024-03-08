@@ -11,6 +11,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import routes from 'src/routes';
+import AdminNavbar from './AdminNavbar/AdminNavbar';
 import Sidebar from './Sidebar';
 
 type Props = {
@@ -112,7 +113,8 @@ const AdminLayout = ({ children }: Props) => {
             display='none'
           />
         </Box>
-        <Box as='article' w='85%' mr='1rem'>
+        <Box as='article' w='85%' mr='1rem' mt='4rem'>
+          <AdminNavbar />
           {children}
         </Box>
       </Flex>
