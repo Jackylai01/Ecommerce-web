@@ -1,4 +1,11 @@
-import { Box, Flex, Portal, useMediaQuery } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Portal,
+  useDisclosure,
+  useMediaQuery,
+} from '@chakra-ui/react';
+import Configurator from '@components/Configurator';
 import { AsideRouterType, allAdminRouter } from '@fixtures/admin-router';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 import { isAdminLoggedIn, loadAdminToken } from '@helpers/token';
@@ -13,6 +20,7 @@ import { useEffect, useState } from 'react';
 import routes from 'src/routes';
 import MainPanel from '../MainPanel';
 import AdminNavbar from './AdminNavbar/AdminNavbar';
+import FixedPlugin from './FixedPlugin';
 import Sidebar from './Sidebar';
 
 type Props = {
@@ -22,10 +30,12 @@ type Props = {
 const AdminLayout = ({ children }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [pageInfo, setPageInfo] = useState<AsideRouterType>();
   const [hasTriedRefreshing, setHasTriedRefreshing] = useState(false);
   const [isLargeScreen] = useMediaQuery('(min-width: 1400px)');
   const [sidebarVariant, setSidebarVariant] = useState('transparent');
+  const [fixed, setFixed] = useState(false);
 
   const {
     userInfo,
@@ -101,6 +111,27 @@ const AdminLayout = ({ children }: Props) => {
     setPageInfo(findMainRouter);
   }, [router]);
 
+  const getActiveNavbar = (routes: any[]): boolean => {
+    let activeNavbar = false;
+    for (let i = 0; i < routes.length; i++) {
+      if (routes[i].category) {
+        // 显式地声明categoryActiveNavbar的类型为boolean
+        let categoryActiveNavbar: boolean = getActiveNavbar(routes[i].views!);
+        if (categoryActiveNavbar !== activeNavbar) {
+          return categoryActiveNavbar;
+        }
+      } else {
+        if (
+          window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
+        ) {
+          if (routes[i].secondaryNavbar) {
+            return routes[i].secondaryNavbar;
+          }
+        }
+      }
+    }
+    return activeNavbar;
+  };
   return (
     <>
       <Head>
@@ -128,6 +159,23 @@ const AdminLayout = ({ children }: Props) => {
             {children}
           </Box>
         </MainPanel>
+        <Portal>
+          <FixedPlugin
+            secondary={getActiveNavbar(routes)}
+            fixed={fixed}
+            onOpen={onOpen}
+          />
+        </Portal>
+        <Configurator
+          secondary={getActiveNavbar(routes)}
+          isOpen={isOpen}
+          onClose={onClose}
+          onSwitch={(value: any) => {
+            setFixed(value);
+          }}
+          onOpaque={() => setSidebarVariant('opaque')}
+          onTransparent={() => setSidebarVariant('transparent')}
+        />
       </Flex>
     </>
   );

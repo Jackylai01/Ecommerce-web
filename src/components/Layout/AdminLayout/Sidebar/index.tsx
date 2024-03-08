@@ -21,15 +21,8 @@ const Sidebar = (props: any) => {
           transition={variantChange}
           w='260px'
           maxW='260px'
-          ms={{
-            sm: '16px',
-          }}
-          my={{
-            sm: '16px',
-          }}
-          h='calc(100vh - 32px)'
+          h='100vh'
           ps='20px'
-          pe='20px'
           m={sidebarMargins}
           borderRadius={sidebarRadius}
         >

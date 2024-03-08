@@ -4,13 +4,25 @@ import { SettingsIcon } from '@components/Icons/Icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function FixedPlugin(props: any) {
-  const { secondary, onChange, onSwitch, fixed, ...rest } = props;
+interface FixedType {
+  secondary: any;
+  onChange: any;
+  onSwitch: any;
+  fixed: any;
+  onOpen: any;
+}
 
+const FixedPlugin = ({
+  secondary,
+  onChange,
+  onSwitch,
+  fixed,
+  onOpen,
+}: FixedType) => {
   let navbarIcon = useColorModeValue('gray.500', 'gray.200');
   let bgButton = useColorModeValue('white', 'gray.600');
   let fixedDisplay = 'flex';
-  if (props.secondary) {
+  if (secondary) {
     fixedDisplay = 'none';
   }
 
@@ -20,7 +32,7 @@ export default function FixedPlugin(props: any) {
       <Button
         h='52px'
         w='52px'
-        onClick={props.onOpen}
+        onClick={onOpen}
         bg={bgButton}
         position='fixed'
         variant='no-hover'
@@ -40,10 +52,12 @@ export default function FixedPlugin(props: any) {
       </Button>
     </>
   );
-}
+};
 
 FixedPlugin.propTypes = {
   fixed: PropTypes.bool,
   onChange: PropTypes.func,
   onSwitch: PropTypes.func,
 };
+
+export default FixedPlugin;
