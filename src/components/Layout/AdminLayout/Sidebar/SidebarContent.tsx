@@ -14,7 +14,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Separator } from '../Separator';
-import SidebarHelp from './SidebarHelp';
 
 interface SideBarContentType {
   logoText: string;
@@ -45,8 +44,8 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
             fontWeight='bold'
             mb={{ xl: '12px' }}
             mx='auto'
-            ps={{ sm: '10px', xl: '16px' }}
             py='12px'
+            fontSize='22px'
           >
             {prop.name}
           </Text>
@@ -192,7 +191,6 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
       <Stack direction='column' mb='40px'>
         {links}
       </Stack>
-      <SidebarHelp />
     </>
   );
 };
