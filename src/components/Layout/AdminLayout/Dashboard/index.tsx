@@ -59,6 +59,7 @@ const Dashboard = () => {
           icon={<CartIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
         />
       </SimpleGrid>
+
       <Grid
         templateColumns={{ md: '1fr', lg: '1.8fr 1.2fr' }}
         templateRows={{ md: '1fr auto', lg: '1fr' }}
