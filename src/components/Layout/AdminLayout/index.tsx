@@ -119,6 +119,7 @@ const AdminLayout = ({ children }: Props) => {
             base: '100%',
             xl: 'calc(100% - 275px)',
           }}
+          mt='5rem'
         >
           <Box as='article'>
             <Portal>
