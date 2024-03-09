@@ -32,9 +32,6 @@ const Configurator = ({
   isOpen,
   onClose,
   onSwitch,
-  onOpaque,
-  onTransparent,
-  fixed,
 }: ConfiguratorProps) => {
   const [switched, setSwitched] = useState(isChecked);
   const { colorMode, toggleColorMode } = useColorMode();

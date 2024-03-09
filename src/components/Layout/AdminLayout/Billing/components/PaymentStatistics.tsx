@@ -21,7 +21,7 @@ const PaymentStatistics = ({
   const textColor = useColorModeValue('gray.700', 'white');
 
   return (
-    <Card p='16px' display='flex' align='center' justify='center'>
+    <Card p='16px' display='flex' alignItems='center' justifyContent='center'>
       <CardBody>
         <Flex direction='column' align='center' w='100%' py='14px'>
           <IconBox h={'60px'} w={'60px'} bg={iconTeal}>

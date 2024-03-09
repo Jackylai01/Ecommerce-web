@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import { barChartData, barChartOptions } from 'src/variables/charts';
 
-function BarChart() {
+const BarChart = () => {
   const [chartData, setChartData] = useState<
     ApexAxisChartSeries | ApexNonAxisChartSeries
   >([]);
@@ -31,6 +31,6 @@ function BarChart() {
       />
     </Card>
   );
-}
+};
 
 export default BarChart;

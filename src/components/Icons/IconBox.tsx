@@ -1,8 +1,7 @@
 import { Flex } from '@chakra-ui/react';
+import { IconsProps } from '@models/entities/shared/Icons';
 
-export default function IconBox(props: any) {
-  const { children, ...rest } = props;
-
+export default function IconBox({ children, ...rest }: IconsProps) {
   return (
     <Flex
       alignItems={'center'}
