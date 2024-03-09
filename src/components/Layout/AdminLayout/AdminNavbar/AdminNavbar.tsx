@@ -145,6 +145,7 @@ const AdminNavbar = ({
             onOpen={onOpen}
             secondary={secondary}
             fixed={fixed}
+            logoText={'PURITY UI DASHBOARD'}
           />
         </Box>
       </Flex>

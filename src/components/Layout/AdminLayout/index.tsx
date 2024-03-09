@@ -17,7 +17,7 @@ import { adminRefreshTokenAsync } from '@reducers/admin/auth/actions';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import routes from 'src/routes';
+import { default as dashRoutes, default as routes } from 'src/routes';
 import MainPanel from '../MainPanel';
 import AdminNavbar from './AdminNavbar/AdminNavbar';
 import FixedPlugin from './FixedPlugin';
@@ -129,6 +129,29 @@ const AdminLayout = ({ children }: Props) => {
     return 'DashBoard page';
   };
 
+  const getActiveNavbarName = (routes: any) => {
+    let activeName = 'Default Brand Text'; // 如果没有匹配的路由，返回一个默认值
+
+    routes.forEach((route: any) => {
+      // 检查当前路径是否匹配主路由
+      if (route.path && currentPath === `${route.layout}${route.path}`) {
+        activeName = route.name;
+      }
+      // 检查是否存在 views 数组，并递归遍历找到匹配的路由
+      if (route.views) {
+        route.views.forEach((view: any) => {
+          if (currentPath === `${view.path}`) {
+            activeName = view.name;
+          }
+        });
+      }
+    });
+
+    return activeName;
+  };
+
+  const brandText = getActiveNavbarName(dashRoutes);
+
   return (
     <>
       <Head>
@@ -153,7 +176,7 @@ const AdminLayout = ({ children }: Props) => {
             <Portal>
               <AdminNavbar
                 secondary={getActiveNavbar(routes)}
-                brandText={getActiveNavbar(routes)}
+                brandText={brandText}
                 onOpen={onOpen}
                 fixed={fixed}
               />

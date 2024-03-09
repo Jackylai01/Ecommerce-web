@@ -20,14 +20,24 @@ import avatar2 from '@public/assets/img/avatars/avatar2.png';
 import avatar3 from '@public/assets/img/avatars/avatar3.png';
 
 import { ItemContent } from '@components/Menu';
-import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import routes from 'src/routes';
 import SidebarResponsive from '../Sidebar/SidebarResponsive';
 
-export default function HeaderLinks(props: any) {
-  const { variant, children, fixed, secondary, onOpen, ...rest } = props;
+interface HeaderLinksType {
+  fixed: any;
+  secondary: any;
+  onOpen: any;
+  logoText: string;
+}
 
+export default function HeaderLinks({
+  fixed,
+  secondary,
+  onOpen,
+  logoText,
+  ...rest
+}: HeaderLinksType) {
   let mainTeal = useColorModeValue('teal.300', 'teal.300');
   let inputBg = useColorModeValue('white', 'gray.800');
   let mainText = useColorModeValue('gray.700', 'gray.200');
@@ -114,8 +124,8 @@ export default function HeaderLinks(props: any) {
         </Button>
       </Link>
       <SidebarResponsive
-        logoText={props.logoText}
-        secondary={props.secondary}
+        logoText={logoText}
+        secondary={secondary}
         routes={routes}
       />
       <SettingsIcon
@@ -123,7 +133,7 @@ export default function HeaderLinks(props: any) {
         ms={{ base: '16px', xl: '0px' }}
         me='16px'
         ref={settingsRef}
-        onClick={props.onOpen}
+        onClick={onOpen}
         color={navbarIcon}
         w='18px'
         h='18px'
@@ -167,10 +177,3 @@ export default function HeaderLinks(props: any) {
     </Flex>
   );
 }
-
-HeaderLinks.propTypes = {
-  variant: PropTypes.string,
-  fixed: PropTypes.bool,
-  secondary: PropTypes.bool,
-  onOpen: PropTypes.func,
-};
