@@ -1,9 +1,9 @@
 import { Box, useStyleConfig } from '@chakra-ui/react';
+import { CardProps } from '@models/entities/shared/Card';
 
-function CardBody(props: any) {
-  const { variant, children, ...rest } = props;
+function CardBody({ variant, children, rest }: CardProps) {
   const styles = useStyleConfig('CardBody', { variant });
-  // Pass the computed styles into the `__css` prop
+
   return (
     <Box __css={styles} {...rest}>
       {children}

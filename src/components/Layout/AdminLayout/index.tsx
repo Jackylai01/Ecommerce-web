@@ -1,10 +1,4 @@
-import {
-  Box,
-  Flex,
-  Portal,
-  useDisclosure,
-  useMediaQuery,
-} from '@chakra-ui/react';
+import { Box, Flex, Portal, useDisclosure } from '@chakra-ui/react';
 import Configurator from '@components/Configurator';
 import { AsideRouterType, allAdminRouter } from '@fixtures/admin-router';
 import { ADMIN_ROUTE } from '@fixtures/constants';
@@ -34,8 +28,6 @@ const AdminLayout = ({ children }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [pageInfo, setPageInfo] = useState<AsideRouterType>();
   const [hasTriedRefreshing, setHasTriedRefreshing] = useState(false);
-
-  const [isLargeScreen] = useMediaQuery('(min-width: 1400px)');
   const [sidebarVariant, setSidebarVariant] = useState('transparent');
   const [fixed, setFixed] = useState(false);
 

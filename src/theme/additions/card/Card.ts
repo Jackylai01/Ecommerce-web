@@ -11,7 +11,7 @@ const Card = {
   },
   variants: {
     panel: (props: any) => ({
-      bg: props.colorMode === 'dark' ? 'gray.700' : 'white',
+      bg: props.colorMode === 'light' ? 'white' : 'gray.700',
       width: '100%',
       boxShadow: '0px 3.5px 5.5px rgba(0, 0, 0, 0.02)',
       borderRadius: '15px',

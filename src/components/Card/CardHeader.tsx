@@ -1,7 +1,7 @@
 import { Box, useStyleConfig } from '@chakra-ui/react';
+import { CardProps } from '@models/entities/shared/Card';
 
-function CardHeader(props: any) {
-  const { variant, children, ...rest } = props;
+function CardHeader({ variant, children, rest }: CardProps) {
   const styles = useStyleConfig('CardHeader', { variant });
 
   return (
