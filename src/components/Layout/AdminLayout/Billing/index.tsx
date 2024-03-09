@@ -23,8 +23,8 @@ function Billing() {
           <Grid
             templateColumns={{
               sm: '1fr',
-              md: '1fr 1fr',
-              xl: '1fr 1fr 1fr 1fr',
+              md: '2fr 1fr 1fr',
+              xl: '2fr 1fr 1fr 1fr',
             }}
             templateRows={{ sm: 'auto auto auto', md: '1fr auto', xl: '1fr' }}
             gap='26px'
@@ -33,10 +33,7 @@ function Billing() {
               backgroundImage='/assets/img/BackgroundCard1.png'
               title={'Purity UI'}
               number={'7812 2139 0823 XXXX'}
-              validity={{
-                name: 'VALID THRU',
-                data: '05/24',
-              }}
+              validity={{ name: 'VALID THRU', date: '05/24' }}
               cvv={{
                 name: 'CVV',
                 code: '09x',
@@ -61,6 +58,12 @@ function Billing() {
               title={'Paypal'}
               description={'Freelance Payment'}
               amount={4550}
+            />
+            <PaymentStatistics
+              icon={<Icon h={'24px'} w={'24px'} color='white' as={FaPaypal} />}
+              title={'date'}
+              description={'Freelance Payment'}
+              amount={2050}
             />
           </Grid>
           <PaymentMethod
