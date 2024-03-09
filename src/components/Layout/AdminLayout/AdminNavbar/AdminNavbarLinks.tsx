@@ -44,10 +44,6 @@ export default function HeaderLinks({
   let navbarIcon = useColorModeValue('gray.500', 'gray.200');
   let searchIcon = useColorModeValue('gray.700', 'gray.200');
 
-  if (secondary) {
-    navbarIcon = 'white';
-    mainText = 'white';
-  }
   const settingsRef = useRef<any>(null);
 
   return (
