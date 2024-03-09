@@ -159,11 +159,7 @@ const AdminLayout = ({ children }: Props) => {
       </Head>
       <Flex w='100%' justifyContent='space-between'>
         <Box>
-          <Sidebar
-            routes={routes}
-            logoText={'PURITY UI DASHBOARD'}
-            display='none'
-          />
+          <Sidebar routes={routes} sidebarVariant={sidebarVariant} />
         </Box>
         <MainPanel
           w={{

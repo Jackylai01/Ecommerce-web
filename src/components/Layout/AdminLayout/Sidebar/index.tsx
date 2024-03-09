@@ -2,11 +2,14 @@ import { Box, useColorModeValue } from '@chakra-ui/react';
 import { useRef } from 'react';
 import SidebarContent from './SidebarContent';
 
-const Sidebar = (props: any) => {
+interface SidebarType {
+  routes: any;
+  sidebarVariant: any;
+}
+
+const Sidebar = ({ routes, sidebarVariant }: SidebarType) => {
   const mainPanel = useRef<HTMLDivElement>(null);
   let variantChange = '0.2s linear';
-
-  const { logoText, routes, sidebarVariant } = props;
 
   const sidebarBg = useColorModeValue('white', 'gray.700');
   const sidebarRadius = sidebarVariant === 'opaque' ? '16px' : '0px';
