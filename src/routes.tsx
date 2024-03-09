@@ -51,23 +51,6 @@ var dashRoutes = [
         component: Profile,
         layout: `/${ADMIN_ROUTE}`,
       },
-      // {
-      //   path: '/signin',
-      //   name: 'Sign In',
-      //   rtlName: 'لوحة القيادة',
-      //   icon: <DocumentIcon color='inherit' />,
-      //   component: SignIn,
-      //   layout: '/auth',
-      // },
-      // {
-      //   path: '/signup',
-      //   name: 'Sign Up',
-      //   rtlName: 'لوحة القيادة',
-      //   icon: <RocketIcon color='inherit' />,
-      //   secondaryNavbar: true,
-      //   component: SignUp,
-      //   layout: '/auth',
-      // },
     ],
   },
 ];

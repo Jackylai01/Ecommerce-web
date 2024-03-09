@@ -29,10 +29,12 @@ type Props = {
 
 const AdminLayout = ({ children }: Props) => {
   const router = useRouter();
+  const currentPath = router.pathname;
   const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [pageInfo, setPageInfo] = useState<AsideRouterType>();
   const [hasTriedRefreshing, setHasTriedRefreshing] = useState(false);
+
   const [isLargeScreen] = useMediaQuery('(min-width: 1400px)');
   const [sidebarVariant, setSidebarVariant] = useState('transparent');
   const [fixed, setFixed] = useState(false);
@@ -111,27 +113,22 @@ const AdminLayout = ({ children }: Props) => {
     setPageInfo(findMainRouter);
   }, [router]);
 
-  const getActiveNavbar = (routes: any[]): boolean => {
-    let activeNavbar = false;
+  const getActiveNavbar = (routes: any) => {
     for (let i = 0; i < routes.length; i++) {
-      if (routes[i].category) {
-        // 显式地声明categoryActiveNavbar的类型为boolean
-        let categoryActiveNavbar: boolean = getActiveNavbar(routes[i].views!);
-        if (categoryActiveNavbar !== activeNavbar) {
-          return categoryActiveNavbar;
-        }
-      } else {
-        if (
-          window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-        ) {
-          if (routes[i].secondaryNavbar) {
-            return routes[i].secondaryNavbar;
+      if (routes[i].path && currentPath === routes[i].layout + routes[i].path) {
+        return routes[i].name;
+      }
+      if (routes[i].views) {
+        for (let j = 0; j < routes[i].views.length; j++) {
+          if (currentPath === routes[i].layout + routes[i].views[j].path) {
+            return routes[i].views[j].name;
           }
         }
       }
     }
-    return activeNavbar;
+    return 'DashBoard page';
   };
+
   return (
     <>
       <Head>
@@ -154,7 +151,12 @@ const AdminLayout = ({ children }: Props) => {
         >
           <Box as='article'>
             <Portal>
-              <AdminNavbar />
+              <AdminNavbar
+                secondary={getActiveNavbar(routes)}
+                brandText={getActiveNavbar(routes)}
+                onOpen={onOpen}
+                fixed={fixed}
+              />
             </Portal>
             {children}
           </Box>

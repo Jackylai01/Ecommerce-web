@@ -13,28 +13,34 @@ import {
 } from '@chakra-ui/react';
 import { Separator } from '@components/Separator';
 
-import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 
-const Configurator = (props: any) => {
-  const {
-    secondary,
-    isOpen,
-    onClose,
-    fixed,
-    onSwitch,
-    onOpaque,
-    onTransparent,
-    isChecked,
-    ...rest
-  } = props;
+interface ConfiguratorProps {
+  secondary?: boolean;
+  isOpen: boolean;
+  onClose: () => void;
+  fixed?: boolean;
+  onSwitch: (state: boolean) => void;
+  onOpaque?: () => void;
+  onTransparent?: () => void;
+  isChecked: boolean;
+}
 
-  const [switched, setSwitched] = useState(props.isChecked);
-
+const Configurator = ({
+  secondary,
+  isChecked,
+  isOpen,
+  onClose,
+  onSwitch,
+  onOpaque,
+  onTransparent,
+  fixed,
+}: ConfiguratorProps) => {
+  const [switched, setSwitched] = useState(isChecked);
   const { colorMode, toggleColorMode } = useColorMode();
 
   let fixedDisplay = 'flex';
-  if (props.secondary) {
+  if (secondary) {
     fixedDisplay = 'none';
   }
 
@@ -42,8 +48,8 @@ const Configurator = (props: any) => {
   return (
     <>
       <Drawer
-        isOpen={props.isOpen}
-        onClose={props.onClose}
+        isOpen={isOpen}
+        onClose={onClose}
         placement={document.documentElement.dir === 'rtl' ? 'left' : 'right'}
         finalFocusRef={settingsRef}
         blockScrollOnMount={false}
@@ -88,10 +94,10 @@ const Configurator = (props: any) => {
                   isChecked={switched}
                   onChange={(event) => {
                     if (switched === true) {
-                      props.onSwitch(false);
+                      onSwitch(false);
                       setSwitched(false);
                     } else {
-                      props.onSwitch(true);
+                      onSwitch(true);
                       setSwitched(true);
                     }
                   }}
@@ -124,17 +130,6 @@ const Configurator = (props: any) => {
       </Drawer>
     </>
   );
-};
-
-Configurator.propTypes = {
-  secondary: PropTypes.bool,
-  isOpen: PropTypes.bool,
-  onClose: PropTypes.func,
-  fixed: PropTypes.bool,
-  onSwitch: PropTypes.func,
-  onOpaque: PropTypes.func,
-  onTransparent: PropTypes.func,
-  isChecked: PropTypes.bool,
 };
 
 export default Configurator;

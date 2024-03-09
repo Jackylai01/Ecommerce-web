@@ -1,4 +1,3 @@
-// Chakra Imports
 import {
   Box,
   Breadcrumb,
@@ -7,22 +6,23 @@ import {
   Flex,
   useColorModeValue,
 } from '@chakra-ui/react';
-import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import AdminNavbarLinks from './AdminNavbarLinks';
 
-export default function AdminNavbar(props: any) {
+interface AdminNavbarType {
+  fixed: any;
+  secondary: any;
+  brandText?: string;
+  onOpen: any;
+}
+
+const AdminNavbar = ({
+  fixed,
+  secondary,
+  brandText,
+  onOpen,
+}: AdminNavbarType) => {
   const [scrolled, setScrolled] = useState(false);
-  const {
-    variant,
-    children,
-    fixed,
-    secondary,
-    brandText,
-    onOpen,
-    logoText,
-    ...rest
-  } = props;
 
   const mainText = useColorModeValue('gray.700', 'gray.200');
   const secondaryText = useColorModeValue('gray.400', 'gray.200');
@@ -142,20 +142,14 @@ export default function AdminNavbar(props: any) {
         </Box>
         <Box ms='auto' w={{ sm: '100%', md: 'unset' }}>
           <AdminNavbarLinks
-            onOpen={props.onOpen}
-            secondary={props.secondary}
-            fixed={props.fixed}
+            onOpen={onOpen}
+            secondary={secondary}
+            fixed={fixed}
           />
         </Box>
       </Flex>
     </Flex>
   );
-}
-
-AdminNavbar.propTypes = {
-  brandText: PropTypes.string,
-  variant: PropTypes.string,
-  secondary: PropTypes.bool,
-  fixed: PropTypes.bool,
-  onOpen: PropTypes.func,
 };
+
+export default AdminNavbar;
