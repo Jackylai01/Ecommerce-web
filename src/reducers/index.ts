@@ -1,5 +1,6 @@
 import adminAuth from './admin/auth';
 import customPage from './admin/custom-page';
+import dashBoardTheme from './admin/dash-board/themeSlice';
 import adminUpload from './admin/upload';
 import clientAuth from './client/auth';
 import clientCart from './client/cart';
@@ -18,6 +19,7 @@ const appReducer = {
   fileSelect,
   clientAuth,
   clientCart,
+  dashBoardTheme,
 };
 
 export default appReducer;
