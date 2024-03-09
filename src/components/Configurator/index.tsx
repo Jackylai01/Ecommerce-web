@@ -25,6 +25,8 @@ const Configurator = (props: any) => {
     onSwitch,
     onOpaque,
     onTransparent,
+    isChecked,
+    ...rest
   } = props;
 
   const [switched, setSwitched] = useState(props.isChecked);
@@ -49,10 +51,19 @@ const Configurator = (props: any) => {
         <DrawerContent>
           <DrawerHeader pt='24px' px='24px'>
             <DrawerCloseButton />
-            <Text fontSize='xl' fontWeight='bold' mt='16px'>
+            <Text
+              fontSize='xl'
+              fontWeight='bold'
+              mt='16px'
+              color={colorMode === 'light' ? 'gray.800' : 'white'}
+            >
               Purity UI Configurator
             </Text>
-            <Text fontSize='md' mb='16px'>
+            <Text
+              fontSize='md'
+              mb='16px'
+              color={colorMode === 'light' ? 'gray.800' : 'white'}
+            >
               See your dashboard options.
             </Text>
             <Separator />
@@ -64,7 +75,12 @@ const Configurator = (props: any) => {
                 justifyContent='space-between '
                 mb='16px'
               >
-                <Text fontSize='md' fontWeight='600' mb='4px'>
+                <Text
+                  fontSize='md'
+                  fontWeight='600'
+                  mb='4px'
+                  color={colorMode === 'light' ? 'gray.800' : 'whiteAlpha.900'}
+                >
                   Navbar Fixed
                 </Text>
                 <Switch
@@ -86,22 +102,22 @@ const Configurator = (props: any) => {
                 alignItems='center'
                 mb='24px'
               >
-                <Text fontSize='md' fontWeight='600' mb='4px'>
+                <Text
+                  fontSize='md'
+                  fontWeight='600'
+                  mb='4px'
+                  color={colorMode === 'light' ? 'gray.800' : 'whiteAlpha.900'}
+                >
                   Dark/Light
                 </Text>
-                <Button onClick={toggleColorMode}>
+                <Button
+                  onClick={toggleColorMode}
+                  color={colorMode === 'light' ? 'gray.800' : 'whiteAlpha.900'}
+                >
                   Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
                 </Button>
               </Flex>
               <Separator />
-              <Box mt='24px'>
-                <Text fontSize='md' fontWeight='600'>
-                  Sidenav Type
-                </Text>
-                <Text fontSize='sm' mb='16px'>
-                  Choose between 2 different sidenav types.
-                </Text>
-              </Box>
             </Flex>
           </DrawerBody>
         </DrawerContent>
@@ -118,6 +134,7 @@ Configurator.propTypes = {
   onSwitch: PropTypes.func,
   onOpaque: PropTypes.func,
   onTransparent: PropTypes.func,
+  isChecked: PropTypes.bool,
 };
 
 export default Configurator;

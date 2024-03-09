@@ -169,6 +169,7 @@ const AdminLayout = ({ children }: Props) => {
         <Configurator
           secondary={getActiveNavbar(routes)}
           isOpen={isOpen}
+          isChecked={fixed}
           onClose={onClose}
           onSwitch={(value: any) => {
             setFixed(value);
