@@ -45,7 +45,7 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
             mb={{ xl: '12px' }}
             mx='auto'
             py='12px'
-            fontSize='22px'
+            fontSize='20px'
           >
             {prop.name}
           </Text>
@@ -181,7 +181,7 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
             fontSize='11px'
           >
             <CreativeTimLogo w='32px' h='32px' me='10px' />
-            <Text fontSize='sm' mt='3px' lineHeight='1.5'>
+            <Text fontSize='xs' mt='3px' lineHeight='1.5'>
               {logoText}
             </Text>
           </ChakraLink>

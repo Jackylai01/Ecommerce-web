@@ -19,7 +19,7 @@ function Billing() {
   return (
     <Flex direction='column' pt={{ base: '120px', md: '75px' }}>
       <Grid templateColumns={{ sm: '1fr', lg: '2fr 1.2fr' }} templateRows='1fr'>
-        <Box>
+        <Box m='1rem'>
           <Grid
             templateColumns={{
               sm: '1fr',
@@ -28,6 +28,7 @@ function Billing() {
             }}
             templateRows={{ sm: 'auto auto auto', md: '1fr auto', xl: '1fr' }}
             gap='26px'
+            borderRadius='12px'
           >
             <CreditCard
               backgroundImage='/assets/img/BackgroundCard1.png'
@@ -81,7 +82,12 @@ function Billing() {
         <Invoices title={'Invoices'} data={invoicesData} />
       </Grid>
       <Grid templateColumns={{ sm: '1fr', lg: '1.6fr 1.2fr' }}>
-        <BillingInformation title={'Billing Information'} data={billingData} />
+        <Box mr='1rem'>
+          <BillingInformation
+            title={'Billing Information'}
+            data={billingData}
+          />
+        </Box>
         <Transactions
           title={'Your Transactions'}
           date={'23 - 30 March'}

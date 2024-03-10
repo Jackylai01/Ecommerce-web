@@ -28,7 +28,7 @@ const PaymentMethod = ({ title, mastercard, visa }: PaymentMethodType) => {
   );
 
   return (
-    <Card p='16px' mt='24px'>
+    <Card mt='24px'>
       <CardHeader>
         <Flex justify='space-between' align='center' minHeight='60px' w='100%'>
           <Text fontSize='lg' color={textColor} fontWeight='bold'>

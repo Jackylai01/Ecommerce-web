@@ -17,7 +17,7 @@ interface BilingInFormationType {
 const BillingInformation = ({ title, data }: BilingInFormationType) => {
   const textColor = useColorModeValue('gray.700', 'white');
   return (
-    <Card my={{ lg: '24px' }} me={{ lg: '24px' }}>
+    <Card my={{ lg: '24px' }} me={{ lg: '24px' }} pl='1rem'>
       <Flex direction='column'>
         <CardHeader py='12px'>
           <Text color={textColor} fontSize='lg' fontWeight='bold'>
