@@ -16,10 +16,7 @@ import {
  * @throws 403 Forbidden 帳號已被鎖定
  */
 export const apiClientUsersRegister = async (body: LoginRequest) => {
-  return postRequest<ApiResult<AuthResponse>>(
-    '/client/public/auth/register',
-    body,
-  );
+  return postRequest<ApiResult<AuthResponse>>('/client/register', body);
 };
 
 /**
@@ -28,10 +25,7 @@ export const apiClientUsersRegister = async (body: LoginRequest) => {
  * @throws 403 Forbidden 帳號已被鎖定
  */
 export const apiClientUsersLogin = async (body: LoginRequest) => {
-  return postRequest<ApiResult<AuthResponse>>(
-    '/client/public/auth/login',
-    body,
-  );
+  return postRequest<ApiResult<AuthResponse>>('/client/login', body);
 };
 
 /**
@@ -58,7 +52,7 @@ export const apiClientForgotPassword = async (body: SendForgotCodeRequest) => {
 
 export const apiClientResetPassword = async (body: any) => {
   const { code, ...restBody } = body;
-  return postRequest(`/client/reset/${code}`, restBody);
+  return postRequest(`/client/resetPassword/${code}`, restBody);
 };
 
 /**
