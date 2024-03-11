@@ -14,7 +14,7 @@ const Profile = () => {
   );
 
   return (
-    <Flex direction='column'>
+    <Flex direction='column' mt='2rem'>
       <Header
         backgroundHeader='https://res.cloudinary.com/dqawkwte9/image/upload/v1709726163/csxaregkhrbscmtkizgx.png'
         backgroundProfile={bgProfile}

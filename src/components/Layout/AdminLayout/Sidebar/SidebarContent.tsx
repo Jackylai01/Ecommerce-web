@@ -12,7 +12,6 @@ import IconBox from '@components/Icons/IconBox';
 import { CreativeTimLogo } from '@components/Icons/Icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { Separator } from '../Separator';
 
 interface SideBarContentType {
@@ -24,10 +23,8 @@ interface SideBarContentType {
 
 const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
   const router = useRouter();
-  const [state, setState] = useState<Record<string, boolean>>({});
-
   const activeBg = useColorModeValue('white', 'gray.700');
-  const inactiveBg = useColorModeValue('white', 'gray.700');
+  const inactiveBg = useColorModeValue('gray.500', 'gray.700');
   const activeColor = useColorModeValue('gray.700', 'white');
   const inactiveColor = useColorModeValue('gray.400', 'gray.400');
 
