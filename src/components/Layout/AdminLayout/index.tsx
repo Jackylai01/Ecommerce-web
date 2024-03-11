@@ -1,5 +1,4 @@
 import { Box, Flex, Portal, useDisclosure } from '@chakra-ui/react';
-import Configurator from '@components/Configurator';
 import { AsideRouterType, allAdminRouter } from '@fixtures/admin-router';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 import { isAdminLoggedIn, loadAdminToken } from '@helpers/token';
@@ -14,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { default as dashRoutes, default as routes } from 'src/routes';
 import MainPanel from '../MainPanel';
 import AdminNavbar from './AdminNavbar/AdminNavbar';
+import Configurator from './Configurator';
 import FixedPlugin from './FixedPlugin';
 import Sidebar from './Sidebar';
 

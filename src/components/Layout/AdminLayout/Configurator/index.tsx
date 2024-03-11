@@ -12,6 +12,9 @@ import {
   useColorMode,
 } from '@chakra-ui/react';
 import { Separator } from '@components/Separator';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { setAdminTheme } from '@reducers/layout';
 
 import { useRef, useState } from 'react';
 
@@ -35,7 +38,13 @@ const Configurator = ({
 }: ConfiguratorProps) => {
   const [switched, setSwitched] = useState(isChecked);
   const { colorMode, toggleColorMode } = useColorMode();
+  const dispatch = useAppDispatch();
+  const { adminTheme } = useAppSelector((state) => state.layout);
 
+  const toggleTheme = () => {
+    const newTheme = adminTheme === 'light' ? 'dark' : 'light';
+    dispatch(setAdminTheme(newTheme)); // 發送 Redux 動作來切換後台主題
+  };
   let fixedDisplay = 'flex';
   if (secondary) {
     fixedDisplay = 'none';
@@ -114,7 +123,7 @@ const Configurator = ({
                   Dark/Light
                 </Text>
                 <Button
-                  onClick={toggleColorMode}
+                  onClick={toggleTheme}
                   color={colorMode === 'light' ? 'gray.800' : 'whiteAlpha.900'}
                 >
                   Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
