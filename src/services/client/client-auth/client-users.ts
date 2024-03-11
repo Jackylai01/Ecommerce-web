@@ -20,6 +20,14 @@ export const apiClientUsersRegister = async (body: LoginRequest) => {
 };
 
 /**
+ * 用户啟用帳號
+ * @param verificationToken
+ */
+export const apiClientActivateAccount = async (verificationToken: string) => {
+  return getRequest(`/client/activate/${verificationToken}`);
+};
+
+/**
  * 使用者登入
  * @throws 403 Forbidden 帳號或密碼不正確
  * @throws 403 Forbidden 帳號已被鎖定
@@ -43,7 +51,7 @@ export const apiClientUsersLogout = async () => postRequest('/client/logout');
  * 使用者忘記密碼
  */
 export const apiClientForgotPassword = async (body: SendForgotCodeRequest) => {
-  return postRequest('/client/forgot', body);
+  return postRequest('/client/forgotPassword', body);
 };
 
 /**
@@ -56,19 +64,11 @@ export const apiClientResetPassword = async (body: any) => {
 };
 
 /**
- * 使用者更改密碼
- */
-
-export const apiClientChangePassword = async (body: any) => {
-  return postRequest('/client/change-password', body);
-};
-
-/**
  * 獲得個人資料
  */
 
 export const apiClientGetProfile = async () => {
-  return getRequest('/client/client-profile');
+  return getRequest('/client/profile');
 };
 
 /**
@@ -76,5 +76,5 @@ export const apiClientGetProfile = async () => {
  */
 
 export const apiClientModifyProfile = async (data: any) => {
-  return putRequest('/client/client-profile', data);
+  return putRequest('/client/editProfile', data);
 };
