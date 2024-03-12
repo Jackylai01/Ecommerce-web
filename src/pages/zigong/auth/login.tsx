@@ -56,7 +56,7 @@ const Login = () => {
     if (userInfo || loginSuccess) {
       router.push(`/${ADMIN_ROUTE}`);
     }
-  }, [userInfo, router]);
+  }, [userInfo, loginSuccess, router]);
 
   useEffect(() => {
     if (forgetPasswordSuccess) {
@@ -186,7 +186,7 @@ const Login = () => {
                   mt='0px'
                 >
                   <Text color={textColor} fontWeight='medium'>
-                    Don't have an account?
+                    Don&apos;t have an account?
                     <Link
                       color={titleColor}
                       as='span'
