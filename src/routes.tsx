@@ -14,7 +14,6 @@ var dashRoutes = [
   {
     path: `/`,
     name: 'Dashboard',
-    rtlName: 'لوحة القيادة',
     icon: HomeIcon,
     component: Dashboard,
     layout: `/${ADMIN_ROUTE}`,
@@ -22,7 +21,6 @@ var dashRoutes = [
   {
     path: '/tables',
     name: 'Tables',
-    rtlName: 'لوحة القيادة',
     icon: StatsIcon,
     component: Tables,
     layout: `/${ADMIN_ROUTE}`,
@@ -30,7 +28,6 @@ var dashRoutes = [
   {
     path: '/billing',
     name: 'Billing',
-    rtlName: 'لوحة القيادة',
     icon: CreditIcon,
     component: Billing,
     layout: `/${ADMIN_ROUTE}`,
@@ -39,13 +36,11 @@ var dashRoutes = [
   {
     name: 'ACCOUNT PAGES',
     category: 'account',
-    rtlName: 'صفحات',
     state: 'pageCollapse',
     views: [
       {
         path: '/profile',
         name: 'Profile',
-        rtlName: 'لوحة القيادة',
         icon: PersonIcon,
         secondaryNavbar: true,
         component: Profile,

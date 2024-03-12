@@ -1,17 +1,9 @@
 import { Box, Flex, Icon, Text, useColorModeValue } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 
 function TimelineRow(props: any) {
   const { logo, title, date, color, index, arrLength } = props;
   const textColor = useColorModeValue('gray.700', 'white.300');
   const bgIconColor = useColorModeValue('white.300', 'gray.700');
-  const [isRTL, setIsRTL] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setIsRTL(document.documentElement.dir === 'rtl');
-    }
-  }, []);
 
   return (
     <Flex alignItems='center' minH='78px' justifyContent='start' mb='5px'>
@@ -25,8 +17,6 @@ function TimelineRow(props: any) {
           pe='6px'
           zIndex='1'
           position='relative'
-          right={isRTL ? '-8px' : ''}
-          left={isRTL ? '' : '-8px'}
         />
         <Box
           w='2px'

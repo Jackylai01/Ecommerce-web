@@ -47,7 +47,7 @@ const Configurator = ({
       <Drawer
         isOpen={isOpen}
         onClose={onClose}
-        placement={document.documentElement.dir === 'rtl' ? 'left' : 'right'}
+        placement='right'
         finalFocusRef={settingsRef}
         blockScrollOnMount={false}
       >
