@@ -63,8 +63,8 @@ export default function HeaderLinks({
   };
 
   useEffect(() => {
-    if (logoutSuccess) {
-      router.push(`/${ADMIN_ROUTE}/login`);
+    if (!userInfo) {
+      router.push(`/${ADMIN_ROUTE}/auth/login`);
     }
   }, [router]);
 
