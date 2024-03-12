@@ -60,12 +60,6 @@ function Billing() {
               description={'Freelance Payment'}
               amount={4550}
             />
-            <PaymentStatistics
-              icon={<Icon h={'24px'} w={'24px'} color='white' as={FaPaypal} />}
-              title={'date'}
-              description={'Freelance Payment'}
-              amount={2050}
-            />
           </Grid>
           <PaymentMethod
             title={'Payment Method'}

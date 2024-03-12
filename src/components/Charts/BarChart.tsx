@@ -19,7 +19,7 @@ const BarChart = () => {
       py='1rem'
       height={{ sm: '200px' }}
       width='100%'
-      bg='linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)'
+      bg='#151928'
       position='relative'
     >
       <Chart
