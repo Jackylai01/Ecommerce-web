@@ -1,16 +1,21 @@
+import { formatQueryString } from '@helpers/query';
+import { PagingQuery } from '@models/entities/shared/pagination';
+import { Product } from '@models/entities/shared/products';
 import {
+  ApiPaginationResult,
   ApiResult,
   deleteRequest,
   getRequest,
   postRequest,
-} from '../../shared/api'; // 根据实际路径调整导入路径
+} from '../../shared/api';
 
 /**
  * 取得所有產品
  */
-export const apiGetAllProducts = async (params: any) => {
-  return getRequest<ApiResult<any>>('/products', params);
-};
+export const apiGetAllProducts = async (query: PagingQuery) =>
+  getRequest<ApiPaginationResult<Product>>(
+    formatQueryString('/products', query),
+  );
 
 /**
  * 根據ID取得單一產品

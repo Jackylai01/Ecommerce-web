@@ -32,6 +32,13 @@ var dashRoutes = [
     component: Billing,
     layout: `/${ADMIN_ROUTE}`,
   },
+  {
+    path: '/products',
+    name: 'Products',
+    icon: CreditIcon,
+    component: Billing,
+    layout: `/${ADMIN_ROUTE}`,
+  },
 
   {
     name: 'ACCOUNT PAGES',

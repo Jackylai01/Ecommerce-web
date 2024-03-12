@@ -9,7 +9,7 @@ export const getMainRoute = (url: string) => url.split('/')[1]; // 從 URL 中�
 
 export const toPageLayoutType = (pathname: string) => {
   if (pathname.startsWith(`/${ADMIN_ROUTE}/auth`)) {
-    return PageLayoutType.ADMIN_AUTH; // 如果 URL 的開頭是 admin 的 auth 路由，則頁面佈局類型為 ADMIN_AUTH
+    return PageLayoutType.ADMIN_AUTH; // 如果 URL 的開頭是 zigong 的 auth 路由，則頁面佈局類型為 ADMIN_AUTH
   }
 
   if (pathname.startsWith(`/${CLIENT_ROUTE}/auth`)) {

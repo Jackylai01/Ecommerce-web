@@ -1,15 +1,15 @@
 import {
-	Avatar,
-	Badge,
-	Button,
-	Flex,
-	Td,
-	Text,
-	Tr,
-	useColorModeValue,
+  Avatar,
+  Badge,
+  Button,
+  Flex,
+  Td,
+  Text,
+  Tr,
+  useColorModeValue,
 } from '@chakra-ui/react';
 
-function TablesTableRow(props:any) {
+function TablesTableRow(props: any) {
   const { logo, name, email, subdomain, domain, status, date } = props;
   const textColor = useColorModeValue('gray.700', 'white');
   const bgStatus = useColorModeValue('gray.400', '#1a202c');

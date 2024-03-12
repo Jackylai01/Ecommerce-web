@@ -21,8 +21,8 @@ export enum ProductAction {
 // 获取所有产品的Async Action
 export const getAllProductsAsync = createAsyncThunk(
   `${ReducerName.PRODUCT}/${ProductAction.getAllProducts}`,
-  async (params: any) => {
-    const response = await apiGetAllProducts(params);
+  async (query: any) => {
+    const response = await apiGetAllProducts(query);
     return response.res.data;
   },
 );
