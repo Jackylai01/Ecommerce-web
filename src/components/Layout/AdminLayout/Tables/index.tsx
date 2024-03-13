@@ -3,7 +3,7 @@ import { dashboardTableData, tablesTableData } from 'src/variables/general';
 import Authors from './components/Authors';
 import Projects from './components/Projects';
 
-function Tables() {
+const Tables = () => {
   return (
     <Flex direction='column' pt={{ base: '120px', md: '75px' }}>
       <Authors
@@ -18,6 +18,6 @@ function Tables() {
       />
     </Flex>
   );
-}
+};
 
 export default Tables;

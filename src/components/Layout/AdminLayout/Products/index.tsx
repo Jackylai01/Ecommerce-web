@@ -70,12 +70,17 @@ const ProductTableContainer = () => {
 
   return (
     <>
-      <Box as='main' overflowX='auto' w='full'>
-        <Table variant='simple' color={textColor} mt='2rem'>
+      <Box as='main' overflowX='auto' w='full' maxW='100%' mt='5rem'>
+        <Table variant='simple' color={textColor} size='sm'>
           <Thead>
-            <Tr my='.8rem' pl='0px' color='gray.400'>
+            <Tr>
               {captions.map((caption, idx) => (
-                <Th color='gray.400' key={idx}>
+                <Th
+                  color='gray.400'
+                  key={idx}
+                  minWidth='120px'
+                  textAlign='center'
+                >
                   {caption}
                 </Th>
               ))}

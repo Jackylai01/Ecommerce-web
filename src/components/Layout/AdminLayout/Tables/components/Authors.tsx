@@ -1,6 +1,7 @@
 import {
   Avatar,
   Badge,
+  Box,
   Button,
   Flex,
   Table,
@@ -26,7 +27,6 @@ interface AuthorsProps {
     subdomain: string;
     domain: string;
     status: any;
-    date: any;
   }[];
 }
 
@@ -37,7 +37,6 @@ interface AuthorRowData {
   subdomain: string;
   domain: string;
   status: string;
-  date: string;
 }
 
 const Authors = ({ title, captions, data }: AuthorsProps) => {
@@ -58,7 +57,7 @@ const Authors = ({ title, captions, data }: AuthorsProps) => {
         {row.status}
       </Badge>
     ),
-    (row: AuthorRowData) => <Text>{row.date}</Text>,
+
     (row: AuthorRowData) => (
       <Button colorScheme='blue' size='sm' onClick={() => editRow(row)}>
         Edit
@@ -71,31 +70,34 @@ const Authors = ({ title, captions, data }: AuthorsProps) => {
   };
 
   return (
-    <Card overflowX={{ sm: 'scroll', xl: 'hidden' }}>
+    <Card>
       <CardHeader p='6px 0px 22px 0px'>
         <Text fontSize='xl' color={textColor} fontWeight='bold'>
           {title}
         </Text>
       </CardHeader>
       <CardBody>
-        <Table variant='simple' color={textColor}>
-          <Thead>
-            <Tr my='.8rem' pl='0px' color='gray.400'>
-              {captions.map((caption, idx) => {
-                return (
-                  <Th color='gray.400' key={idx} ps={idx === 0 ? '0px' : '0px'}>
+        <Box overflowX='auto' w='full'>
+          <Table variant='simple' color={textColor} size='sm'>
+            <Thead>
+              <Tr>
+                {captions.map((caption, idx) => (
+                  <Th
+                    key={idx}
+                    minWidth={caption === 'Email' ? '100px' : '200px'}
+                  >
                     {caption}
                   </Th>
-                );
-              })}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data.map((row, index) => (
-              <TablesTableRow key={index} row={row} renderCell={renderCell} />
-            ))}
-          </Tbody>
-        </Table>
+                ))}
+              </Tr>
+            </Thead>
+            <Tbody>
+              {data.map((row, index) => (
+                <TablesTableRow key={index} row={row} renderCell={renderCell} />
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
       </CardBody>
     </Card>
   );

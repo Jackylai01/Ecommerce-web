@@ -139,7 +139,6 @@ export const tablesTableData = [
     subdomain: 'Manager',
     domain: 'Organization',
     status: 'Online',
-    date: '14/06/21',
   },
   {
     logo: '/assets/img/avatars/avatar2.png',
@@ -148,7 +147,6 @@ export const tablesTableData = [
     subdomain: 'Programmer',
     domain: 'Developer',
     status: 'Offline',
-    date: '12/05/21',
   },
   {
     logo: '/assets/img/avatars/avatar3.png',
@@ -157,7 +155,6 @@ export const tablesTableData = [
     subdomain: 'Executive',
     domain: 'Projects',
     status: 'Online',
-    date: '07/06/21',
   },
   {
     logo: '/assets/img/avatars/avatar4.png',
@@ -166,7 +163,6 @@ export const tablesTableData = [
     subdomain: 'Manager',
     domain: 'Organization',
     status: 'Online',
-    date: '14/11/21',
   },
   {
     logo: '/assets/img/avatars/avatar5.png',
@@ -175,7 +171,6 @@ export const tablesTableData = [
     subdomain: 'Programmer',
     domain: 'Developer',
     status: 'Offline',
-    date: '21/01/21',
   },
   {
     logo: '/assets/img/avatars/avatar7.png',
@@ -184,7 +179,6 @@ export const tablesTableData = [
     subdomain: 'Designer',
     domain: 'UI/UX Design',
     status: 'Offline',
-    date: '04/09/20',
   },
 ];
 
