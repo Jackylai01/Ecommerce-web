@@ -18,16 +18,14 @@ export enum ProductAction {
   deleteAllProducts = 'deleteAllProducts',
 }
 
-// 获取所有产品的Async Action
 export const getAllProductsAsync = createAsyncThunk(
   `${ReducerName.PRODUCT}/${ProductAction.getAllProducts}`,
   async (query: any) => {
     const response = await apiGetAllProducts(query);
-    return response.res.data;
+    return response.result.data;
   },
 );
 
-// 根据ID获取单个产品的Async Action
 export const getProductByIdAsync = createAsyncThunk(
   `${ReducerName.PRODUCT}/${ProductAction.getProductById}`,
   async (id: string) => {
@@ -36,7 +34,6 @@ export const getProductByIdAsync = createAsyncThunk(
   },
 );
 
-// 添加产品的Async Action
 export const addProductAsync = createAsyncThunk(
   `${ReducerName.PRODUCT}/${ProductAction.addProduct}`,
   async (body: any) => {
@@ -45,7 +42,6 @@ export const addProductAsync = createAsyncThunk(
   },
 );
 
-// 更新产品的Async Action
 export const updateProductAsync = createAsyncThunk(
   `${ReducerName.PRODUCT}/${ProductAction.updateProduct}`,
   async ({ id, body }: { id: string; body: any }) => {
@@ -54,7 +50,6 @@ export const updateProductAsync = createAsyncThunk(
   },
 );
 
-// 删除单个产品的Async Action
 export const deleteProductAsync = createAsyncThunk(
   `${ReducerName.PRODUCT}/${ProductAction.deleteProduct}`,
   async (id: string) => {
@@ -63,7 +58,6 @@ export const deleteProductAsync = createAsyncThunk(
   },
 );
 
-// 删除所有产品的Async Action
 export const deleteAllProductsAsync = createAsyncThunk(
   `${ReducerName.PRODUCT}/${ProductAction.deleteAllProducts}`,
   async () => {

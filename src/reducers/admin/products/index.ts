@@ -13,7 +13,7 @@ import {
   updateProductAsync,
 } from './actions';
 
-type ProductState = ApiState & {
+type ProductState = ApiState<ProductAction> & {
   list: Product[] | null;
   productDetails: Product | null;
 };

@@ -1,4 +1,8 @@
 import {
+  Avatar,
+  Badge,
+  Button,
+  Flex,
   Table,
   Tbody,
   Text,
@@ -26,8 +30,46 @@ interface AuthorsProps {
   }[];
 }
 
+interface AuthorRowData {
+  logo: string;
+  name: string;
+  email: string;
+  subdomain: string;
+  domain: string;
+  status: string;
+  date: string;
+}
+
 const Authors = ({ title, captions, data }: AuthorsProps) => {
   const textColor = useColorModeValue('gray.700', 'white');
+
+  const renderCell = [
+    (row: AuthorRowData) => (
+      <Flex align='center'>
+        <Avatar src={row.logo} w='50px' borderRadius='12px' />
+        <Text pl='15px'>{row.name}</Text>
+      </Flex>
+    ),
+    (row: AuthorRowData) => <Text>{row.email}</Text>,
+    (row: AuthorRowData) => <Text>{row.subdomain}</Text>,
+    (row: AuthorRowData) => <Text>{row.domain}</Text>,
+    (row: AuthorRowData) => (
+      <Badge colorScheme={row.status === 'Online' ? 'green' : 'red'}>
+        {row.status}
+      </Badge>
+    ),
+    (row: AuthorRowData) => <Text>{row.date}</Text>,
+    (row: AuthorRowData) => (
+      <Button colorScheme='blue' size='sm' onClick={() => editRow(row)}>
+        Edit
+      </Button>
+    ),
+  ];
+
+  const editRow = (row: AuthorRowData) => {
+    console.log('Editing row:', row);
+  };
+
   return (
     <Card overflowX={{ sm: 'scroll', xl: 'hidden' }}>
       <CardHeader p='6px 0px 22px 0px'>
@@ -49,20 +91,9 @@ const Authors = ({ title, captions, data }: AuthorsProps) => {
             </Tr>
           </Thead>
           <Tbody>
-            {data.map((row) => {
-              return (
-                <TablesTableRow
-                  key={`${row.email}-${row.name}`}
-                  name={row.name}
-                  logo={row.logo}
-                  email={row.email}
-                  subdomain={row.subdomain}
-                  domain={row.domain}
-                  status={row.status}
-                  date={row.date}
-                />
-              );
-            })}
+            {data.map((row, index) => (
+              <TablesTableRow key={index} row={row} renderCell={renderCell} />
+            ))}
           </Tbody>
         </Table>
       </CardBody>
