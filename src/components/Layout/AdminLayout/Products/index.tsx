@@ -3,6 +3,8 @@ import {
   Badge,
   Box,
   Button,
+  Flex,
+  Icon,
   Table,
   Tbody,
   Th,
@@ -16,6 +18,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { getAllProductsAsync } from '@reducers/admin/products/actions';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { FaTrashAlt } from 'react-icons/fa';
 
 interface ProductRowData {
   logo: string;
@@ -68,17 +71,13 @@ const ProductTableContainer = () => {
       </Button>
     ),
     (row: ProductRowData) => (
-      <Button colorScheme='blue' size='sm' onClick={() => deleteRow(row)}>
-        Delete
-      </Button>
+      <Flex color='red.500' cursor='pointer' align='center' p='12px'>
+        <Icon as={FaTrashAlt} me='4px' />
+        <Box fontSize='sm' fontWeight='semibold' onClick={() => deleteRow(row)}>
+          DELETE
+        </Box>
+      </Flex>
     ),
-  ];
-
-  const captionStyles = [
-    { minWidth: '150px', textAlign: 'center' }, // Logo
-    { minWidth: '200px', textAlign: 'left' }, // Name
-    { minWidth: '300px', textAlign: 'left' }, // Description
-    { minWidth: '150px', textAlign: 'center' }, // Status
   ];
 
   return (
