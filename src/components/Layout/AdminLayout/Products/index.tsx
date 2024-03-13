@@ -49,6 +49,7 @@ const ProductTableContainer = () => {
   const editRow = (row: ProductRowData) => {
     console.log('Editing row:', row);
   };
+  const deleteRow = (row: ProductRowData) => {};
 
   const renderCell = [
     (row: any) => (
@@ -66,6 +67,18 @@ const ProductTableContainer = () => {
         Edit
       </Button>
     ),
+    (row: ProductRowData) => (
+      <Button colorScheme='blue' size='sm' onClick={() => deleteRow(row)}>
+        Delete
+      </Button>
+    ),
+  ];
+
+  const captionStyles = [
+    { minWidth: '150px', textAlign: 'center' }, // Logo
+    { minWidth: '200px', textAlign: 'left' }, // Name
+    { minWidth: '300px', textAlign: 'left' }, // Description
+    { minWidth: '150px', textAlign: 'center' }, // Status
   ];
 
   return (
@@ -75,12 +88,7 @@ const ProductTableContainer = () => {
           <Thead>
             <Tr>
               {captions.map((caption, idx) => (
-                <Th
-                  color='gray.400'
-                  key={idx}
-                  minWidth='120px'
-                  textAlign='center'
-                >
+                <Th color='gray.400' key={idx} textAlign='center'>
                   {caption}
                 </Th>
               ))}
@@ -89,7 +97,7 @@ const ProductTableContainer = () => {
           <Tbody>
             {ProductList.map((product, index) => (
               <TablesTableRow
-                key={index}
+                key={product._id}
                 row={product}
                 renderCell={renderCell}
               />
