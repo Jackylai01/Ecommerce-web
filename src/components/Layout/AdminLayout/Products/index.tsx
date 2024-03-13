@@ -31,11 +31,7 @@ const ProductTableContainer = () => {
   const router = useRouter();
   const {
     list: ProductList,
-    status: {
-      getAllProductsLoading,
-      getAllProductsSuccess,
-      getProductByIdFailed,
-    },
+    status: { getAllProductsLoading, getProductByIdFailed },
   } = useAppSelector((state) => state.adminProducts);
 
   useEffect(() => {
@@ -49,16 +45,6 @@ const ProductTableContainer = () => {
   if (getAllProductsLoading || !Array.isArray(ProductList)) {
     return <div>Loading...</div>;
   }
-
-  const tableData = Array.isArray(ProductList)
-    ? ProductList.map((product) => ({
-        name: product.name,
-        description: product.description,
-        price: product.price.toString(),
-        status: product.status || '',
-        logo: product.coverImage?.imageUrl,
-      }))
-    : [];
 
   const editRow = (row: ProductRowData) => {
     console.log('Editing row:', row);
@@ -84,22 +70,28 @@ const ProductTableContainer = () => {
 
   return (
     <>
-      <Table variant='simple' color={textColor} mt='2rem'>
-        <Thead>
-          <Tr my='.8rem' pl='0px' color='gray.400'>
-            {captions.map((caption, idx) => (
-              <Th color='gray.400' key={idx}>
-                {caption}
-              </Th>
+      <Box as='main' overflowX='auto' w='full'>
+        <Table variant='simple' color={textColor} mt='2rem'>
+          <Thead>
+            <Tr my='.8rem' pl='0px' color='gray.400'>
+              {captions.map((caption, idx) => (
+                <Th color='gray.400' key={idx}>
+                  {caption}
+                </Th>
+              ))}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {ProductList.map((product, index) => (
+              <TablesTableRow
+                key={index}
+                row={product}
+                renderCell={renderCell}
+              />
             ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {ProductList.map((product, index) => (
-            <TablesTableRow key={index} row={product} renderCell={renderCell} />
-          ))}
-        </Tbody>
-      </Table>
+          </Tbody>
+        </Table>
+      </Box>
     </>
   );
 };
