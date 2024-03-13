@@ -1,7 +1,11 @@
-import { Box, useStyleConfig } from '@chakra-ui/react';
-import { CardProps } from '@models/entities/shared/Card';
+import { Box, BoxProps, useStyleConfig } from '@chakra-ui/react';
 
-function CardBody({ variant, children, rest }: CardProps) {
+interface CardBodyProps extends BoxProps {
+  variant?: string;
+  children: React.ReactNode;
+}
+
+function CardBody({ variant, children, ...rest }: CardBodyProps) {
   const styles = useStyleConfig('CardBody', { variant });
 
   return (

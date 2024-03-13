@@ -64,7 +64,6 @@ const Dashboard = () => {
         templateColumns={{ md: '1fr', lg: '1.8fr 1.2fr' }}
         templateRows={{ md: '1fr auto', lg: '1fr' }}
         mt='1rem'
-        mb='5rem'
       >
         <BuiltByDevelopers
           title={'Built by Developers'}
