@@ -1,4 +1,5 @@
 import { ReducerName } from '@enums/reducer-name';
+import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
 import { Product } from '@models/entities/shared/products';
@@ -31,37 +32,33 @@ const productSlice = createSlice({
     resetProductState: () => initialState,
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(getAllProductsAsync.fulfilled, (state, action) => {
-        state.list = action.payload;
-      })
-      .addCase(getProductByIdAsync.fulfilled, (state, action) => {
-        state.productDetails = action.payload;
-      })
-      .addCase(addProductAsync.fulfilled, (state, action) => {
-        // 假設list已存在，將新產品添加到列表中
-        state.list = state.list
-          ? [...state.list, action.payload]
-          : [action.payload];
-      })
-      .addCase(updateProductAsync.fulfilled, (state, action) => {
-        // 更新產品列表中的對應產品
-        if (state.list) {
-          state.list = state.list.map((product) =>
-            product._id === action.payload._id ? action.payload : product,
-          );
-        }
-      })
-      .addCase(deleteProductAsync.fulfilled, (state, action) => {
-        if (state.list) {
-          state.list = state.list.filter(
-            (product) => product._id !== action.payload,
-          );
-        }
-      })
-      .addCase(deleteAllProductsAsync.fulfilled, (state) => {
-        state.list = null;
-      });
+    builder.addCase(getAllProductsAsync.fulfilled, (state, action) => {
+      state.list = action.payload;
+    });
+    builder.addCase(getProductByIdAsync.fulfilled, (state, action) => {
+      state.productDetails = action.payload;
+    });
+    builder.addCase(addProductAsync.fulfilled, (state, action) => {
+      // 假設list已存在，將新產品添加到列表中
+      state.list = state.list
+        ? [...state.list, action.payload]
+        : [action.payload];
+    });
+    builder.addCase(updateProductAsync.fulfilled, (state, action) => {
+      // 更新產品列表中的對應產品
+      if (state.list) {
+        state.list = state.list.map((product) =>
+          product._id === action.payload._id ? action.payload : product,
+        );
+      }
+    });
+    builder.addCase(deleteProductAsync.fulfilled, (state, action) => {
+      state.productDetails = null;
+    });
+    builder.addCase(deleteAllProductsAsync.fulfilled, (state) => {
+      state.list = null;
+    });
+    asyncMatcher(builder, ReducerName.PRODUCT);
   },
 });
 

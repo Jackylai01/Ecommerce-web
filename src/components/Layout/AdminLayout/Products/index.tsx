@@ -3,24 +3,28 @@ import {
   Badge,
   Box,
   Button,
-  Flex,
-  Icon,
   Table,
   Tbody,
   Th,
   Thead,
   Tr,
   useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react';
+import LoadingLayout from '@components/Layout/LoadingLayout';
+import ConfirmationModal from '@components/Modal/ConfirmationModal';
 import TablesTableRow from '@components/Tables/TablesTableRow';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { getAllProductsAsync } from '@reducers/admin/products/actions';
+import {
+  deleteProductAsync,
+  getAllProductsAsync,
+} from '@reducers/admin/products/actions';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { FaTrashAlt } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 
 interface ProductRowData {
+  _id: any;
   logo: string;
   name: string;
   description: string;
@@ -31,10 +35,20 @@ interface ProductRowData {
 const ProductTableContainer = () => {
   const dispatch = useAppDispatch();
   const textColor = useColorModeValue('gray.700', 'white');
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
+  const [selectedProductId, setSelectedProductId] = useState(null);
   const {
     list: ProductList,
-    status: { getAllProductsLoading, getProductByIdFailed },
+    productDetails,
+    status: {
+      getAllProductsLoading,
+      getProductByIdFailed,
+      deleteProductLoading,
+      deleteProductSuccess,
+      deleteProductFailed,
+    },
+    error: { deleteProductError },
   } = useAppSelector((state) => state.adminProducts);
 
   useEffect(() => {
@@ -44,15 +58,6 @@ const ProductTableContainer = () => {
   }, [router.isReady]);
 
   const captions = ['Logo', 'Name', 'Description', 'Status'];
-
-  if (getAllProductsLoading || !Array.isArray(ProductList)) {
-    return <div>Loading...</div>;
-  }
-
-  const editRow = (row: ProductRowData) => {
-    console.log('Editing row:', row);
-  };
-  const deleteRow = (row: ProductRowData) => {};
 
   const renderCell = [
     (row: any) => (
@@ -66,44 +71,74 @@ const ProductTableContainer = () => {
       </Badge>
     ),
     (row: ProductRowData) => (
-      <Button colorScheme='blue' size='sm' onClick={() => editRow(row)}>
-        Edit
+      <Button colorScheme='blue' size='sm' onClick={() => editRow(row._id)}>
+        編輯
       </Button>
     ),
     (row: ProductRowData) => (
-      <Flex color='red.500' cursor='pointer' align='center' p='12px'>
-        <Icon as={FaTrashAlt} me='4px' />
-        <Box fontSize='sm' fontWeight='semibold' onClick={() => deleteRow(row)}>
-          DELETE
-        </Box>
-      </Flex>
+      <Button
+        colorScheme='red'
+        size='sm'
+        onClick={() => requestDelete(row._id)}
+      >
+        刪除
+      </Button>
     ),
   ];
 
+  const editRow = (row: ProductRowData) => {
+    console.log('Editing row:', row);
+  };
+
+  const requestDelete = (id: any) => {
+    setSelectedProductId(id);
+    onOpen();
+  };
+
+  const deleteRow = async () => {
+    if (selectedProductId) {
+      dispatch(deleteProductAsync(selectedProductId));
+      onClose();
+    }
+  };
+
+  const modalContent = '您確定要刪除這個產品？';
+
+  console.log(deleteProductLoading);
   return (
     <>
-      <Box as='main' overflowX='auto' w='full' maxW='100%' mt='5rem'>
-        <Table variant='simple' color={textColor} size='sm'>
-          <Thead>
-            <Tr>
-              {captions.map((caption, idx) => (
-                <Th color='gray.400' key={idx} textAlign='center'>
-                  {caption}
-                </Th>
+      <LoadingLayout isLoading={getAllProductsLoading || deleteProductLoading}>
+        <Box as='main' overflowX='auto' w='full' maxW='100%' mt='5rem'>
+          <Table variant='simple' color={textColor} size='sm'>
+            <Thead>
+              <Tr>
+                {captions.map((caption, idx) => (
+                  <Th color='gray.400' key={idx} textAlign='center'>
+                    {caption}
+                  </Th>
+                ))}
+              </Tr>
+            </Thead>
+            <Tbody>
+              {ProductList?.map((product) => (
+                <TablesTableRow
+                  key={product._id}
+                  row={product}
+                  renderCell={renderCell}
+                />
               ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {ProductList.map((product, index) => (
-              <TablesTableRow
-                key={product._id}
-                row={product}
-                renderCell={renderCell}
-              />
-            ))}
-          </Tbody>
-        </Table>
-      </Box>
+            </Tbody>
+          </Table>
+          <ConfirmationModal
+            isOpen={isOpen}
+            onClose={onClose}
+            title='確認要刪除?'
+            onConfirm={deleteRow}
+          >
+            {modalContent}
+          </ConfirmationModal>
+        </Box>
+      </LoadingLayout>
     </>
   );
 };
