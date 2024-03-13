@@ -7,15 +7,6 @@ import {
   SlackLogo,
   SpotifyLogo,
 } from '@components/Icons/Icons';
-import avatar1 from '@public/assets/img/avatars/avatar1.png';
-import avatar10 from '@public/assets/img/avatars/avatar10.png';
-import avatar2 from '@public/assets/img/avatars/avatar2.png';
-import avatar3 from '@public/assets/img/avatars/avatar3.png';
-import avatar4 from '@public/assets/img/avatars/avatar4.png';
-import avatar5 from '@public/assets/img/avatars/avatar5.png';
-import avatar7 from '@public/assets/img/avatars/avatar7.png';
-import avatar8 from '@public/assets/img/avatars/avatar8.png';
-import avatar9 from '@public/assets/img/avatars/avatar9.png';
 
 import { AiOutlineExclamation } from 'react-icons/ai';
 import {
@@ -33,42 +24,70 @@ export const dashboardTableData = [
   {
     logo: AdobexdLogo,
     name: 'Purity UI Version',
-    members: [avatar1, avatar2, avatar3, avatar4, avatar5],
+    members: [
+      '/assets/img/avatars/avatar1.png',
+      '/assets/img/avatars/avatar2.png',
+      '/assets/img/avatars/avatar3.png',
+      '/assets/img/avatars/avatar4.png',
+      '/assets/img/avatars/avatar5.png',
+    ],
     budget: '$14,000',
     progression: 60,
   },
   {
     logo: AtlassianLogo,
     name: 'Add Progress Track',
-    members: [avatar3, avatar2],
+    members: [
+      '/assets/img/avatars/avatar3.png',
+      ,
+      '/assets/img/avatars/avatar2.png',
+    ],
     budget: '$3,000',
     progression: 10,
   },
   {
     logo: SlackLogo,
     name: 'Fix Platform Errors',
-    members: [avatar10, avatar4],
+    members: [
+      '/assets/img/avatars/avatar4.png',
+      '/assets/img/avatars/avatar10.png',
+    ],
     budget: 'Not set',
     progression: 100,
   },
   {
     logo: SpotifyLogo,
     name: 'Launch our Mobile App',
-    members: [avatar2, avatar3, avatar7, avatar8],
+    members: [
+      '/assets/img/avatars/avatar2.png',
+      '/assets/img/avatars/avatar3.png',
+      '/assets/img/avatars/avatar7.png',
+      '/assets/img/avatars/avatar8.png',
+    ],
     budget: '$32,000',
     progression: 100,
   },
   {
     logo: JiraLogo,
     name: 'Add the New Pricing Page',
-    members: [avatar10, avatar3, avatar7, avatar2, avatar8],
+    members: [
+      '/assets/img/avatars/avatar10.png',
+      '/assets/img/avatars/avatar3.png',
+      '/assets/img/avatars/avatar7.png',
+      '/assets/img/avatars/avatar2.png',
+      '/assets/img/avatars/avatar1.png',
+    ],
     budget: '$400',
     progression: 25,
   },
   {
     logo: InvisionLogo,
     name: 'Redesign New Online Shop',
-    members: [avatar9, avatar3, avatar2],
+    members: [
+      '/assets/img/avatars/avatar2.png',
+      '/assets/img/avatars/avatar6.png',
+      '/assets/img/avatars/avatar5.png',
+    ],
     budget: '$7,600',
     progression: 40,
   },
