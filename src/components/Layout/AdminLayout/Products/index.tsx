@@ -13,6 +13,8 @@ import {
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import ConfirmationModal from '@components/Modal/ConfirmationModal';
+import MessageModal from '@components/Modal/MessageModal';
+import Pagination from '@components/Pagination';
 import TablesTableRow from '@components/Tables/TablesTableRow';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
@@ -36,26 +38,31 @@ const ProductTableContainer = () => {
   const dispatch = useAppDispatch();
   const textColor = useColorModeValue('gray.700', 'white');
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isMessageModalOpen,
+    onOpen: onMessageModalOpen,
+    onClose: onMessageModalClose,
+  } = useDisclosure();
   const router = useRouter();
   const [selectedProductId, setSelectedProductId] = useState(null);
   const {
     list: ProductList,
+    metadata,
     productDetails,
     status: {
       getAllProductsLoading,
-      getProductByIdFailed,
       deleteProductLoading,
       deleteProductSuccess,
-      deleteProductFailed,
     },
     error: { deleteProductError },
   } = useAppSelector((state) => state.adminProducts);
 
   useEffect(() => {
-    if (!router.isReady) return;
-    dispatch(getAllProductsAsync({ limit: Number.MAX_SAFE_INTEGER }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady]);
+    const page = parseInt(router.query.page as string) || 1;
+    const limit = parseInt(router.query.limit as string) || 10;
+
+    dispatch(getAllProductsAsync({ page, limit }));
+  }, [dispatch, router.query.page, router.query.limit]);
 
   const captions = ['Logo', 'Name', 'Description', 'Status'];
 
@@ -101,10 +108,14 @@ const ProductTableContainer = () => {
       onClose();
     }
   };
+  useEffect(() => {
+    if (deleteProductSuccess || deleteProductError) {
+      onMessageModalOpen();
+    }
+  }, [deleteProductSuccess, deleteProductError, onMessageModalOpen]);
 
   const modalContent = '您確定要刪除這個產品？';
 
-  console.log(deleteProductLoading);
   return (
     <>
       <LoadingLayout isLoading={getAllProductsLoading || deleteProductLoading}>
@@ -120,13 +131,15 @@ const ProductTableContainer = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {ProductList?.map((product) => (
-                <TablesTableRow
-                  key={product._id}
-                  row={product}
-                  renderCell={renderCell}
-                />
-              ))}
+              {ProductList &&
+                Array.isArray(ProductList) &&
+                ProductList.map((product) => (
+                  <TablesTableRow
+                    key={product._id}
+                    row={product}
+                    renderCell={renderCell}
+                  />
+                ))}
             </Tbody>
           </Table>
           <ConfirmationModal
@@ -137,7 +150,19 @@ const ProductTableContainer = () => {
           >
             {modalContent}
           </ConfirmationModal>
+          <MessageModal
+            title='刪除產品'
+            isActive={isMessageModalOpen}
+            error={deleteProductError}
+            onClose={onMessageModalClose}
+          >
+            {deleteProductSuccess && <Box>產品已成功刪除。</Box>}
+            {deleteProductError && (
+              <Box color='red.500'>{deleteProductError}</Box>
+            )}
+          </MessageModal>
         </Box>
+        {metadata && <Pagination metadata={metadata} />}
       </LoadingLayout>
     </>
   );

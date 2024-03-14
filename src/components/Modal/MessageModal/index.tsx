@@ -1,33 +1,54 @@
+import {
+  Button,
+  Link,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+} from '@chakra-ui/react';
 import { ADMIN_ROUTE } from '@fixtures/constants';
-import Link from 'next/link';
-import Modal from '..';
+import NextLink from 'next/link';
 
-type Props = {
+interface MessageModalProps {
   title: string;
-  active: boolean;
+  isActive: boolean;
   error: string | null;
-  close: React.MouseEventHandler;
+  onClose: () => void;
   children?: React.ReactNode;
-};
+}
 
-const MessageModal = ({ title, active, error, close, children }: Props) => {
+const MessageModal: React.FC<MessageModalProps> = ({
+  title,
+  isActive,
+  error,
+  onClose,
+  children,
+}) => {
   return (
-    <Modal
-      title={`${title}${error ? '失敗' : '成功'}`}
-      currentValue={active}
-      setCurrentValue={close}
-    >
-      {error && <p className='form__error-message margin-bottom'>{error}</p>}
-      {children ? (
-        <>{children}</>
-      ) : (
-        <>
-          <button className='simple-btn' type='button' onClick={close}>
+    <Modal isOpen={isActive} onClose={onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>
+          {title}
+          {error ? ' 失敗' : ' 成功'}
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          {error ? <Text color='red.500'>{error}</Text> : children}
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme='blue' mr={3} onClick={onClose}>
             關閉
-          </button>
-          <Link href={`/${ADMIN_ROUTE}`}>返回</Link>
-        </>
-      )}
+          </Button>
+          <NextLink href={`/${ADMIN_ROUTE}`} passHref>
+            <Link color='teal.500'>返回</Link>
+          </NextLink>
+        </ModalFooter>
+      </ModalContent>
     </Modal>
   );
 };

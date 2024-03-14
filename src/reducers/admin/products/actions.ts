@@ -1,4 +1,6 @@
 import { ReducerName } from '@enums/reducer-name';
+import { PagingQuery } from '@models/entities/shared/pagination';
+import { ProductQueryParams } from '@models/entities/shared/query';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiAddProduct,
@@ -20,9 +22,10 @@ export enum ProductAction {
 
 export const getAllProductsAsync = createAsyncThunk(
   `${ReducerName.PRODUCT}/${ProductAction.getAllProducts}`,
-  async (query: any) => {
+  async ({ page, limit }: ProductQueryParams) => {
+    const query: PagingQuery = { page, limit };
     const response = await apiGetAllProducts(query);
-    return response.result.data;
+    return response.result;
   },
 );
 

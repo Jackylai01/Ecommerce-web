@@ -1,181 +1,127 @@
-import { Box, Flex, List, ListItem, Select } from '@chakra-ui/react';
-import { fieldQuery, formatQueryString } from '@helpers/query';
+// components/Pagination.tsx
+import {
+  ArrowBackIcon,
+  ArrowForwardIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@chakra-ui/icons';
+import {
+  Button,
+  Flex,
+  HStack,
+  IconButton,
+  Select,
+  Text,
+  useBreakpointValue,
+} from '@chakra-ui/react';
 import { Metadata } from '@models/entities/shared/pagination';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
-type Props = {
+interface PaginationProps {
   metadata: Metadata;
-};
+}
 
-const Pagination = ({ metadata }: Props) => {
-  const [middenLinks, setMiddenLinks] = useState<(string | number)[]>([]);
-  const { count, limit, last, page } = metadata;
-  const prevPage = page > 1 ? page - 1 : 1;
-  const nextPage = page < last ? page + 1 : last;
-  const startIndex = limit * (page - 1) + 1;
-  const endIndex = page === last ? count - (page & limit) : page * limit;
-
+const Pagination: React.FC<PaginationProps> = ({ metadata }) => {
   const router = useRouter();
   const { pathname, query } = router;
 
-  useEffect(() => {
-    let links;
+  // 獲取當前的頁碼
+  const currentPage = Number(query.page) || 1;
+  const limit = Number(query.limit) || metadata.limit;
 
-    if (last <= 8) {
-      links = Array(last)
-        .fill('')
-        .map((e, index) => (index += 1));
-    } else if (page <= 5) {
-      links = Array(8)
-        .fill('')
-        .map((e, index) => (index += 1));
-      links = [...links, '...', last];
-    } else if (page >= last - 5) {
-      let startNumber = last - 8;
-      links = Array(8)
-        .fill('')
-        .map((e) => (startNumber += 1));
-      links = [1, '...', ...links];
-    } else {
-      let startNumber = page - 4;
-      links = Array(7)
-        .fill('')
-        .map((e) => (startNumber += 1));
-      links = [1, '...', ...links, '...', last];
-    }
+  // 生成頁碼
+  const pageNumbers = [];
+  for (let i = 1; i <= metadata.last; i++) {
+    pageNumbers.push(i);
+  }
 
-    setMiddenLinks(links);
-  }, [last, page]);
-
-  useEffect(() => {
-    if (Number(query.page ?? last) > last) {
-      const routerLink = formatQueryString(pathname, {
-        ...query,
-        page: last,
-      });
-      router.push(routerLink);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.page, last]);
-
-  const selectPageLimit = (limitNumber: string) => {
-    if (!limitNumber) return;
-    const routerLink = formatQueryString(pathname, {
-      ...query,
-      limit: limitNumber,
+  // 跳转到指定页码
+  const setPage = (page: number) => {
+    router.push({
+      pathname,
+      query: { ...query, page },
     });
-    router.push(routerLink);
   };
 
-  const linkString = (pageNumber: number): string => {
-    return fieldQuery(pathname, { ...query, page: pageNumber });
+  // 改變每頁顯示數量
+  const setLimit = (newLimit: string) => {
+    router.push({
+      pathname,
+      query: { ...query, page: 1, limit: newLimit },
+    });
   };
 
-  const relString = (pageNumber: number): string | undefined => {
-    return pageNumber === prevPage
-      ? 'prev'
-      : pageNumber === nextPage
-      ? 'next'
-      : undefined;
-  };
+  const displayValue = useBreakpointValue({ base: 'none', md: 'block' });
+
+  const buttonSize = useBreakpointValue({ base: 'xs', md: 'sm' });
+  const selectSize = useBreakpointValue({ base: 'sm', md: 'md' });
+  const hStackSpacing = useBreakpointValue({ base: '1', md: '2' });
+  const textNoOfLines = useBreakpointValue({ base: 1, md: undefined });
+  const fontSize = useBreakpointValue({ base: 'xs', md: 'sm' });
 
   return (
     <Flex
-      as='footer'
-      align='flex-end'
+      direction={{ base: 'column', md: 'row' }}
+      alignItems='center'
+      justifyContent='center'
+      gap='10px'
       wrap='wrap'
-      fontSize='0.9rem'
-      justifyContent='space-between'
     >
-      <Box display='inline-flex' flexDirection='column' marginTop='1rem'>
-        <Box as='p' color='white'>
-          顯示 {startIndex}-{endIndex} 筆項目，總計 {page} 頁 {count} 個項目
-        </Box>
-        {last > 1 && (
-          <List
-            display='flex'
-            flexWrap='wrap'
-            alignItems='center'
-            marginTop='1rem'
+      <HStack spacing={hStackSpacing}>
+        <IconButton
+          aria-label='First page'
+          icon={<ArrowBackIcon />}
+          onClick={() => setPage(1)}
+          isDisabled={currentPage === 1}
+          size={buttonSize}
+        />
+        <IconButton
+          aria-label='Previous page'
+          icon={<ChevronLeftIcon />}
+          onClick={() => setPage(currentPage - 1)}
+          isDisabled={currentPage === 1}
+          size={buttonSize}
+        />
+        {pageNumbers.map((number) => (
+          <Button
+            key={number}
+            onClick={() => setPage(number)}
+            isActive={currentPage === number}
+            display={currentPage === number ? 'block' : displayValue}
+            size={buttonSize}
           >
-            <ListItem color='white'>
-              <Link href={linkString(prevPage)} passHref>
-                <Box as='a'>
-                  <FaArrowLeft />
-                </Box>
-              </Link>
-            </ListItem>
-            {middenLinks.map((item, index) => (
-              <ListItem
-                key={index}
-                overflow='hidden'
-                fontWeight='500'
-                color='white'
-                margin='0rem 0.5rem'
-              >
-                {typeof item === 'number' ? (
-                  <Link href={linkString(item)}>
-                    <a
-                      className={`${item === page ? 'active' : ''}`}
-                      rel={relString(item)}
-                      style={{ color: item === page ? '#1e78c1' : 'white' }}
-                    >
-                      {item}
-                    </a>
-                  </Link>
-                ) : (
-                  item
-                )}
-              </ListItem>
-            ))}
-            <ListItem
-              color='white'
-              justifyContent='center
-            '
-            >
-              <Link href={linkString(nextPage)} passHref>
-                <Box as='a'>
-                  <FaArrowRight />
-                </Box>
-              </Link>
-            </ListItem>
-          </List>
-        )}
-      </Box>
-      <Flex alignItems='center' justifyContent='center' mt='2rem'>
-        <Box as='p' color='white'>
-          每頁筆數：
-        </Box>
-        <Box as='form'>
-          <Box as='label' htmlFor='pagination-show-number'>
-            <Select
-              id='pagination-show-number'
-              color='white'
-              fontWeight='700'
-              value={limit}
-              onChange={(event) => selectPageLimit(event.target.value)}
-              sx={{
-                option: {
-                  color: 'black',
-                },
-              }}
-            >
-              <Box as='option' value='10'>
-                10
-              </Box>
-              <Box as='option' value='25'>
-                25
-              </Box>
-              <Box as='option' value='50'>
-                50
-              </Box>
-            </Select>
-          </Box>
-        </Box>
-      </Flex>
+            {number}
+          </Button>
+        ))}
+        <IconButton
+          aria-label='Next page'
+          icon={<ChevronRightIcon />}
+          onClick={() => setPage(currentPage + 1)}
+          isDisabled={currentPage === metadata.last}
+          size={buttonSize}
+        />
+        <IconButton
+          aria-label='Last page'
+          icon={<ArrowForwardIcon />}
+          onClick={() => setPage(metadata.last)}
+          isDisabled={currentPage === metadata.last}
+          size={buttonSize}
+        />
+      </HStack>
+      <Select
+        onChange={(e) => setLimit(e.target.value)}
+        value={limit.toString()}
+        size={selectSize}
+      >
+        <option value='10'>10</option>
+        <option value='25'>25</option>
+        <option value='50'>50</option>
+      </Select>
+      <Text fontSize={fontSize} noOfLines={textNoOfLines}>
+        顯示 {currentPage * limit - limit + 1} 至
+        {Math.min(currentPage * limit, metadata.count)} 筆，共 {metadata.count}{' '}
+        筆
+      </Text>
     </Flex>
   );
 };
