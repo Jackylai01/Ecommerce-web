@@ -22,6 +22,7 @@ import Pagination from '@components/Pagination';
 import TablesTableRow from '@components/Tables/TablesTableRow';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { resetProductState } from '@reducers/admin/products';
 import {
   deleteProductAsync,
   getAllProductsAsync,
@@ -136,7 +137,6 @@ const ProductTableContainer = () => {
 
   useEffect(() => {
     const page = parseInt(router.query.page as string) || 1;
-
     dispatch(getAllProductsAsync({ page, limit: 10 }));
   }, [router.query.page, dispatch]);
 
@@ -148,6 +148,7 @@ const ProductTableContainer = () => {
         duration: 5000,
         isClosable: true,
       });
+      dispatch(resetProductState());
     } else if (updateProductStatusFailed) {
       toast({
         title: '產品狀態更新失敗',

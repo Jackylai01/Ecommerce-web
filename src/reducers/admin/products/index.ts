@@ -20,12 +20,14 @@ type ProductState = ApiState<ProductAction> & {
   list: Product[] | null;
   metadata: Metadata | null;
   productDetails: Product | null;
+  updateProductStatusSuccess: boolean;
 };
 
 const initialState: ProductState = {
   list: null,
   metadata: null,
   productDetails: null,
+  updateProductStatusSuccess: false,
   ...newApiState<ProductState>(ProductAction),
 };
 
