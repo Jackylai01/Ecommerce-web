@@ -136,7 +136,6 @@ const ProductTableContainer = () => {
 
   useEffect(() => {
     const page = parseInt(router.query.page as string) || 1;
-
     dispatch(getAllProductsAsync({ page, limit: 10 }));
   }, [router.query.page, dispatch]);
 

@@ -18,7 +18,7 @@ const Sidebar = ({ routes, sidebarVariant }: SidebarType) => {
 
   return (
     <Box ref={mainPanel}>
-      <Box display={{ sm: 'none', xl: 'block' }} position='fixed'>
+      <Box display={{ base: 'none', sm: 'none', xl: 'block' }} position='fixed'>
         <Box
           bg={sidebarBg}
           transition={variantChange}
