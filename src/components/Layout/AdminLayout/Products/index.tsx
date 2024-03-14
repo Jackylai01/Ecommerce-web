@@ -59,6 +59,8 @@ const ProductTableContainer = () => {
       getAllProductsLoading,
       deleteProductLoading,
       deleteProductSuccess,
+      updateProductStatusSuccess,
+      updateProductStatusFailed,
     },
     error: { deleteProductError, updateProductStatusError },
   } = useAppSelector((state) => state.adminProducts);
@@ -107,23 +109,7 @@ const ProductTableContainer = () => {
 
   const handleStatusChange = async (id: string, isChecked: boolean) => {
     const newStatus = isChecked ? 'onSale' : 'offShelf';
-    try {
-      dispatch(updateProductStatusAsync({ id, status: newStatus }));
-      toast({
-        title: `產品狀態已成功更新為 ${newStatus}.`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: '產品狀態更新失敗',
-        description: updateProductStatusError,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
+    dispatch(updateProductStatusAsync({ id, status: newStatus }));
   };
 
   const editRow = (row: ProductRowData) => {
@@ -153,6 +139,29 @@ const ProductTableContainer = () => {
 
     dispatch(getAllProductsAsync({ page, limit: 10 }));
   }, [router.query.page, dispatch]);
+
+  useEffect(() => {
+    if (updateProductStatusSuccess) {
+      toast({
+        title: '產品狀態更新成功',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    } else if (updateProductStatusFailed) {
+      toast({
+        title: '產品狀態更新失敗',
+        description: updateProductStatusError || '未知錯誤。',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [
+    updateProductStatusSuccess,
+    updateProductStatusFailed,
+    updateProductStatusError,
+  ]);
 
   const modalContent = '您確定要刪除這個產品？';
 
