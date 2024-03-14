@@ -9,6 +9,7 @@ import {
   apiGetAllProducts,
   apiGetProductById,
   apiUpdateProduct,
+  apiUpdateProductStatus,
 } from '@services/admin/products/products';
 
 export enum ProductAction {
@@ -18,6 +19,7 @@ export enum ProductAction {
   updateProduct = 'updateProduct',
   deleteProduct = 'deleteProduct',
   deleteAllProducts = 'deleteAllProducts',
+  updateProductStatus = 'updateProductStatus',
 }
 
 export const getAllProductsAsync = createAsyncThunk(
@@ -65,5 +67,13 @@ export const deleteAllProductsAsync = createAsyncThunk(
   `${ReducerName.PRODUCT}/${ProductAction.deleteAllProducts}`,
   async () => {
     await apiDeleteAllProducts();
+  },
+);
+
+export const updateProductStatusAsync = createAsyncThunk(
+  `${ReducerName.PRODUCT}/${ProductAction.updateProductStatus}`,
+  async ({ id, status }: { id: string; status: string }) => {
+    const response = await apiUpdateProductStatus(id, status);
+    return { id, status, data: response.result.data };
   },
 );

@@ -3,6 +3,9 @@ import {
   Badge,
   Box,
   Button,
+  FormControl,
+  FormLabel,
+  Switch,
   Table,
   Tbody,
   Th,
@@ -10,6 +13,7 @@ import {
   Tr,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import ConfirmationModal from '@components/Modal/ConfirmationModal';
@@ -21,6 +25,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import {
   deleteProductAsync,
   getAllProductsAsync,
+  updateProductStatusAsync,
 } from '@reducers/admin/products/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -44,6 +49,7 @@ const ProductTableContainer = () => {
     onClose: onMessageModalClose,
   } = useDisclosure();
   const router = useRouter();
+  const toast = useToast();
   const [selectedProductId, setSelectedProductId] = useState(null);
   const {
     list: ProductList,
@@ -54,15 +60,8 @@ const ProductTableContainer = () => {
       deleteProductLoading,
       deleteProductSuccess,
     },
-    error: { deleteProductError },
+    error: { deleteProductError, updateProductStatusError },
   } = useAppSelector((state) => state.adminProducts);
-
-  useEffect(() => {
-    const page = parseInt(router.query.page as string) || 1;
-    const limit = parseInt(router.query.limit as string) || 10;
-
-    dispatch(getAllProductsAsync({ page, limit }));
-  }, [dispatch, router.query.page, router.query.limit]);
 
   const captions = ['Logo', 'Name', 'Description', 'Status'];
 
@@ -91,7 +90,41 @@ const ProductTableContainer = () => {
         刪除
       </Button>
     ),
+    (row: ProductRowData) => (
+      <FormControl display='flex' alignItems='center'>
+        <FormLabel htmlFor={`status-switch-${row._id}`} mb='0'>
+          {row.status === 'onSale' ? '上架' : '下架'}
+        </FormLabel>
+        <Switch
+          id={`status-switch-${row._id}`}
+          isChecked={row.status === 'onSale'}
+          onChange={(e) => handleStatusChange(row._id, e.target.checked)}
+          size='sm'
+        />
+      </FormControl>
+    ),
   ];
+
+  const handleStatusChange = async (id: string, isChecked: boolean) => {
+    const newStatus = isChecked ? 'onSale' : 'offShelf';
+    try {
+      dispatch(updateProductStatusAsync({ id, status: newStatus }));
+      toast({
+        title: `產品狀態已成功更新為 ${newStatus}.`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: '產品狀態更新失敗',
+        description: updateProductStatusError,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
 
   const editRow = (row: ProductRowData) => {
     console.log('Editing row:', row);
@@ -108,11 +141,18 @@ const ProductTableContainer = () => {
       onClose();
     }
   };
+
   useEffect(() => {
     if (deleteProductSuccess || deleteProductError) {
       onMessageModalOpen();
     }
   }, [deleteProductSuccess, deleteProductError, onMessageModalOpen]);
+
+  useEffect(() => {
+    const page = parseInt(router.query.page as string) || 1;
+
+    dispatch(getAllProductsAsync({ page, limit: 10 }));
+  }, [router.query.page, dispatch]);
 
   const modalContent = '您確定要刪除這個產品？';
 

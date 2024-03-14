@@ -7,6 +7,7 @@ import {
   deleteRequest,
   getRequest,
   postRequest,
+  putRequest,
 } from '../../shared/api';
 
 /**
@@ -51,4 +52,11 @@ export const apiDeleteProduct = async (id: string) => {
  */
 export const apiDeleteAllProducts = async () => {
   return deleteRequest<ApiResult<any>>('/products/all');
+};
+
+/**
+ * 更新產品狀態。例:上架、下架
+ */
+export const apiUpdateProductStatus = async (id: string, status: string) => {
+  return putRequest<ApiResult<any>>(`/products/${id}/status`, { status });
 };

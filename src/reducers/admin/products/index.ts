@@ -13,6 +13,7 @@ import {
   getAllProductsAsync,
   getProductByIdAsync,
   updateProductAsync,
+  updateProductStatusAsync,
 } from './actions';
 
 type ProductState = ApiState<ProductAction> & {
@@ -59,6 +60,15 @@ const productSlice = createSlice({
     });
     builder.addCase(deleteAllProductsAsync.fulfilled, (state) => {
       state.list = null;
+    });
+    builder.addCase(updateProductStatusAsync.fulfilled, (state, action) => {
+      const { id, status } = action.payload;
+      if (state.list) {
+        const index = state.list.findIndex((product) => product._id === id);
+        if (index !== -1) {
+          state.list[index].status = [status];
+        }
+      }
     });
     asyncMatcher(builder, ReducerName.PRODUCT);
   },
