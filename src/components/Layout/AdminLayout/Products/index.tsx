@@ -119,7 +119,7 @@ const ProductTableContainer = () => {
   return (
     <>
       <LoadingLayout isLoading={getAllProductsLoading || deleteProductLoading}>
-        <Box as='main' overflowX='auto' w='full' maxW='100%' mt='5rem'>
+        <Box as='main' overflowX='auto' w='full' minWidth='800px' mt='5rem'>
           <Table variant='simple' color={textColor} size='sm'>
             <Thead>
               <Tr>
@@ -142,6 +142,7 @@ const ProductTableContainer = () => {
                 ))}
             </Tbody>
           </Table>
+          {metadata && <Pagination metadata={metadata} />}
           <ConfirmationModal
             isOpen={isOpen}
             onClose={onClose}
@@ -162,7 +163,6 @@ const ProductTableContainer = () => {
             )}
           </MessageModal>
         </Box>
-        {metadata && <Pagination metadata={metadata} />}
       </LoadingLayout>
     </>
   );
