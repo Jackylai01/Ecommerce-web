@@ -124,7 +124,7 @@ const ProductTableContainer = () => {
             <Thead>
               <Tr>
                 {captions.map((caption, idx) => (
-                  <Th color='gray.400' key={idx} textAlign='center'>
+                  <Th color='gray.400' key={idx}>
                     {caption}
                   </Th>
                 ))}
@@ -142,27 +142,28 @@ const ProductTableContainer = () => {
                 ))}
             </Tbody>
           </Table>
-          {metadata && <Pagination metadata={metadata} />}
-          <ConfirmationModal
-            isOpen={isOpen}
-            onClose={onClose}
-            title='確認要刪除?'
-            onConfirm={deleteRow}
-          >
-            {modalContent}
-          </ConfirmationModal>
-          <MessageModal
-            title='刪除產品'
-            isActive={isMessageModalOpen}
-            error={deleteProductError}
-            onClose={onMessageModalClose}
-          >
-            {deleteProductSuccess && <Box>產品已成功刪除。</Box>}
-            {deleteProductError && (
-              <Box color='red.500'>{deleteProductError}</Box>
-            )}
-          </MessageModal>
         </Box>
+        <ConfirmationModal
+          isOpen={isOpen}
+          onClose={onClose}
+          title='確認要刪除?'
+          onConfirm={deleteRow}
+        >
+          {modalContent}
+        </ConfirmationModal>
+        <MessageModal
+          title='刪除產品'
+          isActive={isMessageModalOpen}
+          error={deleteProductError}
+          onClose={onMessageModalClose}
+        >
+          {deleteProductSuccess && <Box>產品已成功刪除。</Box>}
+          {deleteProductError && (
+            <Box color='red.500'>{deleteProductError}</Box>
+          )}
+        </MessageModal>
+
+        {metadata && <Pagination metadata={metadata} />}
       </LoadingLayout>
     </>
   );
