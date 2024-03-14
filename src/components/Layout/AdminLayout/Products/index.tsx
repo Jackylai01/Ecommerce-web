@@ -95,11 +95,11 @@ const ProductTableContainer = () => {
     (row: ProductRowData) => (
       <FormControl display='flex' alignItems='center'>
         <FormLabel htmlFor={`status-switch-${row._id}`} mb='0'>
-          {row.status === 'onSale' ? '上架' : '下架'}
+          {row.status.includes('onSale') ? '上架' : '下架'}
         </FormLabel>
         <Switch
           id={`status-switch-${row._id}`}
-          isChecked={row.status === 'onSale'}
+          isChecked={row.status.includes('onSale')}
           onChange={(e) => handleStatusChange(row._id, e.target.checked)}
           size='sm'
         />
