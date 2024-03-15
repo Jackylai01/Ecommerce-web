@@ -45,9 +45,9 @@ const AdminUserProfilePage: NextPage = () => {
         />
         <MessageModal
           title='儲存'
-          active={modifyProfileSuccess || modifyProfileFailed}
+          isActive={modifyProfileSuccess || modifyProfileFailed}
           error={modifyProfileError}
-          close={() => dispatch(resetAdminAuthStatus())}
+          onClose={() => dispatch(resetAdminAuthStatus())}
         />
       </LoadingLayout>
     </>
