@@ -138,7 +138,6 @@ const ProductTableContainer = () => {
   useEffect(() => {
     dispatch(resetProductState());
 
-    // 加載產品列表
     const page = parseInt(router.query.page as string) || 1;
     dispatch(getAllProductsAsync({ page, limit: 10 }));
 
