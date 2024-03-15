@@ -151,7 +151,6 @@ const ProductTableContainer = () => {
         title: '產品狀態更新失敗',
         description: updateProductStatusError || '未知錯誤。',
         status: 'error',
-        duration: 5000,
         isClosable: true,
       });
     }
