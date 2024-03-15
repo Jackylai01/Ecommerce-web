@@ -6,23 +6,26 @@ import {
   Flex,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { getChineseNameForPath } from '@helpers/router';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import AdminNavbarLinks from './AdminNavbarLinks';
 
 interface AdminNavbarType {
   fixed: any;
   secondary: any;
-  brandText?: string;
   onOpen: any;
 }
 
 const AdminNavbar = ({
   fixed,
   secondary,
-  brandText,
+
   onOpen,
 }: AdminNavbarType) => {
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
+  const currentPathChinese = getChineseNameForPath(router.pathname);
 
   const mainText = useColorModeValue('gray.700', 'gray.200');
   const secondaryText = useColorModeValue('gray.400', 'gray.200');
@@ -134,7 +137,7 @@ const AdminNavbar = ({
             </BreadcrumbItem>
             <BreadcrumbItem color={mainText}>
               <BreadcrumbLink href='#' color={mainText}>
-                {brandText}
+                {currentPathChinese}
               </BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>

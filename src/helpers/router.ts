@@ -1,5 +1,6 @@
 import { PageLayoutType } from '@enums/page-layout-type';
 import { ADMIN_ROUTE, CLIENT_ROUTE, PUBLIC_ROUTE } from '@fixtures/constants';
+import { routeToChinese } from '@models/entities/shared/query';
 
 export const pathnameRemoveQuery = (pathname: string) => {
   return pathname.split('?')[0]; // 去除 URL 中的 query 參數
@@ -32,3 +33,12 @@ export const toPageLayoutType = (pathname: string) => {
       return PageLayoutType.CLIENT_PUBLIC;
   }
 };
+
+// 處理路由名稱轉換中文的函式，設定包含zigong。
+export function getChineseNameForPath(pathname: any) {
+  if (pathname.startsWith('/zigong')) {
+    const withoutPrefix = pathname.slice('/zigong'.length);
+    return routeToChinese[withoutPrefix] || '後臺管理';
+  }
+  return '後臺管理';
+}

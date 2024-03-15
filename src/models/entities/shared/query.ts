@@ -1,4 +1,14 @@
+import { Enum } from '@models/enum';
+
 export interface ProductQueryParams {
   page?: number;
   limit?: number;
 }
+
+export const routeToChinese: Enum = {
+  '/tables': '帳號管理',
+  '/products': '產品管理',
+  '/categories': '產品類別管理',
+  '/billing': '金流管理',
+  '/profile': '個人資料設定',
+};
