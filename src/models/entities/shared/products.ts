@@ -38,8 +38,15 @@ export interface Product extends BaseEntity {
 }
 
 export interface Category {
+  // 類別ID
+  _id: string;
   // 類別名稱
   name: string;
   // 類別描述
-  description: string;
+  description?: string;
+  // 類別封面照
+  coverImage?: {
+    imageUrl: string;
+    imageId: string;
+  };
 }
