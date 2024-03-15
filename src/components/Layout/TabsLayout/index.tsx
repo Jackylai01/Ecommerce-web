@@ -6,6 +6,7 @@ import { FC, ReactNode } from 'react';
 interface TabItem {
   label: string;
   path: string;
+  icon: any;
 }
 
 interface MainLayoutProps extends BoxProps {
@@ -26,10 +27,15 @@ const TabsLayout: FC<MainLayoutProps> = ({ children, tabsConfig, ...rest }) => {
     router.push(path);
   };
 
+  const tabItems = tabsConfig.map((tab) => ({
+    label: tab.label,
+    icon: tab.icon,
+  }));
+
   return (
     <Box {...rest}>
       <TabsComponent
-        tabs={tabsConfig.map((tab) => tab.label)}
+        tabItems={tabItems}
         index={activeTabIndex >= 0 ? activeTabIndex : 0}
         onChange={handleTabChange}
       />

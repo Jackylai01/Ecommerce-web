@@ -1,22 +1,47 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import { FC } from 'react';
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import React, { FC } from 'react';
 
+interface TabItemWithIcon {
+  label: string;
+  icon: React.ElementType; // 使用React.ElementType以支持图标组件
+}
 interface TabsComponentProps {
-  tabs: string[];
+  tabItems: TabItemWithIcon[];
   onChange: (index: number) => void;
   index: number;
 }
 
-const TabsComponent: FC<TabsComponentProps> = ({ tabs, onChange, index }) => {
+const TabsComponent: FC<TabsComponentProps> = ({
+  tabItems,
+  onChange,
+  index,
+}) => {
   return (
-    <Tabs index={index} onChange={onChange} mt='3rem'>
-      <TabList>
-        {tabs.map((label, idx) => (
-          <Tab key={idx}>{label}</Tab>
-        ))}
+    <Tabs
+      index={index}
+      onChange={(index) => onChange(index)}
+      mt='3rem'
+      size='lg'
+    >
+      <TabList borderBottom='none'>
+        <>
+          {tabItems.map((item, idx) => (
+            <Tab
+              key={idx}
+              _selected={{
+                bg: 'blue.500',
+                color: 'white',
+                borderRadius: '12px',
+              }}
+            >
+              <Box as={item.icon} mr='2' />
+              {item.label}
+            </Tab>
+          ))}
+        </>
       </TabList>
       <TabPanels>
-        {tabs.map((_, idx) => (
+        {tabItems.map((_, idx) => (
           <TabPanel key={idx}></TabPanel>
         ))}
       </TabPanels>
