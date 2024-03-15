@@ -17,7 +17,12 @@ const TabsComponent: FC<TabsComponentProps> = ({
   index,
 }) => {
   return (
-    <Tabs index={index} onChange={(index) => onChange(index)} mt='5rem'>
+    <Tabs
+      index={index}
+      onChange={(index) => onChange(index)}
+      mt='5rem'
+      ml='1rem'
+    >
       <TabList borderBottom='none'>
         <>
           {tabItems.map((item, idx) => (
