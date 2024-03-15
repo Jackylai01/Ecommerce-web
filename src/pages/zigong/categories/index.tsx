@@ -1,14 +1,14 @@
-import ProductTableContainer from '@components/Layout/AdminLayout/Products';
+import ProductCategories from '@components/Layout/AdminLayout/Products/components/ProductCategories';
 import TabsLayout from '@components/Layout/TabsLayout';
 import { ProductsConfig } from '@fixtures/Tabs-configs';
 import { NextPage } from 'next';
 
-const ProductsPages: NextPage = () => {
+const CategoriesPages: NextPage = () => {
   return (
     <TabsLayout tabsConfig={ProductsConfig}>
-      <ProductTableContainer />
+      <ProductCategories />
     </TabsLayout>
   );
 };
 
-export default ProductsPages;
+export default CategoriesPages;
