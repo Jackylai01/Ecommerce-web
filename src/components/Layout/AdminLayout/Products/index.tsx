@@ -165,7 +165,7 @@ const ProductTableContainer = () => {
   return (
     <>
       <LoadingLayout isLoading={getAllProductsLoading || deleteProductLoading}>
-        <Box as='main' overflowX='auto' w='full' minWidth='800px' mt='5rem'>
+        <Box as='main' overflowX='auto' w='full' minWidth='800px'>
           <Table variant='simple' color={textColor} size='sm'>
             <Thead>
               <Tr>
