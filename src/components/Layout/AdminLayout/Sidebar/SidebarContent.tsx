@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import IconBox from '@components/Icons/IconBox';
 import { CreativeTimLogo } from '@components/Icons/Icons';
+import { ADMIN_ROUTE } from '@fixtures/constants';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Separator } from '../Separator';
@@ -34,6 +35,13 @@ const SidebarContent = ({
   const inactiveColor = useColorModeValue('gray.400', 'gray.400');
 
   const activeRoute = (routePath: string) => {
+    if (
+      routePath === '/' &&
+      (router.pathname === ADMIN_ROUTE || router.pathname === `${ADMIN_ROUTE}/`)
+    ) {
+      return true;
+    }
+
     if (router.pathname === routePath) {
       return true;
     }
@@ -44,9 +52,9 @@ const SidebarContent = ({
     ) {
       return true;
     }
+
     return router.pathname === routePath;
   };
-
   const links = routes.map((prop: any, key: number) => {
     const isActive = activeRoute(`${prop.layout}${prop.path}`);
     if (prop.category) {
