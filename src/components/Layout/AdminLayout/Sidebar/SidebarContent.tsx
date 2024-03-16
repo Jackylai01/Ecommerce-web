@@ -19,20 +19,36 @@ interface SideBarContentType {
   routes: any;
   display?: string;
   sidebarVariant?: any;
+  currentPath: string;
 }
 
-const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
+const SidebarContent = ({
+  logoText,
+  routes,
+  currentPath,
+}: SideBarContentType) => {
   const router = useRouter();
   const activeBg = useColorModeValue('white', 'gray.700');
   const inactiveBg = useColorModeValue('gray.500', 'gray.700');
   const activeColor = useColorModeValue('gray.700', 'white');
   const inactiveColor = useColorModeValue('gray.400', 'gray.400');
 
-  const activeRoute = (routeName: any) => {
-    return router.pathname === routeName ? 'active' : '';
+  const activeRoute = (routePath: string) => {
+    if (router.pathname === routePath) {
+      return true;
+    }
+
+    if (
+      router.pathname.includes('/categories') &&
+      routePath.includes('/products')
+    ) {
+      return true;
+    }
+    return router.pathname === routePath;
   };
 
   const links = routes.map((prop: any, key: number) => {
+    const isActive = activeRoute(`${prop.layout}${prop.path}`);
     if (prop.category) {
       return (
         <div key={prop.name}>
@@ -47,23 +63,23 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
             {prop.name}
           </Text>
           {prop.views.map((viewProp: any, viewKey: number) => (
-            <Link href={viewProp.layout + viewProp.path} passHref key={viewKey}>
+            <Link
+              href={viewProp.layout + viewProp.path}
+              passHref
+              key={`view-${viewKey}`}
+            >
               <ChakraLink w='100%'>
                 <Button
                   boxSize='initial'
                   justifyContent='flex-start'
                   alignItems='center'
-                  bg={
-                    activeRoute(viewProp.layout + viewProp.path) === 'active'
-                      ? activeBg
-                      : 'transparent'
-                  }
+                  bg={isActive ? 'teal.300' : 'transparent'}
+                  color={isActive ? 'white' : 'gray.400'}
                   mb={{ xl: '12px' }}
                   mx={{ xl: 'auto' }}
                   ps={{ sm: '10px', xl: '16px' }}
                   py='12px'
                   borderRadius='15px'
-                  _hover={{ bg: activeBg }}
                   _active={{
                     bg: 'inherit',
                     transform: 'none',
@@ -74,8 +90,7 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
                   <Flex>
                     <IconBox
                       bg={
-                        activeRoute(viewProp.layout + viewProp.path) ===
-                        'active'
+                        activeRoute(viewProp.layout + viewProp.path)
                           ? 'teal.300'
                           : inactiveBg
                       }
@@ -88,8 +103,7 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
                     </IconBox>
                     <Text
                       color={
-                        activeRoute(viewProp.layout + viewProp.path) ===
-                        'active'
+                        activeRoute(viewProp.layout + viewProp.path)
                           ? activeColor
                           : inactiveColor
                       }
@@ -114,17 +128,12 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
             boxSize='initial'
             justifyContent='flex-start'
             alignItems='center'
-            bg={
-              activeRoute(prop.layout + prop.path) === 'active'
-                ? activeBg
-                : 'transparent'
-            }
+            bg={activeRoute(prop.layout + prop.path) ? activeBg : 'transparent'}
             mb={{ xl: '12px' }}
             mx={{ xl: 'auto' }}
             ps={{ sm: '10px', xl: '16px' }}
             py='12px'
             borderRadius='15px'
-            _hover={{ bg: activeBg }}
             _active={{
               bg: 'inherit',
               transform: 'none',
@@ -135,9 +144,7 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
             <Flex>
               <IconBox
                 bg={
-                  activeRoute(prop.layout + prop.path) === 'active'
-                    ? 'teal.300'
-                    : inactiveBg
+                  activeRoute(prop.layout + prop.path) ? 'teal.300' : inactiveBg
                 }
                 color='white'
                 h='30px'
@@ -148,7 +155,7 @@ const SidebarContent = ({ logoText, routes }: SideBarContentType) => {
               </IconBox>
               <Text
                 color={
-                  activeRoute(prop.layout + prop.path) === 'active'
+                  activeRoute(prop.layout + prop.path)
                     ? activeColor
                     : inactiveColor
                 }

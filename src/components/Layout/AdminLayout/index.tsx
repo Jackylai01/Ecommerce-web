@@ -129,7 +129,11 @@ const AdminLayout = ({ children }: Props) => {
       </Head>
       <Flex w='100%' justifyContent='space-between'>
         <Box>
-          <Sidebar routes={routes} sidebarVariant={sidebarVariant} />
+          <Sidebar
+            routes={routes}
+            sidebarVariant={sidebarVariant}
+            currentPath={router.pathname}
+          />
         </Box>
         <MainPanel
           w={{

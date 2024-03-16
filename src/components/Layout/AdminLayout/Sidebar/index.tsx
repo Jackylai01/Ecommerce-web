@@ -5,9 +5,10 @@ import SidebarContent from './SidebarContent';
 interface SidebarType {
   routes: any;
   sidebarVariant: any;
+  currentPath: string;
 }
 
-const Sidebar = ({ routes, sidebarVariant }: SidebarType) => {
+const Sidebar = ({ routes, sidebarVariant, currentPath }: SidebarType) => {
   const mainPanel = useRef<HTMLDivElement>(null);
   let variantChange = '0.2s linear';
 
@@ -34,6 +35,7 @@ const Sidebar = ({ routes, sidebarVariant }: SidebarType) => {
             logoText={'PURITY UI DASHBOARD'}
             display='none'
             sidebarVariant={sidebarVariant}
+            currentPath={currentPath}
           />
         </Box>
       </Box>
