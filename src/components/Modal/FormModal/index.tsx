@@ -40,7 +40,12 @@ function FormModal<T extends FieldValues>({
 
   return (
     <FormProvider {...methods}>
-      <Modal isOpen={isOpen} onClose={onClose} size='5xl'>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size='6xl'
+        closeOnOverlayClick={false}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{title}</ModalHeader>
