@@ -47,7 +47,7 @@ function FormModal<T extends FieldValues>({
         closeOnOverlayClick={false}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent minH='620px'>
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <form onSubmit={methods.handleSubmit(handleFormSubmit)}>
