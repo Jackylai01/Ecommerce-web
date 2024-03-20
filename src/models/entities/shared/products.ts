@@ -19,7 +19,7 @@ export interface Product extends BaseEntity {
   // 商品狀態（如：上架、下架、缺貨）
   status?: string[];
   // 商品的規格或特性（例如：顏色、尺寸等）
-  specifications?: any[];
+  specifications?: any;
   // 用戶對商品的評分和評論
   ratings?: {
     userId?: string;
