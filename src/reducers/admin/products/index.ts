@@ -36,6 +36,9 @@ const productSlice = createSlice({
   initialState,
   reducers: {
     resetProductState: () => initialState,
+    resetProductDetails: (state) => {
+      state.productDetails = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getAllProductsAsync.fulfilled, (state, action) => {
@@ -76,5 +79,5 @@ const productSlice = createSlice({
   },
 });
 
-export const { resetProductState } = productSlice.actions;
+export const { resetProductState, resetProductDetails } = productSlice.actions;
 export default productSlice.reducer;

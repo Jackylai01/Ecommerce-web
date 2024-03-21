@@ -16,7 +16,7 @@ interface ProductFormContentType {
 }
 
 export const ProductFormContent = ({ productId }: ProductFormContentType) => {
-  const { control, setValue, reset } = useFormContext();
+  const { control, setValue } = useFormContext();
   const dispatch = useAppDispatch();
 
   const { list: categories } = useAppSelector(
@@ -31,7 +31,7 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
     if (productId) {
       dispatch(getProductByIdAsync(productId));
     }
-  }, [productId, dispatch, reset]);
+  }, [productId, dispatch]);
 
   useEffect(() => {
     if (productDetails) {

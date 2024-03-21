@@ -4,7 +4,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 interface PreviewImage {
-  file?: File;
+  file?: File | null;
   url: string;
 }
 
@@ -29,6 +29,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const { setValue } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // 当文件改变时处理文件预览
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files).map((file) => ({
@@ -39,37 +40,28 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       setPreviews(filesArray);
       setValue(
         name,
-        multiple ? filesArray.map((f) => f.file) : filesArray[0]?.file,
+        multiple ? filesArray.map((f) => f.file) : filesArray[0].file,
       );
     }
   };
 
+  // 从预览中移除图片
   const removePreview = (index: number) => {
-    const filteredPreviews = previews.filter((_, i) => i !== index);
-    setPreviews(filteredPreviews);
-    setValue(
-      name,
-      multiple
-        ? filteredPreviews.map((f) => f.file)
-        : filteredPreviews[0]?.file,
-    );
+    setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
 
+  // 仅当 previewUrl 或 previewUrls 改变时更新预览
   useEffect(() => {
-    let newPreviews: PreviewImage[] = [];
     if (previewUrl) {
-      newPreviews.push({ url: previewUrl, file: undefined });
-    } else if (previewUrls && previewUrls.length > 0) {
-      newPreviews = previewUrls.map((url) => ({ url, file: undefined }));
+      setPreviews([{ url: previewUrl, file: null }]);
+    } else if (previewUrls.length > 0) {
+      setPreviews(previewUrls.map((url) => ({ url, file: null })));
     }
-    if (JSON.stringify(newPreviews) !== JSON.stringify(previews)) {
-      setPreviews(newPreviews);
-    }
-  }, [previewUrl, previewUrls, previews]);
+  }, [previewUrl, previewUrls]);
 
   return (
     <Box>
