@@ -2,7 +2,8 @@ import { VStack } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { getAllProductsCategoryAsync } from '@reducers/admin/product-category/actions';
-import { useEffect } from 'react';
+import { getProductByIdAsync } from '@reducers/admin/products/actions';
+import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import CustomSelect from './Field/CustomSelect';
 import ImageUpload from './Field/ImageUpload';
@@ -10,17 +11,55 @@ import DynamicSpecifications from './Field/Specifications';
 import { TextInput } from './Field/TextInput';
 import ToggleSwitch from './Field/ToggleSwitch';
 
-export const ProductFormContent = () => {
-  const { control } = useFormContext();
+interface ProductFormContentType {
+  productId?: string;
+}
+
+export const ProductFormContent = ({ productId }: ProductFormContentType) => {
+  const { control, setValue, reset } = useFormContext();
   const dispatch = useAppDispatch();
 
-  const categories = useAppSelector(
-    (state) => state.adminProductsCategory.list,
+  const { list: categories } = useAppSelector(
+    (state) => state.adminProductsCategory,
   );
+  const { productDetails } = useAppSelector((state) => state.adminProducts);
+  const [coverImagePreview, setCoverImagePreview] = useState('');
+  const [productImagesPreviews, setProductImagesPreviews] = useState<any>([]);
 
   useEffect(() => {
     dispatch(getAllProductsCategoryAsync({ page: 1, limit: 100 }));
-  }, [dispatch]);
+    if (productId) {
+      dispatch(getProductByIdAsync(productId));
+    }
+  }, [productId, dispatch, reset]);
+
+  useEffect(() => {
+    if (productDetails) {
+      setValue('name', productDetails.name);
+      setValue('description', productDetails.description);
+      setValue('price', productDetails.price);
+      setValue('category', productDetails.category[0]);
+      setValue('status', productDetails.status);
+
+      if (productDetails.specifications) {
+        setValue(
+          'specifications',
+          productDetails.specifications.map((spec: any) => ({
+            ...spec,
+          })),
+        );
+      }
+
+      if (productDetails.coverImage) {
+        setCoverImagePreview(productDetails.coverImage.imageUrl);
+      }
+
+      const imagesPreviews = productDetails.images.map(
+        (image) => image.imageUrl,
+      );
+      setProductImagesPreviews(imagesPreviews);
+    }
+  }, [productDetails, setValue]);
 
   const categoryOptions =
     categories?.map((category) => ({
@@ -63,8 +102,19 @@ export const ProductFormContent = () => {
         offLabel='下架'
       />
       <DynamicSpecifications />
-      <ImageUpload name='coverImage' label='封面照片' isRequired />
-      <ImageUpload name='images' multiple label='產品圖片' isRequired />
+      <ImageUpload
+        name='coverImage'
+        label='封面照片'
+        isRequired
+        previewUrl={coverImagePreview}
+      />
+      <ImageUpload
+        name='images'
+        label='產品圖片'
+        isRequired
+        multiple
+        previewUrls={productImagesPreviews}
+      />
     </VStack>
   );
 };

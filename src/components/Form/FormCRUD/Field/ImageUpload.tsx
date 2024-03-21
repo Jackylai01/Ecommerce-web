@@ -1,10 +1,10 @@
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { Box, IconButton, Image, Stack, Text } from '@chakra-ui/react';
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 interface PreviewImage {
-  file: File;
+  file?: File;
   url: string;
 }
 
@@ -13,6 +13,8 @@ interface ImageUploadProps {
   label: string;
   multiple?: boolean;
   isRequired?: boolean;
+  previewUrls?: string[];
+  previewUrl?: string;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -20,6 +22,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   label,
   multiple = false,
   isRequired = false,
+  previewUrls = [],
+  previewUrl,
 }) => {
   const [previews, setPreviews] = useState<PreviewImage[]>([]);
   const { setValue } = useFormContext();
@@ -33,7 +37,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       }));
 
       setPreviews(filesArray);
-
       setValue(
         name,
         multiple ? filesArray.map((f) => f.file) : filesArray[0]?.file,
@@ -55,6 +58,18 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
+
+  useEffect(() => {
+    let newPreviews: PreviewImage[] = [];
+    if (previewUrl) {
+      newPreviews.push({ url: previewUrl, file: undefined });
+    } else if (previewUrls && previewUrls.length > 0) {
+      newPreviews = previewUrls.map((url) => ({ url, file: undefined }));
+    }
+    if (JSON.stringify(newPreviews) !== JSON.stringify(previews)) {
+      setPreviews(newPreviews);
+    }
+  }, [previewUrl, previewUrls, previews]);
 
   return (
     <Box>

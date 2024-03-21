@@ -15,8 +15,10 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import { ProductFormContent } from '@components/Form/FormCRUD/ProductsContent';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import ConfirmationModal from '@components/Modal/ConfirmationModal';
+import FormModal from '@components/Modal/FormModal';
 import MessageModal from '@components/Modal/MessageModal';
 import Pagination from '@components/Pagination';
 import TablesTableRow from '@components/Tables/TablesTableRow';
@@ -24,8 +26,10 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { resetProductState } from '@reducers/admin/products';
 import {
+  addProductAsync,
   deleteProductAsync,
   getAllProductsAsync,
+  updateProductAsync,
   updateProductStatusAsync,
 } from '@reducers/admin/products/actions';
 import { useRouter } from 'next/router';
@@ -42,6 +46,9 @@ interface ProductRowData {
 
 const ProductTableContainer = () => {
   const dispatch = useAppDispatch();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingProductId, setEditingProductId] = useState<any>(null);
+
   const textColor = useColorModeValue('gray.700', 'white');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -113,8 +120,13 @@ const ProductTableContainer = () => {
     dispatch(updateProductStatusAsync({ id, status: newStatus }));
   };
 
-  const editRow = (row: ProductRowData) => {
-    console.log('Editing row:', row);
+  const handleEdit = (productId: any) => {
+    setEditingProductId(productId);
+    setIsEditModalOpen(true);
+  };
+
+  const editRow = (productId: any) => {
+    handleEdit(productId);
   };
 
   const requestDelete = (id: any) => {
@@ -127,6 +139,42 @@ const ProductTableContainer = () => {
       dispatch(deleteProductAsync(selectedProductId));
       onClose();
     }
+  };
+
+  const handleSubmit = async (data: any) => {
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key) => {
+      if (
+        key !== 'coverImage' &&
+        key !== 'images' &&
+        key !== 'specifications'
+      ) {
+        formData.append(key, data[key]);
+      }
+    });
+
+    if (data.coverImage) {
+      formData.append('coverImage', data.coverImage);
+    }
+
+    if (data.images && data.images.length) {
+      data.images.forEach((image: any) => {
+        formData.append('images', image);
+      });
+    }
+
+    if (data.specifications) {
+      formData.append('specifications', JSON.stringify(data.specifications));
+    }
+
+    if (editingProductId) {
+      dispatch(updateProductAsync({ id: editingProductId, body: formData }));
+    } else {
+      dispatch(addProductAsync(formData));
+    }
+
+    setIsEditModalOpen(false);
   };
 
   useEffect(() => {
@@ -213,6 +261,14 @@ const ProductTableContainer = () => {
 
         {metadata && <Pagination metadata={metadata} />}
       </LoadingLayout>
+      <FormModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSubmit={handleSubmit}
+        title='編輯產品'
+      >
+        <ProductFormContent productId={editingProductId} />
+      </FormModal>
     </>
   );
 };
