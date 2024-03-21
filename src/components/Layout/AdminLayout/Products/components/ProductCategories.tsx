@@ -17,6 +17,7 @@ import Pagination from '@components/Pagination';
 import TablesTableRow from '@components/Tables/TablesTableRow';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { resetCategoryState } from '@reducers/admin/product-category';
 import {
   deleteProductCategoryAsync,
   getAllProductsCategoryAsync,
@@ -109,6 +110,7 @@ const ProductCategories = () => {
   ]);
 
   useEffect(() => {
+    dispatch(resetCategoryState());
     const page = parseInt(router.query.page as string) || 1;
     dispatch(getAllProductsCategoryAsync({ page, limit: 10 }));
   }, [router.query.page, dispatch]);

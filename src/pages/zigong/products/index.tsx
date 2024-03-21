@@ -7,6 +7,7 @@ import MessageModal from '@components/Modal/MessageModal';
 import { ProductsConfig } from '@fixtures/Tabs-configs';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { resetProductState } from '@reducers/admin/products';
 import { addProductAsync } from '@reducers/admin/products/actions';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
@@ -65,6 +66,12 @@ const ProductsPages: NextPage = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetProductState());
+    };
+  }, [dispatch]);
 
   return (
     <>

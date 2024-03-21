@@ -7,6 +7,7 @@ import MessageModal from '@components/Modal/MessageModal';
 import { ProductsConfig } from '@fixtures/Tabs-configs';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { resetCategoryState } from '@reducers/admin/product-category';
 import { addProductCategoryAsync } from '@reducers/admin/product-category/actions';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
@@ -58,6 +59,11 @@ const CategoriesPages: NextPage = () => {
 
     dispatch(addProductCategoryAsync(formData));
   };
+  useEffect(() => {
+    return () => {
+      dispatch(resetCategoryState());
+    };
+  }, [dispatch]);
 
   return (
     <LoadingLayout isLoading={addProductsCategoryLoading}>
