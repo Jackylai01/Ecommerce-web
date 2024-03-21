@@ -13,7 +13,7 @@ import {
 export enum ProductCategoryAction {
   getAllProductsCategory = 'getAllProductsCategory',
   getProductsCategoryById = 'getProductsCategoryById',
-  addProductsCategory = ' addProductsCategory ',
+  addProductsCategory = 'addProductsCategory',
   updateProductsCategory = 'updateProductsCategory',
   deleteProductsCategory = 'deleteProductsCategory',
 }

@@ -136,13 +136,16 @@ const ProductCategories = () => {
             <Tbody>
               {ProductCategoryList &&
                 Array.isArray(ProductCategoryList) &&
-                ProductCategoryList.map((categories) => (
-                  <TablesTableRow
-                    key={categories._id}
-                    row={categories}
-                    renderCell={renderCell}
-                  />
-                ))}
+                ProductCategoryList.map(
+                  (categories) =>
+                    categories && (
+                      <TablesTableRow
+                        key={categories._id}
+                        row={categories}
+                        renderCell={renderCell}
+                      />
+                    ),
+                )}
             </Tbody>
           </Table>
         </Box>
