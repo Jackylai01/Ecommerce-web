@@ -37,7 +37,7 @@ export const apiAddProduct = async (body: any) => {
  * @throws 400 BadRequest 欄位驗證錯誤
  */
 export const apiUpdateProduct = async (id: string, body: any) => {
-  return postRequest<ApiResult<any>>(`/products/${id}`, body);
+  return putRequest<ApiResult<any>>(`/products/${id}`, body);
 };
 
 /**

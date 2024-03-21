@@ -25,11 +25,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   previewUrls = [],
   previewUrl,
 }) => {
-  const [previews, setPreviews] = useState<PreviewImage[]>([]);
+  const [filePreviews, setFilePreviews] = useState<PreviewImage[]>([]);
+  const [propPreviews, setPropPreviews] = useState<PreviewImage[]>([]);
   const { setValue } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 当文件改变时处理文件预览
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files).map((file) => ({
@@ -37,7 +37,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         url: URL.createObjectURL(file),
       }));
 
-      setPreviews(filesArray);
+      setFilePreviews(filesArray);
+
       setValue(
         name,
         multiple ? filesArray.map((f) => f.file) : filesArray[0].file,
@@ -45,23 +46,27 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     }
   };
 
-  // 从预览中移除图片
-  const removePreview = (index: number) => {
-    setPreviews((prev) => prev.filter((_, i) => i !== index));
+  const removePreview = (index: number, isFilePreview: boolean = true) => {
+    if (isFilePreview) {
+      setFilePreviews((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      setPropPreviews((prev) => prev.filter((_, i) => i !== index));
+    }
   };
 
   const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
 
-  // 仅当 previewUrl 或 previewUrls 改变时更新预览
   useEffect(() => {
     if (previewUrl) {
-      setPreviews([{ url: previewUrl, file: null }]);
+      setPropPreviews([{ url: previewUrl, file: null }]);
     } else if (previewUrls.length > 0) {
-      setPreviews(previewUrls.map((url) => ({ url, file: null })));
+      setPropPreviews(previewUrls.map((url) => ({ url, file: null })));
     }
   }, [previewUrl, previewUrls]);
+
+  const previews = [...filePreviews, ...propPreviews];
 
   return (
     <Box>
@@ -104,7 +109,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               position='absolute'
               top='-2'
               right='-2'
-              onClick={() => removePreview(index)}
+              onClick={() => removePreview(index, index < filePreviews.length)}
             />
           </Box>
         ))}
