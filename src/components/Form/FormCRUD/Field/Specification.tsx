@@ -19,8 +19,12 @@ export const Specification = ({ specIndex }: SpecificationProps) => {
   const { control, register } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `specifications[${specIndex}].details`,
+    name: `specifications[${specIndex}].specs`,
   });
+
+  const handleAddDetail = () => {
+    append({ key: '', value: '' });
+  };
 
   return (
     <VStack spacing={2}>
@@ -34,19 +38,17 @@ export const Specification = ({ specIndex }: SpecificationProps) => {
           <FormControl>
             <FormLabel>特性</FormLabel>
             <Input
-              {...register(
-                `specifications[${specIndex}].details[${index}].key`,
-              )}
-              placeholder='如“尺寸”'
+              {...register(`specifications[${specIndex}].specs[${index}].key`)}
+              placeholder="例如'尺寸'"
             />
           </FormControl>
           <FormControl>
             <FormLabel>值</FormLabel>
             <Input
               {...register(
-                `specifications[${specIndex}].details[${index}].value`,
+                `specifications[${specIndex}].specs[${index}].value`,
               )}
-              placeholder='如“M”'
+              placeholder="例如'M'"
             />
           </FormControl>
           <FormControl>
@@ -54,7 +56,7 @@ export const Specification = ({ specIndex }: SpecificationProps) => {
             <HStack>
               <Input
                 {...register(
-                  `specifications[${specIndex}].details[${index}].inventory`,
+                  `specifications[${specIndex}].specs[${index}].inventory`,
                 )}
                 placeholder='數量'
                 type='number'
@@ -68,11 +70,8 @@ export const Specification = ({ specIndex }: SpecificationProps) => {
           </FormControl>
         </Grid>
       ))}
-      <Button
-        onClick={() => append({ key: '', value: '', inventory: 0 })}
-        colorScheme='blue'
-      >
-        新增細節規格
+      <Button onClick={handleAddDetail} colorScheme='blue' mt='1rem'>
+        新增詳細規格
       </Button>
     </VStack>
   );

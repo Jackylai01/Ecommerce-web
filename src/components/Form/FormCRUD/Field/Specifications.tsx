@@ -19,6 +19,13 @@ const DynamicSpecifications = () => {
   });
   const bgColor = useColorModeValue('gray.50', 'gray.700');
 
+  const handleAddSpecification = () => {
+    append({
+      type: '', // 規格類型，例如颜色、尺寸等
+      specs: [{ key: '', value: '' }], //詳細規格
+      inventory: 0, // 庫存
+    });
+  };
   return (
     <VStack spacing={4}>
       {fields.map((field, index) => (
@@ -49,12 +56,7 @@ const DynamicSpecifications = () => {
       <Button
         leftIcon={<AddIcon />}
         colorScheme='teal'
-        onClick={() =>
-          append({
-            color: '',
-            details: [{ type: '', value: '', inventory: 0 }],
-          })
-        }
+        onClick={handleAddSpecification}
       >
         新增規格
       </Button>
