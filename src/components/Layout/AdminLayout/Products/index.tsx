@@ -181,13 +181,13 @@ const ProductTableContainer = () => {
     if (deleteProductSuccess || deleteProductError) {
       onMessageModalOpen();
     }
-  }, [deleteProductSuccess, deleteProductError, onMessageModalOpen]);
+  }, [deleteProductSuccess, deleteProductError, onMessageModalOpen, dispatch]);
 
   useEffect(() => {
     dispatch(resetProductState());
     const page = parseInt(router.query.page as string) || 1;
     dispatch(getAllProductsAsync({ page, limit: 10 }));
-  }, [dispatch, router.query.page]);
+  }, [dispatch, router.query.page, deleteProductSuccess]);
 
   useEffect(() => {
     if (updateProductStatusSuccess) {
