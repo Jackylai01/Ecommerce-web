@@ -2,7 +2,10 @@ import { VStack } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { getAllProductsCategoryAsync } from '@reducers/admin/product-category/actions';
-import { getProductByIdAsync } from '@reducers/admin/products/actions';
+import {
+  deleteProductImageAsync,
+  getProductByIdAsync,
+} from '@reducers/admin/products/actions';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import CustomSelect from './Field/CustomSelect';
@@ -22,9 +25,23 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
   const { list: categories } = useAppSelector(
     (state) => state.adminProductsCategory,
   );
-  const { productDetails } = useAppSelector((state) => state.adminProducts);
-  const [coverImagePreview, setCoverImagePreview] = useState('');
+  const {
+    productDetails,
+    status: { deleteProductImageLoading, deleteProductImageSuccess },
+  } = useAppSelector((state) => state.adminProducts);
+
+  const [coverImagePreview, setCoverImagePreview] = useState<{
+    url: string;
+    file: null;
+    imageId?: string;
+  } | null>(null);
   const [productImagesPreviews, setProductImagesPreviews] = useState<any>([]);
+
+  const handleRemoveProductImage = (imageId: string) => {
+    if (productId) {
+      dispatch(deleteProductImageAsync({ productId, imageId }));
+    }
+  };
 
   useEffect(() => {
     dispatch(getAllProductsCategoryAsync({ page: 1, limit: 100 }));
@@ -51,12 +68,17 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
       }
 
       if (productDetails.coverImage) {
-        setCoverImagePreview(productDetails.coverImage.imageUrl);
+        setCoverImagePreview({
+          url: productDetails.coverImage.imageUrl,
+          file: null,
+          imageId: productDetails.coverImage.imageId,
+        });
       }
 
-      const imagesPreviews = productDetails.images.map(
-        (image) => image.imageUrl,
-      );
+      const imagesPreviews = productDetails.images.map((image) => ({
+        url: image.imageUrl,
+        imageId: image.imageId,
+      }));
       setProductImagesPreviews(imagesPreviews);
     }
   }, [productDetails, setValue]);
@@ -106,7 +128,7 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         name='coverImage'
         label='封面照片'
         isRequired
-        previewUrl={coverImagePreview}
+        previewUrl={coverImagePreview?.url}
       />
       <ImageUpload
         name='images'
@@ -114,6 +136,10 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         isRequired
         multiple
         previewUrls={productImagesPreviews}
+        productId={productId}
+        onRemoveImage={handleRemoveProductImage}
+        deleteLoading={deleteProductImageLoading}
+        deleteSuccess={deleteProductImageSuccess}
       />
     </VStack>
   );

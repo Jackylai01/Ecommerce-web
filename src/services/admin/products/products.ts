@@ -60,3 +60,16 @@ export const apiDeleteAllProducts = async () => {
 export const apiUpdateProductStatus = async (id: string, status: string) => {
   return putRequest<ApiResult<any>>(`/products/${id}/status`, { status });
 };
+
+/**
+ * 刪除產品單張相片
+ */
+export const apiDeleteProductImage = async (
+  productId: string,
+  imageId: string,
+) => {
+  const encodedPublicId = encodeURIComponent(imageId);
+  return deleteRequest<ApiResult<any>>(
+    `/products/${productId}/image/${encodedPublicId}`,
+  );
+};

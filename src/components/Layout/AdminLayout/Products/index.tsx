@@ -69,6 +69,7 @@ const ProductTableContainer = () => {
       deleteProductSuccess,
       updateProductStatusSuccess,
       updateProductStatusFailed,
+      updateProductLoading,
     },
     error: { deleteProductError, updateProductStatusError },
   } = useAppSelector((state) => state.adminProducts);

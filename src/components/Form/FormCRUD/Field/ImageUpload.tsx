@@ -1,11 +1,19 @@
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
-import { Box, IconButton, Image, Stack, Text } from '@chakra-ui/react';
+import {
+  Box,
+  IconButton,
+  Image,
+  Progress,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 interface PreviewImage {
   file?: File | null;
   url: string;
+  imageId?: string;
 }
 
 interface ImageUploadProps {
@@ -15,6 +23,10 @@ interface ImageUploadProps {
   isRequired?: boolean;
   previewUrls?: string[];
   previewUrl?: string;
+  productId?: string | any;
+  onRemoveImage?: (imageId: string) => void;
+  deleteLoading?: boolean;
+  deleteSuccess?: boolean;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -24,8 +36,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   isRequired = false,
   previewUrls = [],
   previewUrl,
+  productId,
+  onRemoveImage,
+  deleteSuccess,
+  deleteLoading,
 }) => {
-  const [filePreviews, setFilePreviews] = useState<PreviewImage[]>([]);
+  const [filePreviews, setFilePreviews] = useState<any[]>([]);
   const [propPreviews, setPropPreviews] = useState<PreviewImage[]>([]);
   const { setValue } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -46,11 +62,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     }
   };
 
-  const removePreview = (index: number, isFilePreview: boolean = true) => {
+  const handleRemoveImage = (
+    index: number,
+    isFilePreview: boolean,
+    imageId?: string,
+  ) => {
     if (isFilePreview) {
       setFilePreviews((prev) => prev.filter((_, i) => i !== index));
-    } else {
-      setPropPreviews((prev) => prev.filter((_, i) => i !== index));
+    } else if (imageId && onRemoveImage) {
+      onRemoveImage(imageId);
     }
   };
 
@@ -59,17 +79,20 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   useEffect(() => {
-    // 生成基于props的预览数组
     const newPropPreviews = previewUrl
       ? [{ url: previewUrl, file: null }]
       : previewUrls.map((url) => ({ url, file: null }));
 
-    // 只有当newPropPreviews和当前propPreviews不同时才更新
     if (JSON.stringify(newPropPreviews) !== JSON.stringify(propPreviews)) {
       setPropPreviews(newPropPreviews);
     }
   }, [previewUrl, previewUrls]);
-  const previews = [...filePreviews, ...propPreviews];
+
+  const singlePreview = previewUrl
+    ? [{ url: previewUrl, file: null, imageId: undefined }]
+    : [];
+
+  const previews = [...filePreviews, ...singlePreview, ...previewUrls];
 
   return (
     <Box>
@@ -112,8 +135,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               position='absolute'
               top='-2'
               right='-2'
-              onClick={() => removePreview(index, index < filePreviews.length)}
+              onClick={() =>
+                handleRemoveImage(
+                  index,
+                  index < filePreviews.length,
+                  preview.imageId,
+                )
+              }
             />
+            {deleteLoading && <Progress size='xs' isIndeterminate />}
           </Box>
         ))}
       </Stack>

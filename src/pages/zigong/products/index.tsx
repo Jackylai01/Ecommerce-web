@@ -15,23 +15,39 @@ import { useEffect, useState } from 'react';
 const ProductsPages: NextPage = () => {
   const dispatch = useAppDispatch();
   const {
-    status: { addProductSuccess, addProductFailed, addProductLoading },
+    status: {
+      addProductSuccess,
+      addProductFailed,
+      addProductLoading,
+      updateProductLoading,
+      updateProductSuccess,
+      updateProductFailed,
+    },
     error: { addProductError },
   } = useAppSelector((state) => state.adminProducts);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<string>('');
+  const [modalTitle, setModalTitle] = useState<string>('新增產品');
 
   useEffect(() => {
     if (addProductSuccess) {
       setIsModalOpen(true);
       setModalContent('產品新增成功！');
+      setModalTitle('新增產品');
     }
+
+    if (updateProductSuccess) {
+      setIsModalOpen(true);
+      setModalContent('產品更新成功！');
+      setModalTitle('更新產品');
+    }
+
     if (addProductFailed) {
       setIsModalOpen(true);
       setModalContent('');
     }
-  }, [addProductSuccess, addProductFailed, addProductLoading]);
+  }, [addProductSuccess, updateProductSuccess, addProductFailed]);
 
   const handleSubmit = async (data: any) => {
     console.log(data);
@@ -76,7 +92,7 @@ const ProductsPages: NextPage = () => {
 
   return (
     <>
-      <LoadingLayout isLoading={addProductLoading}>
+      <LoadingLayout isLoading={addProductLoading || updateProductLoading}>
         <AddButton
           formTitle='Add Product'
           formContent={<ProductFormContent />}
@@ -86,7 +102,7 @@ const ProductsPages: NextPage = () => {
           <ProductTableContainer />
         </TabsLayout>
         <MessageModal
-          title='新增產品'
+          title={modalTitle}
           isActive={isModalOpen}
           error={addProductError}
           onClose={handleCloseModal}

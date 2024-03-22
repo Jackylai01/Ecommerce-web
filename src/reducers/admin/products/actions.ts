@@ -6,6 +6,7 @@ import {
   apiAddProduct,
   apiDeleteAllProducts,
   apiDeleteProduct,
+  apiDeleteProductImage,
   apiGetAllProducts,
   apiGetProductById,
   apiUpdateProduct,
@@ -20,6 +21,7 @@ export enum ProductAction {
   deleteProduct = 'deleteProduct',
   deleteAllProducts = 'deleteAllProducts',
   updateProductStatus = 'updateProductStatus',
+  deleteProductImage = 'deleteProductImage',
 }
 
 export const getAllProductsAsync = createAsyncThunk(
@@ -75,5 +77,13 @@ export const updateProductStatusAsync = createAsyncThunk(
   async ({ id, status }: { id: string; status: string }) => {
     const response = await apiUpdateProductStatus(id, status);
     return { id, status, data: response.result.data };
+  },
+);
+
+export const deleteProductImageAsync = createAsyncThunk(
+  `${ReducerName.PRODUCT}/${ProductAction.deleteProductImage}`,
+  async ({ productId, imageId }: { productId: string; imageId: string }) => {
+    const response = await apiDeleteProductImage(productId, imageId);
+    return { productId, imageId, data: response.result.data };
   },
 );

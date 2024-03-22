@@ -10,6 +10,7 @@ import {
   addProductAsync,
   deleteAllProductsAsync,
   deleteProductAsync,
+  deleteProductImageAsync,
   getAllProductsAsync,
   getProductByIdAsync,
   updateProductAsync,
@@ -73,6 +74,14 @@ const productSlice = createSlice({
         if (index !== -1) {
           state.list[index].status = [status];
         }
+      }
+    });
+    builder.addCase(deleteProductImageAsync.fulfilled, (state, action) => {
+      const { productId, imageId } = action.meta.arg;
+      if (state.productDetails && state.productDetails._id === productId) {
+        state.productDetails.images = state.productDetails.images.filter(
+          (image) => image.imageId !== imageId,
+        );
       }
     });
     asyncMatcher(builder, ReducerName.PRODUCT);
