@@ -10,8 +10,10 @@ import {
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react';
+import { ProductCategoryForm } from '@components/Form/FormCRUD/ProductCategory';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import ConfirmationModal from '@components/Modal/ConfirmationModal';
+import FormModal from '@components/Modal/FormModal';
 import MessageModal from '@components/Modal/MessageModal';
 import Pagination from '@components/Pagination';
 import TablesTableRow from '@components/Tables/TablesTableRow';
@@ -19,24 +21,27 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { resetCategoryState } from '@reducers/admin/product-category';
 import {
+  addProductCategoryAsync,
   deleteProductCategoryAsync,
   getAllProductsCategoryAsync,
+  updateProductCategoryAsync,
 } from '@reducers/admin/product-category/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-interface ProductRowData {
+interface ProductCategoryRowData {
   _id: any;
-  logo: string;
   name: string;
   description: string;
-  status: 'onSale' | 'offSale';
   date: string;
 }
 
 const ProductCategories = () => {
   const dispatch = useAppDispatch();
   const textColor = useColorModeValue('gray.700', 'white');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingCategoryId, setEditingProductId] = useState<any>(null);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isMessageModalOpen,
@@ -44,9 +49,9 @@ const ProductCategories = () => {
     onClose: onMessageModalClose,
   } = useDisclosure();
   const router = useRouter();
-
   const [selectedProductCategoryId, setSelectedProductCategoryId] =
-    useState(null);
+    useState<any>(null);
+
   const {
     list: ProductCategoryList,
     metadata,
@@ -65,14 +70,14 @@ const ProductCategories = () => {
     (row: any) => (
       <Avatar src={row.coverImage?.imageUrl} w='50px' borderRadius='12px' />
     ),
-    (row: ProductRowData) => <Box>{row.name}</Box>,
-    (row: ProductRowData) => <Box>{row.description}</Box>,
-    (row: ProductRowData) => (
+    (row: ProductCategoryRowData) => <Box>{row.name}</Box>,
+    (row: ProductCategoryRowData) => <Box>{row.description}</Box>,
+    (row: ProductCategoryRowData) => (
       <Button colorScheme='blue' size='sm' onClick={() => editRow(row._id)}>
         編輯
       </Button>
     ),
-    (row: ProductRowData) => (
+    (row: ProductCategoryRowData) => (
       <Button
         colorScheme='red'
         size='sm'
@@ -83,13 +88,45 @@ const ProductCategories = () => {
     ),
   ];
 
-  const editRow = (row: ProductRowData) => {
-    console.log('Editing row:', row);
+  const handleEdit = (categoryId: any) => {
+    setEditingProductId(categoryId);
+    setIsEditModalOpen(true);
+  };
+
+  const editRow = (categoryId: any) => {
+    handleEdit(categoryId);
   };
 
   const requestDelete = (id: any) => {
     setSelectedProductCategoryId(id);
     onOpen();
+  };
+
+  const handleSubmit = async (data: any) => {
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key) => {
+      if (key !== 'coverImage') {
+        formData.append(key, data[key]);
+      }
+    });
+
+    if (data.coverImage) {
+      formData.append('coverImage', data.coverImage);
+    }
+
+    if (editingCategoryId) {
+      dispatch(
+        updateProductCategoryAsync({
+          id: selectedProductCategoryId,
+          body: formData,
+        }),
+      );
+    } else {
+      dispatch(addProductCategoryAsync(formData));
+    }
+
+    setIsEditModalOpen(false);
   };
 
   const deleteRow = async () => {
@@ -173,6 +210,14 @@ const ProductCategories = () => {
 
         {metadata && <Pagination metadata={metadata} />}
       </LoadingLayout>
+      <FormModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSubmit={handleSubmit}
+        title='編輯產品'
+      >
+        <ProductCategoryForm categoryId={editingCategoryId} />
+      </FormModal>
     </>
   );
 };

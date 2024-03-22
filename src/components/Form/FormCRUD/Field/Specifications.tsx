@@ -32,7 +32,7 @@ const DynamicSpecifications = () => {
         >
           <Flex alignItems='center' justifyContent='space-between'>
             <Input
-              {...register(`specifications[${index}].color`)}
+              {...register(`specifications[${index}].type`)}
               placeholder='颜色（如“黑色”）'
               w='full'
               mr={2}
@@ -52,7 +52,7 @@ const DynamicSpecifications = () => {
         onClick={() =>
           append({
             color: '',
-            details: [{ key: '', value: '', inventory: 0 }],
+            details: [{ type: '', value: '', inventory: 0 }],
           })
         }
       >

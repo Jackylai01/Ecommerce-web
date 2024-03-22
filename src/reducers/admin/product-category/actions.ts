@@ -31,7 +31,7 @@ export const getProductCategoryByIdAsync = createAsyncThunk(
   `${ReducerName.PRODUCT_CATEGORY}/${ProductCategoryAction.getProductsCategoryById}`,
   async (id: string) => {
     const response = await apiGetCategoryById(id);
-    return response.result.data;
+    return response.result;
   },
 );
 
