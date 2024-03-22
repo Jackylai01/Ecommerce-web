@@ -59,13 +59,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   useEffect(() => {
-    if (previewUrl) {
-      setPropPreviews([{ url: previewUrl, file: null }]);
-    } else if (previewUrls.length > 0) {
-      setPropPreviews(previewUrls.map((url) => ({ url, file: null })));
+    // 生成基于props的预览数组
+    const newPropPreviews = previewUrl
+      ? [{ url: previewUrl, file: null }]
+      : previewUrls.map((url) => ({ url, file: null }));
+
+    // 只有当newPropPreviews和当前propPreviews不同时才更新
+    if (JSON.stringify(newPropPreviews) !== JSON.stringify(propPreviews)) {
+      setPropPreviews(newPropPreviews);
     }
   }, [previewUrl, previewUrls]);
-
   const previews = [...filePreviews, ...propPreviews];
 
   return (
