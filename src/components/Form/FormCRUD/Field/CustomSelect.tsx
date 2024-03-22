@@ -30,7 +30,13 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
       <FormLabel htmlFor={name}>
         {label} {isRequired && <span style={{ color: 'red' }}></span>}
       </FormLabel>
-      <Select id={name} ref={ref} {...inputProps} {...selectProps}>
+      <Select
+        id={name}
+        ref={ref}
+        placeholder='請選擇'
+        {...inputProps}
+        {...selectProps}
+      >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

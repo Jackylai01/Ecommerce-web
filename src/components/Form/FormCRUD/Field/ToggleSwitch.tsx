@@ -32,6 +32,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       <Controller
         name={name}
         control={control}
+        defaultValue={onValue}
         render={({ field: { onChange, ref } }) => (
           <Switch
             id={name}
