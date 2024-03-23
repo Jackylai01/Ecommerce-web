@@ -30,11 +30,7 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
     status: { deleteProductImageLoading, deleteProductImageSuccess },
   } = useAppSelector((state) => state.adminProducts);
 
-  const [coverImagePreview, setCoverImagePreview] = useState<{
-    url: string;
-    file: null;
-    imageId?: string;
-  } | null>(null);
+  const [coverImagePreview, setCoverImagePreview] = useState<any>(null);
   const [productImagesPreviews, setProductImagesPreviews] = useState<any>([]);
 
   const handleRemoveProductImage = (imageId: string) => {
@@ -67,21 +63,29 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         );
       }
 
-      if (productDetails.coverImage) {
-        setCoverImagePreview({
-          url: productDetails.coverImage.imageUrl,
-          file: null,
-          imageId: productDetails.coverImage.imageId,
-        });
+      if (productDetails && productDetails.coverImage) {
+        const coverImagePreviews = productDetails.coverImage;
+        setCoverImagePreview(coverImagePreviews);
       }
 
       const imagesPreviews = productDetails.images.map((image) => ({
         url: image.imageUrl,
         imageId: image.imageId,
       }));
+
       setProductImagesPreviews(imagesPreviews);
     }
   }, [productDetails, setValue]);
+
+  useEffect(() => {
+    if (productDetails && productDetails.coverImage) {
+      setCoverImagePreview({
+        url: productDetails.coverImage.imageUrl,
+        file: null,
+        imageId: productDetails.coverImage.imageId,
+      });
+    }
+  }, [productDetails]);
 
   const categoryOptions =
     categories?.map((category) => ({
@@ -128,7 +132,10 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         name='coverImage'
         label='封面照片'
         isRequired
-        previewUrl={coverImagePreview?.url}
+        previewUrl={coverImagePreview}
+        onRemoveImage={handleRemoveProductImage}
+        deleteLoading={deleteProductImageLoading}
+        deleteSuccess={deleteProductImageSuccess}
       />
       <ImageUpload
         name='images'

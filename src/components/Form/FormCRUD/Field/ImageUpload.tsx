@@ -7,7 +7,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 interface PreviewImage {
@@ -21,8 +21,8 @@ interface ImageUploadProps {
   label: string;
   multiple?: boolean;
   isRequired?: boolean;
-  previewUrls?: string[];
-  previewUrl?: string;
+  previewUrls?: any;
+  previewUrl?: any;
   productId?: string | any;
   onRemoveImage?: (imageId: string) => void;
   deleteLoading?: boolean;
@@ -42,7 +42,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   deleteLoading,
 }) => {
   const [filePreviews, setFilePreviews] = useState<any[]>([]);
-  const [propPreviews, setPropPreviews] = useState<PreviewImage[]>([]);
   const { setValue } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -67,10 +66,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     isFilePreview: boolean,
     imageId?: string,
   ) => {
+    console.log(imageId);
+    if (imageId && onRemoveImage) {
+      onRemoveImage(imageId);
+    }
     if (isFilePreview) {
       setFilePreviews((prev) => prev.filter((_, i) => i !== index));
-    } else if (imageId && onRemoveImage) {
-      onRemoveImage(imageId);
     }
   };
 
@@ -78,21 +79,30 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     fileInputRef.current?.click();
   };
 
-  useEffect(() => {
-    const newPropPreviews = previewUrl
-      ? [{ url: previewUrl, file: null }]
-      : previewUrls.map((url) => ({ url, file: null }));
+  const propPreviews = useMemo(() => {
+    let previews = [];
 
-    if (JSON.stringify(newPropPreviews) !== JSON.stringify(propPreviews)) {
-      setPropPreviews(newPropPreviews);
+    if (previewUrl && previewUrl.url) {
+      previews.push({
+        url: previewUrl.url,
+        file: null,
+        imageId: previewUrl.imageId,
+      });
     }
+
+    if (previewUrls && previewUrls.length > 0) {
+      previews = [
+        ...previews,
+        ...previewUrls.map((pv: any) => ({
+          url: pv.url,
+          file: null,
+          imageId: pv.imageId,
+        })),
+      ];
+    }
+
+    return previews;
   }, [previewUrl, previewUrls]);
-
-  const singlePreview = previewUrl
-    ? [{ url: previewUrl, file: null, imageId: undefined }]
-    : [];
-
-  const previews = [...filePreviews, ...singlePreview, ...previewUrls];
 
   return (
     <Box>
@@ -113,7 +123,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         style={{ display: 'none' }}
       />
       <Stack direction='row' flexWrap='wrap' marginTop='4'>
-        {previews.map((preview, index) => (
+        {[...filePreviews, ...propPreviews].map((preview, index) => (
           <Box
             key={index}
             position='relative'
