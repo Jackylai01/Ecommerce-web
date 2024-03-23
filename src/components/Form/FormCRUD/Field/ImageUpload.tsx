@@ -38,7 +38,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   previewUrl,
   productId,
   onRemoveImage,
-  deleteSuccess,
+
   deleteLoading,
 }) => {
   const [filePreviews, setFilePreviews] = useState<any[]>([]);

@@ -86,6 +86,11 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
       });
     }
   }, [productDetails]);
+  useEffect(() => {
+    if (deleteProductImageSuccess) {
+      setCoverImagePreview(null);
+    }
+  }, [deleteProductImageSuccess]);
 
   const categoryOptions =
     categories?.map((category) => ({
@@ -135,7 +140,6 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         previewUrl={coverImagePreview}
         onRemoveImage={handleRemoveProductImage}
         deleteLoading={deleteProductImageLoading}
-        deleteSuccess={deleteProductImageSuccess}
       />
       <ImageUpload
         name='images'
@@ -146,7 +150,6 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         productId={productId}
         onRemoveImage={handleRemoveProductImage}
         deleteLoading={deleteProductImageLoading}
-        deleteSuccess={deleteProductImageSuccess}
       />
     </VStack>
   );
