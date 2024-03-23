@@ -65,7 +65,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     isFilePreview: boolean,
     imageId?: string,
   ) => {
-    console.log(imageId);
     if (imageId && onRemoveImage) {
       onRemoveImage(imageId);
     }

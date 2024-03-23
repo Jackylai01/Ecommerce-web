@@ -50,7 +50,6 @@ const ProductsPages: NextPage = () => {
   }, [addProductSuccess, updateProductSuccess, addProductFailed]);
 
   const handleSubmit = async (data: any) => {
-    console.log(data);
     const formData = new FormData();
 
     Object.keys(data).forEach((key) => {
