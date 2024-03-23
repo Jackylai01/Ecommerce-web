@@ -86,6 +86,7 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
       });
     }
   }, [productDetails]);
+
   useEffect(() => {
     if (deleteProductImageSuccess) {
       setCoverImagePreview(null);
@@ -93,10 +94,12 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
   }, [deleteProductImageSuccess]);
 
   const categoryOptions =
-    categories?.map((category) => ({
-      value: category._id,
-      label: category.name,
-    })) || [];
+    categories
+      ?.map((category) => ({
+        value: category._id ?? '',
+        label: category.name ?? '',
+      }))
+      .filter((option) => option.value !== '' && option.label !== '') || [];
 
   return (
     <VStack spacing={4} align='flex-start'>

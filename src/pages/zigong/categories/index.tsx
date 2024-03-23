@@ -19,16 +19,25 @@ const CategoriesPages: NextPage = () => {
       addProductsCategoryFailed,
       addProductsCategoryLoading,
       addProductsCategorySuccess,
+      updateProductsCategoryLoading,
+      updateProductsCategorySuccess,
     },
     error: { addProductsCategoryError },
   } = useAppSelector((state) => state.adminProductsCategory);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
+  const [modalTitle, setModalTitle] = useState<string>('新增產品類別');
 
   useEffect(() => {
     if (addProductsCategorySuccess) {
       setIsModalOpen(true);
       setModalContent('產品類別新增成功！');
+      setModalTitle('新增產品類別');
+    }
+    if (updateProductsCategorySuccess) {
+      setIsModalOpen(true);
+      setModalContent('產品類別更新成功！');
+      setModalTitle('更新產品類別');
     }
     if (addProductsCategoryFailed) {
       setIsModalOpen(true);
@@ -66,7 +75,9 @@ const CategoriesPages: NextPage = () => {
   }, [dispatch]);
 
   return (
-    <LoadingLayout isLoading={addProductsCategoryLoading}>
+    <LoadingLayout
+      isLoading={addProductsCategoryLoading || updateProductsCategoryLoading}
+    >
       <AddButton
         formTitle='Add Product Category'
         formContent={<ProductCategoryForm />}
@@ -76,7 +87,7 @@ const CategoriesPages: NextPage = () => {
         <ProductCategories />
       </TabsLayout>
       <MessageModal
-        title='新增產品類別'
+        title={modalTitle}
         isActive={isModalOpen}
         error={addProductsCategoryError}
         onClose={handleCloseModal}

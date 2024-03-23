@@ -9,6 +9,7 @@ import {
   ProductCategoryAction,
   addProductCategoryAsync,
   deleteProductCategoryAsync,
+  deleteProductCategoryImageAsync,
   getAllProductsCategoryAsync,
   getProductCategoryByIdAsync,
   updateProductCategoryAsync,
@@ -17,7 +18,7 @@ import {
 type ProductCategoryState = ApiState<ProductCategoryAction> & {
   list: Category[] | null;
   metadata: Metadata | null;
-  categoryDetails: Category | null;
+  categoryDetails: any;
 };
 
 const initialState: ProductCategoryState = {
@@ -45,7 +46,7 @@ const productCategorySlice = createSlice({
       if (state.list) state.list = [...state.list, action.payload];
     });
     builder.addCase(updateProductCategoryAsync.fulfilled, (state, action) => {
-      if (state.list) {
+      if (state.list && action.payload) {
         state.list = state.list.map((category) =>
           category._id === action.payload._id ? action.payload : category,
         );
@@ -58,6 +59,17 @@ const productCategorySlice = createSlice({
         );
       }
     });
+    builder.addCase(
+      deleteProductCategoryImageAsync.fulfilled,
+      (state, action) => {
+        const { categoryId, imageId } = action.meta.arg;
+        if (state.categoryDetails && state.categoryDetails._id === categoryId) {
+          state.categoryDetails.images = state.categoryDetails.images.filter(
+            (image: any) => image.imageId !== imageId,
+          );
+        }
+      },
+    );
 
     asyncMatcher(builder, ReducerName.PRODUCT_CATEGORY);
   },

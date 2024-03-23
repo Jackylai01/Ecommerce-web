@@ -118,7 +118,7 @@ const ProductCategories = () => {
     if (editingCategoryId) {
       dispatch(
         updateProductCategoryAsync({
-          id: selectedProductCategoryId,
+          id: editingCategoryId,
           body: formData,
         }),
       );

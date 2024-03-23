@@ -36,9 +36,9 @@ export interface Product extends BaseEntity {
 
 export interface Category {
   // 類別ID
-  _id: string;
+  _id?: string;
   // 類別名稱
-  name: string;
+  name?: string;
   // 類別描述
   description?: string;
   // 類別封面照

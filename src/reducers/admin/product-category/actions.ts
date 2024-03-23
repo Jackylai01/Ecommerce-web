@@ -5,6 +5,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiAddCategory,
   apiDeleteCategory,
+  apiDeleteCategoryImage,
   apiGetCategories,
   apiGetCategoryById,
   apiUpdateCategory,
@@ -16,6 +17,7 @@ export enum ProductCategoryAction {
   addProductsCategory = 'addProductsCategory',
   updateProductsCategory = 'updateProductsCategory',
   deleteProductsCategory = 'deleteProductsCategory',
+  deleteProductCategoryImage = 'deleteProductCategoryImage',
 }
 
 export const getAllProductsCategoryAsync = createAsyncThunk(
@@ -56,5 +58,13 @@ export const deleteProductCategoryAsync = createAsyncThunk(
   async (id: string) => {
     await apiDeleteCategory(id);
     return id;
+  },
+);
+
+export const deleteProductCategoryImageAsync = createAsyncThunk(
+  `${ReducerName.PRODUCT_CATEGORY}/${ProductCategoryAction.deleteProductCategoryImage}`,
+  async ({ categoryId, imageId }: { categoryId: string; imageId: string }) => {
+    const response = await apiDeleteCategoryImage(categoryId, imageId);
+    return { categoryId, imageId, data: response.result.data };
   },
 );
