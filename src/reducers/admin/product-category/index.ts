@@ -41,6 +41,10 @@ const productCategorySlice = createSlice({
     });
     builder.addCase(getProductCategoryByIdAsync.fulfilled, (state, action) => {
       state.categoryDetails = action.payload;
+      // 确保 images 数组存在
+      if (!state.categoryDetails.images) {
+        state.categoryDetails.images = [];
+      }
     });
     builder.addCase(addProductCategoryAsync.fulfilled, (state, action) => {
       if (state.list) state.list = [...state.list, action.payload];
@@ -64,13 +68,18 @@ const productCategorySlice = createSlice({
       (state, action) => {
         const { categoryId, imageId } = action.meta.arg;
         if (state.categoryDetails && state.categoryDetails._id === categoryId) {
-          state.categoryDetails.images = state.categoryDetails.images.filter(
-            (image: any) => image.imageId !== imageId,
-          );
+          // 这里再次确认 images 属性存在，并且是一个数组
+          if (!Array.isArray(state.categoryDetails.images)) {
+            state.categoryDetails.images = [];
+          } else {
+            // 如果 images 已存在且为数组，则进行过滤操作
+            state.categoryDetails.images = state.categoryDetails.images.filter(
+              (image: any) => image.imageId !== imageId,
+            );
+          }
         }
       },
     );
-
     asyncMatcher(builder, ReducerName.PRODUCT_CATEGORY);
   },
 });

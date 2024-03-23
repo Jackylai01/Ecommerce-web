@@ -33,9 +33,16 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
   const [coverImagePreview, setCoverImagePreview] = useState<any>(null);
   const [productImagesPreviews, setProductImagesPreviews] = useState<any>([]);
 
-  const handleRemoveProductImage = (imageId: string) => {
-    if (productId) {
-      dispatch(deleteProductImageAsync({ productId, imageId }));
+  const handleRemoveProductImage = () => {
+    if (productId && coverImagePreview?.imageId) {
+      dispatch(
+        deleteProductImageAsync({
+          productId,
+          imageId: coverImagePreview.imageId,
+        }),
+      ).then(() => {
+        setCoverImagePreview(null);
+      });
     }
   };
 
@@ -86,12 +93,6 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
       });
     }
   }, [productDetails]);
-
-  useEffect(() => {
-    if (deleteProductImageSuccess) {
-      setCoverImagePreview(null);
-    }
-  }, [deleteProductImageSuccess]);
 
   const categoryOptions =
     categories

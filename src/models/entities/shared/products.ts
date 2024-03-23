@@ -47,3 +47,7 @@ export interface Category {
     imageId: string;
   };
 }
+
+export interface PreviewImage {
+  imageId: string;
+}

@@ -25,9 +25,13 @@ export const ProductCategoryForm = ({
     status: { deleteProductCategoryImageLoading },
   } = useAppSelector((state) => state.adminProductsCategory);
 
-  const handleRemoveProductImage = (imageId: string) => {
-    if (categoryId) {
-      dispatch(deleteProductCategoryImageAsync({ categoryId, imageId }));
+  const handleRemoveProductCategoryImage = (imageId: string) => {
+    if (categoryId && coverImagePreview?.imageId) {
+      dispatch(deleteProductCategoryImageAsync({ categoryId, imageId })).then(
+        () => {
+          setCoverImagePreview(null);
+        },
+      );
     }
   };
 
@@ -73,7 +77,7 @@ export const ProductCategoryForm = ({
         label='封面照片'
         isRequired
         previewUrl={coverImagePreview}
-        onRemoveImage={handleRemoveProductImage}
+        onRemoveImage={handleRemoveProductCategoryImage}
         deleteLoading={deleteProductCategoryImageLoading}
       />
     </VStack>

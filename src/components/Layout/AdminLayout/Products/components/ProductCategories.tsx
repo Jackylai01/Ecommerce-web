@@ -125,7 +125,6 @@ const ProductCategories = () => {
     } else {
       dispatch(addProductCategoryAsync(formData));
     }
-
     setIsEditModalOpen(false);
   };
 
