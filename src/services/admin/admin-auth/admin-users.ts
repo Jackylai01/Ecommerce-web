@@ -14,11 +14,7 @@ import {
   postRequest,
   putRequest,
 } from '../../shared/api';
-import {
-  CreateAccountSchema,
-  LoginSchema,
-  SendForgotCodeSchema,
-} from './auth-users.schema';
+import { LoginSchema, SendForgotCodeSchema } from './auth-users.schema';
 
 /**
  * 後台-管理員登入
@@ -68,13 +64,9 @@ export const apiAdminResetPassword = async (body: any) => {
  * 管理員-註冊帳號
  */
 export const apiAdminCreateAccount = async (body: any) => {
-  const { error, value } = validateSchema(CreateAccountSchema(), body);
-  if (error) {
-    throw error;
-  }
   return postRequest<ApiResult<UserCreateAccountResponse>>(
-    '/zigong/admin-register',
-    value,
+    '/zigong/createAccount',
+    body,
   );
 };
 

@@ -11,6 +11,7 @@ interface TextInputType {
   label: string;
   placeholder: string;
   isRequired: boolean;
+  type?: string;
 }
 
 export const TextInput = ({
@@ -18,6 +19,7 @@ export const TextInput = ({
   label,
   placeholder,
   isRequired = false,
+  type,
 }: TextInputType) => {
   const {
     register,
@@ -29,7 +31,12 @@ export const TextInput = ({
   return (
     <FormControl isInvalid={isInvalid} isRequired={isRequired}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <Input id={name} placeholder={placeholder} {...register(name)} />
+      <Input
+        id={name}
+        placeholder={placeholder}
+        {...register(name)}
+        type={type}
+      />
       <FormErrorMessage>{errors[name]?.message}</FormErrorMessage>
     </FormControl>
   );

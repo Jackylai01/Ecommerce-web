@@ -86,9 +86,13 @@ export const adminResetPasswordAsync = createAsyncThunk(
 
 export const adminCreateAccountsAsync = createAsyncThunk(
   `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.createAccounts}`,
-  async (data: any) => {
-    await apiAdminCreateAccount(data);
-    return data;
+  async (data: any, { rejectWithValue }) => {
+    try {
+      const response = await apiAdminCreateAccount(data);
+      return response.result.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   },
 );
 
