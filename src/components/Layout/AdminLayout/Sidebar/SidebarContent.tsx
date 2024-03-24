@@ -53,8 +53,13 @@ const SidebarContent = ({
       return true;
     }
 
+    if (router.pathname.includes('/member') && routePath.includes('/tables')) {
+      return true;
+    }
+
     return router.pathname === routePath;
   };
+
   const links = routes.map((prop: any, key: number) => {
     const isActive = activeRoute(`${prop.layout}${prop.path}`);
     if (prop.category) {

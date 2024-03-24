@@ -11,4 +11,5 @@ export const routeToChinese: Enum = {
   '/categories': '產品類別管理',
   '/billing': '金流管理',
   '/profile': '個人資料設定',
+  '/member': '會員管理',
 };

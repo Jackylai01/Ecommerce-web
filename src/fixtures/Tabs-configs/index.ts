@@ -13,3 +13,16 @@ export const ProductsConfig: TabItem[] = [
     icon: MdCategory,
   },
 ];
+
+export const UsersConfig: TabItem[] = [
+  {
+    label: '帳號管理',
+    path: '/zigong/tables',
+    icon: MdList,
+  },
+  {
+    label: '會員管理',
+    path: '/zigong/member',
+    icon: MdCategory,
+  },
+];

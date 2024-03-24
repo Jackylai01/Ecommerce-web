@@ -17,12 +17,7 @@ interface AdminNavbarType {
   onOpen: any;
 }
 
-const AdminNavbar = ({
-  fixed,
-  secondary,
-
-  onOpen,
-}: AdminNavbarType) => {
+const AdminNavbar = ({ fixed, secondary, onOpen }: AdminNavbarType) => {
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
   const currentPathChinese = getChineseNameForPath(router.pathname);
