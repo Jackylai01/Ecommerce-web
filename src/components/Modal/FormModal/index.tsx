@@ -19,7 +19,7 @@ import {
 interface FormModalProps<T extends FieldValues> {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: SubmitHandler<T>;
+  onSubmit: any;
   children: ReactNode;
   title: string;
 }

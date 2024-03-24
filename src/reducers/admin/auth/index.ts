@@ -42,6 +42,9 @@ const adminAuthSlice = createSlice({
     resetAdminAuthStatus: (state) => {
       state.status = initialState.status;
     },
+    resetCreateAccount: (state) => {
+      state.createAccount = null;
+    },
     resetAdminAuth: () => initialState,
   },
   extraReducers: (builder) => {
@@ -70,6 +73,10 @@ const adminAuthSlice = createSlice({
   },
 });
 
-export const { setAdminUserInfo, resetAdminAuth, resetAdminAuthStatus } =
-  adminAuthSlice.actions;
+export const {
+  setAdminUserInfo,
+  resetAdminAuth,
+  resetAdminAuthStatus,
+  resetCreateAccount,
+} = adminAuthSlice.actions;
 export default adminAuthSlice.reducer;

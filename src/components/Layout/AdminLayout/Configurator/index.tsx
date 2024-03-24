@@ -11,6 +11,7 @@ import {
   Text,
   useColorMode,
 } from '@chakra-ui/react';
+import { ResetPasswordForm } from '@components/Form/FormCRUD/ResetPassword';
 import { Separator } from '@components/Separator';
 
 import { useRef, useState } from 'react';
@@ -35,6 +36,11 @@ const Configurator = ({
 }: ConfiguratorProps) => {
   const [switched, setSwitched] = useState(isChecked);
   const { colorMode, toggleColorMode } = useColorMode();
+  const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] =
+    useState(false);
+
+  const onOpenResetPasswordModal = () => setIsResetPasswordModalOpen(true);
+  const onCloseResetPasswordModal = () => setIsResetPasswordModalOpen(false);
 
   let fixedDisplay = 'flex';
   if (secondary) {
@@ -120,8 +126,19 @@ const Configurator = ({
                   Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
                 </Button>
               </Flex>
+              <Button
+                mt='4'
+                colorScheme='blue'
+                onClick={onOpenResetPasswordModal}
+              >
+                重設密碼
+              </Button>
               <Separator />
             </Flex>
+            <ResetPasswordForm
+              isOpen={isResetPasswordModalOpen}
+              onClose={onCloseResetPasswordModal}
+            />
           </DrawerBody>
         </DrawerContent>
       </Drawer>

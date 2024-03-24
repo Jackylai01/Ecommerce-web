@@ -47,6 +47,10 @@ const TablesPage = () => {
     }
   }, [createAccountsFailed, createAccountsLoading, createAccountsSuccess]);
 
+  useEffect(() => {
+    setIsModalOpen(false);
+  }, []);
+
   return (
     <LoadingLayout isLoading={createAccountsLoading}>
       <Flex direction='column'>

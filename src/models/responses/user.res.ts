@@ -43,6 +43,11 @@ export class UserCreateAccountResponse {
   phoneNumber!: string;
 }
 
+export class ResetPassword {
+  currentPassword!: string;
+  newPassword!: string;
+}
+
 export enum Role {
   /** 管理端 */
   Admin = 'admin',

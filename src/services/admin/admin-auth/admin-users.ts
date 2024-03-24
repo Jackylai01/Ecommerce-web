@@ -5,7 +5,7 @@ import {
 import {
   AuthResponse,
   ProfileResponse,
-  UserCreateAccountResponse,
+  ResetPassword,
 } from '../../../models/responses/user.res';
 import { validateSchema } from '../../../models/schema/base.schema';
 import {
@@ -56,18 +56,14 @@ export const apiAdminForgotPassword = async (body: SendForgotCodeRequest) => {
  */
 
 export const apiAdminResetPassword = async (body: any) => {
-  const { id, code, ...restBody } = body;
-  return postRequest(`/zigong/reset/${id}/${code}`, restBody);
+  return postRequest<ApiResult<ResetPassword>>(`/zigong/change-password`, body);
 };
 
 /**
  * 管理員-註冊帳號
  */
 export const apiAdminCreateAccount = async (body: any) => {
-  return postRequest<ApiResult<UserCreateAccountResponse>>(
-    '/zigong/createAccount',
-    body,
-  );
+  return postRequest<ApiResult<any>>('/zigong/createAccount', body);
 };
 
 /**
