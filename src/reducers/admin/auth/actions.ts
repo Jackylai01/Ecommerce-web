@@ -11,10 +11,10 @@ import {
   apiAdminCreateAccount,
   apiAdminForgotPassword,
   apiAdminResetPassword,
+  apiAdminUsersByProfile,
   apiAdminUsersLogin,
   apiAdminUsersLogout,
   apiAdminUsersModifyProfile,
-  apiAdminUsersProfile,
   apiAdminUsersTokenRefresh,
 } from '@services/admin/admin-auth/admin-users';
 
@@ -93,18 +93,18 @@ export const adminCreateAccountsAsync = createAsyncThunk(
   },
 );
 
-export const adminDetailUserProfileAsync = createAsyncThunk(
-  `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.adminDetailUserProfile}`,
-  async () => {
-    const response = await apiAdminUsersProfile();
-    return response.result.data;
-  },
-);
-
 export const adminModifyProfileAsync = createAsyncThunk(
   `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.modifyProfile}`,
   async (data: ProfileResponse) => {
     const response = await apiAdminUsersModifyProfile(data);
     return response.res.data;
+  },
+);
+
+export const adminGetUserProfileAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.adminDetailUserProfile}`,
+  async (id: string) => {
+    const response = await apiAdminUsersByProfile(id);
+    return response.result.data;
   },
 );

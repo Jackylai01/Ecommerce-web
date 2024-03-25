@@ -19,7 +19,7 @@ interface ProductFormContentType {
 }
 
 export const ProductFormContent = ({ productId }: ProductFormContentType) => {
-  const { control, setValue } = useFormContext();
+  const { setValue } = useFormContext();
   const dispatch = useAppDispatch();
 
   const { list: categories } = useAppSelector(

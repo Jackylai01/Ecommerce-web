@@ -11,8 +11,12 @@ import {
   Text,
   useColorMode,
 } from '@chakra-ui/react';
+import { EditProfileForm } from '@components/Form/FormCRUD/EditProfile';
 import { ResetPasswordForm } from '@components/Form/FormCRUD/ResetPassword';
+import FormModal from '@components/Modal/FormModal';
 import { Separator } from '@components/Separator';
+import useAppDispatch from '@hooks/useAppDispatch';
+import { adminModifyProfileAsync } from '@reducers/admin/auth/actions';
 
 import { useRef, useState } from 'react';
 
@@ -34,20 +38,30 @@ const Configurator = ({
   onClose,
   onSwitch,
 }: ConfiguratorProps) => {
+  const dispatch = useAppDispatch();
   const [switched, setSwitched] = useState(isChecked);
   const { colorMode, toggleColorMode } = useColorMode();
   const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] =
     useState(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
 
   const onOpenResetPasswordModal = () => setIsResetPasswordModalOpen(true);
   const onCloseResetPasswordModal = () => setIsResetPasswordModalOpen(false);
+
+  const onOpenEditProfileModal = () => setIsEditProfileModalOpen(true);
+  const onCloseEditProfileModal = () => setIsEditProfileModalOpen(false);
 
   let fixedDisplay = 'flex';
   if (secondary) {
     fixedDisplay = 'none';
   }
 
+  const onSubmit = (data: any) => {
+    dispatch(adminModifyProfileAsync(data));
+  };
+
   const settingsRef = useRef<HTMLButtonElement>(null);
+
   return (
     <>
       <Drawer
@@ -134,11 +148,22 @@ const Configurator = ({
                 重設密碼
               </Button>
               <Separator />
+              <Button colorScheme='teal' onClick={onOpenEditProfileModal}>
+                編輯個人檔案
+              </Button>
             </Flex>
             <ResetPasswordForm
               isOpen={isResetPasswordModalOpen}
               onClose={onCloseResetPasswordModal}
             />
+            <FormModal
+              isOpen={isEditProfileModalOpen}
+              onClose={onCloseEditProfileModal}
+              onSubmit={onSubmit}
+              title='編輯個人資訊'
+            >
+              <EditProfileForm />
+            </FormModal>
           </DrawerBody>
         </DrawerContent>
       </Drawer>

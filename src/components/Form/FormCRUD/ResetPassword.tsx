@@ -31,6 +31,7 @@ export const ResetPasswordForm = ({ isOpen, onClose }: ResetPasswordType) => {
   const [modalTitle, setModalTitle] = useState<string>('重設密碼');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+
   useEffect(() => {
     if (resetPasswordSuccess) {
       setIsModalOpen(true);

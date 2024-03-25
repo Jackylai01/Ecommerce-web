@@ -12,7 +12,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import {
   AdminAuthAsyncAction,
   adminCreateAccountsAsync,
-  adminDetailUserProfileAsync,
+  adminGetUserProfileAsync,
   adminLoginAsync,
   adminLogoutAsync,
   adminModifyProfileAsync,
@@ -57,7 +57,7 @@ const adminAuthSlice = createSlice({
     builder.addCase(adminLogoutAsync.fulfilled, (state) => {
       state.userInfo = null;
     });
-    builder.addCase(adminDetailUserProfileAsync.fulfilled, (state, action) => {
+    builder.addCase(adminGetUserProfileAsync.fulfilled, (state, action) => {
       state.userProfile = action.payload;
     });
     builder.addCase(adminCreateAccountsAsync.fulfilled, (state, action) => {

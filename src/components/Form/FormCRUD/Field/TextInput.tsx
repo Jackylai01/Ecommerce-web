@@ -10,7 +10,7 @@ interface TextInputType {
   name: string;
   label: string;
   placeholder: string;
-  isRequired: boolean;
+  isRequired?: boolean;
   type?: string;
 }
 

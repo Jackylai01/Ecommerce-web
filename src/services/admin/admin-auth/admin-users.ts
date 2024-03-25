@@ -67,12 +67,6 @@ export const apiAdminCreateAccount = async (body: any) => {
 };
 
 /**
- * 後台-管理員個人基本資料
- */
-export const apiAdminUsersProfile = async () =>
-  getRequest<ApiResult<ProfileResponse>>('/zigong/admin-profile');
-
-/**
  * 後台-管理員修改個人基本資料
  * @throws 400 BadRequest 欄位驗證錯誤
  * @throws 403 Forbidden Email 已被使用
@@ -80,5 +74,13 @@ export const apiAdminUsersProfile = async () =>
  */
 
 export const apiAdminUsersModifyProfile = async (body: ProfileResponse) => {
-  return putRequest<ApiResult<ProfileResponse>>('/zigong/admin-profile', body);
+  return putRequest<ApiResult<ProfileResponse>>('/zigong/modifyProfile', body);
+};
+
+/**
+ * 後台-查詢個人資料
+ */
+
+export const apiAdminUsersByProfile = async (id: string) => {
+  return getRequest<ApiResult<any>>(`/zigong/user/${id}`);
 };

@@ -17,7 +17,7 @@ export class ProfileImage {
 }
 
 export class UserInfo {
-  _id!: string;
+  id!: string;
   username!: string;
   roles!: string[];
   currentSessionToken!: string;
@@ -29,6 +29,10 @@ export class ProfileResponse {
   _id!: string;
   username!: string;
   email!: string;
+  address!: string;
+  city!: string;
+  country!: string;
+  postalCode!: string;
   expirationDate: Date | null = null;
   images!: [ProfileImage];
   roles!: string;
