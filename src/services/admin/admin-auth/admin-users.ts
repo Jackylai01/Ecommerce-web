@@ -73,8 +73,14 @@ export const apiAdminCreateAccount = async (body: any) => {
  * @throws 403 Forbidden 手機號碼已被使用
  */
 
-export const apiAdminUsersModifyProfile = async (body: ProfileResponse) => {
-  return putRequest<ApiResult<ProfileResponse>>('/zigong/modifyProfile', body);
+export const apiAdminUsersModifyProfile = async (
+  body: ProfileResponse,
+  id: string,
+) => {
+  return putRequest<ApiResult<ProfileResponse>>(
+    `/zigong/modifyProfile/${id}`,
+    body,
+  );
 };
 
 /**
@@ -83,4 +89,23 @@ export const apiAdminUsersModifyProfile = async (body: ProfileResponse) => {
 
 export const apiAdminUsersByProfile = async (id: string) => {
   return getRequest<ApiResult<any>>(`/zigong/user/${id}`);
+};
+
+/**
+ * 後台-上傳個人照片
+ */
+export const apiAdminUploadProfileImage = async (body: any, id: string) => {
+  return postRequest<ApiResult<any>>(`/zigong/uploadProfileImage/${id}`, body);
+};
+
+/**
+ * 後台-更改信箱要進行信箱驗證
+ */
+
+export const apiAdminVerificationToken = async (
+  emailVerificationToken: string,
+) => {
+  return getRequest<ApiResult<any>>(
+    `/zigong/modifyProfile/email/${emailVerificationToken}`,
+  );
 };

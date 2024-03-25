@@ -17,6 +17,8 @@ import {
   adminLogoutAsync,
   adminModifyProfileAsync,
   adminRefreshTokenAsync,
+  adminUploadProfileImageAsync,
+  adminVerificationTokenAsync,
 } from './actions';
 
 type AdminAuthState = ApiState<AdminAuthAsyncAction> & {
@@ -57,6 +59,7 @@ const adminAuthSlice = createSlice({
     builder.addCase(adminLogoutAsync.fulfilled, (state) => {
       state.userInfo = null;
     });
+
     builder.addCase(adminGetUserProfileAsync.fulfilled, (state, action) => {
       state.userProfile = action.payload;
     });
@@ -69,6 +72,22 @@ const adminAuthSlice = createSlice({
         ...action.payload,
       } as ProfileResponse;
     });
+
+    builder.addCase(adminUploadProfileImageAsync.fulfilled, (state, action) => {
+      if (!state.userProfile) {
+        state.userProfile = {} as ProfileResponse;
+      }
+      state.userProfile.profileImage = action.payload.profileImage;
+    });
+
+    builder.addCase(adminVerificationTokenAsync.fulfilled, (state, action) => {
+      if (!state.userProfile) {
+        state.userProfile = {} as ProfileResponse;
+      }
+      state.userProfile.emailVerificationToken =
+        action.payload.emailVerificationToken;
+    });
+
     asyncMatcher(builder, ReducerName.ADMIN_AUTH);
   },
 });

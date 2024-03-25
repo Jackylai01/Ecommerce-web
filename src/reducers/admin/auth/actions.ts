@@ -11,11 +11,13 @@ import {
   apiAdminCreateAccount,
   apiAdminForgotPassword,
   apiAdminResetPassword,
+  apiAdminUploadProfileImage,
   apiAdminUsersByProfile,
   apiAdminUsersLogin,
   apiAdminUsersLogout,
   apiAdminUsersModifyProfile,
   apiAdminUsersTokenRefresh,
+  apiAdminVerificationToken,
 } from '@services/admin/admin-auth/admin-users';
 
 export enum AdminAuthAsyncAction {
@@ -27,6 +29,8 @@ export enum AdminAuthAsyncAction {
   createAccounts = 'createAccounts',
   adminDetailUserProfile = 'adminDetailUserProfile',
   modifyProfile = 'modifyProfile',
+  uploadProfileImage = 'uploadProfileImage',
+  verificationToken = 'verificationToken',
 }
 
 export const adminLoginAsync = createAsyncThunk(
@@ -95,8 +99,8 @@ export const adminCreateAccountsAsync = createAsyncThunk(
 
 export const adminModifyProfileAsync = createAsyncThunk(
   `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.modifyProfile}`,
-  async (data: ProfileResponse) => {
-    const response = await apiAdminUsersModifyProfile(data);
+  async ({ data, id }: { data: ProfileResponse; id: any }) => {
+    const response = await apiAdminUsersModifyProfile(data, id);
     return response.res.data;
   },
 );
@@ -105,6 +109,22 @@ export const adminGetUserProfileAsync = createAsyncThunk(
   `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.adminDetailUserProfile}`,
   async (id: string) => {
     const response = await apiAdminUsersByProfile(id);
+    return response.result.data;
+  },
+);
+
+export const adminUploadProfileImageAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.uploadProfileImage}`,
+  async ({ formData, userId }: { formData: FormData; userId: any }) => {
+    const response = await apiAdminUploadProfileImage(formData, userId);
+    return response.result.data;
+  },
+);
+
+export const adminVerificationTokenAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.verificationToken}`,
+  async (emailVerificationToken: any) => {
+    const response = await apiAdminVerificationToken(emailVerificationToken);
     return response.result.data;
   },
 );

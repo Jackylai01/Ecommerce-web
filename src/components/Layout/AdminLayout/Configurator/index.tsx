@@ -16,6 +16,7 @@ import { ResetPasswordForm } from '@components/Form/FormCRUD/ResetPassword';
 import FormModal from '@components/Modal/FormModal';
 import { Separator } from '@components/Separator';
 import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
 import { adminModifyProfileAsync } from '@reducers/admin/auth/actions';
 
 import { useRef, useState } from 'react';
@@ -39,12 +40,13 @@ const Configurator = ({
   onSwitch,
 }: ConfiguratorProps) => {
   const dispatch = useAppDispatch();
+  const { userInfo } = useAppSelector((state) => state.adminAuth);
   const [switched, setSwitched] = useState(isChecked);
   const { colorMode, toggleColorMode } = useColorMode();
+
   const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] =
     useState(false);
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
-
   const onOpenResetPasswordModal = () => setIsResetPasswordModalOpen(true);
   const onCloseResetPasswordModal = () => setIsResetPasswordModalOpen(false);
 
@@ -56,8 +58,8 @@ const Configurator = ({
     fixedDisplay = 'none';
   }
 
-  const onSubmit = (data: any) => {
-    dispatch(adminModifyProfileAsync(data));
+  const onSubmit = (data: any, id: string) => {
+    dispatch(adminModifyProfileAsync({ data, id: userInfo?.id }));
   };
 
   const settingsRef = useRef<HTMLButtonElement>(null);

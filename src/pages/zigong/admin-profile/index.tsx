@@ -4,7 +4,6 @@ import MessageModal from '@components/Modal/MessageModal';
 import crudConfigMap from '@fixtures/crud-configs';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { ProfileResponse } from '@models/responses/user.res';
 import { resetAdminAuthStatus } from '@reducers/admin/auth';
 import { adminModifyProfileAsync } from '@reducers/admin/auth/actions';
 import { setCrudLayoutDetail } from '@reducers/crud-layout';
@@ -30,7 +29,7 @@ const AdminUserProfilePage: NextPage = () => {
     dispatch(setCrudLayoutDetail(userProfile));
   }, [dispatch, userProfile]);
 
-  const onSubmit = (data: ProfileResponse) => {
+  const onSubmit = (data: any) => {
     dispatch(adminModifyProfileAsync(data));
   };
 

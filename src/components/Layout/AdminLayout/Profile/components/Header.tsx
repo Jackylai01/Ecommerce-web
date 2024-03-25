@@ -1,4 +1,15 @@
-import { Avatar, Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import {
+  Avatar,
+  Box,
+  Flex,
+  Text,
+  useColorModeValue,
+  useToast,
+} from '@chakra-ui/react';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { adminUploadProfileImageAsync } from '@reducers/admin/auth/actions';
+import { useEffect, useRef } from 'react';
 
 interface HeaderType {
   backgroundHeader: any;
@@ -23,6 +34,50 @@ const Header = ({
     'rgba(255, 255, 255, 0.31)',
   );
   const emailColor = useColorModeValue('gray.400', 'gray.300');
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const dispatch = useAppDispatch();
+  const {
+    userProfile,
+    userInfo,
+    status: { uploadProfileImageFailed, uploadProfileImageSuccess },
+    error: { uploadProfileImageError },
+  } = useAppSelector((state) => state.adminAuth);
+
+  const toast = useToast();
+
+  const handleAvatarClick = () => {
+    inputFileRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('profileImage', file);
+
+    dispatch(adminUploadProfileImageAsync({ formData, userId: userInfo?.id }));
+  };
+
+  useEffect(() => {
+    if (uploadProfileImageSuccess) {
+      toast({
+        title: '上傳相片成功成功',
+        status: 'success',
+        isClosable: true,
+      });
+    } else if (uploadProfileImageFailed) {
+      toast({
+        title: '上傳相片失敗',
+        description: uploadProfileImageError || '未知錯誤。',
+        status: 'error',
+        isClosable: true,
+      });
+    }
+  }, [uploadProfileImageFailed, uploadProfileImageSuccess]);
+
   return (
     <Box
       mb={{ sm: '205px', md: '75px', xl: '70px' }}
@@ -72,13 +127,32 @@ const Header = ({
             w={{ sm: '100%' }}
             textAlign={{ sm: 'center', md: 'start' }}
           >
-            <Avatar
-              me={{ md: '22px' }}
-              src={avatarImage}
-              w='80px'
-              h='80px'
-              borderRadius='15px'
+            <input
+              type='file'
+              ref={inputFileRef}
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+              accept='image/*'
             />
+            {userProfile?.profileImage ? (
+              <Avatar
+                me={{ md: '22px' }}
+                src={userProfile.profileImage.imageUrl}
+                w='80px'
+                h='80px'
+                borderRadius='15px'
+                onClick={handleAvatarClick}
+                cursor='pointer'
+              />
+            ) : (
+              <Avatar
+                me={{ md: '22px' }}
+                src={avatarImage}
+                w='80px'
+                h='80px'
+                borderRadius='15px'
+              />
+            )}
             <Flex direction='column' maxWidth='100%' my={{ sm: '14px' }}>
               <Text
                 fontSize={{ sm: 'lg', lg: 'xl' }}
@@ -90,7 +164,7 @@ const Header = ({
               </Text>
               <Text
                 fontSize={{ sm: 'sm', md: 'md' }}
-                color={emailColor}
+                color={textColor}
                 fontWeight='semibold'
               >
                 {email}

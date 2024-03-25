@@ -34,8 +34,9 @@ export class ProfileResponse {
   country!: string;
   postalCode!: string;
   expirationDate: Date | null = null;
-  images!: [ProfileImage];
+  profileImage!: any;
   roles!: string;
+  emailVerificationToken!: string;
 }
 
 export class UserCreateAccountResponse {
