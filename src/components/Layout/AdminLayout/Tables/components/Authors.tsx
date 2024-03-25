@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Badge,
   Box,
   Button,
   Flex,
@@ -52,11 +51,6 @@ const Authors = ({ title, captions, data }: AuthorsProps) => {
     (row: AuthorRowData) => <Text>{row.email}</Text>,
     (row: AuthorRowData) => <Text>{row.subdomain}</Text>,
     (row: AuthorRowData) => <Text>{row.domain}</Text>,
-    (row: AuthorRowData) => (
-      <Badge colorScheme={row.status === 'Online' ? 'green' : 'red'}>
-        {row.status}
-      </Badge>
-    ),
 
     (row: AuthorRowData) => (
       <Button colorScheme='blue' size='sm' onClick={() => editRow(row)}>
