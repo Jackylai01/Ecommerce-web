@@ -4,10 +4,8 @@ import Header from '@components/Layout/AdminLayout/Profile/components/Header';
 import PlatformSettings from '@components/Layout/AdminLayout/Profile/components/PlatformSettings';
 import ProfileInformation from '@components/Layout/AdminLayout/Profile/components/ProfileInformation';
 import Projects from '@components/Layout/AdminLayout/Profile/components/Projects';
-import useAppDispatch from '@hooks/useAppDispatch';
 
 const ProfilePages = () => {
-  const dispatch = useAppDispatch();
   const textColor = useColorModeValue('gray.700', 'white');
   const bgProfile = useColorModeValue(
     'hsla(0,0%,100%,.8)',
