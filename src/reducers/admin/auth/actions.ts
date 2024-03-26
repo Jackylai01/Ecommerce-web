@@ -4,14 +4,18 @@ import {
   removeAdminToken,
   saveAdminToken,
 } from '@helpers/token';
+import { PagingQuery } from '@models/entities/shared/pagination';
+import { QueryParams } from '@models/entities/shared/query';
 import { LoginRequest, SendForgotCodeRequest } from '@models/requests/user.req';
 import { ProfileResponse } from '@models/responses/user.res';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiAdminCreateAccount,
+  apiAdminDeleteUser,
   apiAdminForgotPassword,
   apiAdminResetPassword,
   apiAdminUploadProfileImage,
+  apiAdminUsersByAll,
   apiAdminUsersByProfile,
   apiAdminUsersLogin,
   apiAdminUsersLogout,
@@ -31,6 +35,8 @@ export enum AdminAuthAsyncAction {
   modifyProfile = 'modifyProfile',
   uploadProfileImage = 'uploadProfileImage',
   verificationToken = 'verificationToken',
+  getAllUsers = 'getAllUsers',
+  deleteUser = 'deleteUser',
 }
 
 export const adminLoginAsync = createAsyncThunk(
@@ -125,6 +131,23 @@ export const adminVerificationTokenAsync = createAsyncThunk(
   `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.verificationToken}`,
   async (emailVerificationToken: any) => {
     const response = await apiAdminVerificationToken(emailVerificationToken);
+    return response.result.data;
+  },
+);
+
+export const adminGetAllUsersAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.getAllUsers}`,
+  async ({ page, limit }: QueryParams) => {
+    const query: PagingQuery = { page, limit };
+    const response = await apiAdminUsersByAll(query);
+    return response.result;
+  },
+);
+
+export const adminDeleteUserAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.deleteUser}`,
+  async (id: string) => {
+    const response = await apiAdminDeleteUser(id);
     return response.result.data;
   },
 );

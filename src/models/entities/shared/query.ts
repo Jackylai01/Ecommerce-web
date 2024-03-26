@@ -1,6 +1,6 @@
 import { Enum } from '@models/enum';
 
-export interface ProductQueryParams {
+export interface QueryParams {
   page?: number;
   limit?: number;
 }

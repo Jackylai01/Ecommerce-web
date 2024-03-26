@@ -1,3 +1,5 @@
+import { formatQueryString } from '@helpers/query';
+import { PagingQuery } from '@models/entities/shared/pagination';
 import {
   LoginRequest,
   SendForgotCodeRequest,
@@ -9,7 +11,9 @@ import {
 } from '../../../models/responses/user.res';
 import { validateSchema } from '../../../models/schema/base.schema';
 import {
+  ApiPaginationResult,
   ApiResult,
+  deleteRequest,
   getRequest,
   postRequest,
   putRequest,
@@ -92,6 +96,15 @@ export const apiAdminUsersByProfile = async (id: string) => {
 };
 
 /**
+ * 後台-查詢全部後台帳號
+ */
+
+export const apiAdminUsersByAll = async (query: PagingQuery) =>
+  getRequest<ApiPaginationResult<any>>(
+    formatQueryString('/zigong/getAllUsers', query),
+  );
+
+/**
  * 後台-上傳個人照片
  */
 export const apiAdminUploadProfileImage = async (body: any, id: string) => {
@@ -108,4 +121,12 @@ export const apiAdminVerificationToken = async (
   return getRequest<ApiResult<any>>(
     `/zigong/modifyProfile/email/${emailVerificationToken}`,
   );
+};
+
+/**
+ * 後台-管理刪除單一帳號
+ */
+
+export const apiAdminDeleteUser = async (id: string) => {
+  return deleteRequest<ApiResult<any>>(`/zigong/deleteAccount/${id}`);
 };

@@ -2,6 +2,7 @@ import { ReducerName } from '@enums/reducer-name';
 import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
+import { Metadata } from '@models/entities/shared/pagination';
 import {
   AuthResponse,
   ProfileResponse,
@@ -12,6 +13,8 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import {
   AdminAuthAsyncAction,
   adminCreateAccountsAsync,
+  adminDeleteUserAsync,
+  adminGetAllUsersAsync,
   adminGetUserProfileAsync,
   adminLoginAsync,
   adminLogoutAsync,
@@ -22,12 +25,16 @@ import {
 } from './actions';
 
 type AdminAuthState = ApiState<AdminAuthAsyncAction> & {
+  list: ProfileResponse[] | null;
+  metadata: Metadata | null;
   userInfo: UserInfo | null;
   userProfile: ProfileResponse | null;
   createAccount: UserCreateAccountResponse | null;
 };
 
 const initialState: AdminAuthState = {
+  list: null,
+  metadata: null,
   userInfo: null,
   userProfile: null,
   createAccount: null,
@@ -87,7 +94,17 @@ const adminAuthSlice = createSlice({
       state.userProfile.emailVerificationToken =
         action.payload.emailVerificationToken;
     });
-
+    builder.addCase(adminGetAllUsersAsync.fulfilled, (state, action) => {
+      state.list = action.payload.data;
+      state.metadata = action.payload.metadata;
+    });
+    builder.addCase(adminDeleteUserAsync.fulfilled, (state, action) => {
+      if (state.list) {
+        state.list = state.list.filter(
+          (user) => user._id !== action.payload.id,
+        );
+      }
+    });
     asyncMatcher(builder, ReducerName.ADMIN_AUTH);
   },
 });
