@@ -1,8 +1,8 @@
 import {
-  Avatar,
   Box,
   Button,
   Flex,
+  Switch,
   Table,
   Tbody,
   Text,
@@ -23,6 +23,8 @@ import useAppSelector from '@hooks/useAppSelector';
 import {
   adminDeleteUserAsync,
   adminGetAllUsersAsync,
+  adminGetUserProfileAsync,
+  adminToggleUserRoleAsync,
 } from '@reducers/admin/auth/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -30,14 +32,6 @@ import { useEffect, useState } from 'react';
 interface AuthorsProps {
   title: string;
   captions: string[];
-  data: {
-    logo: any;
-    name: string;
-    email: string;
-    subdomain: string;
-    domain: string;
-    status: any;
-  }[];
 }
 
 interface IUser {
@@ -57,6 +51,11 @@ const roleMapping: { [key: string]: string } = {
   staff: '員工',
 };
 
+const roleOptions = {
+  admin: '管理員',
+  staff: '員工',
+};
+
 const Authors = ({ title, captions }: AuthorsProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -67,26 +66,30 @@ const Authors = ({ title, captions }: AuthorsProps) => {
   const [userIdToDelete, setUserIdToDelete] = useState<string | null>(null);
   const {
     list,
+    userProfile,
     status: { deleteUserFailed, deleteUserLoading, deleteUserSuccess },
     error: { deleteUserError },
   } = useAppSelector((state) => state.adminAuth);
 
   const renderCell = [
-    (user: IUser) => (
-      <Flex align='center'>
-        <Avatar
-          src={user.profileImage?.imageUrl}
-          w='50px'
-          borderRadius='12px'
-        />
-        <Text pl='15px'>{user.username}</Text>
-      </Flex>
-    ),
+    (user: IUser) => <Text>{user.username}</Text>,
     (user: IUser) => <Text>{user.email}</Text>,
     (user: IUser) => (
-      <Text>
-        {user.roles.map((role) => roleMapping[role] || role).join(', ')}
-      </Text>
+      <Flex align='center' justify='flex-start' gap='2' textAlign='center'>
+        <Text>
+          {user.roles.map((role) => roleMapping[role] || role).join(', ')}
+        </Text>
+        <Switch
+          isChecked={user.roles.includes('admin')}
+          onChange={() =>
+            handleRoleChange(
+              user._id,
+              user.roles.includes('admin') ? 'staff' : 'admin',
+            )
+          }
+          colorScheme='teal'
+        />
+      </Flex>
     ),
     (user: IUser) => <Text>{user.city}</Text>,
     (user: IUser) => (
@@ -98,7 +101,24 @@ const Authors = ({ title, captions }: AuthorsProps) => {
         刪除
       </Button>
     ),
+    (user: IUser) => (
+      <Button
+        colorScheme='blue'
+        size='sm'
+        onClick={() => handleGetUser(user._id)}
+      >
+        查看
+      </Button>
+    ),
   ];
+
+  const handleGetUser = (id: string) => {
+    dispatch(adminGetUserProfileAsync(id));
+  };
+
+  const handleRoleChange = (userId: string, newRole: string) => {
+    dispatch(adminToggleUserRoleAsync({ userId, newRole: newRole }));
+  };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);

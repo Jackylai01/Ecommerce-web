@@ -11,7 +11,7 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { adminCreateAccountsAsync } from '@reducers/admin/auth/actions';
 import { useEffect, useState } from 'react';
-import { dashboardTableData, tablesTableData } from 'src/variables/general';
+import { dashboardTableData } from 'src/variables/general';
 
 const TablesPage = () => {
   const dispatch = useAppDispatch();
@@ -62,8 +62,7 @@ const TablesPage = () => {
         <TabsLayout tabsConfig={UsersConfig}>
           <Authors
             title={'帳號管理'}
-            captions={['Author', 'Function', 'Status', 'Employed', '']}
-            data={tablesTableData}
+            captions={['使用者名稱', '信箱', '角色', '城市']}
           />
         </TabsLayout>
         <Projects

@@ -20,12 +20,14 @@ import {
   adminLogoutAsync,
   adminModifyProfileAsync,
   adminRefreshTokenAsync,
+  adminToggleUserRoleAsync,
   adminUploadProfileImageAsync,
   adminVerificationTokenAsync,
 } from './actions';
 
 type AdminAuthState = ApiState<AdminAuthAsyncAction> & {
   list: ProfileResponse[] | null;
+
   metadata: Metadata | null;
   userInfo: UserInfo | null;
   userProfile: ProfileResponse | null;
@@ -102,6 +104,13 @@ const adminAuthSlice = createSlice({
       if (state.list) {
         state.list = state.list.filter(
           (user) => user._id !== action.payload.id,
+        );
+      }
+    });
+    builder.addCase(adminToggleUserRoleAsync.fulfilled, (state, action) => {
+      if (state.list && action.payload && action.payload._id) {
+        state.list = state.list.map((user) =>
+          user._id === action.payload._id ? action.payload : user,
         );
       }
     });

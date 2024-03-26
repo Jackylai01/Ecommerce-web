@@ -130,3 +130,16 @@ export const apiAdminVerificationToken = async (
 export const apiAdminDeleteUser = async (id: string) => {
   return deleteRequest<ApiResult<any>>(`/zigong/deleteAccount/${id}`);
 };
+
+/**
+ * 後台-管理員切換角色
+ */
+
+export const apiAdminToggleUserRole = async (
+  userId: string,
+  newRole: string,
+) => {
+  return putRequest<ApiResult<any>>(`/zigong/toggleUserRole/${userId}`, {
+    newRole,
+  });
+};

@@ -14,6 +14,7 @@ import {
   apiAdminDeleteUser,
   apiAdminForgotPassword,
   apiAdminResetPassword,
+  apiAdminToggleUserRole,
   apiAdminUploadProfileImage,
   apiAdminUsersByAll,
   apiAdminUsersByProfile,
@@ -37,6 +38,7 @@ export enum AdminAuthAsyncAction {
   verificationToken = 'verificationToken',
   getAllUsers = 'getAllUsers',
   deleteUser = 'deleteUser',
+  toggleUserRole = 'toggleUserRole',
 }
 
 export const adminLoginAsync = createAsyncThunk(
@@ -148,6 +150,14 @@ export const adminDeleteUserAsync = createAsyncThunk(
   `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.deleteUser}`,
   async (id: string) => {
     const response = await apiAdminDeleteUser(id);
+    return response.result.data;
+  },
+);
+
+export const adminToggleUserRoleAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.toggleUserRole}`,
+  async ({ userId, newRole }: { userId: string; newRole: string }) => {
+    const response = await apiAdminToggleUserRole(userId, newRole);
     return response.result.data;
   },
 );
