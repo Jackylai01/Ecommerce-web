@@ -27,7 +27,6 @@ import {
 
 type AdminAuthState = ApiState<AdminAuthAsyncAction> & {
   list: ProfileResponse[] | null;
-
   metadata: Metadata | null;
   userInfo: UserInfo | null;
   userProfile: ProfileResponse | null;

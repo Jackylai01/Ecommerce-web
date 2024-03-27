@@ -17,9 +17,12 @@ import CardHeader from '@components/Card/CardHeader';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import ConfirmationModal from '@components/Modal/ConfirmationModal';
 import MessageModal from '@components/Modal/MessageModal';
+import TablesModal from '@components/Modal/TablesModal';
 import TablesTableRow from '@components/Tables/TablesTableRow';
+import { profileUsers } from '@helpers/tables';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { ProfileResponse } from '@models/responses/user.res';
 import {
   adminDeleteUserAsync,
   adminGetAllUsersAsync,
@@ -64,10 +67,18 @@ const Authors = ({ title, captions }: AuthorsProps) => {
   const [modalContent, setModalContent] = useState<string>('');
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState<string | null>(null);
+  const [isTablesModalOpen, setIsTablesModalOpen] = useState(false);
+  const [tablesModalData, setTablesModalData] = useState<ProfileResponse[]>([]);
+
   const {
     list,
     userProfile,
-    status: { deleteUserFailed, deleteUserLoading, deleteUserSuccess },
+    status: {
+      deleteUserFailed,
+      deleteUserLoading,
+      deleteUserSuccess,
+      adminDetailUserProfileSuccess,
+    },
     error: { deleteUserError },
   } = useAppSelector((state) => state.adminAuth);
 
@@ -138,6 +149,13 @@ const Authors = ({ title, captions }: AuthorsProps) => {
   };
 
   useEffect(() => {
+    if (adminDetailUserProfileSuccess && userProfile) {
+      setTablesModalData([userProfile]);
+      setIsTablesModalOpen(true);
+    }
+  }, [adminDetailUserProfileSuccess, userProfile]);
+
+  useEffect(() => {
     const page = parseInt(router.query.page as string) || 1;
     dispatch(adminGetAllUsersAsync({ page, limit: 10 }));
   }, [dispatch, router.query.page]);
@@ -156,6 +174,7 @@ const Authors = ({ title, captions }: AuthorsProps) => {
 
   useEffect(() => {
     setIsModalOpen(false);
+    setIsTablesModalOpen(false);
   }, []);
 
   return (
@@ -208,6 +227,13 @@ const Authors = ({ title, captions }: AuthorsProps) => {
         >
           {modalContent}
         </MessageModal>
+        <TablesModal
+          isOpen={isTablesModalOpen}
+          onClose={() => setIsTablesModalOpen(false)}
+          data={tablesModalData}
+          title='帳號資訊'
+          renderFields={profileUsers}
+        />
       </LoadingLayout>
     </>
   );

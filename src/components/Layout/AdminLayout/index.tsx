@@ -7,10 +7,7 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { AuthResponse } from '@models/responses/user.res';
 import { resetAdminAuth, setAdminUserInfo } from '@reducers/admin/auth';
-import {
-  adminGetUserProfileAsync,
-  adminRefreshTokenAsync,
-} from '@reducers/admin/auth/actions';
+import { adminRefreshTokenAsync } from '@reducers/admin/auth/actions';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -110,11 +107,11 @@ const AdminLayout = ({ children }: Props) => {
     }
   }, [refreshTokenError, dispatch, router]);
 
-  useEffect(() => {
-    if (userInfo && userInfo.id) {
-      dispatch(adminGetUserProfileAsync(userInfo.id));
-    }
-  }, [userInfo, dispatch]);
+  // useEffect(() => {
+  //   if (userInfo && userInfo.id) {
+  //     dispatch(adminGetUserProfileAsync(userInfo.id));
+  //   }
+  // }, [userInfo, dispatch]);
 
   useEffect(() => {
     const mainRouter = router.asPath.split('/')[2] ?? ADMIN_ROUTE;

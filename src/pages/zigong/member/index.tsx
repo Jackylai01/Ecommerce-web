@@ -1,6 +1,6 @@
 import { ProductCategoryForm } from '@components/Form/FormCRUD/ProductCategory';
 import AddButton from '@components/Icons/AddFormIcon';
-import Authors from '@components/Layout/AdminLayout/Tables/components/Authors';
+import Members from '@components/Layout/AdminLayout/Tables/components/Members';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import TabsLayout from '@components/Layout/TabsLayout';
 import MessageModal from '@components/Modal/MessageModal';
@@ -11,7 +11,6 @@ import { resetCategoryState } from '@reducers/admin/product-category';
 import { addProductCategoryAsync } from '@reducers/admin/product-category/actions';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
-import { tablesTableData } from 'src/variables/general';
 
 const MembersPages: NextPage = () => {
   const dispatch = useAppDispatch();
@@ -86,10 +85,9 @@ const MembersPages: NextPage = () => {
         onSubmit={handleSubmit}
       />
       <TabsLayout tabsConfig={UsersConfig}>
-        <Authors
+        <Members
           title={'會員管理'}
-          captions={['Author', 'Function', 'Status', 'Employed', '']}
-          data={tablesTableData}
+          captions={['會員帳號', '信箱', '姓名', '地址', '上次登入時間']}
         />
       </TabsLayout>
       <MessageModal
