@@ -34,12 +34,14 @@ interface AuthorsProps {
   captions: string[];
 }
 
-interface IUser {
+interface IClientUser {
   _id: string;
   profileImage?: {
     imageUrl: string;
     imageId: string;
   };
+  gender: string;
+  address: string;
   username: string;
   email: string;
   city: string;
@@ -65,21 +67,18 @@ const Members = ({ title, captions }: AuthorsProps) => {
       deleteClientUserFailed,
       deleteClientUserLoading,
       deleteClientUserSuccess,
-      getAllClientUsersFailed,
-      getAllClientUsersLoading,
-      getAllClientUsersSuccess,
-      adminDetailClientUserProfileFailed,
-      adminDetailClientUserProfileLoading,
       adminDetailClientUserProfileSuccess,
     },
     error: { deleteClientUserError },
   } = useAppSelector((state) => state.adminClientUsers);
 
   const renderCell = [
-    (user: IUser) => <Text>{user.username}</Text>,
-    (user: IUser) => <Text>{user.email}</Text>,
-    (user: IUser) => <Text>{user.city}</Text>,
-    (user: IUser) => (
+    (user: IClientUser) => <Text>{user.username}</Text>,
+    (user: IClientUser) => <Text>{user.email}</Text>,
+    (user: IClientUser) => <Text>{user.city}</Text>,
+    (user: IClientUser) => <Text>{user.address}</Text>,
+    (user: IClientUser) => <Text>{user.gender}</Text>,
+    (user: IClientUser) => (
       <Button
         colorScheme='red'
         size='sm'
@@ -88,7 +87,7 @@ const Members = ({ title, captions }: AuthorsProps) => {
         刪除
       </Button>
     ),
-    (user: IUser) => (
+    (user: IClientUser) => (
       <Button
         colorScheme='blue'
         size='sm'

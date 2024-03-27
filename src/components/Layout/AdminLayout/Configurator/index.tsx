@@ -150,7 +150,11 @@ const Configurator = ({
                 重設密碼
               </Button>
               <Separator />
-              <Button colorScheme='teal' onClick={onOpenEditProfileModal}>
+              <Button
+                colorScheme='teal'
+                onClick={onOpenEditProfileModal}
+                mt='1rem'
+              >
                 編輯個人檔案
               </Button>
             </Flex>
