@@ -146,6 +146,7 @@ const Members = ({ title, captions }: AuthorsProps) => {
 
   useEffect(() => {
     setIsModalOpen(false);
+    setIsTablesModalOpen(false);
   }, []);
 
   return (
