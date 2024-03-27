@@ -5,6 +5,7 @@ export enum ReducerName {
   CLIENT_UPLOAD = 'clientUpload',
   CLIENT_SHAPEFILE = 'clientShapeFile',
   ADMIN_AUTH = 'adminAuth',
+  ADMIN_CLIENT_USERS = 'adminClientUsers',
   CLIENT_PUBLIC = 'clientPublic',
   ADMIN_UPLOAD = 'adminUpload',
   ADMIN_CLIENT_USER = 'adminClientUser',
