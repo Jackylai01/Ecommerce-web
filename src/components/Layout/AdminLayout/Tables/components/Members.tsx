@@ -12,8 +12,20 @@ import {
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import CardHeader from '@components/Card/CardHeader';
+import LoadingLayout from '@components/Layout/LoadingLayout';
+import ConfirmationModal from '@components/Modal/ConfirmationModal';
+import MessageModal from '@components/Modal/MessageModal';
+import TablesModal from '@components/Modal/TablesModal';
+import TablesTableRow from '@components/Tables/TablesTableRow';
+import { clientUsersTables } from '@helpers/tables';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { ClientUser } from '@models/entities/client-user';
+import {
+  adminDeleteClientUserAsync,
+  adminGetAllClientUsersAsync,
+  adminGetClientUserAsync,
+} from '@reducers/admin/client-users/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -41,8 +53,27 @@ const Members = ({ title, captions }: AuthorsProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [isTablesModalOpen, setIsTablesModalOpen] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState<string | null>(null);
-  const { userProfile } = useAppSelector((state) => state.adminAuth);
+
+  const [tablesModalData, setTablesModalData] = useState<ClientUser[]>([]);
+
+  const {
+    list,
+    detail,
+    status: {
+      deleteClientUserFailed,
+      deleteClientUserLoading,
+      deleteClientUserSuccess,
+      getAllClientUsersFailed,
+      getAllClientUsersLoading,
+      getAllClientUsersSuccess,
+      adminDetailClientUserProfileFailed,
+      adminDetailClientUserProfileLoading,
+      adminDetailClientUserProfileSuccess,
+    },
+    error: { deleteClientUserError },
+  } = useAppSelector((state) => state.adminClientUsers);
 
   const renderCell = [
     (user: IUser) => <Text>{user.username}</Text>,
@@ -52,7 +83,7 @@ const Members = ({ title, captions }: AuthorsProps) => {
       <Button
         colorScheme='red'
         size='sm'
-        // onClick={() => handleDeleteClick(user._id)}
+        onClick={() => handleDeleteClick(user._id)}
       >
         刪除
       </Button>
@@ -69,42 +100,49 @@ const Members = ({ title, captions }: AuthorsProps) => {
   ];
 
   const handleGetUser = (id: string) => {
-    // dispatch(adminGetUserProfileAsync(id));
+    dispatch(adminGetClientUserAsync(id));
   };
 
   const handleCloseModal = () => {
-    // setIsModalOpen(false);
+    setIsModalOpen(false);
   };
 
-  // const handleDeleteClick = (id: string) => {
-  //   setUserIdToDelete(id);
-  //   setIsConfirmationModalOpen(true);
-  // };
+  const handleDeleteClick = (id: string) => {
+    setUserIdToDelete(id);
+    setIsConfirmationModalOpen(true);
+  };
 
-  // const handleConfirmDelete = () => {
-  //   if (userIdToDelete) {
-  //     dispatch(adminDeleteUserAsync(userIdToDelete));
-  //     setUserIdToDelete(null);
-  //     setIsConfirmationModalOpen(false);
-  //   }
-  // };
+  const handleConfirmDelete = () => {
+    if (userIdToDelete) {
+      dispatch(adminDeleteClientUserAsync(userIdToDelete));
+      setUserIdToDelete(null);
+      setIsConfirmationModalOpen(false);
+    }
+  };
 
-  // // useEffect(() => {
-  // //   const page = parseInt(router.query.page as string) || 1;
-  // //   dispatch(adminGetAllUsersAsync({ page, limit: 10 }));
-  // // }, [dispatch, router.query.page]);
+  useEffect(() => {
+    if (adminDetailClientUserProfileSuccess && detail) {
+      setTablesModalData([detail]);
+      setIsTablesModalOpen(true);
+    }
+  }, [adminDetailClientUserProfileSuccess, detail]);
 
-  // // useEffect(() => {
-  // //   if (deleteUserSuccess) {
-  // //     setIsModalOpen(true);
-  // //     setModalContent('刪除帳號成功！');
-  // //   }
+  useEffect(() => {
+    if (deleteClientUserSuccess) {
+      setIsModalOpen(true);
+      setModalContent('刪除會員帳號成功！');
+    }
 
-  // //   if (deleteUserFailed) {
-  // //     setIsModalOpen(true);
-  // //     setModalContent('');
-  // //   }
-  // // }, [deleteUserFailed, deleteUserLoading, deleteUserSuccess]);
+    if (deleteClientUserFailed) {
+      setIsModalOpen(true);
+      setModalContent('');
+    }
+  }, [deleteClientUserSuccess, deleteClientUserFailed]);
+
+  useEffect(() => {
+    const page = parseInt(router.query.page as string) || 1;
+    dispatch(adminGetAllClientUsersAsync({ page, limit: 10 }));
+  }, [dispatch, router.query.page]);
 
   useEffect(() => {
     setIsModalOpen(false);
@@ -112,53 +150,62 @@ const Members = ({ title, captions }: AuthorsProps) => {
 
   return (
     <>
-      <Card>
-        <CardHeader p='6px 0px 22px 0px'>
-          <Text fontSize='xl' color={textColor} fontWeight='bold'>
-            {title}
-          </Text>
-        </CardHeader>
-        <CardBody>
-          <Box overflowX='auto' w='full'>
-            <Table variant='simple' color={textColor} size='sm'>
-              <Thead>
-                <Tr>
-                  {captions.map((caption, idx) => (
-                    <Th key={idx} minWidth='200px'>
-                      {caption}
-                    </Th>
+      <LoadingLayout isLoading={deleteClientUserLoading}>
+        <Card>
+          <CardHeader p='6px 0px 22px 0px'>
+            <Text fontSize='xl' color={textColor} fontWeight='bold'>
+              {title}
+            </Text>
+          </CardHeader>
+          <CardBody>
+            <Box overflowX='auto' w='full'>
+              <Table variant='simple' color={textColor} size='sm'>
+                <Thead>
+                  <Tr>
+                    {captions.map((caption, idx) => (
+                      <Th key={idx} minWidth='200px'>
+                        {caption}
+                      </Th>
+                    ))}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {list?.map((user, index) => (
+                    <TablesTableRow
+                      key={index}
+                      row={user}
+                      renderCell={renderCell}
+                    />
                   ))}
-                </Tr>
-              </Thead>
-              <Tbody>
-                {/* {list?.map((user, index) => (
-                  <TablesTableRow
-                    key={index}
-                    row={user}
-                    renderCell={renderCell}
-                  />
-                ))} */}
-              </Tbody>
-            </Table>
-          </Box>
-        </CardBody>
-      </Card>
-      {/* <ConfirmationModal
-        isOpen={isConfirmationModalOpen}
-        onClose={() => setIsConfirmationModalOpen(false)}
-        title='確認刪除'
-        onConfirm={handleConfirmDelete}
-      >
-        您確定要刪除這個帳號？
-      </ConfirmationModal> */}
-      {/* <MessageModal
-        title='刪除帳號'
-        isActive={isModalOpen}
-        error={deleteUserError}
-        onClose={handleCloseModal}
-      >
-        {modalContent}
-      </MessageModal> */}
+                </Tbody>
+              </Table>
+            </Box>
+          </CardBody>
+        </Card>
+        <ConfirmationModal
+          isOpen={isConfirmationModalOpen}
+          onClose={() => setIsConfirmationModalOpen(false)}
+          title='確認刪除'
+          onConfirm={handleConfirmDelete}
+        >
+          您確定要刪除這個帳號？
+        </ConfirmationModal>
+        <MessageModal
+          title='刪除會員帳號'
+          isActive={isModalOpen}
+          error={deleteClientUserError}
+          onClose={handleCloseModal}
+        >
+          {modalContent}
+        </MessageModal>
+        <TablesModal
+          isOpen={isTablesModalOpen}
+          onClose={() => setIsTablesModalOpen(false)}
+          data={tablesModalData}
+          title='會員詳細資訊'
+          renderFields={clientUsersTables}
+        />
+      </LoadingLayout>
     </>
   );
 };

@@ -1,4 +1,5 @@
 import adminAuth from './admin/auth';
+import adminClientUsers from './admin/client-users';
 import customPage from './admin/custom-page';
 import dashBoardTheme from './admin/dash-board/themeSlice';
 import adminProductsCategory from './admin/product-category';
@@ -24,6 +25,7 @@ const appReducer = {
   dashBoardTheme,
   adminProducts,
   adminProductsCategory,
+  adminClientUsers,
 };
 
 export default appReducer;

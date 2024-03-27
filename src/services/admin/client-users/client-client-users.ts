@@ -6,6 +6,7 @@ import {
   ApiResult,
   deleteRequest,
   getRequest,
+  postRequest,
 } from '../../shared/api';
 
 /**
@@ -30,3 +31,16 @@ export const apiClientDetailAdminUser = async (id: string) =>
  */
 export const apiClientRemoveAdminUser = async (id: string) =>
   deleteRequest<ApiResult<ClientUser>>(`/zigong/client-users/${id}`);
+
+/**
+ * 後台-寄信通知(全部會員)
+ */
+
+export const apiClientNotifyAllUsers = async () =>
+  postRequest<ApiResult<any>>(`/zigong/client-users/notify-all`);
+
+/**
+ * 後台-寄信通知(選擇部分會員)
+ */
+export const apiClientNotifySelectedUsers = async () =>
+  postRequest<ApiResult<any>>(`/zigong/client-users/notify-selected`);

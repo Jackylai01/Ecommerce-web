@@ -9,12 +9,12 @@ import {
 } from '@services/admin/client-users/client-client-users';
 
 export enum AdminClientUsersAsyncAction {
-  adminDetailClientUserProfile = 'adminDetailClientUserProfile ',
+  adminDetailClientUserProfile = 'adminDetailClientUserProfile',
   getAllClientUsers = 'getAllClientUsers',
   deleteClientUser = 'deleteClientUser',
 }
 
-export const adminGetUserProfileAsync = createAsyncThunk(
+export const adminGetClientUserAsync = createAsyncThunk(
   `${ReducerName.ADMIN_CLIENT_USERS}/${AdminClientUsersAsyncAction.adminDetailClientUserProfile}`,
   async (id: string) => {
     const response = await apiClientDetailAdminUser(id);
@@ -22,7 +22,7 @@ export const adminGetUserProfileAsync = createAsyncThunk(
   },
 );
 
-export const adminGetAllUsersAsync = createAsyncThunk(
+export const adminGetAllClientUsersAsync = createAsyncThunk(
   `${ReducerName.ADMIN_CLIENT_USERS}/${AdminClientUsersAsyncAction.getAllClientUsers}`,
   async ({ page, limit }: QueryParams) => {
     const query: PagingQuery = { page, limit };
@@ -31,7 +31,7 @@ export const adminGetAllUsersAsync = createAsyncThunk(
   },
 );
 
-export const adminDeleteUserAsync = createAsyncThunk(
+export const adminDeleteClientUserAsync = createAsyncThunk(
   `${ReducerName.ADMIN_CLIENT_USERS}/${AdminClientUsersAsyncAction.deleteClientUser}`,
   async (id: string) => {
     const response = await apiClientRemoveAdminUser(id);

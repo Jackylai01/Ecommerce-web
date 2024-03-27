@@ -87,7 +87,7 @@ const MembersPages: NextPage = () => {
       <TabsLayout tabsConfig={UsersConfig}>
         <Members
           title={'會員管理'}
-          captions={['會員帳號', '信箱', '姓名', '地址', '上次登入時間']}
+          captions={['會員帳號', '信箱', '縣市', '地址', '性別']}
         />
       </TabsLayout>
       <MessageModal

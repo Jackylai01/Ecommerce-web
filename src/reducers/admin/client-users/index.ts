@@ -7,9 +7,9 @@ import { Metadata } from '@models/entities/shared/pagination';
 import { createSlice } from '@reduxjs/toolkit';
 import {
   AdminClientUsersAsyncAction,
-  adminDeleteUserAsync,
-  adminGetAllUsersAsync,
-  adminGetUserProfileAsync,
+  adminDeleteClientUserAsync,
+  adminGetAllClientUsersAsync,
+  adminGetClientUserAsync,
 } from './actions';
 
 type AdminClientUsersState = ApiState<AdminClientUsersAsyncAction> & {
@@ -32,15 +32,15 @@ const adminClientUsersSlice = createSlice({
     resetAdminClientUsers: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(adminGetUserProfileAsync.fulfilled, (state, action) => {
+    builder.addCase(adminGetClientUserAsync.fulfilled, (state, action) => {
       state.detail = action.payload;
     });
 
-    builder.addCase(adminGetAllUsersAsync.fulfilled, (state, action) => {
+    builder.addCase(adminGetAllClientUsersAsync.fulfilled, (state, action) => {
       state.list = action.payload.data;
       state.metadata = action.payload.metadata;
     });
-    builder.addCase(adminDeleteUserAsync.fulfilled, (state) => {
+    builder.addCase(adminDeleteClientUserAsync.fulfilled, (state) => {
       state.detail = null;
     });
 
