@@ -1,5 +1,3 @@
-import { ProductCategoryForm } from '@components/Form/FormCRUD/ProductCategory';
-import AddButton from '@components/Icons/AddFormIcon';
 import Members from '@components/Layout/AdminLayout/Tables/components/Members';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import TabsLayout from '@components/Layout/TabsLayout';
@@ -79,11 +77,6 @@ const MembersPages: NextPage = () => {
     <LoadingLayout
       isLoading={addProductsCategoryLoading || updateProductsCategoryLoading}
     >
-      <AddButton
-        formTitle='Add Members Category'
-        formContent={<ProductCategoryForm />}
-        onSubmit={handleSubmit}
-      />
       <TabsLayout tabsConfig={UsersConfig}>
         <Members
           title={'會員管理'}
