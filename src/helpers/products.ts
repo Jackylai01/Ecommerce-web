@@ -1,5 +1,9 @@
 import { IItem, NavItem } from '@models/requests/products';
 
+export const formatPrice = (value: number): string => {
+  return value.toFixed(2);
+};
+
 export const getSubstring = (text: string, substringEnd: number): string => {
   return text?.length > substringEnd
     ? `${text?.substring(0, substringEnd)}...`
