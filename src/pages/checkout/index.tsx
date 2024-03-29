@@ -121,7 +121,14 @@ export const CheckoutPage: NextPage = () => {
       </Stack>
 
       <Box w={{ base: '100%', lg: '40%' }}>
-        <Card borderWidth='1px' borderColor='gray.200' shadow='none' p='2rem'>
+        <Card
+          borderWidth='1px'
+          bg='none'
+          borderColor='gray.200'
+          color='black'
+          p='2rem'
+          shadow='md'
+        >
           <CardHeader>
             <Heading size='md'>Payment Details</Heading>
           </CardHeader>
@@ -135,7 +142,6 @@ export const CheckoutPage: NextPage = () => {
                 />
                 <Button
                   bgColor='brand.primary'
-                  color='white'
                   rounded='full'
                   ml='-40px'
                   px='2rem'
@@ -145,6 +151,8 @@ export const CheckoutPage: NextPage = () => {
                   _active={{
                     bgColor: 'brand.primaryDark',
                   }}
+                  color='black'
+                  bg='red.200'
                 >
                   Apply Coupon
                 </Button>
@@ -199,11 +207,12 @@ export const CheckoutPage: NextPage = () => {
               w='100%'
               rounded='full'
               _hover={{
-                bgColor: 'brand.primaryDark',
+                bgColor: 'red.200',
               }}
               _active={{
-                bgColor: 'brand.primaryDark',
+                bgColor: 'red.500',
               }}
+              bg='red.300'
             >
               Pay ${formatPrice(subTotal)}
             </Button>
