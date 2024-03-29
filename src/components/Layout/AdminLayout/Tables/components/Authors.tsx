@@ -17,6 +17,7 @@ import LoadingLayout from '@components/Layout/LoadingLayout';
 import ConfirmationModal from '@components/Modal/ConfirmationModal';
 import MessageModal from '@components/Modal/MessageModal';
 import TablesModal from '@components/Modal/TablesModal';
+import Pagination from '@components/Pagination';
 import TablesTableRow from '@components/Tables/TablesTableRow';
 import { profileUsers } from '@helpers/tables';
 import useAppDispatch from '@hooks/useAppDispatch';
@@ -75,6 +76,7 @@ const Authors = ({ title, captions }: AuthorsProps) => {
   const {
     list,
     userProfile,
+    metadata,
     status: {
       deleteUserFailed,
       deleteUserLoading,
@@ -219,6 +221,7 @@ const Authors = ({ title, captions }: AuthorsProps) => {
               </Table>
             </Box>
           </CardBody>
+          {metadata && <Pagination metadata={metadata} />}
         </Card>
         <ConfirmationModal
           isOpen={isConfirmationModalOpen}

@@ -160,7 +160,7 @@ const ProductCategories = () => {
           getProductsCategoryByIdLoading || deleteProductsCategoryLoading
         }
       >
-        <Box as='main' overflowX='auto' w='full' minWidth='800px'>
+        <Box as='main' overflowX='auto' w='full' minWidth='800px' h='100vh'>
           <Table variant='simple' color={textColor} size='sm'>
             <Thead>
               <Tr>

@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/react';
 import Members from '@components/Layout/AdminLayout/Tables/components/Members';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import TabsLayout from '@components/Layout/TabsLayout';
@@ -77,20 +78,22 @@ const MembersPages: NextPage = () => {
     <LoadingLayout
       isLoading={addProductsCategoryLoading || updateProductsCategoryLoading}
     >
-      <TabsLayout tabsConfig={UsersConfig}>
-        <Members
-          title={'會員管理'}
-          captions={['會員帳號', '信箱', '縣市', '地址', '性別', '', '']}
-        />
-      </TabsLayout>
-      <MessageModal
-        title={modalTitle}
-        isActive={isModalOpen}
-        error={addProductsCategoryError}
-        onClose={handleCloseModal}
-      >
-        {modalContent}
-      </MessageModal>
+      <Box h='100vh'>
+        <TabsLayout tabsConfig={UsersConfig}>
+          <Members
+            title={'會員管理'}
+            captions={['會員帳號', '信箱', '縣市', '地址', '性別', '', '']}
+          />
+        </TabsLayout>
+        <MessageModal
+          title={modalTitle}
+          isActive={isModalOpen}
+          error={addProductsCategoryError}
+          onClose={handleCloseModal}
+        >
+          {modalContent}
+        </MessageModal>
+      </Box>
     </LoadingLayout>
   );
 };
