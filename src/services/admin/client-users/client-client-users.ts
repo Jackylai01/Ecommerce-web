@@ -42,5 +42,5 @@ export const apiClientNotifyAllUsers = async () =>
 /**
  * 後台-寄信通知(選擇部分會員)
  */
-export const apiClientNotifySelectedUsers = async () =>
-  postRequest<ApiResult<any>>(`/zigong/client-users/notify-selected`);
+export const apiClientNotifySelectedUsers = async (id: any) =>
+  postRequest<ApiResult<any>>(`/zigong/client-users/notify-selected`, id);

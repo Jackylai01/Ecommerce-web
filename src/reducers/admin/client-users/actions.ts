@@ -5,6 +5,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiClientDetailAdminUser,
   apiClientListClientUsers,
+  apiClientNotifyAllUsers,
+  apiClientNotifySelectedUsers,
   apiClientRemoveAdminUser,
 } from '@services/admin/client-users/client-client-users';
 
@@ -12,6 +14,8 @@ export enum AdminClientUsersAsyncAction {
   adminDetailClientUserProfile = 'adminDetailClientUserProfile',
   getAllClientUsers = 'getAllClientUsers',
   deleteClientUser = 'deleteClientUser',
+  notifyAllUsers = 'notifyAllUsers',
+  notifySelectedUsers = 'notifySelectedUsers',
 }
 
 export const adminGetClientUserAsync = createAsyncThunk(
@@ -36,5 +40,21 @@ export const adminDeleteClientUserAsync = createAsyncThunk(
   async (id: string) => {
     const response = await apiClientRemoveAdminUser(id);
     return response.result.data;
+  },
+);
+
+export const notifyAllUsersAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_CLIENT_USERS}/${AdminClientUsersAsyncAction.notifyAllUsers}`,
+  async () => {
+    const response = await apiClientNotifyAllUsers();
+    return response.result;
+  },
+);
+
+export const notifySelectedUsersAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_CLIENT_USERS}/${AdminClientUsersAsyncAction.notifySelectedUsers}`,
+  async (userIds: any[]) => {
+    const response = await apiClientNotifySelectedUsers(userIds);
+    return response.result;
   },
 );
