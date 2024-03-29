@@ -11,6 +11,7 @@ import { adminRefreshTokenAsync } from '@reducers/admin/auth/actions';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 import { default as routes } from 'src/routes';
 import LoadingLayout from '../LoadingLayout';
 import MainPanel from '../MainPanel';
@@ -27,7 +28,7 @@ const AdminLayout = ({ children }: Props) => {
   const router = useRouter();
   const currentPath = router.pathname;
   const dispatch = useAppDispatch();
-
+  const { colorMode } = useAdminColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [pageInfo, setPageInfo] = useState<AsideRouterType>();
   const [hasTriedRefreshing, setHasTriedRefreshing] = useState(false);
@@ -107,12 +108,6 @@ const AdminLayout = ({ children }: Props) => {
     }
   }, [refreshTokenError, dispatch, router]);
 
-  // useEffect(() => {
-  //   if (userInfo && userInfo.id) {
-  //     dispatch(adminGetUserProfileAsync(userInfo.id));
-  //   }
-  // }, [userInfo, dispatch]);
-
   useEffect(() => {
     const mainRouter = router.asPath.split('/')[2] ?? ADMIN_ROUTE;
     const findMainRouter = allAdminRouter.find(({ href }) =>
@@ -158,7 +153,11 @@ const AdminLayout = ({ children }: Props) => {
       <Head>
         <title>{pageInfo?.label && `${pageInfo?.label} - `}營運管理平台</title>
       </Head>
-      <Flex w='100%' justifyContent='space-between'>
+      <Flex
+        w='100%'
+        justifyContent='space-between'
+        bg={colorMode === 'light' ? 'gray.50' : 'gray.800'}
+      >
         <Box>
           <Sidebar
             routes={routes}

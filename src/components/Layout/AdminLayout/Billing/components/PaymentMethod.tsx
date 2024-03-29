@@ -1,16 +1,10 @@
-import {
-  Button,
-  Flex,
-  Icon,
-  Spacer,
-  Text,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Button, Flex, Icon, Spacer, Text } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import CardHeader from '@components/Card/CardHeader';
 import IconBox from '@components/Icons/IconBox';
 import { FaPencilAlt } from 'react-icons/fa';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface PaymentMethodType {
   title: string;
@@ -19,13 +13,14 @@ interface PaymentMethodType {
 }
 
 const PaymentMethod = ({ title, mastercard, visa }: PaymentMethodType) => {
-  const iconTeal = useColorModeValue('teal.300', 'teal.300');
-  const textColor = useColorModeValue('gray.700', 'white');
-  const borderColor = useColorModeValue('#dee2e6', 'gray.500');
-  const bgButton = useColorModeValue(
-    'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)',
-    'gray.800',
-  );
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const iconTeal = colorMode === 'light' ? 'teal.300' : 'teal.300';
+  const borderColor = colorMode === 'light' ? '#dee2e6' : 'gray.500';
+  const bgButton =
+    colorMode === 'light'
+      ? 'linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)'
+      : 'gray.800';
 
   return (
     <Card mt='24px'>

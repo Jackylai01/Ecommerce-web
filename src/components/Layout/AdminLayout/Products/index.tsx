@@ -11,7 +11,6 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
@@ -34,6 +33,7 @@ import {
 } from '@reducers/admin/products/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface ProductRowData {
   _id: any;
@@ -48,8 +48,10 @@ const ProductTableContainer = () => {
   const dispatch = useAppDispatch();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingProductId, setEditingProductId] = useState<any>(null);
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const SwitchColor = colorMode === 'light' ? 'gray.500' : 'white';
 
-  const textColor = useColorModeValue('gray.700', 'white');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isMessageModalOpen,
@@ -74,7 +76,7 @@ const ProductTableContainer = () => {
     error: { deleteProductError, updateProductStatusError },
   } = useAppSelector((state) => state.adminProducts);
 
-  const captions = ['Logo', 'Name', 'Description', 'Status'];
+  const captions = ['Logo', 'Name', 'Description', 'Status', '', '', ''];
 
   const renderCell = [
     (row: any) => (
@@ -111,6 +113,14 @@ const ProductTableContainer = () => {
           isChecked={row.status.includes('onSale')}
           onChange={(e) => handleStatusChange(row._id, e.target.checked)}
           size='sm'
+          sx={{
+            '.chakra-switch__track': {
+              boxShadow: colorMode === 'light' ? '0 0 0 1px #afafaf' : 'none',
+            },
+            '.chakra-switch__thumb': {
+              bg: row.status.includes('onSale') ? 'white' : 'gray.300',
+            },
+          }}
         />
       </FormControl>
     ),
@@ -216,7 +226,7 @@ const ProductTableContainer = () => {
   return (
     <>
       <LoadingLayout isLoading={getAllProductsLoading || deleteProductLoading}>
-        <Box as='main' overflowX='auto' w='full' minWidth='800px'>
+        <Box as='main' overflowX='auto' w='full' minWidth='800px' h='100vh'>
           <Table variant='simple' color={textColor} size='sm'>
             <Thead>
               <Tr>

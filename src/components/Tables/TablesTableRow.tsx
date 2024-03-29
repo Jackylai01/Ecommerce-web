@@ -1,4 +1,5 @@
-import { Td, Tr, useColorModeValue } from '@chakra-ui/react';
+import { Td, Tr } from '@chakra-ui/react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface TablesTableRowProps {
   row: any;
@@ -6,7 +7,8 @@ interface TablesTableRowProps {
 }
 
 function TablesTableRow({ row, renderCell }: TablesTableRowProps) {
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
   return (
     <Tr>

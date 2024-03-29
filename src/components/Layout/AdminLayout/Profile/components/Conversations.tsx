@@ -1,10 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Flex,
-  Text,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Avatar, Button, Flex, Text } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import CardHeader from '@components/Card/CardHeader';
@@ -13,9 +7,11 @@ import avatar3 from '@public/assets/img/avatars/avatar3.png';
 import avatar4 from '@public/assets/img/avatars/avatar4.png';
 import avatar5 from '@public/assets/img/avatars/avatar5.png';
 import avatar6 from '@public/assets/img/avatars/avatar6.png';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 const Conversations = ({ title }: any) => {
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
   return (
     <Card p='16px'>

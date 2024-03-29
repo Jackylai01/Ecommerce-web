@@ -9,7 +9,6 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
@@ -31,10 +30,12 @@ import {
 } from '@reducers/admin/auth/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface AuthorsProps {
   title: string;
   captions: string[];
+  data?: any[];
 }
 
 interface IUser {
@@ -62,7 +63,8 @@ const roleOptions = {
 const Authors = ({ title, captions }: AuthorsProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -98,7 +100,14 @@ const Authors = ({ title, captions }: AuthorsProps) => {
               user.roles.includes('admin') ? 'staff' : 'admin',
             )
           }
-          colorScheme='teal'
+          sx={{
+            '.chakra-switch__track': {
+              boxShadow: colorMode === 'light' ? '0 0 0 1px #afafaf' : 'none',
+            },
+            '.chakra-switch__thumb': {
+              bg: user.roles.includes('admin') ? 'white' : 'gray.300',
+            },
+          }}
         />
       </Flex>
     ),

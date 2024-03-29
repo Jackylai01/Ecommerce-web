@@ -7,12 +7,14 @@ import {
   Td,
   Text,
   Tr,
-  useColorModeValue,
 } from '@chakra-ui/react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 const DashboardTableRow = (props: any) => {
   const { logo, name, members, budget, progression } = props;
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white.300';
+
   return (
     <Tr>
       <Td minWidth={{ sm: '250px' }} pl='0px'>

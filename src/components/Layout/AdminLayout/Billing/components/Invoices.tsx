@@ -1,8 +1,9 @@
-import { Button, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Button, Flex, Text } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import CardHeader from '@components/Card/CardHeader';
 import InvoicesRow from '@components/Tables/InvoicesRow';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface InvoicesType {
   title: string;
@@ -16,7 +17,8 @@ interface InvoicesType {
 }
 
 const Invoices = ({ title, data }: InvoicesType) => {
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
   return (
     <Card

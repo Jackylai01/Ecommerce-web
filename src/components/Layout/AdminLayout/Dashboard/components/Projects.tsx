@@ -7,12 +7,12 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardHeader from '@components/Card/CardHeader';
 import DashboardTableRow from '@components/Tables/DashboardTableRow';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface ProductsType {
   title: string;
@@ -22,7 +22,8 @@ interface ProductsType {
 }
 
 const Projects = ({ title, amount, captions, data }: ProductsType) => {
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
   return (
     <Card p='16px' overflowX={{ sm: 'scroll', xl: 'hidden' }}>

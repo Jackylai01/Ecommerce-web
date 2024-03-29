@@ -1,5 +1,6 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import React, { FC } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface TabItemWithIcon {
   label: string;
@@ -16,12 +17,16 @@ const TabsComponent: FC<TabsComponentProps> = ({
   onChange,
   index,
 }) => {
+  const { colorMode } = useAdminColorMode();
+  const tabsBg = colorMode === 'light' ? 'black' : 'white';
+
   return (
     <Tabs
       index={index}
       onChange={(index) => onChange(index)}
       mt='5rem'
       ml='1rem'
+      color={tabsBg}
     >
       <TabList borderBottom='none'>
         <>

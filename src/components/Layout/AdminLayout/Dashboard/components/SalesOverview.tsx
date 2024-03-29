@@ -1,6 +1,7 @@
-import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardHeader from '@components/Card/CardHeader';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface SalesOverviewType {
   title: string;
@@ -9,7 +10,9 @@ interface SalesOverviewType {
 }
 
 const SalesOverview = ({ title, percentage, chart }: SalesOverviewType) => {
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+
   return (
     <Card p='28px 10px 16px 0px' mb={{ sm: '26px', lg: '0px' }}>
       <CardHeader mb='20px' pl='22px'>

@@ -1,5 +1,6 @@
-import { Box, useColorModeValue } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { useRef } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 import SidebarContent from './SidebarContent';
 
 interface SidebarType {
@@ -11,8 +12,8 @@ interface SidebarType {
 const Sidebar = ({ routes, sidebarVariant, currentPath }: SidebarType) => {
   const mainPanel = useRef<HTMLDivElement>(null);
   let variantChange = '0.2s linear';
+  const { colorMode } = useAdminColorMode();
 
-  const sidebarBg = useColorModeValue('white', 'gray.700');
   const sidebarRadius = sidebarVariant === 'opaque' ? '16px' : '0px';
   const sidebarMargins =
     sidebarVariant === 'opaque' ? '16px 0px 16px 16px' : '0px';
@@ -21,7 +22,7 @@ const Sidebar = ({ routes, sidebarVariant, currentPath }: SidebarType) => {
     <Box ref={mainPanel}>
       <Box display={{ base: 'none', sm: 'none', xl: 'block' }} position='fixed'>
         <Box
-          bg={sidebarBg}
+          bg={colorMode === 'light' ? 'gray.50' : 'gray.800'}
           transition={variantChange}
           w='260px'
           maxW='260px'

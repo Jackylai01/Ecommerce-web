@@ -4,11 +4,11 @@ import {
   StatHelpText,
   StatLabel,
   StatNumber,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import IconBox from '@components/Icons/IconBox';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface MiniStatisticsType {
   title: string;
@@ -23,8 +23,9 @@ const MiniStatistics = ({
   percentage,
   icon,
 }: MiniStatisticsType) => {
-  const iconTeal = useColorModeValue('teal.300', 'teal.300');
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const iconTeal = colorMode === 'light' ? 'teal.300' : 'teal.300';
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
   return (
     <Card minH='83px'>

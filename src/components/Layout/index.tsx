@@ -5,6 +5,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { setPageLayoutType } from '@reducers/layout';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { ColorModeProvider } from 'src/context/colorMode';
 import AdminAuthLayout from './AdminAuthLayout';
 import AdminLayout from './AdminLayout';
 import ClientLayout from './ClientLayout';
@@ -35,7 +36,9 @@ const Layout = ({ children }: Props) => {
         <ClientLayout>{children}</ClientLayout>
       )}
       {pageLayoutType === PageLayoutType.ADMIN && (
-        <AdminLayout>{children}</AdminLayout>
+        <ColorModeProvider>
+          <AdminLayout>{children}</AdminLayout>
+        </ColorModeProvider>
       )}
       {pageLayoutType === PageLayoutType.ADMIN_AUTH && (
         <AdminAuthLayout>{children}</AdminAuthLayout>

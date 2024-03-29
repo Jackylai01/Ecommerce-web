@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, Text, useColorModeValue } from '@chakra-ui/react';
+import { Flex, SimpleGrid, Text } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import {
@@ -7,6 +7,7 @@ import {
   StatsIcon,
   WalletIcon,
 } from '@components/Icons/Icons';
+import { useAdminColorMode } from 'src/context/colorMode';
 import ChartStatistics from './ChartStatistics';
 
 interface ActiveUsersType {
@@ -16,8 +17,10 @@ interface ActiveUsersType {
 }
 
 const ActiveUsers = ({ title, percentage, chart }: ActiveUsersType) => {
-  const iconBoxInside = useColorModeValue('white', 'white');
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const iconBoxInside = colorMode === 'light' ? 'white' : 'white';
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+
   return (
     <Card p='16px'>
       <CardBody>

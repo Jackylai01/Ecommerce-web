@@ -1,10 +1,4 @@
-import {
-  Flex,
-  Grid,
-  Image,
-  SimpleGrid,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Flex, Grid, Image, SimpleGrid } from '@chakra-ui/react';
 import {
   CartIcon,
   DocumentIcon,
@@ -12,6 +6,7 @@ import {
   WalletIcon,
 } from '@components/Icons/Icons';
 import dynamic from 'next/dynamic';
+import { useAdminColorMode } from 'src/context/colorMode';
 import { dashboardTableData, timelineData } from 'src/variables/general';
 import ActiveUsers from './components/ActiveUsers';
 import BuiltByDevelopers from './components/BuiltByDevelopers';
@@ -29,7 +24,9 @@ const LineChart = dynamic(() => import('@components/Charts/LineChart'), {
 });
 
 const Dashboard = () => {
-  const iconBoxInside = useColorModeValue('white', 'white');
+  const { colorMode } = useAdminColorMode();
+
+  const iconBoxInside = colorMode === 'light' ? 'white' : 'white';
 
   return (
     <Flex flexDirection='column' pt={{ base: '120px', md: '75px' }}>

@@ -1,9 +1,12 @@
-import { Box, Flex, Icon, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Icon, Text } from '@chakra-ui/react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 function TimelineRow(props: any) {
   const { logo, title, date, color, index, arrLength } = props;
-  const textColor = useColorModeValue('gray.700', 'white.300');
-  const bgIconColor = useColorModeValue('white.300', 'gray.700');
+
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white.300';
+  const bgIconColor = colorMode === 'light' ? 'white.300' : 'gray.700';
 
   return (
     <Flex alignItems='center' minH='78px' justifyContent='start' mb='5px'>

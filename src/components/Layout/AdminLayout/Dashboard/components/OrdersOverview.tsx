@@ -1,8 +1,9 @@
-import { Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import CardHeader from '@components/Card/CardHeader';
 import TimelineRow from '@components/Tables/TimelineRow';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface OrdersOverviewType {
   title: string;
@@ -11,8 +12,8 @@ interface OrdersOverviewType {
 }
 
 const OrdersOverview = ({ title, amount, data }: OrdersOverviewType) => {
-  const textColor = useColorModeValue('gray.700', 'white');
-
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   return (
     <Card maxH='100%'>
       <CardHeader p='22px 0px 35px 14px'>

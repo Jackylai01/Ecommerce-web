@@ -1,8 +1,9 @@
-import { Button, useColorModeValue } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { SettingsIcon } from '@components/Icons/Icons';
 
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface FixedType {
   secondary: any;
@@ -19,8 +20,10 @@ const FixedPlugin = ({
   fixed,
   onOpen,
 }: FixedType) => {
-  let navbarIcon = useColorModeValue('gray.500', 'gray.200');
-  let bgButton = useColorModeValue('white', 'gray.600');
+  const { colorMode } = useAdminColorMode();
+  const navbarIcon = colorMode === 'light' ? 'gray.500' : 'gray.200';
+  const bgButton = colorMode === 'light' ? 'white' : 'gray.600';
+
   let fixedDisplay = 'flex';
   if (secondary) {
     fixedDisplay = 'none';

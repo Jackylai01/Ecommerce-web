@@ -4,11 +4,11 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Flex,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import { getChineseNameForPath } from '@helpers/router';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 import AdminNavbarLinks from './AdminNavbarLinks';
 
 interface AdminNavbarType {
@@ -21,30 +21,27 @@ const AdminNavbar = ({ fixed, secondary, onOpen }: AdminNavbarType) => {
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
   const currentPathChinese = getChineseNameForPath(router.pathname);
+  const { colorMode } = useAdminColorMode();
+  const mainText = colorMode === 'light' ? 'gray.700' : 'gray.200';
+  const secondaryText = colorMode === 'light' ? 'gray.400' : 'gray.200';
 
-  const mainText = useColorModeValue('gray.700', 'gray.200');
-  const secondaryText = useColorModeValue('gray.400', 'gray.200');
-  const navbarShadowValue = useColorModeValue(
-    '0px 7px 23px rgba(0, 0, 0, 0.05)',
-    'none',
-  );
-  const navbarBgValue = useColorModeValue(
-    'linear-gradient(112.83deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.8) 110.84%)',
-    'linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)',
-  );
-  const navbarBorderValue = useColorModeValue(
-    '#FFFFFF',
-    'rgba(255, 255, 255, 0.31)',
-  );
-  const navbarFilterValue = useColorModeValue(
-    'none',
-    'drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))',
-  );
+  const navbarShadowValue = colorMode
+    ? '0px 7px 23px rgba(0, 0, 0, 0.05)'
+    : 'none';
 
-  let navbarFilter = useColorModeValue(
-    'none',
-    'drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))',
-  );
+  const navbarBgValue = colorMode
+    ? 'linear-gradient(112.83deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.8) 110.84%)'
+    : 'linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)';
+
+  const navbarBorderValue = colorMode ? '#FFFFFF' : 'rgba(255, 255, 255, 0.31)';
+
+  const navbarFilterValue = colorMode
+    ? 'none'
+    : 'drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))';
+
+  let navbarFilter = colorMode
+    ? 'none'
+    : 'drop-shadow(0px 7px 23px rgba(0, 0, 0, 0.05))';
 
   let navbarPosition = 'absolute';
   let navbarBackdrop = 'blur(21px)';

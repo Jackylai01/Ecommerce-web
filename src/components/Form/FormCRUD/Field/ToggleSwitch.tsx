@@ -39,6 +39,14 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
             ref={ref}
             isChecked={value === onValue}
             onChange={(e) => onChange(e.target.checked ? onValue : offValue)}
+            sx={{
+              '.chakra-switch__track': {
+                boxShadow: '0 0 0 1px #afafaf',
+              },
+              '.chakra-switch__thumb': {
+                bg: value === onValue ? 'white' : 'gray.300',
+              },
+            }}
           />
         )}
       />

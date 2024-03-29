@@ -6,13 +6,13 @@ import {
   Icon,
   Stack,
   Text,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import IconBox from '@components/Icons/IconBox';
 import { CreativeTimLogo } from '@components/Icons/Icons';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useAdminColorMode } from 'src/context/colorMode';
 import { Separator } from '../Separator';
 
 interface SideBarContentType {
@@ -29,10 +29,12 @@ const SidebarContent = ({
   currentPath,
 }: SideBarContentType) => {
   const router = useRouter();
-  const activeBg = useColorModeValue('white', 'gray.700');
-  const inactiveBg = useColorModeValue('gray.500', 'gray.700');
-  const activeColor = useColorModeValue('gray.700', 'white');
-  const inactiveColor = useColorModeValue('gray.400', 'gray.400');
+  const { colorMode } = useAdminColorMode();
+
+  const activeBg = colorMode === 'light' ? 'white' : 'gray.700';
+  const inactiveBg = colorMode === 'light' ? 'gray.500' : 'gray.700';
+  const activeColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const inactiveColor = colorMode === 'light' ? 'gray.400' : 'gray.400';
 
   const activeRoute = (routePath: string) => {
     if (
@@ -197,8 +199,8 @@ const SidebarContent = ({
             alignItems='center'
             fontSize='11px'
           >
-            <CreativeTimLogo w='32px' h='32px' me='10px' />
-            <Text fontSize='xs' mt='3px' lineHeight='1.5'>
+            <CreativeTimLogo w='32px' h='32px' me='10px' color={activeColor} />
+            <Text fontSize='xs' mt='3px' lineHeight='1.5' color={activeColor}>
               {logoText}
             </Text>
           </ChakraLink>

@@ -1,9 +1,10 @@
-import { Flex, Icon, Text, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Icon, Text } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import CardHeader from '@components/Card/CardHeader';
 import TransactionRow from '@components/Tables/TransactionRow';
 import { FaRegCalendarAlt } from 'react-icons/fa';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface TransactionsType {
   title: string;
@@ -28,7 +29,8 @@ const Transactions = ({
   newestTransactions,
   olderTransactions,
 }: TransactionsType) => {
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
   return (
     <Card my='24px' ms={{ lg: '24px' }}>

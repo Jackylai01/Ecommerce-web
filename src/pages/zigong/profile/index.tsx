@@ -1,16 +1,18 @@
-import { Flex, Grid, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Grid } from '@chakra-ui/react';
 import Conversations from '@components/Layout/AdminLayout/Profile/components/Conversations';
 import Header from '@components/Layout/AdminLayout/Profile/components/Header';
 import PlatformSettings from '@components/Layout/AdminLayout/Profile/components/PlatformSettings';
 import ProfileInformation from '@components/Layout/AdminLayout/Profile/components/ProfileInformation';
 import Projects from '@components/Layout/AdminLayout/Profile/components/Projects';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 const ProfilePages = () => {
-  const textColor = useColorModeValue('gray.700', 'white');
-  const bgProfile = useColorModeValue(
-    'hsla(0,0%,100%,.8)',
-    'linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)',
-  );
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const bgProfile =
+    colorMode === 'light'
+      ? 'hsla(0,0%,100%,.8)'
+      : 'linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)';
 
   return (
     <Flex direction='column' mt='2rem'>

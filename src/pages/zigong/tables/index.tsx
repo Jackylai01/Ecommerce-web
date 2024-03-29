@@ -62,7 +62,7 @@ const TablesPage = () => {
         <TabsLayout tabsConfig={UsersConfig}>
           <Authors
             title={'帳號管理'}
-            captions={['使用者名稱', '信箱', '角色', '城市']}
+            captions={['使用者名稱', '信箱', '角色', '城市', '', '']}
           />
         </TabsLayout>
         <Projects

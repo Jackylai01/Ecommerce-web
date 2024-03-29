@@ -1,18 +1,11 @@
-import {
-  Avatar,
-  Box,
-  Flex,
-  Text,
-  Tooltip,
-  useColorModeValue,
-  useToast,
-} from '@chakra-ui/react';
+import { Avatar, Box, Flex, Text, Tooltip, useToast } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import MessageModal from '@components/Modal/MessageModal';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { adminUploadProfileImageAsync } from '@reducers/admin/auth/actions';
 import { useEffect, useRef, useState } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface HeaderType {
   backgroundHeader: any;
@@ -31,12 +24,12 @@ const Header = ({
   email,
   tabs,
 }: HeaderType) => {
-  const textColor = useColorModeValue('gray.700', 'white');
-  const borderProfileColor = useColorModeValue(
-    'white',
-    'rgba(255, 255, 255, 0.31)',
-  );
-  const emailColor = useColorModeValue('gray.400', 'gray.300');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const borderProfileColor =
+    colorMode === 'light' ? 'white' : 'rgba(255, 255, 255, 0.31)';
+  const emailColor = colorMode === 'light' ? 'gray.400' : 'gray.300';
+
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');

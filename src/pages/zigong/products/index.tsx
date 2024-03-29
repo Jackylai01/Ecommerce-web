@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/react';
 import { ProductFormContent } from '@components/Form/FormCRUD/ProductsContent';
 import AddButton from '@components/Icons/AddFormIcon';
 import ProductTableContainer from '@components/Layout/AdminLayout/Products';
@@ -90,7 +91,7 @@ const ProductsPages: NextPage = () => {
   }, [dispatch]);
 
   return (
-    <>
+    <Box>
       <LoadingLayout isLoading={addProductLoading || updateProductLoading}>
         <AddButton
           formTitle='Add Product'
@@ -109,7 +110,7 @@ const ProductsPages: NextPage = () => {
           {modalContent}
         </MessageModal>
       </LoadingLayout>
-    </>
+    </Box>
   );
 };
 

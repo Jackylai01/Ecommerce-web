@@ -1,9 +1,10 @@
-import { Flex, Icon, Link, Text, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Icon, Link, Text } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import CardHeader from '@components/Card/CardHeader';
 
 import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface ProfileInforMation {
   title: string;
@@ -22,7 +23,8 @@ const ProfileInformation = ({
   email,
   location,
 }: ProfileInforMation) => {
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
   return (
     <Card p='16px' my={{ sm: '24px', xl: '0px' }}>

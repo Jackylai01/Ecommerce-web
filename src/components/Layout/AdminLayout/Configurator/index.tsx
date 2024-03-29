@@ -9,7 +9,6 @@ import {
   Flex,
   Switch,
   Text,
-  useColorMode,
 } from '@chakra-ui/react';
 import { EditProfileForm } from '@components/Form/FormCRUD/EditProfile';
 import { ResetPasswordForm } from '@components/Form/FormCRUD/ResetPassword';
@@ -20,6 +19,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { adminModifyProfileAsync } from '@reducers/admin/auth/actions';
 
 import { useRef, useState } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface ConfiguratorProps {
   secondary?: boolean;
@@ -42,7 +42,7 @@ const Configurator = ({
   const dispatch = useAppDispatch();
   const { userInfo } = useAppSelector((state) => state.adminAuth);
   const [switched, setSwitched] = useState(isChecked);
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode, toggleColorMode } = useAdminColorMode();
 
   const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] =
     useState(false);
@@ -73,7 +73,7 @@ const Configurator = ({
         finalFocusRef={settingsRef}
         blockScrollOnMount={false}
       >
-        <DrawerContent>
+        <DrawerContent bg={colorMode === 'light' ? 'gray.50' : 'gray.700'}>
           <DrawerHeader pt='24px' px='24px'>
             <DrawerCloseButton />
             <Text
@@ -104,7 +104,7 @@ const Configurator = ({
                   fontSize='md'
                   fontWeight='600'
                   mb='4px'
-                  color={colorMode === 'light' ? 'gray.800' : 'whiteAlpha.900'}
+                  color={colorMode === 'light' ? 'gray.50' : 'gray.800'}
                 >
                   Navbar Fixed
                 </Text>

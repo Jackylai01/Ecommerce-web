@@ -1,15 +1,9 @@
-import {
-  Button,
-  Flex,
-  Icon,
-  Spacer,
-  Text,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Button, Flex, Icon, Spacer, Text } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 
 import { BsArrowRight } from 'react-icons/bs';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface BuiltByDevelopersType {
   title: string;
@@ -24,8 +18,8 @@ const BuiltByDevelopers = ({
   description,
   image,
 }: BuiltByDevelopersType) => {
-  const textColor = useColorModeValue('gray.700', 'white');
-
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   return (
     <Card minHeight='290.5px' p='1.2rem'>
       <CardBody w='100%'>

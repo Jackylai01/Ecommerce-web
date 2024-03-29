@@ -1,8 +1,9 @@
-import { Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import CardHeader from '@components/Card/CardHeader';
 import BillingRow from '@components/Tables/BillingRow';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface BilingInFormationType {
   title: string;
@@ -15,7 +16,9 @@ interface BilingInFormationType {
 }
 
 const BillingInformation = ({ title, data }: BilingInFormationType) => {
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+
   return (
     <Card my={{ lg: '24px' }} me={{ lg: '24px' }} pl='1rem'>
       <Flex direction='column'>

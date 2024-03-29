@@ -1,15 +1,10 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Icon,
-  Spacer,
-  Text,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, Spacer, Text } from '@chakra-ui/react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 function InvoicesRow(props: any) {
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+
   const { date, code, price, format, logo } = props;
 
   return (

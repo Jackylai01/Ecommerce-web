@@ -11,7 +11,6 @@ import {
   MenuItem,
   MenuList,
   Text,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import { SettingsIcon } from '@components/Icons/Icons';
 import avatar1 from '@public/assets/img/avatars/avatar1.png';
@@ -26,6 +25,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { adminLogoutAsync } from '@reducers/admin/auth/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 import routes from 'src/routes';
 import SidebarResponsive from '../Sidebar/SidebarResponsive';
 
@@ -45,11 +45,14 @@ export default function HeaderLinks({
 }: HeaderLinksType) {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  let mainTeal = useColorModeValue('teal.300', 'teal.300');
-  let inputBg = useColorModeValue('white', 'gray.800');
-  let mainText = useColorModeValue('gray.700', 'gray.200');
-  let navbarIcon = useColorModeValue('gray.500', 'gray.200');
-  let searchIcon = useColorModeValue('gray.700', 'gray.200');
+  const { colorMode } = useAdminColorMode();
+
+  let mainTeal = colorMode === 'light' ? 'teal.300' : 'teal.300';
+  let inputBg = colorMode === 'light' ? 'white' : 'gray.800';
+  let mainText = colorMode === 'light' ? 'gray.700' : 'gray.200';
+  let navbarIcon = colorMode === 'light' ? 'gray.500' : 'gray.200';
+  let searchIcon = colorMode === 'light' ? 'gray.700' : 'gray.200';
+
   const {
     userInfo,
     status: { logoutFailed, logoutLoading, logoutSuccess },

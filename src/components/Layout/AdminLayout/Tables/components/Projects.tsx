@@ -1,17 +1,9 @@
-import {
-  Flex,
-  Table,
-  Tbody,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Flex, Table, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
 import CardHeader from '@components/Card/CardHeader';
 import TablesProjectRow from '@components/Tables/TablesProjectRow';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface ProjectsProps {
   title: string;
@@ -26,7 +18,9 @@ interface ProjectsProps {
 }
 
 const Projects = ({ title, captions, data }: ProjectsProps) => {
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+
   return (
     <Card my='22px' overflowX={{ sm: 'scroll', xl: 'hidden' }}>
       <CardHeader p='6px 0px 22px 0px'>

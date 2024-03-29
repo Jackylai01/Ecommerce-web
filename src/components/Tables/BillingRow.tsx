@@ -1,17 +1,13 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Icon,
-  Text,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, Text } from '@chakra-ui/react';
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 function BillingRow(props: any) {
-  const textColor = useColorModeValue('gray.700', 'white');
-  const bgColor = useColorModeValue('#F8F9FA', 'gray.800');
-  const nameColor = useColorModeValue('gray.500', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const bgColor = colorMode === 'light' ? '#F8F9FA' : 'white';
+  const nameColor = colorMode === 'light' ? 'gray.500' : 'white';
+
   const { name, company, email, number } = props;
 
   return (
