@@ -47,7 +47,7 @@ export const Cart = () => {
         ref={btnRef}
         onClick={onOpen}
         variant='ghost'
-        color='brand.primary'
+        color='black'
         _hover={{
           bgColor: 'transparent',
         }}
@@ -63,6 +63,7 @@ export const Cart = () => {
             boxSize='15px'
             rounded='full'
             color='white'
+            bg='red'
             fontSize='0.6rem'
             align='center'
             justify='center'
@@ -79,11 +80,9 @@ export const Cart = () => {
         size='lg'
       >
         <DrawerOverlay />
-        <DrawerContent>
+        <DrawerContent bg='white'>
           <DrawerCloseButton />
-          <DrawerHeader color='brand.primary'>
-            Cart ({cart.length} Items)
-          </DrawerHeader>
+          <DrawerHeader color='black'>Cart ({cart.length} Items)</DrawerHeader>
           <DrawerBody>
             {cart.length === 0 ? (
               <>Your Cart is Empty</>
@@ -92,12 +91,13 @@ export const Cart = () => {
             )}
           </DrawerBody>
           {cart.length !== 0 && (
-            <DrawerFooter justifyContent='space-between'>
+            <DrawerFooter justifyContent='space-between' color='black'>
               <Box>
                 <Button
                   variant='outline'
                   mr={3}
                   onClick={() => dispatch(resetItems('cart'))}
+                  color='black'
                 >
                   Clear Cart
                 </Button>
@@ -105,9 +105,9 @@ export const Cart = () => {
                   <Button
                     as='a'
                     bgColor='brand.primary'
-                    color='white'
-                    _hover={{ bgColor: 'brand.primaryLight' }}
-                    _active={{ bgColor: 'brand.primaryLight' }}
+                    color='black'
+                    _hover={{ bgColor: 'gray.300' }}
+                    _active={{ bgColor: 'black' }}
                     onClick={handleCheckout}
                   >
                     Checkout

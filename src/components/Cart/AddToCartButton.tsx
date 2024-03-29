@@ -45,7 +45,7 @@ export const AddToCartButton = ({
         <Button
           variant='outline'
           borderColor='brand.primary'
-          color='brand.primary'
+          color='black'
           borderRadius='50px'
           size='sm'
           w='150px'

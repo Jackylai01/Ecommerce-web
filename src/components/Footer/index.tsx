@@ -97,15 +97,16 @@ export const Footer = () => {
             <Stack direction={'row'}>
               <Input
                 placeholder='Your email address'
-                bg='blackAlpha.100'
+                color='black'
                 border={0}
                 _focus={{
                   bg: 'whiteAlpha.300',
                 }}
+                bg='white'
               />
               <IconButton
-                bg='brand.primary'
-                color='white'
+                bg='gray.200'
+                color='black'
                 _hover={{
                   bg: 'brand.primaryDark',
                 }}

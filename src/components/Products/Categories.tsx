@@ -41,6 +41,8 @@ const CategoryCard = ({ category }: CategoryCardProps) => (
       p='10px'
       h='100%'
       _hover={{ cursor: 'pointer', bgColor: 'gray.100' }}
+      bg='none'
+      shadow='md'
     >
       <Image
         src={category.image}
@@ -48,7 +50,6 @@ const CategoryCard = ({ category }: CategoryCardProps) => (
         height={200}
         width={200}
       />
-
       <CardBody>
         <Heading size={{ base: 'sm', lg: 'md' }}>{category.name}</Heading>
       </CardBody>

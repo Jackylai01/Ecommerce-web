@@ -23,14 +23,12 @@ export function DesktopNav() {
         </Box>
 
         {navItems.map((navItem) => (
-          <Box key={navItem.label}>
+          <Box key={navItem.label} color='black'>
             <Link href={navItem.href}>{navItem.label}</Link>
           </Box>
         ))}
-
         <Search />
       </Stack>
-
       <Stack direction='row' spacing={2}>
         <Wishlist />
         <Cart />

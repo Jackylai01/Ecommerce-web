@@ -3,7 +3,7 @@ import { Footer } from '@components/Footer';
 import { Banner } from '@components/Home/Banner';
 import { FeaturedProducts } from '@components/Home/FeaturedProducts';
 import { TopCategories } from '@components/Home/TopCategories';
-import { fakeCategories, fakeProducts, fakeProducts1 } from '@helpers/products';
+import { fakeCategories, fakeProducts } from '@helpers/products';
 import type { NextPage } from 'next';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -15,7 +15,7 @@ const HomePage: NextPage = () => {
       <Banner />
       <TopCategories categories={fakeCategories} />
       <FeaturedProducts title='Best Deals For You' products={fakeProducts} />
-      <FeaturedProducts title='Best Deals For You' products={fakeProducts1} />
+      <FeaturedProducts title='Best Deals For You' products={fakeProducts} />
       <Footer />
     </Box>
   );

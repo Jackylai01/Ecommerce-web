@@ -1,5 +1,4 @@
 import { Flex, Text } from '@chakra-ui/react';
-import theme from '@fixtures/theme';
 import { IRating } from '@models/requests/products';
 import ReactStars from 'react-stars';
 
@@ -14,10 +13,11 @@ export const Rating = ({ rating }: RatingProps) => {
         value={rating?.rate}
         half={true}
         size={18}
-        color2={theme.colors.brand.primary}
+        color1='#ccc'
+        color2='#000'
         edit={false}
       />
-      <Text fontSize='xs' mx='1'>
+      <Text fontSize='xs' mx='1' color='black'>
         ({rating?.count})
       </Text>
     </Flex>

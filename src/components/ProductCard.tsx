@@ -22,7 +22,7 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   return (
-    <Card w='xs' pos='relative' m='0.5rem'>
+    <Card w='xs' pos='relative' m='0.5rem' bg='none' shadow='md'>
       <AddToWishlistButton product={product} />
       <CardBody>
         <Link href={`/products/${product.slug}`}>
@@ -38,14 +38,15 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             <Link href={`/products/${product.slug}`}>
               <Heading size='sm'>{getSubstring(product.name, 20)}</Heading>
             </Link>
-            <Flex color='brand.primaryDark' fontWeight='bold'>
+            <Flex color='black' fontWeight='bold'>
               <Text fontSize='sm'>$ </Text>
               <Text fontSize='lg'>{product.price}</Text>
             </Flex>
           </Flex>
-          <Text fontSize='sm'> {getSubstring(product.description, 30)} </Text>
+          <Text fontSize='sm' color='black'>
+            {getSubstring(product.description, 30)}{' '}
+          </Text>
           <Rating rating={product.rating} />
-
           <AddToCartButton product={product} />
         </Stack>
       </CardBody>

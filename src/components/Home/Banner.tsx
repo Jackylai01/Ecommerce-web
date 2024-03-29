@@ -24,7 +24,12 @@ export const Banner = () => {
           >
             Online Shopping <br /> Made Easy
           </Heading>
-          <Text fontSize={{ base: 'md', lg: 'lg' }} py='1rem' maxW='600px'>
+          <Text
+            fontSize={{ base: 'md', lg: 'lg' }}
+            py='1rem'
+            maxW='600px'
+            color='black'
+          >
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
             autem voluptatem iure illo optio obcaecati accusantium fugiat
             dolores tenetur

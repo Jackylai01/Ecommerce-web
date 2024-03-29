@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react';
 import { SectionHeading } from '@components/SectionHeading';
 import { ICategory } from '@models/requests/products';
-
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -22,7 +21,6 @@ export const TopCategories = ({ categories }: TopCategoriesProps) => {
   return (
     <Box w={{ base: '100%', lg: '90%' }} mx='auto' py='3rem' px='2rem'>
       <SectionHeading title=' Shop Our Top Categories' />
-
       <Grid
         templateColumns={{
           base: 'repeat(1, 1fr)',
@@ -69,6 +67,8 @@ const TopCategoryCard = ({ category }: TopCategoryCardProps) => (
       p='10px'
       h='100%'
       _hover={{ cursor: 'pointer', bgColor: 'gray.100' }}
+      bg='none'
+      shadow='md'
     >
       <Image
         src={category.image}

@@ -1,5 +1,5 @@
 'use client';
-import { Button, Flex } from '@chakra-ui/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
 import { CustomBreadcrumb } from '@components/CustomBreadcrumb';
 import { ProductCard } from '@components/ProductCard';
 import { usePagination } from '@mantine/hooks';
@@ -47,7 +47,7 @@ export const AllProducts = ({
             <ProductCard key={product.id} product={product} />
           ))
         ) : (
-          <div>No products found in this category.</div>
+          <Box color='black'>No products found in this category.</Box>
         )}
       </Flex>
       {itemsPerPage < products.length && (

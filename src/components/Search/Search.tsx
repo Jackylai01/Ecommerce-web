@@ -45,19 +45,21 @@ export const Search = () => {
           value={searchText}
           onClick={() => setIsModalOpen(true)}
           onChange={(e) => setSearchText(e.target.value)}
+          color='black'
         />
       </InputGroup>
 
       {isModalOpen && (
         <Box
           pos='absolute'
-          bg='white'
+          bg='gray.100'
           shadow='md'
           padding='0.5rem'
           w='100%'
           boxSizing='border-box'
           maxH='500px'
           overflowY='auto'
+          color='black'
         >
           {products.length === 0 ? (
             isLoading ? (
@@ -96,7 +98,7 @@ const SearchedProductList = ({ products }: SearchedProductListProps) => {
                 boxSize='24px'
                 mr='10px'
               />
-              <Text>{product.name}</Text>
+              <Text color='black'>{product.name}</Text>
             </Flex>
             <Flex justify='flex-end'>
               <Tag size='sm'>{product.category.name}</Tag>

@@ -23,6 +23,7 @@ export const CustomBreadcrumb = ({ items = [] }: ICustomBreadcrumbProps) => {
           px='1rem'
           mx='auto'
           fontSize={{ base: 'xs', md: 'md' }}
+          color='black'
         >
           {items.map((item, index) =>
             index !== items.length - 1 ? (

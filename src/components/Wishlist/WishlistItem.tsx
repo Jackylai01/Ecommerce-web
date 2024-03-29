@@ -51,13 +51,11 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
           </a>
         </Link>
       </GridItem>
-
       <GridItem>
         <Text fontWeight='bold' fontSize='xs'>
           $ {item.price}
         </Text>
       </GridItem>
-
       <GridItem textAlign='right'>
         {itemIsAdded ? (
           <Button
@@ -65,7 +63,7 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
             bgColor='white'
             borderWidth='1px'
             borderColor='gray.300'
-            color='gray.500'
+            color='gray.100'
             title='Remove from Cart'
             onClick={() =>
               dispatch(removeItem({ key: 'cart', productId: item.id }))
@@ -76,10 +74,10 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
         ) : (
           <Button
             size='xs'
-            bgColor='white'
+            bgColor='gray'
             borderWidth='1px'
             borderColor='brand.primary'
-            color='brand.primary'
+            color='white'
             title='Add to Cart'
             onClick={() =>
               dispatch(addItem({ key: 'cart', product: item, count: 1 }))

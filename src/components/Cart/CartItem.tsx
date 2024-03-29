@@ -32,8 +32,9 @@ export const CartItem = ({ item }: CartItemProps) => {
       borderBottomWidth='1px'
       borderBottomColor='gray.200'
       my='2'
+      color='black'
     >
-      <GridItem>
+      <GridItem color='black'>
         <Link href={`/products/${item.slug}`} passHref>
           <a>
             <Image
@@ -57,6 +58,7 @@ export const CartItem = ({ item }: CartItemProps) => {
       <GridItem colSpan={{ base: 3, lg: 2 }} justifyContent='flex-end'>
         <HStack my='0.5rem' justifyContent='flex-end'>
           <Button
+            color='black'
             onClick={() =>
               dispatch(decreaseCount({ key: 'cart', productId: item.id }))
             }
@@ -76,6 +78,7 @@ export const CartItem = ({ item }: CartItemProps) => {
             onClick={() =>
               dispatch(increaseCount({ key: 'cart', productId: item.id }))
             }
+            color='black'
           >
             +
           </Button>

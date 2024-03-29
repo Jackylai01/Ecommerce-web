@@ -2,7 +2,6 @@ import {
   Button,
   Flex,
   Popover,
-  PopoverArrow,
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
@@ -30,7 +29,7 @@ export const Wishlist = () => {
     <Popover>
       <PopoverTrigger>
         <Button
-          color='brand.primary'
+          color='black'
           variant='ghost'
           _hover={{
             bgColor: 'transparent',
@@ -43,7 +42,7 @@ export const Wishlist = () => {
               pos='absolute'
               top='0px'
               right='5px'
-              bgColor='brand.primaryLight'
+              bg='red'
               boxSize='15px'
               rounded='full'
               color='white'
@@ -56,10 +55,9 @@ export const Wishlist = () => {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent>
-        <PopoverArrow />
+      <PopoverContent bg='gray.700'>
         <PopoverCloseButton />
-        <PopoverHeader color='brand.primary' fontWeight='bold'>
+        <PopoverHeader color='b' fontWeight='bold'>
           Wishlist
         </PopoverHeader>
         <PopoverBody p='1rem'>
