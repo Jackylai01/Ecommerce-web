@@ -77,6 +77,9 @@ const MembersPages: NextPage = () => {
           right='10'
           color={colorMode === 'light' ? 'white' : 'white'}
           bg={colorMode === 'light' ? 'teal.500' : 'gray.600'}
+          _hover={{
+            bg: colorMode === 'light' ? 'teal.600' : 'gray.500',
+          }}
         />
         <TabsLayout tabsConfig={UsersConfig}>
           <Members
