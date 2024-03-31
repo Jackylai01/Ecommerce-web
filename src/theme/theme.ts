@@ -11,7 +11,6 @@ import { buttonStyles } from './components/button';
 import { drawerStyles } from './components/drawer';
 import { linkStyles } from './components/link';
 import { globalStyles } from './styles';
-// import { mode } from "@chakra-ui/theme-tools";
 
 export const theme = extendTheme(
   { breakpoints },

@@ -47,7 +47,11 @@ const TablesModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size='xl'>
       <ModalOverlay />
-      <ModalContent minW={{ base: '90%', md: '600px', lg: '800px' }}>
+      <ModalContent
+        minW={{ base: '90%', md: '600px', lg: '800px' }}
+        bg='white'
+        color='black'
+      >
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

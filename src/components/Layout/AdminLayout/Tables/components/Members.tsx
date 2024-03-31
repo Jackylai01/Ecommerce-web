@@ -58,7 +58,6 @@ const Members = ({ title, captions }: AuthorsProps) => {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [isTablesModalOpen, setIsTablesModalOpen] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState<string | null>(null);
-
   const [tablesModalData, setTablesModalData] = useState<ClientUser[]>([]);
 
   const {
@@ -81,22 +80,22 @@ const Members = ({ title, captions }: AuthorsProps) => {
     (user: IClientUser) => <Text>{user.address}</Text>,
     (user: IClientUser) => <Text>{user.gender}</Text>,
     (user: IClientUser) => (
-      <Button
-        colorScheme='red'
-        size='sm'
-        onClick={() => handleDeleteClick(user._id)}
-      >
-        刪除
-      </Button>
-    ),
-    (user: IClientUser) => (
-      <Button
-        colorScheme='blue'
-        size='sm'
-        onClick={() => handleGetUser(user._id)}
-      >
-        查看
-      </Button>
+      <Box display='flex' gap='2'>
+        <Button
+          colorScheme='blue'
+          size='sm'
+          onClick={() => handleGetUser(user._id)}
+        >
+          查看
+        </Button>
+        <Button
+          colorScheme='red'
+          size='sm'
+          onClick={() => handleDeleteClick(user._id)}
+        >
+          刪除
+        </Button>
+      </Box>
     ),
   ];
 
@@ -185,7 +184,6 @@ const Members = ({ title, captions }: AuthorsProps) => {
           </CardBody>
           {metadata && <Pagination metadata={metadata} />}
         </Card>
-
         <ConfirmationModal
           isOpen={isConfirmationModalOpen}
           onClose={() => setIsConfirmationModalOpen(false)}

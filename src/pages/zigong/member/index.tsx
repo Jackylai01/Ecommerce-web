@@ -1,94 +1,101 @@
-import { Box } from '@chakra-ui/react';
+import { EmailIcon } from '@chakra-ui/icons';
+import { Box, IconButton, useDisclosure } from '@chakra-ui/react';
+import SendEmailForm from '@components/Form/FormCRUD/SendEmail';
 import Members from '@components/Layout/AdminLayout/Tables/components/Members';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import TabsLayout from '@components/Layout/TabsLayout';
+import FormModal from '@components/Modal/FormModal';
 import MessageModal from '@components/Modal/MessageModal';
 import { UsersConfig } from '@fixtures/Tabs-configs';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { resetCategoryState } from '@reducers/admin/product-category';
-import { addProductCategoryAsync } from '@reducers/admin/product-category/actions';
+import { notifySelectedUsersAsync } from '@reducers/admin/client-users/actions';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 const MembersPages: NextPage = () => {
   const dispatch = useAppDispatch();
   const {
     status: {
-      addProductsCategoryFailed,
-      addProductsCategoryLoading,
-      addProductsCategorySuccess,
-      updateProductsCategoryLoading,
-      updateProductsCategorySuccess,
+      notifySelectedUsersLoading,
+      notifySelectedUsersSuccess,
+      notifySelectedUsersFailed,
     },
-    error: { addProductsCategoryError },
-  } = useAppSelector((state) => state.adminProductsCategory);
+    error: { notifySelectedUsersError },
+  } = useAppSelector((state) => state.adminClientUsers);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { colorMode } = useAdminColorMode();
+  const methods = useForm({
+    defaultValues: {
+      userIds: [],
+      subject: '',
+      content: '',
+    },
+  });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
-  const [modalTitle, setModalTitle] = useState<string>('新增產品類別');
+  const [modalTitle, setModalTitle] = useState<string>('寄送郵件');
+
+  const handleSubmitEmail = (emailData: any) => {
+    console.log(emailData);
+    dispatch(notifySelectedUsersAsync(emailData));
+    onClose();
+  };
 
   useEffect(() => {
-    if (addProductsCategorySuccess) {
+    if (notifySelectedUsersSuccess) {
       setIsModalOpen(true);
-      setModalContent('產品類別新增成功！');
-      setModalTitle('新增產品類別');
+      setModalContent('送出郵件成功！');
     }
-    if (updateProductsCategorySuccess) {
-      setIsModalOpen(true);
-      setModalContent('產品類別更新成功！');
-      setModalTitle('更新產品類別');
-    }
-    if (addProductsCategoryFailed) {
+
+    if (notifySelectedUsersFailed) {
       setIsModalOpen(true);
       setModalContent('');
     }
-  }, [
-    addProductsCategoryFailed,
-    addProductsCategoryLoading,
-    addProductsCategorySuccess,
-  ]);
+  }, [notifySelectedUsersSuccess, notifySelectedUsersFailed]);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  const handleSubmit = async (data: any) => {
-    const formData = new FormData();
-
-    Object.keys(data).forEach((key) => {
-      if (key !== 'coverImage') {
-        formData.append(key, data[key]);
-      }
-    });
-
-    if (data.coverImage) {
-      formData.append('coverImage', data.coverImage);
-    }
-
-    dispatch(addProductCategoryAsync(formData));
-  };
-
   useEffect(() => {
-    return () => {
-      dispatch(resetCategoryState());
-    };
-  }, [dispatch]);
+    setIsModalOpen(false);
+  }, []);
 
   return (
-    <LoadingLayout
-      isLoading={addProductsCategoryLoading || updateProductsCategoryLoading}
-    >
+    <LoadingLayout isLoading={notifySelectedUsersLoading}>
       <Box h='100vh'>
+        <IconButton
+          aria-label='寄送郵件'
+          icon={<EmailIcon />}
+          onClick={onOpen}
+          position='absolute'
+          right='10'
+          color={colorMode === 'light' ? 'white' : 'white'}
+          bg={colorMode === 'light' ? 'teal.500' : 'gray.600'}
+        />
         <TabsLayout tabsConfig={UsersConfig}>
           <Members
             title={'會員管理'}
-            captions={['會員帳號', '信箱', '縣市', '地址', '性別', '', '']}
+            captions={['會員帳號', '信箱', '縣市', '地址', '性別', '']}
           />
         </TabsLayout>
+        <FormModal
+          isOpen={isOpen}
+          onClose={onClose}
+          title='寄信通知'
+          onSubmit={handleSubmitEmail}
+        >
+          <SendEmailForm />
+        </FormModal>
         <MessageModal
           title={modalTitle}
           isActive={isModalOpen}
-          error={addProductsCategoryError}
+          error={notifySelectedUsersError}
           onClose={handleCloseModal}
         >
           {modalContent}

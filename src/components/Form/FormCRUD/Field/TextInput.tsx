@@ -12,6 +12,8 @@ interface TextInputType {
   placeholder: string;
   isRequired?: boolean;
   type?: string;
+  as?: React.ElementType; // 添加这一行来支持Textarea组件
+  height?: string; // 添加高度属性
 }
 
 export const TextInput = ({
@@ -20,6 +22,8 @@ export const TextInput = ({
   placeholder,
   isRequired = false,
   type,
+  as,
+  height,
 }: TextInputType) => {
   const {
     register,
@@ -32,10 +36,12 @@ export const TextInput = ({
     <FormControl isInvalid={isInvalid} isRequired={isRequired}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
       <Input
+        as={as || 'input'}
         id={name}
         placeholder={placeholder}
         {...register(name)}
         type={type}
+        h={height}
       />
       <FormErrorMessage>{errors[name]?.message}</FormErrorMessage>
     </FormControl>
