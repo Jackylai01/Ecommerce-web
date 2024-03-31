@@ -29,7 +29,13 @@ const SendEmailForm = () => {
     <Box>
       <FormControl>
         <FormLabel>Recipients</FormLabel>
-        <Stack spacing={3}>
+        <Stack
+          spacing={3}
+          bg='gray.500'
+          p='1rem'
+          borderRadius='10px'
+          color='white'
+        >
           {list?.map((user) => (
             <Checkbox
               key={user._id}
