@@ -36,9 +36,15 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
         placeholder='請選擇'
         {...inputProps}
         {...selectProps}
+        bg='white'
+        color='black'
       >
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option
+            key={option.value}
+            value={option.value}
+            style={{ backgroundColor: 'white', color: 'black' }}
+          >
             {option.label}
           </option>
         ))}

@@ -13,6 +13,7 @@ import {
   Switch,
   Table,
   Tbody,
+  Td,
   Th,
   Thead,
   Tr,
@@ -271,15 +272,26 @@ const ProductTableContainer = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {ProductList &&
-                Array.isArray(ProductList) &&
+              {ProductList && ProductList.length > 0 ? (
                 ProductList.map((product) => (
                   <TablesTableRow
                     key={product._id}
                     row={product}
                     renderCell={renderCell}
                   />
-                ))}
+                ))
+              ) : (
+                <Tr>
+                  <Td
+                    colSpan={captions.length + 1}
+                    textAlign='center'
+                    border='none'
+                    color='gray.700'
+                  >
+                    沒有找到產品，請新增產品。
+                  </Td>
+                </Tr>
+              )}
             </Tbody>
           </Table>
         </Box>

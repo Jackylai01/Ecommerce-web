@@ -108,7 +108,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         {label} {isRequired && <span style={{ color: 'red' }}>*</span>}
       </Text>
       <IconButton
-        icon={<AddIcon />}
+        icon={<AddIcon color='black' />}
         onClick={handleButtonClick}
         aria-label={`Upload ${label}`}
       />
