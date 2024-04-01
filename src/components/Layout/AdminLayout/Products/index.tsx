@@ -50,7 +50,6 @@ const ProductTableContainer = () => {
   const [editingProductId, setEditingProductId] = useState<any>(null);
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
-  const SwitchColor = colorMode === 'light' ? 'gray.500' : 'white';
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -90,19 +89,26 @@ const ProductTableContainer = () => {
       </Badge>
     ),
     (row: ProductRowData) => (
-      <Button colorScheme='blue' size='sm' onClick={() => editRow(row._id)}>
-        編輯
-      </Button>
+      <Box display='flex' gap={2}>
+        <Button
+          bg='blue.500'
+          color='white'
+          size='sm'
+          onClick={() => editRow(row._id)}
+        >
+          編輯
+        </Button>
+        <Button
+          bg='red.300'
+          size='sm'
+          color='white'
+          onClick={() => requestDelete(row._id)}
+        >
+          刪除
+        </Button>
+      </Box>
     ),
-    (row: ProductRowData) => (
-      <Button
-        colorScheme='red'
-        size='sm'
-        onClick={() => requestDelete(row._id)}
-      >
-        刪除
-      </Button>
-    ),
+
     (row: ProductRowData) => (
       <FormControl display='flex' alignItems='center'>
         <FormLabel htmlFor={`status-switch-${row._id}`} mb='0'>
