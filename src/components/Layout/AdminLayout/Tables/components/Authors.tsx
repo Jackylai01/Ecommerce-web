@@ -117,17 +117,13 @@ const Authors = ({ title, captions }: AuthorsProps) => {
     (user: IUser) => (
       <Box display='flex' gap='1'>
         <Button
-          colorScheme='red'
+          bg='red.300'
           size='sm'
           onClick={() => handleDeleteClick(user._id)}
         >
           刪除
         </Button>
-        <Button
-          colorScheme='blue'
-          size='sm'
-          onClick={() => handleGetUser(user._id)}
-        >
+        <Button bg='blue.300' size='sm' onClick={() => handleGetUser(user._id)}>
           查看
         </Button>
       </Box>

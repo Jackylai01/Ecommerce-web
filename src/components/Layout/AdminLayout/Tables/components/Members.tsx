@@ -81,15 +81,11 @@ const Members = ({ title, captions }: AuthorsProps) => {
     (user: IClientUser) => <Text>{user.gender}</Text>,
     (user: IClientUser) => (
       <Box display='flex' gap='1'>
-        <Button
-          colorScheme='blue'
-          size='sm'
-          onClick={() => handleGetUser(user._id)}
-        >
+        <Button bg='blue.300' size='sm' onClick={() => handleGetUser(user._id)}>
           查看
         </Button>
         <Button
-          colorScheme='red'
+          bg='red.300'
           size='sm'
           onClick={() => handleDeleteClick(user._id)}
         >
