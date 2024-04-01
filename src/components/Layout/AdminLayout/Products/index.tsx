@@ -48,6 +48,8 @@ interface ProductRowData {
   description: string;
   status: 'onSale' | 'offSale';
   date: string;
+  minimumPurchase: string;
+  maximumPurchase: string;
 }
 
 const ProductTableContainer = () => {
@@ -83,14 +85,22 @@ const ProductTableContainer = () => {
     error: { deleteProductError, updateProductStatusError },
   } = useAppSelector((state) => state.adminProducts);
 
-  const captions = ['Logo', 'Name', 'Description', 'Status', ''];
+  const captions = [
+    '封面',
+    '姓名',
+    '最低購買數量',
+    '最高購買數量',
+    '商品狀態',
+    '',
+  ];
 
   const renderCell = [
     (row: any) => (
       <Avatar src={row.coverImage?.imageUrl} w='50px' borderRadius='12px' />
     ),
     (row: ProductRowData) => <Box>{row.name}</Box>,
-    (row: ProductRowData) => <Box>{row.description}</Box>,
+    (row: ProductRowData) => <Box>{row.minimumPurchase}</Box>,
+    (row: ProductRowData) => <Box>{row.maximumPurchase}</Box>,
     (row: ProductRowData) => (
       <Badge color={row.status === 'onSale' ? 'green.300' : 'red.300'}>
         {row.status}

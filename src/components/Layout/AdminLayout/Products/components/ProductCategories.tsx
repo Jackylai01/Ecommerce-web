@@ -65,7 +65,7 @@ const ProductCategories = () => {
     error: { deleteProductsCategoryError },
   } = useAppSelector((state) => state.adminProductsCategory);
 
-  const captions = ['Logo', 'Name', 'Description', ''];
+  const captions = ['封面', '類別名稱', '描述', ''];
 
   const renderCell = [
     (row: any) => (
