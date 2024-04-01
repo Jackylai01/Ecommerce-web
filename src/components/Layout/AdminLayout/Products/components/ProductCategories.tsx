@@ -208,7 +208,9 @@ const ProductCategories = () => {
           )}
         </MessageModal>
 
-        {metadata && <Pagination metadata={metadata} />}
+        {metadata && ProductCategoryList?.length !== 0 && (
+          <Pagination metadata={metadata} />
+        )}
       </LoadingLayout>
       <FormModal
         isOpen={isEditModalOpen}

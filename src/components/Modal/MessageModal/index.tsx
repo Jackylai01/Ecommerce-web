@@ -31,7 +31,7 @@ const MessageModal: React.FC<MessageModalProps> = ({
   return (
     <Modal isOpen={isActive} onClose={onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent bg='white' color='black'>
         <ModalHeader>
           {title}
           {error ? ' 失敗' : ' 成功'}

@@ -122,6 +122,18 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         placeholder='請輸入商品價格'
         isRequired
       />
+      <TextInput
+        name='minimumPurchase'
+        label='最低購買數量'
+        placeholder='請輸入商品最低購買數量(選填)'
+        isRequired
+      />
+      <TextInput
+        name='maximumPurchase'
+        label='最高購買數量'
+        placeholder='請輸入商品最高購買數量(選填)'
+        isRequired
+      />
       <CustomSelect
         name='category'
         label='產品類別'

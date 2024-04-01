@@ -178,7 +178,7 @@ const Members = ({ title, captions }: AuthorsProps) => {
               </Table>
             </Box>
           </CardBody>
-          {metadata && <Pagination metadata={metadata} />}
+          {metadata && list?.length !== 0 && <Pagination metadata={metadata} />}
         </Card>
         <ConfirmationModal
           isOpen={isConfirmationModalOpen}

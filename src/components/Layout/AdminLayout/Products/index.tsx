@@ -302,7 +302,9 @@ const ProductTableContainer = () => {
             <Box color='red.500'>{deleteProductError}</Box>
           )}
         </MessageModal>
-        {metadata && <Pagination metadata={metadata} />}
+        {metadata && ProductList?.length !== 0 && (
+          <Pagination metadata={metadata} />
+        )}
       </LoadingLayout>
       <FormModal
         isOpen={isEditModalOpen}
