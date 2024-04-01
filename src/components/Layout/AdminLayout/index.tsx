@@ -155,7 +155,7 @@ const AdminLayout = ({ children }: Props) => {
       </Head>
       <Flex
         w='100%'
-        h='100%'
+        h='100vh'
         justifyContent='space-between'
         bg={colorMode === 'light' ? 'gray.50' : 'gray.800'}
       >

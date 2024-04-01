@@ -56,7 +56,8 @@ const ProductTableContainer = () => {
   const [editingProductId, setEditingProductId] = useState<any>(null);
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
-  const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.700';
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
+  const borderColor = colorMode === 'light' ? 'black' : 'white';
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -256,7 +257,7 @@ const ProductTableContainer = () => {
                     <MenuButton
                       as={IconButton}
                       aria-label='Options'
-                      icon={<MdOutlineSort color='black' size='20px' />}
+                      icon={<MdOutlineSort color={borderColor} size='20px' />}
                       variant='outline'
                     />
                     <MenuList shadow='md' bg={bgColor}>
