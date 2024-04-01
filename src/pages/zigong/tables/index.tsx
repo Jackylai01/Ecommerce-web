@@ -53,7 +53,7 @@ const TablesPage = () => {
 
   return (
     <LoadingLayout isLoading={createAccountsLoading}>
-      <Box h='100vh'>
+      <Box>
         <Flex direction='column'>
           <AddButton
             formTitle='Add Users account'

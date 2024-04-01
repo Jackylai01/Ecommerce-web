@@ -31,16 +31,18 @@ const SendEmailForm = () => {
         <FormLabel>Recipients</FormLabel>
         <Stack
           spacing={3}
-          bg='gray.500'
           p='1rem'
+          m='1rem'
           borderRadius='10px'
-          color='white'
+          color='black'
+          boxShadow='lg'
         >
           {list?.map((user) => (
             <Checkbox
               key={user._id}
               isChecked={field.value.includes(user._id)}
               onChange={(e) => handleCheckboxChange(e.target.checked, user._id)}
+              borderColor='gray.700'
             >
               {user.username}
             </Checkbox>

@@ -7,7 +7,6 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react';
 import { ProductCategoryForm } from '@components/Form/FormCRUD/ProductCategory';
@@ -28,6 +27,7 @@ import {
 } from '@reducers/admin/product-category/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface ProductCategoryRowData {
   _id: any;
@@ -38,7 +38,8 @@ interface ProductCategoryRowData {
 
 const ProductCategories = () => {
   const dispatch = useAppDispatch();
-  const textColor = useColorModeValue('gray.700', 'white');
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingCategoryId, setEditingProductId] = useState<any>(null);
 
@@ -160,7 +161,7 @@ const ProductCategories = () => {
           getProductsCategoryByIdLoading || deleteProductsCategoryLoading
         }
       >
-        <Box as='main' overflowX='auto' w='full' minWidth='800px' h='100vh'>
+        <Box as='main' overflowX='auto' w='full' minWidth='800px'>
           <Table variant='simple' color={textColor} size='sm'>
             <Thead>
               <Tr>
