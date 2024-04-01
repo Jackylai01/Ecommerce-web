@@ -60,6 +60,8 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
       setValue('price', productDetails.price);
       setValue('category', productDetails.category[0]);
       setValue('status', productDetails.status);
+      setValue('minimumPurchase', productDetails.minimumPurchase);
+      setValue('maximumPurchase', productDetails.maximumPurchase);
 
       if (productDetails.specifications) {
         setValue(

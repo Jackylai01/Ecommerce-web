@@ -13,7 +13,12 @@ function TablesTableRow({ row, renderCell }: TablesTableRowProps) {
   return (
     <Tr>
       {renderCell.map((cell, index) => (
-        <Td key={index} color={textColor}>
+        <Td
+          key={index}
+          color={textColor}
+          textAlign='left'
+          verticalAlign='middle'
+        >
           {cell(row)}
         </Td>
       ))}

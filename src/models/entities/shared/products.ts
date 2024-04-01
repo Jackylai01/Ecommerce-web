@@ -28,6 +28,8 @@ export interface Product extends BaseEntity {
   }[];
   // 最低購買數量
   minimumPurchase?: number;
+  // 最高購買數量
+  maximumPurchase?: number;
   // 商品的平均評分
   averageRating?: number;
   // 自訂模組，可以根據您的實際需求添加額外的類型定義
