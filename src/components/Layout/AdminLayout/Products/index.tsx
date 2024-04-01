@@ -5,6 +5,11 @@ import {
   Button,
   FormControl,
   FormLabel,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Switch,
   Table,
   Tbody,
@@ -23,7 +28,6 @@ import Pagination from '@components/Pagination';
 import TablesTableRow from '@components/Tables/TablesTableRow';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { resetProductState } from '@reducers/admin/products';
 import {
   addProductAsync,
   deleteProductAsync,
@@ -33,6 +37,7 @@ import {
 } from '@reducers/admin/products/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { MdOutlineSort } from 'react-icons/md';
 import { useAdminColorMode } from 'src/context/colorMode';
 
 interface ProductRowData {
@@ -50,6 +55,8 @@ const ProductTableContainer = () => {
   const [editingProductId, setEditingProductId] = useState<any>(null);
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.700';
+  const [sort, setSort] = useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -75,7 +82,7 @@ const ProductTableContainer = () => {
     error: { deleteProductError, updateProductStatusError },
   } = useAppSelector((state) => state.adminProducts);
 
-  const captions = ['Logo', 'Name', 'Description', 'Status', '', '', ''];
+  const captions = ['Logo', 'Name', 'Description', 'Status', ''];
 
   const renderCell = [
     (row: any) => (
@@ -84,7 +91,7 @@ const ProductTableContainer = () => {
     (row: ProductRowData) => <Box>{row.name}</Box>,
     (row: ProductRowData) => <Box>{row.description}</Box>,
     (row: ProductRowData) => (
-      <Badge colorScheme={row.status === 'onSale' ? 'green' : 'red'}>
+      <Badge color={row.status === 'onSale' ? 'green.300' : 'red.300'}>
         {row.status}
       </Badge>
     ),
@@ -201,10 +208,14 @@ const ProductTableContainer = () => {
   }, [deleteProductSuccess, deleteProductError, onMessageModalOpen, dispatch]);
 
   useEffect(() => {
-    dispatch(resetProductState());
-    const page = parseInt(router.query.page as string) || 1;
-    dispatch(getAllProductsAsync({ page, limit: 10 }));
-  }, [dispatch, router.query.page, deleteProductSuccess]);
+    const fetchData = async () => {
+      const page = parseInt(router.query.page as string, 10) || 1;
+      const limit = 10;
+      const sortParam = router.query.sort || '';
+      dispatch(getAllProductsAsync({ page, limit, sort: sortParam }));
+    };
+    fetchData();
+  }, [dispatch, router.query.page, router.query.sort]);
 
   useEffect(() => {
     if (updateProductStatusSuccess) {
@@ -229,11 +240,22 @@ const ProductTableContainer = () => {
 
   const modalContent = '您確定要刪除這個產品？';
 
+  const handleSort = (sortField: any) => {
+    const newSortOrder =
+      sort.includes(sortField) && !sort.includes('desc') ? 'desc' : 'asc';
+    const newSort = `${sortField}:${newSortOrder}`;
+
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, page: '1', sort: newSort },
+    });
+  };
+
   return (
     <>
       <LoadingLayout isLoading={getAllProductsLoading || deleteProductLoading}>
-        <Box as='main' overflowX='auto' w='full' minWidth='800px' h='100vh'>
-          <Table variant='simple' color={textColor} size='sm'>
+        <Box as='main' overflowX='auto' w='full' minWidth='800px'>
+          <Table variant='simple' color={bgColor} size='sm'>
             <Thead>
               <Tr>
                 {captions.map((caption, idx) => (
@@ -241,6 +263,32 @@ const ProductTableContainer = () => {
                     {caption}
                   </Th>
                 ))}
+                <Th>
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      aria-label='Options'
+                      icon={<MdOutlineSort color='black' size='20px' />}
+                      variant='outline'
+                    />
+                    <MenuList shadow='md' bg={bgColor}>
+                      <MenuItem
+                        bg={bgColor}
+                        color={textColor}
+                        onClick={() => handleSort('createdAt')}
+                      >
+                        編輯時間
+                      </MenuItem>
+                      <MenuItem
+                        bg={bgColor}
+                        color={textColor}
+                        onClick={() => handleSort('modifiedAt')}
+                      >
+                        建立時間
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                </Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -275,7 +323,6 @@ const ProductTableContainer = () => {
             <Box color='red.500'>{deleteProductError}</Box>
           )}
         </MessageModal>
-
         {metadata && <Pagination metadata={metadata} />}
       </LoadingLayout>
       <FormModal

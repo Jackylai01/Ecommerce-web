@@ -3,6 +3,7 @@ import { Enum } from '@models/enum';
 export interface QueryParams {
   page?: number;
   limit?: number;
+  sort?: any;
 }
 
 export const routeToChinese: Enum = {

@@ -1,10 +1,8 @@
-import theme from '@fixtures/theme';
 import Link from 'next/link';
 import { CSSProperties } from 'react';
 
 const linkStyle: CSSProperties = {
   textDecoration: 'none',
-  color: theme.brand.primary,
 };
 
 export const StudioNavbar = () => {

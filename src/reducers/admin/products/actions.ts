@@ -26,8 +26,8 @@ export enum ProductAction {
 
 export const getAllProductsAsync = createAsyncThunk(
   `${ReducerName.PRODUCT}/${ProductAction.getAllProducts}`,
-  async ({ page, limit }: QueryParams) => {
-    const query: PagingQuery = { page, limit };
+  async ({ page, limit, sort }: QueryParams) => {
+    const query: PagingQuery = { page, limit, sort };
     const response = await apiGetAllProducts(query);
     return response.result;
   },

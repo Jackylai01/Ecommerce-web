@@ -1,7 +1,8 @@
 import { Box } from '@chakra-ui/react';
 import { ProductFormContent } from '@components/Form/FormCRUD/ProductsContent';
 import AddButton from '@components/Icons/AddFormIcon';
-import ProductTableContainer from '@components/Layout/AdminLayout/Products';
+import dynamic from 'next/dynamic';
+
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import TabsLayout from '@components/Layout/TabsLayout';
 import MessageModal from '@components/Modal/MessageModal';
@@ -12,6 +13,11 @@ import { resetProductState } from '@reducers/admin/products';
 import { addProductAsync } from '@reducers/admin/products/actions';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+
+const ProductTableContainer = dynamic(
+  () => import('@components/Layout/AdminLayout/Products'),
+  { ssr: false },
+);
 
 const ProductsPages: NextPage = () => {
   const dispatch = useAppDispatch();
