@@ -80,7 +80,7 @@ const Members = ({ title, captions }: AuthorsProps) => {
     (user: IClientUser) => <Text>{user.address}</Text>,
     (user: IClientUser) => <Text>{user.gender}</Text>,
     (user: IClientUser) => (
-      <Box display='flex' gap='2'>
+      <Box display='flex' gap='1'>
         <Button
           colorScheme='blue'
           size='sm'

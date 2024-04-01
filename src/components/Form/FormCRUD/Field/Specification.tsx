@@ -40,6 +40,8 @@ export const Specification = ({ specIndex }: SpecificationProps) => {
             <Input
               {...register(`specifications[${specIndex}].specs[${index}].key`)}
               placeholder="例如'尺寸'"
+              color='black'
+              sx={{ '::placeholder': { color: 'gray.500' } }}
             />
           </FormControl>
           <FormControl>
@@ -49,6 +51,8 @@ export const Specification = ({ specIndex }: SpecificationProps) => {
                 `specifications[${specIndex}].specs[${index}].value`,
               )}
               placeholder="例如'M'"
+              color='black'
+              sx={{ '::placeholder': { color: 'gray.500' } }}
             />
           </FormControl>
           <FormControl>
@@ -60,10 +64,11 @@ export const Specification = ({ specIndex }: SpecificationProps) => {
                 )}
                 placeholder='數量'
                 type='number'
+                sx={{ '::placeholder': { color: 'gray.500' } }}
               />
               <IconButton
                 aria-label='删除規格'
-                icon={<DeleteIcon />}
+                icon={<DeleteIcon color='black' />}
                 onClick={() => remove(index)}
               />
             </HStack>

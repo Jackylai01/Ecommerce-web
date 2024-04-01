@@ -115,22 +115,22 @@ const Authors = ({ title, captions }: AuthorsProps) => {
     ),
     (user: IUser) => <Text>{user.city}</Text>,
     (user: IUser) => (
-      <Button
-        colorScheme='red'
-        size='sm'
-        onClick={() => handleDeleteClick(user._id)}
-      >
-        刪除
-      </Button>
-    ),
-    (user: IUser) => (
-      <Button
-        colorScheme='blue'
-        size='sm'
-        onClick={() => handleGetUser(user._id)}
-      >
-        查看
-      </Button>
+      <Box display='flex' gap='1'>
+        <Button
+          colorScheme='red'
+          size='sm'
+          onClick={() => handleDeleteClick(user._id)}
+        >
+          刪除
+        </Button>
+        <Button
+          colorScheme='blue'
+          size='sm'
+          onClick={() => handleGetUser(user._id)}
+        >
+          查看
+        </Button>
+      </Box>
     ),
   ];
 

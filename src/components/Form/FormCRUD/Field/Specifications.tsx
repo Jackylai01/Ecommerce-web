@@ -1,13 +1,5 @@
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Button,
-  Flex,
-  IconButton,
-  Input,
-  VStack,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, Input, VStack } from '@chakra-ui/react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Specification } from './Specification';
 
@@ -17,7 +9,6 @@ const DynamicSpecifications = () => {
     control,
     name: 'specifications',
   });
-  const bgColor = useColorModeValue('gray.50', 'gray.700');
 
   const handleAddSpecification = () => {
     append({
@@ -32,10 +23,10 @@ const DynamicSpecifications = () => {
         <Box
           key={field.id}
           p={4}
-          bg={bgColor}
           borderWidth='1px'
           borderRadius='lg'
           shadow='md'
+          color='black'
         >
           <Flex alignItems='center' justifyContent='space-between'>
             <Input
@@ -43,10 +34,11 @@ const DynamicSpecifications = () => {
               placeholder='颜色（如“黑色”）'
               w='full'
               mr={2}
+              sx={{ '::placeholder': { color: 'gray.500' } }}
             />
             <IconButton
               aria-label='删除規格組合'
-              icon={<DeleteIcon />}
+              icon={<DeleteIcon color='black' />}
               onClick={() => remove(index)}
             />
           </Flex>

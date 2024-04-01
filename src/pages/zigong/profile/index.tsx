@@ -8,7 +8,7 @@ import { useAdminColorMode } from 'src/context/colorMode';
 
 const ProfilePages = () => {
   const { colorMode } = useAdminColorMode();
-  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+
   const bgProfile =
     colorMode === 'light'
       ? 'hsla(0,0%,100%,.8)'
