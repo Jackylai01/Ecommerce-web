@@ -65,7 +65,7 @@ const ProductCategories = () => {
     error: { deleteProductsCategoryError },
   } = useAppSelector((state) => state.adminProductsCategory);
 
-  const captions = ['Logo', 'Name', 'Description', '', ''];
+  const captions = ['Logo', 'Name', 'Description', ''];
 
   const renderCell = [
     (row: any) => (
@@ -74,18 +74,14 @@ const ProductCategories = () => {
     (row: ProductCategoryRowData) => <Box>{row.name}</Box>,
     (row: ProductCategoryRowData) => <Box>{row.description}</Box>,
     (row: ProductCategoryRowData) => (
-      <Button colorScheme='blue' size='sm' onClick={() => editRow(row._id)}>
-        編輯
-      </Button>
-    ),
-    (row: ProductCategoryRowData) => (
-      <Button
-        colorScheme='red'
-        size='sm'
-        onClick={() => requestDelete(row._id)}
-      >
-        刪除
-      </Button>
+      <Box display='flex' gap={2}>
+        <Button bg='blue.300' size='sm' onClick={() => editRow(row._id)}>
+          編輯
+        </Button>
+        <Button bg='red.300' size='sm' onClick={() => requestDelete(row._id)}>
+          刪除
+        </Button>
+      </Box>
     ),
   ];
 
