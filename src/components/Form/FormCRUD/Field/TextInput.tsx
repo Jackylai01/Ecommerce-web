@@ -42,6 +42,23 @@ export const TextInput = ({
         {...register(name)}
         type={type}
         h={height}
+        borderColor='black'
+        color='black'
+        sx={{
+          ':-webkit-autofill': {
+            WebkitBoxShadow: '0 0 0 30px white inset',
+            WebkitTextFillColor: 'black',
+          },
+          ':-webkit-autofill:hover': {
+            WebkitBoxShadow: '0 0 0 30px white inset',
+          },
+          ':-webkit-autofill:focus': {
+            WebkitBoxShadow: '0 0 0 30px white inset',
+          },
+          ':-webkit-autofill:active': {
+            WebkitBoxShadow: '0 0 0 30px white inset',
+          },
+        }}
       />
       <FormErrorMessage>{errors[name]?.message}</FormErrorMessage>
     </FormControl>
