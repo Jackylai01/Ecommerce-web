@@ -56,7 +56,6 @@ const ProductTableContainer = () => {
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.700';
-  const [sort, setSort] = useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -211,11 +210,10 @@ const ProductTableContainer = () => {
     const fetchData = async () => {
       const page = parseInt(router.query.page as string, 10) || 1;
       const limit = 10;
-      const sortParam = router.query.sort || '';
-      dispatch(getAllProductsAsync({ page, limit, sort: sortParam }));
+      dispatch(getAllProductsAsync({ page, limit }));
     };
     fetchData();
-  }, [dispatch, router.query.page, router.query.sort]);
+  }, [dispatch, router.query.page]);
 
   useEffect(() => {
     if (updateProductStatusSuccess) {
@@ -240,17 +238,6 @@ const ProductTableContainer = () => {
 
   const modalContent = '您確定要刪除這個產品？';
 
-  const handleSort = (sortField: any) => {
-    const newSortOrder =
-      sort.includes(sortField) && !sort.includes('desc') ? 'desc' : 'asc';
-    const newSort = `${sortField}:${newSortOrder}`;
-
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, page: '1', sort: newSort },
-    });
-  };
-
   return (
     <>
       <LoadingLayout isLoading={getAllProductsLoading || deleteProductLoading}>
@@ -272,18 +259,10 @@ const ProductTableContainer = () => {
                       variant='outline'
                     />
                     <MenuList shadow='md' bg={bgColor}>
-                      <MenuItem
-                        bg={bgColor}
-                        color={textColor}
-                        onClick={() => handleSort('createdAt')}
-                      >
+                      <MenuItem bg={bgColor} color={textColor}>
                         編輯時間
                       </MenuItem>
-                      <MenuItem
-                        bg={bgColor}
-                        color={textColor}
-                        onClick={() => handleSort('modifiedAt')}
-                      >
+                      <MenuItem bg={bgColor} color={textColor}>
                         建立時間
                       </MenuItem>
                     </MenuList>
