@@ -35,8 +35,14 @@ function FormModal<T extends FieldValues>({
   const methods = useForm<T>();
   const { colorMode } = useAdminColorMode();
   const modalBg = colorMode === 'light' ? 'white' : 'white';
+
   const handleFormSubmit: SubmitHandler<T> = (data) => {
     onSubmit(data);
+    onClose();
+  };
+
+  const handleClose = () => {
+    methods.reset();
     onClose();
   };
 
@@ -44,7 +50,7 @@ function FormModal<T extends FieldValues>({
     <FormProvider {...methods}>
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleClose}
         size='6xl'
         closeOnOverlayClick={false}
       >
@@ -58,7 +64,7 @@ function FormModal<T extends FieldValues>({
               <Button colorScheme='blue' color='white' mr={3} type='submit'>
                 Submit
               </Button>
-              <Button color='black' onClick={onClose}>
+              <Button color='black' onClick={handleClose}>
                 Cancel
               </Button>
             </ModalFooter>

@@ -44,6 +44,7 @@ export const TextInput = ({
         h={height}
         borderColor='black'
         color='black'
+        _hover={{ borderColor: 'gray.400' }}
         sx={{
           ':-webkit-autofill': {
             WebkitBoxShadow: '0 0 0 30px white inset',
