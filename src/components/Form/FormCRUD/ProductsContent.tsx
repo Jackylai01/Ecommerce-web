@@ -1,4 +1,4 @@
-import { VStack } from '@chakra-ui/react';
+import { FormLabel, VStack } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { getAllProductsCategoryAsync } from '@reducers/admin/product-category/actions';
@@ -7,8 +7,9 @@ import {
   getProductByIdAsync,
 } from '@reducers/admin/products/actions';
 import { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import CustomSelect from './Field/CustomSelect';
+import BlocksEditor from './Field/Editor';
 import ImageUpload from './Field/ImageUpload';
 import DynamicSpecifications from './Field/Specifications';
 import { TextInput } from './Field/TextInput';
@@ -19,7 +20,7 @@ interface ProductFormContentType {
 }
 
 export const ProductFormContent = ({ productId }: ProductFormContentType) => {
-  const { setValue } = useFormContext();
+  const { control, setValue } = useFormContext();
   const dispatch = useAppDispatch();
 
   const { list: categories } = useAppSelector(
@@ -60,8 +61,11 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
       setValue('price', productDetails.price);
       setValue('category', productDetails.category[0]);
       setValue('status', productDetails.status);
+      setValue('stock', productDetails.stock);
       setValue('minimumPurchase', productDetails.minimumPurchase);
       setValue('maximumPurchase', productDetails.maximumPurchase);
+      setValue('detailDescription', productDetails.detailDescription);
+      setValue('cost', productDetails.cost);
 
       if (productDetails.specifications) {
         setValue(
@@ -135,6 +139,23 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         label='最高購買數量'
         placeholder='請輸入商品最高購買數量(選填)'
         isRequired
+      />
+      <TextInput
+        name='cost'
+        label='商品總成本'
+        placeholder='請輸入商品總成本'
+      />
+      <TextInput name='stock' label='庫存' placeholder='請輸入商品總庫存' />
+      <FormLabel htmlFor='detailDescription'>詳細商品描述</FormLabel>
+      <Controller
+        control={control}
+        name='detailDescription'
+        render={({ field }) => (
+          <BlocksEditor
+            value={field.value}
+            onChange={(content) => field.onChange(content)}
+          />
+        )}
       />
       <CustomSelect
         name='category'

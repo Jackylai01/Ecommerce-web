@@ -19,4 +19,5 @@ export enum ReducerName {
   ADMIN_ARTICLES_CATEGORY = 'adminArticlesCategory',
   PRODUCT = 'product',
   PRODUCT_CATEGORY = 'productCategory',
+  PRODUCT_TAGS = 'productTags',
 }

@@ -50,6 +50,8 @@ interface ProductRowData {
   date: string;
   minimumPurchase: string;
   maximumPurchase: string;
+  price?: number;
+  stock?: number;
 }
 
 const ProductTableContainer = () => {
@@ -88,6 +90,8 @@ const ProductTableContainer = () => {
   const captions = [
     '封面',
     '姓名',
+    '價格',
+    '庫存',
     '最低購買數量',
     '最高購買數量',
     '商品狀態',
@@ -99,6 +103,8 @@ const ProductTableContainer = () => {
       <Avatar src={row.coverImage?.imageUrl} w='50px' borderRadius='12px' />
     ),
     (row: ProductRowData) => <Box>{row.name}</Box>,
+    (row: ProductRowData) => <Box>{row.price}</Box>,
+    (row: ProductRowData) => <Box>{row.stock}</Box>,
     (row: ProductRowData) => <Box>{row.minimumPurchase}</Box>,
     (row: ProductRowData) => <Box>{row.maximumPurchase}</Box>,
     (row: ProductRowData) => (
@@ -202,6 +208,17 @@ const ProductTableContainer = () => {
     if (data.specifications) {
       formData.append('specifications', JSON.stringify(data.specifications));
     }
+
+    Object.keys(data).forEach((key) => {
+      if (key !== 'detailDescription') {
+        formData.append(key, data[key]);
+      }
+    });
+
+    formData.append(
+      'detailDescription',
+      JSON.stringify(data.detailDescription),
+    );
 
     if (editingProductId) {
       dispatch(updateProductAsync({ id: editingProductId, body: formData }));

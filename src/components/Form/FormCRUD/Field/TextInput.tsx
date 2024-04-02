@@ -14,6 +14,8 @@ interface TextInputType {
   type?: string;
   as?: React.ElementType; // 添加这一行来支持Textarea组件
   height?: string; // 添加高度属性
+  min?: number;
+  max?: number;
 }
 
 export const TextInput = ({
@@ -24,6 +26,8 @@ export const TextInput = ({
   type,
   as,
   height,
+  min,
+  max,
 }: TextInputType) => {
   const {
     register,
@@ -42,6 +46,8 @@ export const TextInput = ({
         {...register(name)}
         type={type}
         h={height}
+        min={min}
+        max={max}
         borderColor='black'
         color='black'
         _hover={{ borderColor: 'gray.400' }}

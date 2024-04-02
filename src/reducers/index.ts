@@ -3,6 +3,7 @@ import adminClientUsers from './admin/client-users';
 import customPage from './admin/custom-page';
 import dashBoardTheme from './admin/dash-board/themeSlice';
 import adminProductsCategory from './admin/product-category';
+import adminProductsTags from './admin/product-tags';
 import adminProducts from './admin/products';
 import adminUpload from './admin/upload';
 import clientAuth from './client/auth';
@@ -25,6 +26,7 @@ const appReducer = {
   dashBoardTheme,
   adminProducts,
   adminProductsCategory,
+  adminProductsTags,
   adminClientUsers,
 };
 

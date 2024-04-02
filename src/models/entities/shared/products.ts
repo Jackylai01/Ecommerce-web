@@ -18,6 +18,8 @@ export interface Product extends BaseEntity {
   images: { imageUrl: string; imageId: string }[];
   // 商品狀態（如：上架、下架、缺貨）
   status?: string[];
+  // 庫存(總)
+  stock?: number;
   // 商品的規格或特性（例如：顏色、尺寸等）
   specifications?: any;
   // 用戶對商品的評分和評論
@@ -32,6 +34,10 @@ export interface Product extends BaseEntity {
   maximumPurchase?: number;
   // 商品的平均評分
   averageRating?: number;
+  // 商品詳細內容
+  detailDescription?: string;
+  // 商品總成本
+  cost?: number;
   // 自訂模組，可以根據您的實際需求添加額外的類型定義
   blocks: any[];
 }
@@ -49,7 +55,10 @@ export interface Category {
     imageId: string;
   };
 }
-
+export interface Tags extends BaseEntity {
+  name?: string;
+  description?: string;
+}
 export interface PreviewImage {
   imageId: string;
 }

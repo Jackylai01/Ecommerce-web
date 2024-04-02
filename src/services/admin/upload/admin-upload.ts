@@ -40,6 +40,10 @@ export interface CloudinaryUploadResponse {
   imageId: string;
 }
 
+interface UploadResponse {
+  imageUrl: string;
+}
+
 /**
  * 上傳圖片到cloudinary服務器
  * @param {File[]} data - 要上傳的圖片文件數組
@@ -47,14 +51,12 @@ export interface CloudinaryUploadResponse {
  * @returns {Promise<ApiResult<any>>} - 上傳結果
  */
 
-export const apiAdminUpload = async (data: File[], folderName: string) => {
+export const apiAdminUpload = async (file: any) => {
   const formData = new FormData();
-  data.forEach((image: any) => {
-    formData.append('images', image);
-  });
-  formData.append('folderName', folderName);
+  formData.append('image', file);
   const headers = { 'Content-Type': 'multipart/form-data' };
-  return postRequest<ApiListResult<any[]>>(
+
+  return postRequest<ApiListResult<UploadResponse>>(
     '/zigong/images/upload',
     formData,
     headers,

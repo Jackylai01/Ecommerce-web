@@ -75,7 +75,7 @@ const ProductCategories = () => {
     (row: ProductCategoryRowData) => <Box>{row.description}</Box>,
     (row: ProductCategoryRowData) => (
       <Box display='flex' gap={2}>
-        <Button bg='blue.300' size='sm' onClick={() => editRow(row._id)}>
+        <Button bg='blue.500' size='sm' onClick={() => editRow(row._id)}>
           編輯
         </Button>
         <Button bg='red.300' size='sm' onClick={() => requestDelete(row._id)}>
