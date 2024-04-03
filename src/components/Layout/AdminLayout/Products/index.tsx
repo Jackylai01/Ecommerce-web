@@ -189,7 +189,9 @@ const ProductTableContainer = () => {
       if (
         key !== 'coverImage' &&
         key !== 'images' &&
-        key !== 'specifications'
+        key !== 'specifications' &&
+        key !== 'tags' &&
+        data[key] !== undefined
       ) {
         formData.append(key, data[key]);
       }
@@ -209,16 +211,11 @@ const ProductTableContainer = () => {
       formData.append('specifications', JSON.stringify(data.specifications));
     }
 
-    Object.keys(data).forEach((key) => {
-      if (key !== 'detailDescription') {
-        formData.append(key, data[key]);
-      }
-    });
-
-    formData.append(
-      'detailDescription',
-      JSON.stringify(data.detailDescription),
-    );
+    if (data.tags && Array.isArray(data.tags)) {
+      data.tags.forEach((tagId: any) => {
+        formData.append('tags', tagId);
+      });
+    }
 
     if (editingProductId) {
       dispatch(updateProductAsync({ id: editingProductId, body: formData }));

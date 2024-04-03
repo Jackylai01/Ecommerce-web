@@ -1,17 +1,19 @@
-import { FormLabel, VStack } from '@chakra-ui/react';
+import { VStack } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { getAllProductsCategoryAsync } from '@reducers/admin/product-category/actions';
+import { getAllProductsTagsAsync } from '@reducers/admin/product-tags/actions';
 import {
   deleteProductImageAsync,
   getProductByIdAsync,
 } from '@reducers/admin/products/actions';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import CustomSelect from './Field/CustomSelect';
-import BlocksEditor from './Field/Editor';
 import ImageUpload from './Field/ImageUpload';
 import DynamicSpecifications from './Field/Specifications';
+import { TagsMultiSelect } from './Field/TagsSelect';
 import { TextInput } from './Field/TextInput';
 import ToggleSwitch from './Field/ToggleSwitch';
 
@@ -22,10 +24,13 @@ interface ProductFormContentType {
 export const ProductFormContent = ({ productId }: ProductFormContentType) => {
   const { control, setValue } = useFormContext();
   const dispatch = useAppDispatch();
-
+  const router = useRouter();
   const { list: categories } = useAppSelector(
     (state) => state.adminProductsCategory,
   );
+
+  const { list: tags } = useAppSelector((state) => state.adminProductsTags);
+
   const {
     productDetails,
     status: { deleteProductImageLoading, deleteProductImageSuccess },
@@ -47,6 +52,22 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
     }
   };
 
+  const categoryOptions =
+    categories
+      ?.map((category) => ({
+        value: category._id ?? '',
+        label: category.name ?? '',
+      }))
+      .filter((option) => option.value !== '' && option.label !== '') || [];
+
+  const tagsOptions =
+    tags
+      ?.map((tag) => ({
+        value: tag._id ?? '',
+        label: tag.name ?? '',
+      }))
+      .filter((option) => option.value !== '' && option.label !== '') || [];
+
   useEffect(() => {
     dispatch(getAllProductsCategoryAsync({ page: 1, limit: 100 }));
     if (productId) {
@@ -64,7 +85,7 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
       setValue('stock', productDetails.stock);
       setValue('minimumPurchase', productDetails.minimumPurchase);
       setValue('maximumPurchase', productDetails.maximumPurchase);
-      setValue('detailDescription', productDetails.detailDescription);
+      setValue('tags', productDetails.tags);
       setValue('cost', productDetails.cost);
 
       if (productDetails.specifications) {
@@ -100,13 +121,10 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
     }
   }, [productDetails]);
 
-  const categoryOptions =
-    categories
-      ?.map((category) => ({
-        value: category._id ?? '',
-        label: category.name ?? '',
-      }))
-      .filter((option) => option.value !== '' && option.label !== '') || [];
+  useEffect(() => {
+    const page = parseInt(router.query.page as string, 10) || 1;
+    dispatch(getAllProductsTagsAsync({ page, limit: 10 }));
+  }, [dispatch, router.query.page]);
 
   return (
     <VStack spacing={4} align='flex-start'>
@@ -146,8 +164,8 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         placeholder='請輸入商品總成本'
       />
       <TextInput name='stock' label='庫存' placeholder='請輸入商品總庫存' />
-      <FormLabel htmlFor='detailDescription'>詳細商品描述</FormLabel>
-      <Controller
+      {/* <FormLabel htmlFor='detailDescription'>詳細商品描述</FormLabel> */}
+      {/* <Controller
         control={control}
         name='detailDescription'
         render={({ field }) => (
@@ -156,13 +174,14 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
             onChange={(content) => field.onChange(content)}
           />
         )}
-      />
+      /> */}
       <CustomSelect
         name='category'
         label='產品類別'
         options={categoryOptions}
         isRequired
       />
+      <TagsMultiSelect name='tags' label='產品標籤' options={tagsOptions} />
       <ToggleSwitch
         name='status'
         label='產品狀態'

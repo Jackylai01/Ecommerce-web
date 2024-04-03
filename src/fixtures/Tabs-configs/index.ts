@@ -1,5 +1,5 @@
 import { TabItem } from '@models/entities/shared/Tabs';
-import { MdCategory, MdList } from 'react-icons/md';
+import { MdCategory, MdList, MdLocalOffer } from 'react-icons/md';
 
 export const ProductsConfig: TabItem[] = [
   {
@@ -11,6 +11,11 @@ export const ProductsConfig: TabItem[] = [
     label: '類別管理',
     path: '/zigong/categories',
     icon: MdCategory,
+  },
+  {
+    label: '標籤管理',
+    path: '/zigong/tags',
+    icon: MdLocalOffer,
   },
 ];
 

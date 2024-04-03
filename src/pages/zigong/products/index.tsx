@@ -62,7 +62,9 @@ const ProductsPages: NextPage = () => {
       if (
         key !== 'coverImage' &&
         key !== 'images' &&
-        key !== 'specifications'
+        key !== 'specifications' &&
+        key !== 'tags' &&
+        data[key] !== undefined
       ) {
         formData.append(key, data[key]);
       }
@@ -71,13 +73,17 @@ const ProductsPages: NextPage = () => {
     if (data.coverImage) {
       formData.append('coverImage', data.coverImage);
     }
-
     if (data.images && data.images.length) {
       data.images.forEach((image: any) => {
         formData.append('images', image);
       });
     }
 
+    if (data.tags && Array.isArray(data.tags)) {
+      data.tags.forEach((tagId: any) => {
+        formData.append('tags', tagId);
+      });
+    }
     if (data.specifications) {
       formData.append('specifications', JSON.stringify(data.specifications));
     }

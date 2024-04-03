@@ -12,7 +12,6 @@ import useAppSelector from '@hooks/useAppSelector';
 import { notifySelectedUsersAsync } from '@reducers/admin/client-users/actions';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useAdminColorMode } from 'src/context/colorMode';
 
 const MembersPages: NextPage = () => {
@@ -28,17 +27,9 @@ const MembersPages: NextPage = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode } = useAdminColorMode();
-  const methods = useForm({
-    defaultValues: {
-      userIds: [],
-      subject: '',
-      content: '',
-    },
-  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
-  const [modalTitle, setModalTitle] = useState<string>('寄送郵件');
 
   const handleSubmitEmail = (emailData: any) => {
     console.log(emailData);
@@ -96,7 +87,7 @@ const MembersPages: NextPage = () => {
           <SendEmailForm />
         </FormModal>
         <MessageModal
-          title={modalTitle}
+          title='寄送郵件'
           isActive={isModalOpen}
           error={notifySelectedUsersError}
           onClose={handleCloseModal}
