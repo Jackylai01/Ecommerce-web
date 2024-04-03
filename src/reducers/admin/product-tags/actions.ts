@@ -26,12 +26,11 @@ export const getAllProductsTagsAsync = createAsyncThunk(
     return response.result;
   },
 );
-
 export const getProductTagsByIdAsync = createAsyncThunk(
   `${ReducerName.PRODUCT_TAGS}/${ProductTagsAction.getProductsTagsById}`,
-  async (id: string) => {
+  async (id: any) => {
     const response = await apiGetTagsById(id);
-    return response.result;
+    return response.result.data;
   },
 );
 

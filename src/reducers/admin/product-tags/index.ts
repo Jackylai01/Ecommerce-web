@@ -17,7 +17,7 @@ import {
 type ProductTagsState = ApiState<ProductTagsAction> & {
   list: Tags[] | null;
   metadata: Metadata | null;
-  tagsDetails: any;
+  tagsDetails: Tags | null;
 };
 
 const initialState: ProductTagsState = {
@@ -39,7 +39,8 @@ const productTagsSlice = createSlice({
       state.metadata = action.payload.metadata;
     });
     builder.addCase(getProductTagsByIdAsync.fulfilled, (state, action) => {
-      state.tagsDetails = action.payload;
+      const tagDetails = action.payload.data[0];
+      state.tagsDetails = tagDetails ? tagDetails : null;
     });
     builder.addCase(addProductTagsAsync.fulfilled, (state, action) => {
       if (state.list) state.list = [...state.list, action.payload];
