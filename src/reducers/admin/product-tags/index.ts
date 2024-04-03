@@ -32,6 +32,9 @@ const productTagsSlice = createSlice({
   initialState,
   reducers: {
     resetTagsState: () => initialState,
+    resetTagsDetailState: (state) => {
+      state.tagsDetails = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getAllProductsTagsAsync.fulfilled, (state, action) => {
@@ -39,8 +42,7 @@ const productTagsSlice = createSlice({
       state.metadata = action.payload.metadata;
     });
     builder.addCase(getProductTagsByIdAsync.fulfilled, (state, action) => {
-      const tagDetails = action.payload.data[0];
-      state.tagsDetails = tagDetails ? tagDetails : null;
+      state.tagsDetails = action.payload;
     });
     builder.addCase(addProductTagsAsync.fulfilled, (state, action) => {
       if (state.list) state.list = [...state.list, action.payload];
@@ -62,5 +64,6 @@ const productTagsSlice = createSlice({
   },
 });
 
-export const { resetTagsState } = productTagsSlice.actions;
+export const { resetTagsState, resetTagsDetailState } =
+  productTagsSlice.actions;
 export default productTagsSlice.reducer;

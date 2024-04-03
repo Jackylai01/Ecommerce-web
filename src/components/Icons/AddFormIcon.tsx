@@ -2,6 +2,7 @@ import { AddIcon } from '@chakra-ui/icons';
 import { IconButton, useDisclosure } from '@chakra-ui/react';
 import FormModal from '@components/Modal/FormModal';
 import useAppDispatch from '@hooks/useAppDispatch';
+import { resetTagsDetailState } from '@reducers/admin/product-tags';
 import { resetProductDetails } from '@reducers/admin/products';
 import { FC, ReactNode } from 'react';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
@@ -22,6 +23,7 @@ const AddButton: FC<AddButtonProps<any>> = ({
 
   const handleAddButtonClick = () => {
     dispatch(resetProductDetails());
+    dispatch(resetTagsDetailState());
     onOpen();
   };
 

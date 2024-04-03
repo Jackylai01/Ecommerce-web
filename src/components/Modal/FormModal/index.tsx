@@ -34,7 +34,6 @@ function FormModal<T extends FieldValues>({
 }: FormModalProps<T>) {
   const methods = useForm<T>();
   const { colorMode } = useAdminColorMode();
-  const modalBg = colorMode === 'light' ? 'white' : 'white';
 
   const handleFormSubmit: SubmitHandler<T> = (data) => {
     onSubmit(data);

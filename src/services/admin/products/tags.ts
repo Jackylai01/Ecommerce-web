@@ -2,7 +2,6 @@ import { formatQueryString } from '@helpers/query';
 import { PagingQuery } from '@models/entities/shared/pagination';
 import { Tags } from '@models/entities/shared/products';
 import {
-  ApiListResult,
   ApiPaginationResult,
   ApiResult,
   deleteRequest,
@@ -24,7 +23,7 @@ export const apiGetTags = async (query: PagingQuery) =>
  * 根據id 取得產品標籤
  */
 export const apiGetTagsById = async (id: string) => {
-  return getRequest<ApiListResult<Tags>>(`/zigong/tags/${id}`);
+  return getRequest<ApiResult<Tags>>(`/zigong/tags/${id}`);
 };
 
 /**

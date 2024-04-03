@@ -20,23 +20,38 @@ const TagsPages: NextPage = () => {
       addProductsTagsLoading,
       addProductsTagsSuccess,
       updateProductsTagsLoading,
+      updateProductsTagsFailed,
+      updateProductsTagsSuccess,
     },
     error: { addProductsTagsError },
   } = useAppSelector((state) => state.adminProductsTags);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
+  const [mainTitle, setMainTitle] = useState('新增產品標籤');
 
   useEffect(() => {
     if (addProductsTagsSuccess) {
       setIsModalOpen(true);
       setModalContent('產品標籤新增成功！');
+      setMainTitle('新增產品標籤');
     }
 
-    if (addProductsTagsLoading) {
+    if (updateProductsTagsSuccess) {
+      setIsModalOpen(true);
+      setModalContent('產品標籤更新成功！');
+      setMainTitle('更新產品標籤');
+    }
+
+    if (addProductsTagsLoading || updateProductsTagsFailed) {
       setIsModalOpen(true);
       setModalContent('');
     }
-  }, [addProductsTagsFailed, addProductsTagsSuccess]);
+  }, [
+    addProductsTagsFailed,
+    addProductsTagsSuccess,
+    updateProductsTagsSuccess,
+    updateProductsTagsFailed,
+  ]);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -64,7 +79,7 @@ const TagsPages: NextPage = () => {
         <ProductTags />
       </TabsLayout>
       <MessageModal
-        title='新增產品標籤'
+        title={mainTitle}
         isActive={isModalOpen}
         error={addProductsTagsError}
         onClose={handleCloseModal}
