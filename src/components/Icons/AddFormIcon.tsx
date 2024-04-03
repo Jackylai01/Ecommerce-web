@@ -33,12 +33,11 @@ const AddButton: FC<AddButtonProps<any>> = ({
         icon={<AddIcon />}
         isRound
         colorScheme='teal'
-        position='absolute'
-        right='10'
         aria-label='iconButton'
         onClick={handleAddButtonClick}
+        position='absolute'
+        right='20px'
       />
-
       <FormModal
         isOpen={isOpen}
         onClose={onClose}

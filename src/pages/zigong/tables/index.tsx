@@ -1,4 +1,3 @@
-import { Box, Flex } from '@chakra-ui/react';
 import { UsersForm } from '@components/Form/FormCRUD/Users';
 import AddButton from '@components/Icons/AddFormIcon';
 import Authors from '@components/Layout/AdminLayout/Tables/components/Authors';
@@ -53,34 +52,32 @@ const TablesPage = () => {
 
   return (
     <LoadingLayout isLoading={createAccountsLoading}>
-      <Box>
-        <Flex direction='column'>
-          <AddButton
-            formTitle='Add Users account'
-            formContent={<UsersForm />}
-            onSubmit={handleSubmit}
-          />
-          <TabsLayout tabsConfig={UsersConfig}>
-            <Authors
-              title={'帳號管理'}
-              captions={['使用者名稱', '信箱', '角色', '城市', '']}
-            />
-          </TabsLayout>
-          <Projects
-            title={'Projects Table'}
-            captions={['Companies', 'Budget', 'Status', 'Completion', '']}
-            data={dashboardTableData}
-          />
-        </Flex>
-        <MessageModal
-          title={modalTitle}
-          isActive={isModalOpen}
-          error={createAccountsError}
-          onClose={handleCloseModal}
-        >
-          {modalContent}
-        </MessageModal>
-      </Box>
+      <AddButton
+        formTitle='Add Users account'
+        formContent={<UsersForm />}
+        onSubmit={handleSubmit}
+      />
+
+      <TabsLayout tabsConfig={UsersConfig}>
+        <Authors
+          title={'帳號管理'}
+          captions={['使用者名稱', '信箱', '角色', '城市', '']}
+        />
+      </TabsLayout>
+      <Projects
+        title={'Projects Table'}
+        captions={['Companies', 'Budget', 'Status', 'Completion', '']}
+        data={dashboardTableData}
+      />
+
+      <MessageModal
+        title={modalTitle}
+        isActive={isModalOpen}
+        error={createAccountsError}
+        onClose={handleCloseModal}
+      >
+        {modalContent}
+      </MessageModal>
     </LoadingLayout>
   );
 };

@@ -16,6 +16,7 @@ interface MainLayoutProps extends BoxProps {
 
 const TabsLayout: FC<MainLayoutProps> = ({ children, tabsConfig, ...rest }) => {
   const router = useRouter();
+
   const currentPath = router.pathname;
 
   const activeTabIndex = tabsConfig.findIndex((tab) =>
