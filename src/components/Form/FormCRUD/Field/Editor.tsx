@@ -1,6 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { AddElement } from './NestedUI/AddElement';
-import { ElementEditor } from './NestedUI/ElementEditor';
 
 interface CustomPageElement {
   id: string;
@@ -109,15 +107,7 @@ const EditableBlock: React.FC<EditableBlockProps> = ({ block }) => {
     setElements(elements.filter((element) => element.id !== elementId));
   };
 
-  return (
-    <div>
-      <AddElement onAdd={handleAddElement} />
-      <div>{elements.map(renderElement)}</div>
-      {selectedElement && (
-        <ElementEditor element={selectedElement} onUpdate={updateElement} />
-      )}
-    </div>
-  );
+  return <div></div>;
 };
 
 export default EditableBlock;
