@@ -191,6 +191,7 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         offLabel='下架'
       />
       <DynamicSpecifications />
+      {/* <EditableBlock block={} /> */}
       <ImageUpload
         name='coverImage'
         label='封面照片'
