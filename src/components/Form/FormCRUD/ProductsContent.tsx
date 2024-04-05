@@ -16,6 +16,7 @@ import DynamicSpecifications from './Field/Specifications';
 import { TagsMultiSelect } from './Field/TagsSelect';
 import { TextInput } from './Field/TextInput';
 import ToggleSwitch from './Field/ToggleSwitch';
+import ProductCustomBlocks from './ProductCustomBlocks';
 
 interface ProductFormContentType {
   productId?: string;
@@ -24,6 +25,7 @@ interface ProductFormContentType {
 export const ProductFormContent = ({ productId }: ProductFormContentType) => {
   const { control, setValue } = useFormContext();
   const dispatch = useAppDispatch();
+
   const router = useRouter();
   const { list: categories } = useAppSelector(
     (state) => state.adminProductsCategory,
@@ -164,17 +166,7 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         placeholder='請輸入商品總成本'
       />
       <TextInput name='stock' label='庫存' placeholder='請輸入商品總庫存' />
-      {/* <FormLabel htmlFor='detailDescription'>詳細商品描述</FormLabel> */}
-      {/* <Controller
-        control={control}
-        name='detailDescription'
-        render={({ field }) => (
-          <BlocksEditor
-            value={field.value}
-            onChange={(content) => field.onChange(content)}
-          />
-        )}
-      /> */}
+      <ProductCustomBlocks />
       <CustomSelect
         name='category'
         label='產品類別'
