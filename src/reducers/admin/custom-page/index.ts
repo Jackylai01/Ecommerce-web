@@ -40,15 +40,32 @@ const customPageSlice = createSlice({
         (block: any, index: number) => index !== action.payload,
       );
     },
-    updateElementSizeAndPosition: (state, action) => {
-      const { elementId, newSize, newAlignment } = action.payload;
-      state.pageBlocks.forEach((block) => {
-        block.elements.forEach((element) => {
-          if (element.id === elementId && element.tagName === 'img') {
-            element.size = newSize;
-            element.alignment = newAlignment;
-          }
-        });
+    updateBlock: (
+      state,
+      action: PayloadAction<{ index: number; block: CustomPageBlock }>,
+    ) => {
+      const { index, block } = action.payload;
+      state.pageBlocks[index] = block;
+    },
+    addBlock: (state, action: PayloadAction<CustomPageBlock>) => {
+      state.pageBlocks = [...state.pageBlocks, action.payload];
+    },
+
+    updateElementContent: (
+      state,
+      action: PayloadAction<{ id: string; newContent: string }>,
+    ) => {
+      const { id, newContent } = action.payload;
+      state.pageBlocks = state.pageBlocks.map((block) => {
+        return {
+          ...block,
+          elements: block.elements.map((element) => {
+            if (element.id === id) {
+              return { ...element, context: newContent };
+            }
+            return element;
+          }),
+        };
       });
     },
     formLayoutDataReset: () => initialState,
@@ -58,9 +75,10 @@ const customPageSlice = createSlice({
 export const {
   setCustomPageActive,
   setDragItem,
+  addBlock,
   setPageBlocks,
   removeBLockItem,
   formLayoutDataReset,
-  updateElementSizeAndPosition,
+  updateElementContent,
 } = customPageSlice.actions;
 export default customPageSlice.reducer;

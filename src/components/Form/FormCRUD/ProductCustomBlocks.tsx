@@ -1,31 +1,32 @@
-import { DeleteIcon, DragHandleIcon } from '@chakra-ui/icons';
-import { Box, Button, Icon, VStack, useDisclosure } from '@chakra-ui/react';
-import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-
+import { AddIcon, DeleteIcon, DragHandleIcon } from '@chakra-ui/icons';
+import { Box, Icon, IconButton, VStack, useDisclosure } from '@chakra-ui/react';
 import ContentSelectionModal from '@components/CustomPage/ContentSelectionModal';
 import NestedDisplayUI from '@components/CustomPage/NestedDisplayUI';
 import { customPageTemplates } from '@fixtures/custom-page-templates';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { CustomPageTemplate } from '@models/entities/custom-page-template';
 import {
-  CustomPageBlock,
-  CustomPageTemplate,
-} from '@models/entities/custom-page-template';
+  addBlock,
+  removeBLockItem,
+  setPageBlocks,
+} from '@reducers/admin/custom-page';
+import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 const ProductCustomBlocks = () => {
+  const [isEdit, setIsEdit] = useState(false);
+  const dispatch = useAppDispatch();
   const { setValue } = useFormContext();
-  const [blocks, setBlocks] = useState<CustomPageBlock[]>([]);
+  const blocks = useAppSelector((state) => state.customPage.pageBlocks);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleAddBlock = (template: CustomPageTemplate) => {
-    const newBlocks = [...blocks, template.block];
-    setBlocks(newBlocks);
-    setValue('detailDescription', newBlocks);
+    dispatch(addBlock(template.block));
   };
 
   const handleDeleteBlock = (index: number) => {
-    const newBlocks = blocks.filter((_, i) => i !== index);
-    setBlocks(newBlocks);
-    setValue('detailDescription', newBlocks);
+    dispatch(removeBLockItem(index));
   };
 
   const onDragStart = (e: any, index: number) => {
@@ -43,12 +44,17 @@ const ProductCustomBlocks = () => {
     );
     remainingItems.splice(dropIndex, 0, itemToMove);
 
-    setBlocks(remainingItems);
+    const updatedBlocks = blocks.filter(
+      (_, index) => index !== parseInt(dragIndex),
+    );
+    updatedBlocks.splice(dropIndex, 0, itemToMove);
+
+    dispatch(setPageBlocks(updatedBlocks));
     setValue('detailDescription', remainingItems);
   };
 
   return (
-    <VStack spacing={4} className='custom-page__selected-items'>
+    <VStack spacing={4} className='custom-page__selected-items' mt='2rem'>
       {blocks.map((block, index) => (
         <Box
           key={index}
@@ -86,9 +92,16 @@ const ProductCustomBlocks = () => {
           </span>
         </Box>
       ))}
-      <Button onClick={onOpen} color='white' bg='black'>
-        新增組件
-      </Button>
+      <IconButton
+        aria-label='新增组件'
+        icon={<AddIcon />}
+        colorScheme='teal'
+        size='lg'
+        onClick={() => {
+          onOpen();
+          setIsEdit(!isEdit);
+        }}
+      />
       <ContentSelectionModal
         isOpen={isOpen}
         onClose={onClose}

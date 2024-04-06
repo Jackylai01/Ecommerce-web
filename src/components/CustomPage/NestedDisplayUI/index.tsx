@@ -19,7 +19,7 @@ export type ElementProps = {
   uuid?: string;
 };
 
-const NestedDisplayUI = ({ elements, isEdit = false }: Props) => {
+const NestedDisplayUI = ({ elements, isEdit = true }: Props) => {
   if (!elements || !elements.length) return <></>;
 
   return (
