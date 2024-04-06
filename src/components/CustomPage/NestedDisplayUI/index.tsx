@@ -54,7 +54,6 @@ const NestedDisplayUI = ({ elements, isEdit = true }: Props) => {
                 isEdit={isEdit}
               />
             );
-
           default:
             return <TagElement element={element} isEdit={isEdit} />;
         }
