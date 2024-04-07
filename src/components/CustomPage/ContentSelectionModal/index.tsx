@@ -12,7 +12,6 @@ import { CustomPageTemplate } from '@models/entities/custom-page-template';
 import {
   FaEdit,
   FaHeading,
-  FaLink,
   FaPodcast,
   FaRegImage,
   FaTable,
@@ -40,8 +39,6 @@ const ContentSelectionModal = ({
       return <FaEdit />;
     } else if (templateId.includes('table')) {
       return <FaTable />;
-    } else if (templateId.includes('link')) {
-      return <FaLink />;
     } else if (templateId.includes('post')) {
       return <FaPodcast />;
     } else {

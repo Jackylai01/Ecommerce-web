@@ -1,35 +1,21 @@
-import { Flex, IconButton, VStack } from '@chakra-ui/react';
+import { Flex, VStack } from '@chakra-ui/react';
 import generateUUID from '@helpers/generate-uuid';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { updateElementSizeAndPosition } from '@reducers/admin/custom-page';
 import { fileSelectReset, setSelectActive } from '@reducers/file-select';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import {
-  FaAlignCenter,
-  FaAlignLeft,
-  FaAlignRight,
-  FaArrowsAltH,
-  FaCompressArrowsAlt,
-  FaExpandArrowsAlt,
-} from 'react-icons/fa';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ElementProps } from '..';
 
 export const SelectableImage = ({ element, isEdit }: ElementProps) => {
   const dispatch = useAppDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [elementId, setElementId] = useState(element.id);
 
-  useEffect(() => {
-    if (!element.id) {
-      element.id = generateUUID();
-    }
-  }, [element]);
+useEffect(() => {
+  if (!elementId) {
+    setElementId(generateUUID());
+  }
+}, [elementId]);
 
   const pageBlocks = useAppSelector((state) => state.customPage.pageBlocks);
 
@@ -68,34 +54,6 @@ export const SelectableImage = ({ element, isEdit }: ElementProps) => {
       setAlignment(updatedElement.alignment || 'center');
     }
   }, [element.id, pageBlocks]);
-
-  const handleSizeChange = useCallback(
-    (newSize: string) => {
-      setSize(newSize);
-      dispatch(
-        updateElementSizeAndPosition({
-          elementId: element.id,
-          newSize,
-          alignment,
-        }),
-      );
-    },
-    [dispatch, element.id, alignment],
-  );
-
-  const handleAlignmentChange = useCallback(
-    (newAlignment: string) => {
-      setAlignment(newAlignment);
-      dispatch(
-        updateElementSizeAndPosition({
-          elementId: element.id,
-          size,
-          newAlignment,
-        }),
-      );
-    },
-    [dispatch, element.id, size],
-  );
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -157,42 +115,6 @@ export const SelectableImage = ({ element, isEdit }: ElementProps) => {
       </Flex>
       {isEdit && (
         <Flex justifyContent='center' wrap='wrap'>
-          <IconButton
-            aria-label='Large Size'
-            icon={<FaExpandArrowsAlt />}
-            onClick={() => isEdit && handleSizeChange('large')}
-            m={1}
-          />
-          <IconButton
-            aria-label='Medium Size'
-            icon={<FaArrowsAltH />}
-            onClick={() => isEdit && handleSizeChange('medium')}
-            m={1}
-          />
-          <IconButton
-            aria-label='Small Size'
-            icon={<FaCompressArrowsAlt />}
-            onClick={() => isEdit && handleSizeChange('small')}
-            m={1}
-          />
-          <IconButton
-            aria-label='Align Left'
-            icon={<FaAlignLeft />}
-            onClick={() => isEdit && handleAlignmentChange('left')}
-            m={1}
-          />
-          <IconButton
-            aria-label='Center Align'
-            icon={<FaAlignCenter />}
-            onClick={() => isEdit && handleAlignmentChange('center')}
-            m={1}
-          />
-          <IconButton
-            aria-label='Align Right'
-            icon={<FaAlignRight />}
-            onClick={() => isEdit && handleAlignmentChange('right')}
-            m={1}
-          />
           <input
             type='file'
             ref={fileInputRef}
