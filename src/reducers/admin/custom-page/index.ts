@@ -19,6 +19,7 @@ const initialState: CustomPageState = {
   active: false,
   dragItem: null,
   pageBlocks: [],
+
   pageInfo: null,
 };
 
@@ -35,6 +36,7 @@ const customPageSlice = createSlice({
     setPageBlocks: (state, action: PayloadAction<CustomPageBlock[]>) => {
       state.pageBlocks = action.payload;
     },
+
     removeBLockItem: (state, action: PayloadAction<number>) => {
       state.pageBlocks = state.pageBlocks.filter(
         (block: any, index: number) => index !== action.payload,

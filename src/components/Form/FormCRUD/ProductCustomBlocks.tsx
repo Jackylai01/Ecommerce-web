@@ -1,5 +1,17 @@
-import { AddIcon, DeleteIcon, DragHandleIcon } from '@chakra-ui/icons';
-import { Box, Icon, IconButton, VStack, useDisclosure } from '@chakra-ui/react';
+import {
+  AddIcon,
+  DeleteIcon,
+  DragHandleIcon,
+  EditIcon,
+} from '@chakra-ui/icons';
+import {
+  Box,
+  Button,
+  Icon,
+  IconButton,
+  VStack,
+  useDisclosure,
+} from '@chakra-ui/react';
 import ContentSelectionModal from '@components/CustomPage/ContentSelectionModal';
 import NestedDisplayUI from '@components/CustomPage/NestedDisplayUI';
 import { customPageTemplates } from '@fixtures/custom-page-templates';
@@ -55,6 +67,14 @@ const ProductCustomBlocks = () => {
 
   return (
     <VStack spacing={4} className='custom-page__selected-items' mt='2rem'>
+      <Button
+        leftIcon={<EditIcon />}
+        colorScheme='blue'
+        onClick={() => setIsEdit(!isEdit)}
+        bg={isEdit ? 'red.300' : 'blue.300'}
+      >
+        {isEdit ? '退出編輯模式' : '進入編輯模式'}
+      </Button>
       {blocks.map((block, index) => (
         <Box
           key={index}
@@ -62,7 +82,7 @@ const ProductCustomBlocks = () => {
           position='relative'
           onDragOver={(e) => e.preventDefault()}
         >
-          <NestedDisplayUI elements={block.elements} isEdit={true} />
+          <NestedDisplayUI elements={block.elements} isEdit={isEdit} />
           <Icon
             as={DeleteIcon}
             cursor='pointer'
@@ -97,10 +117,8 @@ const ProductCustomBlocks = () => {
         icon={<AddIcon />}
         colorScheme='teal'
         size='lg'
-        onClick={() => {
-          onOpen();
-          setIsEdit(!isEdit);
-        }}
+        onClick={onOpen}
+        isDisabled={!isEdit}
       />
       <ContentSelectionModal
         isOpen={isOpen}
