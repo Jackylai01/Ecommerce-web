@@ -10,12 +10,13 @@ export const SelectableImage = ({ element, isEdit }: ElementProps) => {
   const dispatch = useAppDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [elementId, setElementId] = useState(element.id);
+  const [src, setSrc] = useState(element.src);
 
-useEffect(() => {
-  if (!elementId) {
-    setElementId(generateUUID());
-  }
-}, [elementId]);
+  useEffect(() => {
+    if (!elementId) {
+      setElementId(generateUUID());
+    }
+  }, [elementId]);
 
   const pageBlocks = useAppSelector((state) => state.customPage.pageBlocks);
 
@@ -30,6 +31,11 @@ useEffect(() => {
   const name = useMemo(() => generateUUID(), []);
   const { fileUrl, fieldName } = useAppSelector((store) => store.fileSelect);
 
+  const getImageStyle = () => ({
+    maxWidth: '50%',
+    height: 'auto',
+  });
+
   useEffect(() => {
     if (currentElement) {
       setSize(currentElement.size || 'medium');
@@ -39,10 +45,10 @@ useEffect(() => {
 
   useEffect(() => {
     if (fileUrl && fieldName === name) {
-      element.src = fileUrl;
+      setSrc(fileUrl);
       dispatch(fileSelectReset());
     }
-  }, [dispatch, element, fieldName, fileUrl, name]);
+  }, [dispatch, fieldName, fileUrl, name]);
 
   useEffect(() => {
     const updatedElement = pageBlocks
@@ -59,7 +65,7 @@ useEffect(() => {
     const file = event.target.files ? event.target.files[0] : null;
     if (file) {
       const newImageUrl = URL.createObjectURL(file);
-      element.src = newImageUrl;
+      setSrc(newImageUrl);
       dispatch(
         setSelectActive({
           active: true,
@@ -69,48 +75,21 @@ useEffect(() => {
       );
     }
   };
-
   const handleImageClick = () => {
     if (isEdit && fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
 
-  const getImageStyle = () => {
-    switch (size) {
-      case 'large':
-        return { width: '100%', height: 'auto' };
-      case 'medium':
-        return { width: '50%', height: 'auto' };
-      case 'small':
-        return { width: '25%', height: 'auto' };
-      default:
-        return { width: '50%', height: 'auto' };
-    }
-  };
-
-  const getFlexAlignment = () => {
-    switch (alignment) {
-      case 'left':
-        return 'flex-start';
-      case 'center':
-        return 'center';
-      case 'right':
-        return 'flex-end';
-      default:
-        return 'center';
-    }
-  };
-
   return (
-    <VStack align='stretch' spacing={4}>
-      <Flex justifyContent={getFlexAlignment()}>
+    <VStack spacing={4} width='100%' align='center'>
+      <Flex justifyContent='center' width='100%'>
         <img
           className={isEdit ? 'select-img' : ''}
-          src={element.src}
+          src={src}
           alt={element.alt || 'Selectable Image'}
-          style={getImageStyle()}
           onClick={handleImageClick}
+          style={getImageStyle()}
         />
       </Flex>
       {isEdit && (
