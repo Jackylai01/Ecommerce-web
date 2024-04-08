@@ -13,7 +13,6 @@ type FileSelectState = {
   fileUrl: string | null;
   fileUrls: string[] | null;
   alt: string | null;
-  tempImageUrls: any;
 };
 
 type SetFileSelectAction = {
@@ -21,7 +20,6 @@ type SetFileSelectAction = {
   fieldName: string;
   fileType: keyof typeof FileAccept;
   multiple?: boolean;
-  tempImageUrls: any;
 };
 
 const initialState: FileSelectState = {
@@ -35,7 +33,6 @@ const initialState: FileSelectState = {
   fileUrl: null,
   fileUrls: null,
   alt: null,
-  tempImageUrls: {},
 };
 
 const fileSelectSlice = createSlice({
@@ -47,16 +44,6 @@ const fileSelectSlice = createSlice({
     },
     setFileUrl: (state, action: PayloadAction<string>) => {
       state.fileUrl = action.payload;
-    },
-    setTempImageUrl: (
-      state,
-      action: PayloadAction<{ id: string; url: string }>,
-    ) => {
-      const { id, url } = action.payload;
-      state.tempImageUrls[id] = url; // 将新的图片 URL 存储到 tempImageUrls 中
-    },
-    removeTempImageUrl: (state, action: PayloadAction<string>) => {
-      delete state.tempImageUrls[action.payload];
     },
     setSelectActive: (state, action: PayloadAction<SetFileSelectAction>) => {
       state.active = action.payload.active;
@@ -100,7 +87,5 @@ export const {
   checkFileUrls,
   fileSelectReset,
   setFileUrl,
-  setTempImageUrl,
-  removeTempImageUrl,
 } = fileSelectSlice.actions;
 export default fileSelectSlice.reducer;
