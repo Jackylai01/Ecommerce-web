@@ -15,7 +15,6 @@ import {
   SubmitHandler,
   useForm,
 } from 'react-hook-form';
-import { useAdminColorMode } from 'src/context/colorMode';
 
 interface FormModalProps<T extends FieldValues> {
   isOpen: boolean;
@@ -33,7 +32,6 @@ function FormModal<T extends FieldValues>({
   title,
 }: FormModalProps<T>) {
   const methods = useForm<T>();
-  const { colorMode } = useAdminColorMode();
 
   const handleFormSubmit: SubmitHandler<T> = (data) => {
     onSubmit(data);

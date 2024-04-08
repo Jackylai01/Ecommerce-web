@@ -66,7 +66,12 @@ const ProductCustomBlocks = () => {
   };
 
   return (
-    <VStack spacing={4} className='custom-page__selected-items' mt='2rem'>
+    <VStack
+      spacing={4}
+      className='custom-page__selected-items'
+      w='100%'
+      mt='2rem'
+    >
       <Button
         leftIcon={<EditIcon />}
         colorScheme='blue'

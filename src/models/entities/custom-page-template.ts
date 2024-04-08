@@ -5,9 +5,11 @@ type CustomPageElement = {
   alt?: string;
   src?: string;
   elements?: CustomPageElement[];
+  image?: any;
   data?: string[][];
   dataTemplate?: CustomPageElement[];
   [key: string]: any;
+  _id?: string | any;
 };
 
 type CustomPageBlock = {

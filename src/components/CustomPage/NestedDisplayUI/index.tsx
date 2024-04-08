@@ -2,6 +2,7 @@ import generateUUID from '@helpers/generate-uuid';
 import { CustomPageElement } from '@models/entities/custom-page-template';
 import Icon from './src/Icon';
 import LoginBlock from './src/LoginBlock';
+import SelectableImage from './src/SelectableImage';
 import Table from './src/Table';
 import TagElement from './src/TagElement';
 import Items from './src/items';
@@ -14,7 +15,7 @@ type Props = {
 export type ElementProps = {
   element: CustomPageElement;
   isEdit: boolean;
-  uuid?: string;
+  id?: string | any;
 };
 
 const NestedDisplayUI = ({ elements, isEdit = true }: Props) => {
@@ -37,6 +38,14 @@ const NestedDisplayUI = ({ elements, isEdit = true }: Props) => {
           case 'table':
             return (
               <Table key={generateUUID()} element={element} isEdit={isEdit} />
+            );
+          case 'img':
+            return (
+              <SelectableImage
+                key={generateUUID()}
+                element={element}
+                isEdit={isEdit}
+              />
             );
 
           default:
