@@ -15,6 +15,7 @@ import {
 import ContentSelectionModal from '@components/CustomPage/ContentSelectionModal';
 import NestedDisplayUI from '@components/CustomPage/NestedDisplayUI';
 import { customPageTemplates } from '@fixtures/custom-page-templates';
+import generateUUID from '@helpers/generate-uuid';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { CustomPageTemplate } from '@models/entities/custom-page-template';
@@ -35,9 +36,16 @@ const ProductCustomBlocks = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleAddBlock = (template: CustomPageTemplate) => {
-    dispatch(addBlock(template.block));
-  };
+    const newBlock = JSON.parse(JSON.stringify(template.block));
 
+    newBlock.elements.forEach((element: any) => {
+      if (element.tagName === 'img' && !element.id) {
+        element.id = generateUUID();
+      }
+    });
+
+    dispatch(addBlock(newBlock));
+  };
   const handleDeleteBlock = (index: number) => {
     dispatch(removeBLockItem(index));
   };
@@ -66,6 +74,7 @@ const ProductCustomBlocks = () => {
     setValue('detailDescription', remainingItems);
   };
 
+  console.log(blocks);
   return (
     <VStack
       spacing={4}

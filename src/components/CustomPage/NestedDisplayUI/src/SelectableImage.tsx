@@ -21,7 +21,6 @@ const SelectableImage = ({
   );
 
   useEffect(() => {
-    // 查找与当前组件标识符匹配的图片
     const matchingImage = uploadedImages.find(
       (image) => image.imageId === imageId,
     );

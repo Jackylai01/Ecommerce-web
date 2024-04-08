@@ -43,7 +43,7 @@ const NestedDisplayUI = ({ elements, isEdit = true }: Props) => {
           case 'img':
             return (
               <SelectableImage
-                key={generateUUID()}
+                key={element.id || generateUUID()}
                 element={element}
                 isEdit={isEdit}
               />
