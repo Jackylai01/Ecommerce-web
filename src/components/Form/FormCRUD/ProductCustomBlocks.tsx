@@ -30,6 +30,7 @@ const ProductCustomBlocks = () => {
   const [isEdit, setIsEdit] = useState(false);
   const dispatch = useAppDispatch();
   const { setValue } = useFormContext();
+
   const blocks = useAppSelector((state) => state.customPage.pageBlocks);
   const { isOpen, onOpen, onClose } = useDisclosure();
 

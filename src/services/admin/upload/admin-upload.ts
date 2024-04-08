@@ -1,43 +1,9 @@
-import {
-  ApiListResult,
-  ApiResult,
-  deleteRequest,
-  postRequest,
-} from '../../shared/api';
-
-/**
- * 後台-檔案上傳
- * @throws 400 BadRequest 欄位驗證錯誤
- */
-// export const apiAdminUpload = async (file: File) => {
-//   const body = {
-//     fileName: file.name,
-//     fileSize: file.size,
-//   };
-//   const response = await postRequest<
-//     ApiResult<{
-//       _id: string;
-//       key: string;
-//       url: string;
-//       src: string;
-//     }>
-//   >('/zigong/upload', body);
-//   const { result, error: uploadError } = response;
-//   if (!result) {
-//     throw uploadError;
-//   }
-//   await pureApiRequest.put(`${result?.data.url}`, file, {
-//     headers: { 'Content-Type': file.type },
-//   });
-
-//   await postRequest(`/zigong/upload/${result?.data._id}`);
-//   result.data.src = `${S3_STORAGE_URL}/${result.data.key}`;
-//   return response;
-// };
+import { ApiResult, deleteRequest, postRequest } from '../../shared/api';
 
 export interface CloudinaryUploadResponse {
   imageUrl: string;
   imageId: string;
+  tempProductId?: string;
 }
 
 interface UploadResponse {
@@ -51,13 +17,32 @@ interface UploadResponse {
  * @returns {Promise<ApiResult<any>>} - 上傳結果
  */
 
-export const apiAdminUpload = async (file: any) => {
+// 调整apiAdminUpload以匹配后端API的期望
+export const apiAdminUpload = async (
+  file: File,
+  folderName?: string,
+  tempProductId?: string,
+  imageId?: string,
+) => {
   const formData = new FormData();
   formData.append('image', file);
+
+  if (folderName) {
+    formData.append('folderName', folderName);
+  }
+
+  if (tempProductId) {
+    formData.append('tempProductId', tempProductId);
+  }
+
+  if (imageId) {
+    formData.append('imageId', imageId);
+  }
+
   const headers = { 'Content-Type': 'multipart/form-data' };
 
-  return postRequest<ApiListResult<UploadResponse>>(
-    '/zigong/images/upload',
+  return postRequest<ApiResult<CloudinaryUploadResponse>>(
+    '/zigong/upload-image',
     formData,
     headers,
   );

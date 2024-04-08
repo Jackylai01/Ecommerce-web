@@ -13,12 +13,23 @@ export enum AdminUploadAction {
 
 export const adminUploadAsync = createAsyncThunk(
   `${ReducerName.ADMIN_UPLOAD}/${AdminUploadAction.upload}`,
-  async (
-    { data, folderName }: { data: File[]; folderName: string },
-    { dispatch },
-  ) => {
-    const response = await apiAdminUpload(data, folderName);
-    dispatch(setArticleOperation(true));
+  async ({
+    file,
+    folderName,
+    tempProductId,
+    imageId,
+  }: {
+    file: File;
+    folderName?: string;
+    tempProductId?: string;
+    imageId?: string;
+  }) => {
+    const response = await apiAdminUpload(
+      file,
+      folderName,
+      tempProductId,
+      imageId,
+    );
     return response.result.data;
   },
 );

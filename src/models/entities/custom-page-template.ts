@@ -9,7 +9,6 @@ type CustomPageElement = {
   data?: string[][];
   dataTemplate?: CustomPageElement[];
   [key: string]: any;
-  _id?: string | any;
 };
 
 type CustomPageBlock = {

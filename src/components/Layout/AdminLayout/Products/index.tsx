@@ -217,6 +217,10 @@ const ProductTableContainer = () => {
       });
     }
 
+    if (data.tempProductId) {
+      formData.append('tempProductId', data.tempProductId);
+    }
+
     if (editingProductId) {
       dispatch(updateProductAsync({ id: editingProductId, body: formData }));
     } else {

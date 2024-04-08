@@ -1,108 +1,62 @@
-import { Flex, VStack } from '@chakra-ui/react';
 import generateUUID from '@helpers/generate-uuid';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { fileSelectReset, setSelectActive } from '@reducers/file-select';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { adminUploadAsync } from '@reducers/admin/upload/actions';
+import React, { useEffect, useRef, useState } from 'react';
 import { ElementProps } from '..';
 
-export const SelectableImage = ({ element, isEdit }: ElementProps) => {
+const SelectableImage = ({
+  element,
+  isEdit,
+  tempProductId,
+}: ElementProps & { tempProductId?: string }) => {
   const dispatch = useAppDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [elementId, setElementId] = useState(element.id);
-  const [src, setSrc] = useState(element.src);
+
+  const [imageId, setImageId] = useState<string>(() => generateUUID());
+  const [src, setSrc] = useState<any>(element.src);
+
+  const uploadedImages = useAppSelector(
+    (state) => state.adminUpload.uploadedImages,
+  );
 
   useEffect(() => {
-    if (!elementId) {
-      setElementId(generateUUID());
+    // 查找与当前组件标识符匹配的图片
+    const matchingImage = uploadedImages.find(
+      (image) => image.imageId === imageId,
+    );
+    if (matchingImage) {
+      setSrc(matchingImage.imageUrl);
     }
-  }, [elementId]);
+  }, [uploadedImages, imageId]);
 
-  const pageBlocks = useAppSelector((state) => state.customPage.pageBlocks);
-
-  const currentElement =
-    pageBlocks
-      .flatMap((block) => block.elements)
-      .find((el) => el.id === element.id) || element;
-
-  const [size, setSize] = useState(element.size || 'medium');
-  const [alignment, setAlignment] = useState(element.alignment || 'center');
-
-  const name = useMemo(() => generateUUID(), []);
-  const { fileUrl, fieldName } = useAppSelector((store) => store.fileSelect);
-
-  const getImageStyle = () => ({
-    maxWidth: '50%',
-    height: 'auto',
-  });
-
-  useEffect(() => {
-    if (currentElement) {
-      setSize(currentElement.size || 'medium');
-      setAlignment(currentElement.alignment || 'center');
-    }
-  }, [currentElement]);
-
-  useEffect(() => {
-    if (fileUrl && fieldName === name) {
-      setSrc(fileUrl);
-      dispatch(fileSelectReset());
-    }
-  }, [dispatch, fieldName, fileUrl, name]);
-
-  useEffect(() => {
-    const updatedElement = pageBlocks
-      .flatMap((block) => block.elements)
-      .find((el) => el.id === element.id);
-
-    if (updatedElement) {
-      setSize(updatedElement.size || 'medium');
-      setAlignment(updatedElement.alignment || 'center');
-    }
-  }, [element.id, pageBlocks]);
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files ? event.target.files[0] : null;
     if (file) {
-      const newImageUrl = URL.createObjectURL(file);
-      setSrc(newImageUrl);
-      dispatch(
-        setSelectActive({
-          active: true,
-          fieldName: name,
-          fileType: 'IMAGE',
-        }),
-      );
-    }
-  };
-  const handleImageClick = () => {
-    if (isEdit && fileInputRef.current) {
-      fileInputRef.current.click();
+      // 上传图片时，连同唯一标识符一起传递
+      const action = await dispatch(
+        adminUploadAsync({ file, tempProductId, imageId }),
+      ).unwrap();
+      setSrc(action.imageUrl);
+
+      setImageId(action.imageId);
     }
   };
 
   return (
-    <VStack spacing={4} width='100%' align='center'>
-      <Flex justifyContent='center' width='100%'>
-        <img
-          className={isEdit ? 'select-img' : ''}
-          src={src}
-          alt={element.alt || 'Selectable Image'}
-          onClick={handleImageClick}
-          style={getImageStyle()}
-        />
-      </Flex>
+    <div onClick={() => isEdit && fileInputRef.current?.click()}>
+      <img src={src} alt='Selectable' />
       {isEdit && (
-        <Flex justifyContent='center' wrap='wrap'>
-          <input
-            type='file'
-            ref={fileInputRef}
-            style={{ display: 'none' }}
-            onChange={handleImageChange}
-          />
-        </Flex>
+        <input
+          type='file'
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+          onChange={handleImageChange}
+        />
       )}
-    </VStack>
+    </div>
   );
 };
 

@@ -38,13 +38,7 @@ const adminUploadSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(adminUploadAsync.fulfilled, (state, action) => {
-      state.file = action.payload;
-      if (Array.isArray(action.payload)) {
-        state.uploadedImages = action.payload.map((img: any) => ({
-          imageUrl: img.imageUrl,
-          imageId: img.imageId,
-        }));
-      }
+      state.uploadedImages.push(action.payload);
     });
     builder.addCase(adminDeleteFilesAsync.fulfilled, (state, action) => {
       const deletedImageId = action.payload;
