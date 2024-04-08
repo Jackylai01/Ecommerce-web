@@ -26,6 +26,7 @@ const customPageSlice = createSlice({
   name: ReducerName.ADMIN_CUSTOM_PAGE,
   initialState,
   reducers: {
+    resetCustomPage: () => initialState,
     setCustomPageActive: (state, action: PayloadAction<boolean>) => {
       state.active = action.payload;
     },
@@ -79,6 +80,7 @@ export const {
   setPageBlocks,
   removeBLockItem,
   formLayoutDataReset,
+  resetCustomPage,
   updateElementContent,
 } = customPageSlice.actions;
 export default customPageSlice.reducer;
