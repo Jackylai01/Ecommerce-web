@@ -69,7 +69,22 @@ const customPageSlice = createSlice({
         };
       });
     },
-    formLayoutDataReset: () => initialState,
+    updateBlockElementData: (
+      state,
+      action: PayloadAction<{ id: string; newData: string[][] }>,
+    ) => {
+      state.pageBlocks = state.pageBlocks.map((block) => {
+        return {
+          ...block,
+          elements: block.elements.map((element) => {
+            if (element.id === action.payload.id) {
+              return { ...element, data: action.payload.newData };
+            }
+            return element;
+          }),
+        };
+      });
+    },
   },
 });
 
@@ -79,7 +94,7 @@ export const {
   addBlock,
   setPageBlocks,
   removeBLockItem,
-  formLayoutDataReset,
+  updateBlockElementData,
   resetCustomPage,
   updateElementContent,
 } = customPageSlice.actions;

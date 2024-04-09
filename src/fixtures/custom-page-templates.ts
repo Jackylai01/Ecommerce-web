@@ -23,14 +23,6 @@ export const customPageTemplates: CustomPageTemplate[] = [
     },
   },
   {
-    _id: 'title_01',
-    cover: '/block/title-1.png',
-    block: {
-      className: 'title',
-      elements: [{ tagName: 'h2', context: testTitle }],
-    },
-  },
-  {
     _id: 'text_01',
     cover: '/block/paragraph-1.png',
     block: {
@@ -47,26 +39,6 @@ export const customPageTemplates: CustomPageTemplate[] = [
         {
           tagName: 'table',
           className: 'table-container__table table-container__table--info',
-          hasSearchBar: false,
-          data: [
-            ['標題名稱', '標題名稱', '標題名稱'],
-            ['標題內容', '標題內容', '標題內容'],
-            ['標題內容', '標題內容', '標題內容'],
-          ],
-        },
-      ],
-    },
-  },
-  {
-    _id: 'table_02',
-    cover: '/block/table-2.png',
-    block: {
-      className: '',
-      elements: [
-        {
-          tagName: 'table',
-          className:
-            'table-container__table table-container__table--info small',
           hasSearchBar: false,
           data: [
             ['標題名稱', '標題名稱', '標題名稱'],

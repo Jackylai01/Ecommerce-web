@@ -38,14 +38,17 @@ const ProductCustomBlocks = () => {
   const handleAddBlock = (template: CustomPageTemplate) => {
     const newBlock = JSON.parse(JSON.stringify(template.block));
 
+    const tagNamesRequiringId = new Set(['img', 'table']);
+
     newBlock.elements.forEach((element: any) => {
-      if (element.tagName === 'img' && !element.id) {
+      if (tagNamesRequiringId.has(element.tagName) && !element.id) {
         element.id = generateUUID();
       }
     });
 
     dispatch(addBlock(newBlock));
   };
+
   const handleDeleteBlock = (index: number) => {
     dispatch(removeBLockItem(index));
   };
@@ -74,7 +77,6 @@ const ProductCustomBlocks = () => {
     setValue('detailDescription', remainingItems);
   };
 
-  console.log(blocks);
   return (
     <VStack
       spacing={4}
@@ -98,33 +100,37 @@ const ProductCustomBlocks = () => {
           onDragOver={(e) => e.preventDefault()}
         >
           <NestedDisplayUI elements={block.elements} isEdit={isEdit} />
-          <Icon
-            as={DeleteIcon}
-            cursor='pointer'
-            position='absolute'
-            top='-10'
-            right='0'
-            color='red.500'
-            w={6}
-            h={6}
-            onClick={() => handleDeleteBlock(index)}
-          />
-          <span
-            draggable='true'
-            onDragStart={(e) => onDragStart(e, index)}
-            onDrop={(e) => onDrop(e, index)}
-          >
-            <Icon
-              as={DragHandleIcon}
-              cursor='grab'
-              position='absolute'
-              top='-20px'
-              left='0'
-              color='gray.500'
-              w={6}
-              h={6}
-            />
-          </span>
+          {isEdit && (
+            <>
+              <Icon
+                as={DeleteIcon}
+                cursor='pointer'
+                position='absolute'
+                top='-10'
+                right='0'
+                color='red.500'
+                w={6}
+                h={6}
+                onClick={() => handleDeleteBlock(index)}
+              />
+              <span
+                draggable='true'
+                onDragStart={(e) => onDragStart(e, index)}
+                onDrop={(e) => onDrop(e, index)}
+              >
+                <Icon
+                  as={DragHandleIcon}
+                  cursor='grab'
+                  position='absolute'
+                  top='-20px'
+                  left='0'
+                  color='gray.500'
+                  w={6}
+                  h={6}
+                />
+              </span>
+            </>
+          )}
         </Box>
       ))}
       <IconButton

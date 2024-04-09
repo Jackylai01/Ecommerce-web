@@ -15,10 +15,7 @@ import {
   CustomPageBlock,
   CustomPageTemplate,
 } from '@models/entities/custom-page-template';
-import {
-  formLayoutDataReset,
-  setPageBlocks,
-} from '@reducers/admin/custom-page';
+import { resetCustomPage, setPageBlocks } from '@reducers/admin/custom-page';
 import React, { useEffect, useState } from 'react';
 import ContentSelectionModal from './ContentSelectionModal';
 import NestedDisplayUI from './NestedDisplayUI';
@@ -43,7 +40,7 @@ const CustomPage = ({ copySelectedItems }: Props) => {
 
   useEffect(() => {
     return () => {
-      dispatch(formLayoutDataReset());
+      dispatch(resetCustomPage());
     };
   }, [dispatch]);
 
