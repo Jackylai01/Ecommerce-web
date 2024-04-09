@@ -87,8 +87,9 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
       setValue('stock', productDetails.stock);
       setValue('minimumPurchase', productDetails.minimumPurchase);
       setValue('maximumPurchase', productDetails.maximumPurchase);
-      setValue('tags', productDetails.tags);
       setValue('cost', productDetails.cost);
+      setValue('tags', productDetails.tags);
+      setValue('detailDescription', productDetails.detailDescription);
 
       if (productDetails.specifications) {
         setValue(
@@ -166,7 +167,7 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         placeholder='請輸入商品總成本'
       />
       <TextInput name='stock' label='庫存' placeholder='請輸入商品總庫存' />
-      <ProductCustomBlocks />
+
       <CustomSelect
         name='category'
         label='產品類別'
@@ -183,7 +184,6 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         offLabel='下架'
       />
       <DynamicSpecifications />
-
       <ImageUpload
         name='coverImage'
         label='封面照片'
@@ -202,6 +202,7 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
         onRemoveImage={handleRemoveProductImage}
         deleteLoading={deleteProductImageLoading}
       />
+      <ProductCustomBlocks name='detailDescription' label='詳細商品內容' />
     </VStack>
   );
 };

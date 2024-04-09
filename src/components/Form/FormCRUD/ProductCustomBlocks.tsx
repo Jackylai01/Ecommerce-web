@@ -27,13 +27,17 @@ import {
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-const ProductCustomBlocks = () => {
-  const [isEdit, setIsEdit] = useState(false);
+interface ProductCustomBlockType {
+  name: string;
+  label: string;
+}
+
+const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
   const dispatch = useAppDispatch();
   const { setValue } = useFormContext();
-
   const blocks = useAppSelector((state) => state.customPage.pageBlocks);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isEdit, setIsEdit] = useState(false);
 
   const handleAddBlock = (template: CustomPageTemplate) => {
     const newBlock = JSON.parse(JSON.stringify(template.block));
@@ -47,10 +51,12 @@ const ProductCustomBlocks = () => {
     });
 
     dispatch(addBlock(newBlock));
+    updateFormValues(newBlock, true);
   };
 
   const handleDeleteBlock = (index: number) => {
     dispatch(removeBLockItem(index));
+    updateFormValues(blocks[index], false);
   };
 
   const onDragStart = (e: any, index: number) => {
@@ -77,6 +83,12 @@ const ProductCustomBlocks = () => {
     setValue('detailDescription', remainingItems);
   };
 
+  const updateFormValues = (block: any, isAdding: boolean) => {
+    const updatedBlocks = isAdding
+      ? [...blocks, block]
+      : blocks.filter((_, idx) => idx !== blocks.indexOf(block));
+    setValue(name, updatedBlocks);
+  };
   return (
     <VStack
       spacing={4}
@@ -84,6 +96,9 @@ const ProductCustomBlocks = () => {
       w='100%'
       mt='2rem'
     >
+      <Box fontSize='xl' mb='4'>
+        {label}
+      </Box>
       <Button
         leftIcon={<EditIcon />}
         colorScheme='blue'

@@ -87,7 +87,12 @@ const ProductsPages: NextPage = () => {
     if (data.specifications) {
       formData.append('specifications', JSON.stringify(data.specifications));
     }
-
+    if (data.detailDescription) {
+      formData.append(
+        'detailDescription',
+        JSON.stringify(data.detailDescription),
+      );
+    }
     dispatch(addProductAsync(formData));
   };
 

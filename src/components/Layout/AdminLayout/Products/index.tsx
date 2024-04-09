@@ -221,6 +221,13 @@ const ProductTableContainer = () => {
       formData.append('tempProductId', data.tempProductId);
     }
 
+    if (data.detailDescription) {
+      formData.append(
+        'detailDescription',
+        JSON.stringify(data.detailDescription),
+      );
+    }
+
     if (editingProductId) {
       dispatch(updateProductAsync({ id: editingProductId, body: formData }));
     } else {

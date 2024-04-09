@@ -79,10 +79,27 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
     <Box>
       {isEdit && (
         <Box mb='4'>
-          <Button onClick={addRow} mr='2'>
+          <Button
+            onClick={addRow}
+            mr='2'
+            bg='gray.600'
+            color='white'
+            sx={{
+              _hover: 'none',
+            }}
+          >
             Add Row
           </Button>
-          <Button onClick={addColumn}>Add Column</Button>
+          <Button
+            onClick={addColumn}
+            bg='gray.600'
+            color='white'
+            sx={{
+              _hover: 'none',
+            }}
+          >
+            Add Column
+          </Button>
         </Box>
       )}
       <Table variant='simple'>
