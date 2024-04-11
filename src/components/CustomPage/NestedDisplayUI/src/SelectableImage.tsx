@@ -11,10 +11,10 @@ import generateUUID from '@helpers/generate-uuid';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { adminUploadAsync } from '@reducers/admin/upload/actions';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ElementProps } from '..';
 
-const SelectableImage = ({ element, isEdit }: ElementProps) => {
+const SelectableImage = ({ element, isEdit, onImageUpdate }: ElementProps) => {
   const dispatch = useAppDispatch();
   const fileInputRef = useRef<any>(null);
   const [imageId, setImageId] = useState<string>(() => generateUUID());
@@ -27,24 +27,20 @@ const SelectableImage = ({ element, isEdit }: ElementProps) => {
   } = useAppSelector((state) => state.adminUpload);
 
   useEffect(() => {
-    const matchingImage = uploadedImages.find(
-      (image) => image.imageId === imageId,
-    );
-    if (matchingImage && matchingImage.imageUrl !== src) {
-      setSrc(matchingImage.imageUrl);
+    const uploadedImage = uploadedImages.find((img) => img.imageId === imageId);
+    if (uploadedImage) {
+      setSrc(uploadedImage.imageUrl);
     }
-  }, [imageId]);
+  }, [uploadedImages, imageId]);
 
-  const handleImageChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files ? event.target.files[0] : null;
+  const handleImageChange = async (event: any) => {
+    const file = event.target.files[0];
     if (file) {
       const action = await dispatch(
         adminUploadAsync({ file, imageId }),
       ).unwrap();
       setSrc(action.imageUrl);
-      setImageId(action.imageId);
+      onImageUpdate(imageId, action.imageUrl);
     }
   };
 

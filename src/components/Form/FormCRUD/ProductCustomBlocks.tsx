@@ -74,11 +74,16 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
     setValue('detailDescription', remainingItems);
   };
 
-  const updateFormValues = (block: any, isAdding: boolean) => {
-    const updatedBlocks = isAdding
-      ? [...blocks, block]
-      : blocks.filter((_: any, idx: any) => idx !== blocks.indexOf(block));
-    setValue(name, updatedBlocks);
+  const handleImageUploadSuccess = (imageId: string, imageUrl: any) => {
+    const newBlocks = blocks.map((block: any) => {
+      return {
+        ...block,
+        elements: block.elements.map((el: any) =>
+          el.id === imageId ? { ...el, src: imageUrl } : el,
+        ),
+      };
+    });
+    setValue(name, newBlocks, { shouldValidate: true });
   };
 
   return (
@@ -96,12 +101,16 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
       </Button>
       {blocks.map((block: any, index: number) => (
         <Box
-          key={index}
+          key={block.id || index}
           className='custom-block'
           position='relative'
           onDragOver={(e) => e.preventDefault()}
         >
-          <NestedDisplayUI elements={block.elements} isEdit={isEdit} />
+          <NestedDisplayUI
+            elements={block.elements}
+            isEdit={isEdit}
+            onImageUpdate={handleImageUploadSuccess}
+          />
           {isEdit && (
             <>
               <Icon

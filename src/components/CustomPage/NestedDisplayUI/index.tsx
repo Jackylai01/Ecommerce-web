@@ -10,15 +10,17 @@ import Items from './src/items';
 type Props = {
   elements: CustomPageElement[];
   isEdit: boolean;
+  onImageUpdate: any;
 };
 
 export type ElementProps = {
   element: CustomPageElement;
   isEdit: boolean;
   id?: string | any;
+  onImageUpdate?: any;
 };
 
-const NestedDisplayUI = ({ elements, isEdit = true }: Props) => {
+const NestedDisplayUI = ({ elements, isEdit = true, onImageUpdate }: Props) => {
   if (!elements || !elements.length) return <></>;
 
   return (
@@ -49,6 +51,7 @@ const NestedDisplayUI = ({ elements, isEdit = true }: Props) => {
                 key={element.id || generateUUID()}
                 element={element}
                 isEdit={isEdit}
+                onImageUpdate={onImageUpdate}
               />
             );
           default:
