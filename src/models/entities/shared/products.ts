@@ -35,7 +35,9 @@ export interface Product extends BaseEntity {
   // 商品的平均評分
   averageRating?: number;
   // 商品詳細內容
-  detailDescription?: string;
+  detailDescription?: any;
+  // detailDescription 編輯區當中的相片id(相片上傳api回應的結果)
+  tempProductIds?: string;
   // 商品總成本
   cost?: number;
   // 商品標籤

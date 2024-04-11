@@ -14,14 +14,9 @@ import { adminUploadAsync } from '@reducers/admin/upload/actions';
 import React, { useEffect, useRef, useState } from 'react';
 import { ElementProps } from '..';
 
-const SelectableImage = ({
-  element,
-  isEdit,
-  tempProductId,
-}: ElementProps & { tempProductId?: string }) => {
+const SelectableImage = ({ element, isEdit }: ElementProps) => {
   const dispatch = useAppDispatch();
   const fileInputRef = useRef<any>(null);
-
   const [imageId, setImageId] = useState<string>(() => generateUUID());
   const [src, setSrc] = useState<any>(element.src);
 
@@ -35,10 +30,10 @@ const SelectableImage = ({
     const matchingImage = uploadedImages.find(
       (image) => image.imageId === imageId,
     );
-    if (matchingImage) {
+    if (matchingImage && matchingImage.imageUrl !== src) {
       setSrc(matchingImage.imageUrl);
     }
-  }, [uploadedImages, imageId]);
+  }, [imageId]);
 
   const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -46,7 +41,7 @@ const SelectableImage = ({
     const file = event.target.files ? event.target.files[0] : null;
     if (file) {
       const action = await dispatch(
-        adminUploadAsync({ file, tempProductId, imageId }),
+        adminUploadAsync({ file, imageId }),
       ).unwrap();
       setSrc(action.imageUrl);
       setImageId(action.imageId);
@@ -74,7 +69,6 @@ const SelectableImage = ({
             ref={fileInputRef}
           />
           <Text
-            as='button'
             onClick={() => fileInputRef.current.click()}
             position='absolute'
             top='50%'

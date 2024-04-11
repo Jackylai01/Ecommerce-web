@@ -14,6 +14,7 @@ type AdminUploadState = ApiState<AdminUploadAction> & {
   file: any | null;
   uploadedImages: any[];
   isArticleOperation: boolean;
+  tempProductId: string | null;
 };
 
 const initialState: AdminUploadState = {
@@ -21,6 +22,7 @@ const initialState: AdminUploadState = {
   file: null,
   uploadedImages: [],
   isArticleOperation: false,
+  tempProductId: null,
   ...newApiState<AdminUploadState>(AdminUploadAction),
 };
 

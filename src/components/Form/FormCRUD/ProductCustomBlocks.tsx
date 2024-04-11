@@ -17,13 +17,8 @@ import NestedDisplayUI from '@components/CustomPage/NestedDisplayUI';
 import { customPageTemplates } from '@fixtures/custom-page-templates';
 import generateUUID from '@helpers/generate-uuid';
 import useAppDispatch from '@hooks/useAppDispatch';
-import useAppSelector from '@hooks/useAppSelector';
 import { CustomPageTemplate } from '@models/entities/custom-page-template';
-import {
-  addBlock,
-  removeBLockItem,
-  setPageBlocks,
-} from '@reducers/admin/custom-page';
+import { setPageBlocks } from '@reducers/admin/custom-page';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -34,29 +29,25 @@ interface ProductCustomBlockType {
 
 const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
   const dispatch = useAppDispatch();
-  const { setValue } = useFormContext();
-  const blocks = useAppSelector((state) => state.customPage.pageBlocks);
+  const { setValue, getValues } = useFormContext();
+  const blocks = getValues(name) || [];
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isEdit, setIsEdit] = useState(false);
 
   const handleAddBlock = (template: CustomPageTemplate) => {
     const newBlock = JSON.parse(JSON.stringify(template.block));
-
-    const tagNamesRequiringId = new Set(['img', 'table']);
-
     newBlock.elements.forEach((element: any) => {
-      if (tagNamesRequiringId.has(element.tagName) && !element.id) {
+      if (!element.id) {
         element.id = generateUUID();
       }
     });
-
-    dispatch(addBlock(newBlock));
-    updateFormValues(newBlock, true);
+    const updatedBlocks = [...blocks, newBlock];
+    setValue(name, updatedBlocks, { shouldValidate: true });
   };
 
   const handleDeleteBlock = (index: number) => {
-    dispatch(removeBLockItem(index));
-    updateFormValues(blocks[index], false);
+    const updatedBlocks = blocks.filter((_: any, idx: number) => idx !== index);
+    setValue(name, updatedBlocks, { shouldValidate: true });
   };
 
   const onDragStart = (e: any, index: number) => {
@@ -70,12 +61,12 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
 
     const itemToMove = blocks[dragIndex];
     const remainingItems = blocks.filter(
-      (_, index) => index !== parseInt(dragIndex),
+      (_: any, index: number) => index !== parseInt(dragIndex),
     );
     remainingItems.splice(dropIndex, 0, itemToMove);
 
     const updatedBlocks = blocks.filter(
-      (_, index) => index !== parseInt(dragIndex),
+      (_: any, index: number) => index !== parseInt(dragIndex),
     );
     updatedBlocks.splice(dropIndex, 0, itemToMove);
 
@@ -86,16 +77,12 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
   const updateFormValues = (block: any, isAdding: boolean) => {
     const updatedBlocks = isAdding
       ? [...blocks, block]
-      : blocks.filter((_, idx) => idx !== blocks.indexOf(block));
+      : blocks.filter((_: any, idx: any) => idx !== blocks.indexOf(block));
     setValue(name, updatedBlocks);
   };
+
   return (
-    <VStack
-      spacing={4}
-      className='custom-page__selected-items'
-      w='100%'
-      mt='2rem'
-    >
+    <VStack spacing={4} align='flex-start' w='100%' mt='2rem'>
       <Box fontSize='xl' mb='4'>
         {label}
       </Box>
@@ -107,7 +94,7 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
       >
         {isEdit ? '退出編輯模式' : '進入編輯模式'}
       </Button>
-      {blocks.map((block, index) => (
+      {blocks.map((block: any, index: number) => (
         <Box
           key={index}
           className='custom-block'

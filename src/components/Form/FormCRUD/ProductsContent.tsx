@@ -19,20 +19,19 @@ import ToggleSwitch from './Field/ToggleSwitch';
 import ProductCustomBlocks from './ProductCustomBlocks';
 
 interface ProductFormContentType {
-  productId?: string;
+  productId?: string | null;
 }
 
 export const ProductFormContent = ({ productId }: ProductFormContentType) => {
-  const { control, setValue } = useFormContext();
   const dispatch = useAppDispatch();
-
   const router = useRouter();
+  const { setValue, getValues } = useFormContext();
+
+  const { uploadedImages } = useAppSelector((state) => state.adminUpload);
   const { list: categories } = useAppSelector(
     (state) => state.adminProductsCategory,
   );
-
   const { list: tags } = useAppSelector((state) => state.adminProductsTags);
-
   const {
     productDetails,
     status: { deleteProductImageLoading, deleteProductImageSuccess },
@@ -89,7 +88,6 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
       setValue('maximumPurchase', productDetails.maximumPurchase);
       setValue('cost', productDetails.cost);
       setValue('tags', productDetails.tags);
-      setValue('detailDescription', productDetails.detailDescription);
 
       if (productDetails.specifications) {
         setValue(
@@ -111,8 +109,49 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
       }));
 
       setProductImagesPreviews(imagesPreviews);
+
+      const detailDescription = productDetails.detailDescription.map(
+        (block: any) => {
+          if (block.className === 'image-selectable') {
+            return {
+              ...block,
+              elements: block.elements.map((element: any) => {
+                if (element.tagName === 'img') {
+                  return { ...element, src: element.src };
+                }
+                return element;
+              }),
+            };
+          }
+          return block;
+        },
+      );
+
+      setValue('detailDescription', detailDescription);
     }
   }, [productDetails, setValue]);
+
+  useEffect(() => {
+    if (uploadedImages.length > 0) {
+      const currentDetailDescription = getValues('detailDescription') || [];
+      const newBlocks = uploadedImages.map((image) => ({
+        className: 'image-selectable',
+        elements: [
+          {
+            tagName: 'img',
+            src: image.imageUrl,
+            id: image.imageId,
+          },
+        ],
+      }));
+
+      const updatedDetailDescription = [
+        ...currentDetailDescription,
+        ...newBlocks,
+      ];
+      setValue('detailDescription', updatedDetailDescription);
+    }
+  }, [uploadedImages, setValue, getValues]);
 
   useEffect(() => {
     if (productDetails && productDetails.coverImage) {

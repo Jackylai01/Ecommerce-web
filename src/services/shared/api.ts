@@ -12,7 +12,6 @@ export const getRequest = async <T>(
 ) => {
   return instance.get<any, ApiResponse<T>>(url, { headers });
 };
-
 export const postRequest = async <T>(
   url: string,
   data?: any,

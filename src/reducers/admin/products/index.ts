@@ -21,6 +21,7 @@ type ProductState = ApiState<ProductAction> & {
   list: Product[] | null;
   metadata: Metadata | null;
   productDetails: Product | null;
+  editingProductId: string | null;
   updateProductStatusSuccess: boolean;
 };
 
@@ -28,6 +29,7 @@ const initialState: ProductState = {
   list: null,
   metadata: null,
   productDetails: null,
+  editingProductId: null,
   updateProductStatusSuccess: false,
   ...newApiState<ProductState>(ProductAction),
 };
@@ -39,6 +41,13 @@ const productSlice = createSlice({
     resetProductState: () => initialState,
     resetProductDetails: (state) => {
       state.productDetails = null;
+    },
+    setEditingProductId: (state, action) => {
+      state.editingProductId = action.payload;
+    },
+
+    resetEditingProductId: (state) => {
+      state.editingProductId = null;
     },
   },
   extraReducers: (builder) => {
@@ -88,5 +97,10 @@ const productSlice = createSlice({
   },
 });
 
-export const { resetProductState, resetProductDetails } = productSlice.actions;
+export const {
+  resetProductState,
+  resetProductDetails,
+  setEditingProductId,
+  resetEditingProductId,
+} = productSlice.actions;
 export default productSlice.reducer;

@@ -35,7 +35,8 @@ const AddButton: FC<AddButtonProps<any>> = ({
         icon={<AddIcon />}
         isRound
         colorScheme='teal'
-        aria-label='iconButton'
+        aria-label='Add product button'
+        type='button'
         onClick={handleAddButtonClick}
         position='absolute'
         right='20px'

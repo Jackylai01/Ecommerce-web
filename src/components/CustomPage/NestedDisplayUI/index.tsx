@@ -52,7 +52,13 @@ const NestedDisplayUI = ({ elements, isEdit = true }: Props) => {
               />
             );
           default:
-            return <TagElement element={element} isEdit={isEdit} />;
+            return (
+              <TagElement
+                key={element.id || generateUUID()}
+                element={element}
+                isEdit={isEdit}
+              />
+            );
         }
       })}
     </>

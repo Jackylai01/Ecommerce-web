@@ -29,11 +29,10 @@ import Pagination from '@components/Pagination';
 import TablesTableRow from '@components/Tables/TablesTableRow';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { setEditingProductId } from '@reducers/admin/products';
 import {
-  addProductAsync,
   deleteProductAsync,
   getAllProductsAsync,
-  updateProductAsync,
   updateProductStatusAsync,
 } from '@reducers/admin/products/actions';
 import { useRouter } from 'next/router';
@@ -54,15 +53,18 @@ interface ProductRowData {
   stock?: number;
 }
 
-const ProductTableContainer = () => {
+interface ProductContainerType {
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+}
+
+const ProductTableContainer = ({ onSubmit }: ProductContainerType) => {
   const dispatch = useAppDispatch();
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingProductId, setEditingProductId] = useState<any>(null);
+
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
   const borderColor = colorMode === 'light' ? 'black' : 'white';
-
+  const { editingProductId } = useAppSelector((state) => state.adminProducts);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isMessageModalOpen,
@@ -71,7 +73,8 @@ const ProductTableContainer = () => {
   } = useDisclosure();
   const router = useRouter();
   const toast = useToast();
-  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const {
     list: ProductList,
     metadata,
@@ -161,8 +164,8 @@ const ProductTableContainer = () => {
     dispatch(updateProductStatusAsync({ id, status: newStatus }));
   };
 
-  const handleEdit = (productId: any) => {
-    setEditingProductId(productId);
+  const handleEdit = (productId: string) => {
+    dispatch(setEditingProductId(productId));
     setIsEditModalOpen(true);
   };
 
@@ -171,70 +174,15 @@ const ProductTableContainer = () => {
   };
 
   const requestDelete = (id: any) => {
-    setSelectedProductId(id);
+    dispatch(setEditingProductId(id));
     onOpen();
   };
 
   const deleteRow = async () => {
-    if (selectedProductId) {
-      dispatch(deleteProductAsync(selectedProductId));
+    if (editingProductId) {
+      dispatch(deleteProductAsync(editingProductId));
       onClose();
     }
-  };
-
-  const handleSubmit = async (data: any) => {
-    const formData = new FormData();
-
-    Object.keys(data).forEach((key) => {
-      if (
-        key !== 'coverImage' &&
-        key !== 'images' &&
-        key !== 'specifications' &&
-        key !== 'tags' &&
-        data[key] !== undefined
-      ) {
-        formData.append(key, data[key]);
-      }
-    });
-
-    if (data.coverImage) {
-      formData.append('coverImage', data.coverImage);
-    }
-
-    if (data.images && data.images.length) {
-      data.images.forEach((image: any) => {
-        formData.append('images', image);
-      });
-    }
-
-    if (data.specifications) {
-      formData.append('specifications', JSON.stringify(data.specifications));
-    }
-
-    if (data.tags && Array.isArray(data.tags)) {
-      data.tags.forEach((tagId: any) => {
-        formData.append('tags', tagId);
-      });
-    }
-
-    if (data.tempProductId) {
-      formData.append('tempProductId', data.tempProductId);
-    }
-
-    if (data.detailDescription) {
-      formData.append(
-        'detailDescription',
-        JSON.stringify(data.detailDescription),
-      );
-    }
-
-    if (editingProductId) {
-      dispatch(updateProductAsync({ id: editingProductId, body: formData }));
-    } else {
-      dispatch(addProductAsync(formData));
-    }
-
-    setIsEditModalOpen(false);
   };
 
   useEffect(() => {
@@ -357,7 +305,7 @@ const ProductTableContainer = () => {
       <FormModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
         title='編輯產品'
       >
         <ProductFormContent productId={editingProductId} />

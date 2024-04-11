@@ -16,20 +16,14 @@ export const adminUploadAsync = createAsyncThunk(
   async ({
     file,
     folderName,
-    tempProductId,
+
     imageId,
   }: {
     file: File;
     folderName?: string;
-    tempProductId?: string;
     imageId?: string;
   }) => {
-    const response = await apiAdminUpload(
-      file,
-      folderName,
-      tempProductId,
-      imageId,
-    );
+    const response = await apiAdminUpload(file, folderName, imageId);
     return response.result.data;
   },
 );
