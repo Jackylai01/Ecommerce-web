@@ -16,8 +16,8 @@ import { ElementProps } from '..';
 
 const SelectableImage = ({ element, isEdit, onImageUpdate }: ElementProps) => {
   const dispatch = useAppDispatch();
-  const fileInputRef = useRef<any>(null);
-  const [imageId, setImageId] = useState<string>(() => generateUUID());
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageId, setImageId] = useState(() => element.id || generateUUID());
   const [src, setSrc] = useState<any>(element.src);
 
   const {
@@ -34,13 +34,19 @@ const SelectableImage = ({ element, isEdit, onImageUpdate }: ElementProps) => {
   }, [uploadedImages, imageId]);
 
   const handleImageChange = async (event: any) => {
-    const file = event.target.files[0];
+    console.log('handleImageChange called');
+    const file = event.target.files ? event.target.files[0] : null;
     if (file) {
-      const action = await dispatch(
-        adminUploadAsync({ file, imageId }),
-      ).unwrap();
-      setSrc(action.imageUrl);
-      onImageUpdate(imageId, action.imageUrl);
+      try {
+        const action = await dispatch(
+          adminUploadAsync({ file, imageId }),
+        ).unwrap();
+        console.log('Upload successful:', action);
+        setSrc(action.imageUrl);
+        if (onImageUpdate) onImageUpdate(imageId, action.imageUrl);
+      } catch (error) {
+        console.error('Upload failed:', error);
+      }
     }
   };
 
@@ -61,11 +67,10 @@ const SelectableImage = ({ element, isEdit, onImageUpdate }: ElementProps) => {
             onChange={handleImageChange}
             size='sm'
             accept='image/*'
-            display='none'
             ref={fileInputRef}
           />
           <Text
-            onClick={() => fileInputRef.current.click()}
+            onClick={() => fileInputRef.current?.click()}
             position='absolute'
             top='50%'
             left='50%'
