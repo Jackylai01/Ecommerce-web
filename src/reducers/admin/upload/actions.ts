@@ -4,7 +4,6 @@ import {
   apiAdminDeleteImage,
   apiAdminUpload,
 } from '@services/admin/upload/admin-upload';
-import { setArticleOperation } from '.';
 
 export enum AdminUploadAction {
   upload = 'upload',
@@ -30,9 +29,8 @@ export const adminUploadAsync = createAsyncThunk(
 
 export const adminDeleteFilesAsync = createAsyncThunk(
   `${ReducerName.ADMIN_UPLOAD}/${AdminUploadAction.delete}`,
-  async (publicId: string, { dispatch }) => {
+  async (publicId: string) => {
     const response = await apiAdminDeleteImage(publicId);
-    dispatch(setArticleOperation(true));
     return response.result.data;
   },
 );

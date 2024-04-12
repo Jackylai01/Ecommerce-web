@@ -34,7 +34,6 @@ const SelectableImage = ({ element, isEdit, onImageUpdate }: ElementProps) => {
   }, [uploadedImages, imageId]);
 
   const handleImageChange = async (event: any) => {
-    console.log('handleImageChange called');
     const file = event.target.files ? event.target.files[0] : null;
     if (file) {
       try {
