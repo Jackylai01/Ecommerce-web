@@ -4,7 +4,7 @@ import { useAdminColorMode } from 'src/context/colorMode';
 
 interface TabItemWithIcon {
   label: string;
-  icon: React.ElementType; // 使用React.ElementType以支持图标组件
+  icon: React.ElementType;
 }
 interface TabsComponentProps {
   tabItems: TabItemWithIcon[];

@@ -38,8 +38,9 @@ const AddButton: FC<AddButtonProps<any>> = ({
         aria-label='Add product button'
         type='button'
         onClick={handleAddButtonClick}
-        position='absolute'
+        position='fixed'
         right='20px'
+        transform='translateY(0%)'
       />
       <FormModal
         isOpen={isOpen}
