@@ -22,7 +22,7 @@ export const TagsMultiSelect = ({
   isRequired = false,
   ...selectProps
 }: TagsMultiSelectProps) => {
-  const { setValue, watch, control } = useFormContext();
+  const { setValue, watch, control, getValues } = useFormContext();
   const {
     field: { ref, ...inputProps },
   } = useController({
@@ -34,8 +34,10 @@ export const TagsMultiSelect = ({
   const selectedTags = watch(name);
 
   useEffect(() => {
-    setValue(name, selectedTags);
-  }, []);
+    if (JSON.stringify(getValues(name)) !== JSON.stringify(selectedTags)) {
+      setValue(name, selectedTags);
+    }
+  }, [selectedTags, setValue, name, getValues]);
 
   return (
     <FormControl isRequired={isRequired}>

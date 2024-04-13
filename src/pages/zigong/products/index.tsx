@@ -37,6 +37,7 @@ const ProductsPages: NextPage = () => {
     error: { addProductError },
   } = useAppSelector((state) => state.adminProducts);
   const { uploadedImages } = useAppSelector((state) => state.adminUpload);
+  const { productDetails } = useAppSelector((state) => state.adminProducts);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');
@@ -65,7 +66,9 @@ const ProductsPages: NextPage = () => {
   }, [dispatch, addProductSuccess, updateProductSuccess, addProductFailed]);
 
   const handleSubmit = async (data: any) => {
-    let detailDescription = [] as any;
+    const detailDescription = productDetails?.detailDescription || [];
+
+    console.log(detailDescription);
 
     const imageElements = uploadedImages.map((image) => ({
       className: 'image-selectable',
@@ -78,7 +81,9 @@ const ProductsPages: NextPage = () => {
       ],
     }));
 
-    detailDescription = [...detailDescription, ...imageElements];
+    if (imageElements.length > 0) {
+      detailDescription.push(...imageElements);
+    }
 
     const formData = new FormData();
 
@@ -99,7 +104,6 @@ const ProductsPages: NextPage = () => {
       }
     });
 
-    // 特殊处理的字段
     if (data.coverImage) {
       formData.append('coverImage', data.coverImage);
     }
@@ -118,7 +122,6 @@ const ProductsPages: NextPage = () => {
       formData.append('specifications', JSON.stringify(data.specifications));
     }
 
-    // 发送请求
     if (editingProductId) {
       dispatch(updateProductAsync({ id: editingProductId, body: formData }));
     } else {
