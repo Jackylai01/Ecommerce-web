@@ -15,7 +15,6 @@ export const adminUploadAsync = createAsyncThunk(
   async ({
     file,
     folderName,
-
     imageId,
   }: {
     file: File;

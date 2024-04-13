@@ -77,6 +77,7 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
   }, [productId, dispatch]);
 
   useEffect(() => {
+    // 當產品詳情存在時，設置產品資料
     if (productDetails) {
       setValue('name', productDetails.name);
       setValue('description', productDetails.description);
@@ -92,24 +93,26 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
       if (productDetails.specifications) {
         setValue(
           'specifications',
-          productDetails.specifications.map((spec: any) => ({
-            ...spec,
-          })),
+          productDetails.specifications.map((spec: any) => ({ ...spec })),
         );
       }
 
-      if (productDetails && productDetails.coverImage) {
-        const coverImagePreviews = productDetails.coverImage;
-        setCoverImagePreview(coverImagePreviews);
+      if (productDetails.coverImage) {
+        setCoverImagePreview({
+          url: productDetails.coverImage.imageUrl,
+          file: null,
+          imageId: productDetails.coverImage.imageId,
+        });
       }
 
-      const imagesPreviews = productDetails.images.map((image) => ({
-        url: image.imageUrl,
-        imageId: image.imageId,
-      }));
+      setProductImagesPreviews(
+        productDetails.images.map((image) => ({
+          url: image.imageUrl,
+          imageId: image.imageId,
+        })),
+      );
 
-      setProductImagesPreviews(imagesPreviews);
-
+      // 更新 detailDescription
       const detailDescription = productDetails.detailDescription.map(
         (block: any) => {
           if (block.className === 'image-selectable') {
@@ -117,7 +120,11 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
               ...block,
               elements: block.elements.map((element: any) => {
                 if (element.tagName === 'img') {
-                  return { ...element, src: element.src };
+                  return {
+                    ...element,
+                    src: element.src,
+                    imageId: element.imageId,
+                  };
                 }
                 return element;
               }),
@@ -132,26 +139,22 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
   }, [productDetails, setValue]);
 
   useEffect(() => {
-    if (uploadedImages.length > 0) {
-      const currentDetailDescription = getValues('detailDescription') || [];
-      const newBlocks = uploadedImages.map((image) => ({
+    if (uploadedImages.length > 0 && !productId) {
+      // 僅在新增產品時執行
+      const imageBlocks = uploadedImages.map((image) => ({
         className: 'image-selectable',
         elements: [
           {
             tagName: 'img',
             src: image.imageUrl,
-            id: image.imageId,
+            imageId: image.imageId,
           },
         ],
       }));
 
-      const updatedDetailDescription = [
-        ...currentDetailDescription,
-        ...newBlocks,
-      ];
-      setValue('detailDescription', updatedDetailDescription);
+      setValue('detailDescription', imageBlocks);
     }
-  }, [uploadedImages, setValue, getValues]);
+  }, [uploadedImages, productId, setValue]);
 
   useEffect(() => {
     if (productDetails && productDetails.coverImage) {

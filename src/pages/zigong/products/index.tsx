@@ -73,7 +73,7 @@ const ProductsPages: NextPage = () => {
         {
           tagName: 'img',
           src: image.imageUrl,
-          id: image.imageId, // 假设每个上传的图片都有唯一ID
+          imageId: image.imageId,
         },
       ],
     }));

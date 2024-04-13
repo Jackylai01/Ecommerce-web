@@ -22,27 +22,32 @@ const SelectableImage = ({ element, isEdit, onImageUpdate }: ElementProps) => {
 
   const {
     uploadedImages,
-    status: { uploadLoading },
+    status: { uploadLoading, uploadSuccess },
     error: { uploadError },
   } = useAppSelector((state) => state.adminUpload);
 
   useEffect(() => {
-    const uploadedImage = uploadedImages.find((img) => img.imageId === imageId);
-    if (uploadedImage) {
+    const uploadedImage = uploadedImages.find((img) => img.tempId === imageId);
+    if (uploadSuccess && uploadedImage) {
       setSrc(uploadedImage.imageUrl);
+      setImageId(uploadedImage.imageId);
+      if (onImageUpdate) {
+        onImageUpdate(uploadedImage.imageId, uploadedImage.imageUrl);
+      }
     }
-  }, [uploadedImages, imageId]);
+  }, [uploadSuccess, uploadedImages, imageId, onImageUpdate]);
 
   const handleImageChange = async (event: any) => {
     const file = event.target.files ? event.target.files[0] : null;
     if (file) {
       try {
         const action = await dispatch(
-          adminUploadAsync({ file, imageId }),
+          adminUploadAsync({ file, imageId: imageId }),
         ).unwrap();
-        console.log('Upload successful:', action);
         setSrc(action.imageUrl);
-        if (onImageUpdate) onImageUpdate(imageId, action.imageUrl);
+        if (onImageUpdate) {
+          onImageUpdate(action.imageId, action.imageUrl);
+        }
       } catch (error) {
         console.error('Upload failed:', error);
       }
@@ -67,6 +72,7 @@ const SelectableImage = ({ element, isEdit, onImageUpdate }: ElementProps) => {
             size='sm'
             accept='image/*'
             ref={fileInputRef}
+            display='none'
           />
           <Text
             onClick={() => fileInputRef.current?.click()}

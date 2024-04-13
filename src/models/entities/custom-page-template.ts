@@ -8,6 +8,7 @@ type CustomPageElement = {
   image?: any;
   data?: string[][];
   dataTemplate?: CustomPageElement[];
+  imageId?: string;
   [key: string]: any;
   id?: any;
 };

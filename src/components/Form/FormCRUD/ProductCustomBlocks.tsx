@@ -17,9 +17,11 @@ import NestedDisplayUI from '@components/CustomPage/NestedDisplayUI';
 import { customPageTemplates } from '@fixtures/custom-page-templates';
 import generateUUID from '@helpers/generate-uuid';
 import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
 import { CustomPageTemplate } from '@models/entities/custom-page-template';
 import { setPageBlocks } from '@reducers/admin/custom-page';
-import { useState } from 'react';
+import { adminDeleteFilesAsync } from '@reducers/admin/upload/actions';
+import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 interface ProductCustomBlockType {
@@ -33,6 +35,7 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
   const blocks = getValues(name) || [];
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isEdit, setIsEdit] = useState(false);
+  const { uploadedImages } = useAppSelector((state) => state.adminUpload);
 
   const handleAddBlock = (template: CustomPageTemplate) => {
     const newBlock = JSON.parse(JSON.stringify(template.block));
@@ -45,7 +48,31 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
     setValue(name, updatedBlocks, { shouldValidate: true });
   };
 
-  const handleDeleteBlock = (index: number) => {
+  const handleDeleteBlock = async (index: number) => {
+    // 獲取即將被刪除的區塊
+    const blockToDelete = blocks[index];
+
+    console.log(blockToDelete);
+    // 檢查區塊中是否有圖片元素，如果有，則檢查並刪除它們
+    for (const element of blockToDelete.elements) {
+      if (element.tagName === 'img' && element.imageId) {
+        // 檢查uploadedImages中是否存在這個publicId
+        const image = uploadedImages.find(
+          (img) => img.imageId === element.imageId,
+        );
+        console.log(image);
+        if (image) {
+          try {
+            await dispatch(adminDeleteFilesAsync(element.imageId));
+            console.log('Image deleted successfully');
+          } catch (error) {
+            console.error('Failed to delete image:', error);
+          }
+        }
+      }
+    }
+
+    // 通過移除選定的區塊來更新區塊數組
     const updatedBlocks = blocks.filter((_: any, idx: number) => idx !== index);
     setValue(name, updatedBlocks, { shouldValidate: true });
   };
@@ -74,17 +101,37 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
     setValue('detailDescription', remainingItems);
   };
 
-  const handleImageUploadSuccess = (imageId: string, imageUrl: any) => {
+  const handleImageUploadSuccess = (imageId: string, imageUrl: string) => {
     const newBlocks = blocks.map((block: any) => {
       return {
         ...block,
-        elements: block.elements.map((el: any) =>
-          el.id === imageId ? { ...el, src: imageUrl } : el,
-        ),
+        elements: block.elements.map((element: any) => {
+          if (element.tagName === 'img') {
+            return { ...element, src: imageUrl, imageId: imageId };
+          }
+          return element;
+        }),
       };
     });
     setValue(name, newBlocks, { shouldValidate: true });
   };
+
+  useEffect(() => {
+    // 每当uploadedImages更新时，同步更新blocks中的imageId
+    const imageBlocks = uploadedImages.map((image) => ({
+      className: 'image-selectable',
+      elements: [
+        {
+          tagName: 'img',
+          src: image.imageUrl,
+          imageId: image.imageId, // 新的imageId
+        },
+      ],
+    }));
+    setValue('detailDescription', imageBlocks);
+  }, [uploadedImages, setValue]);
+
+  console.log(blocks);
 
   return (
     <VStack spacing={4} align='flex-start' w='100%' mt='2rem'>
