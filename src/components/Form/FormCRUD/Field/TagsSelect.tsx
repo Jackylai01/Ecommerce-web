@@ -35,7 +35,7 @@ export const TagsMultiSelect = ({
 
   useEffect(() => {
     setValue(name, selectedTags);
-  }, [selectedTags, setValue, name]);
+  }, []);
 
   return (
     <FormControl isRequired={isRequired}>
