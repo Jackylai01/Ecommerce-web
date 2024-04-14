@@ -37,6 +37,8 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
   const [isEdit, setIsEdit] = useState(false);
   const { uploadedImages } = useAppSelector((state) => state.adminUpload);
 
+  const { productDetails } = useAppSelector((state) => state.adminProducts);
+
   const handleAddBlock = (template: CustomPageTemplate) => {
     const newBlock = JSON.parse(JSON.stringify(template.block));
     newBlock.elements.forEach((element: any) => {
@@ -52,15 +54,27 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
     // 獲取即將被刪除的區塊
     const blockToDelete = blocks[index];
 
-    console.log(blockToDelete);
     // 檢查區塊中是否有圖片元素，如果有，則檢查並刪除它們
-    for (const element of blockToDelete.elements) {
+    blockToDelete.elements.forEach(async (element: any) => {
       if (element.tagName === 'img' && element.imageId) {
-        // 檢查uploadedImages中是否存在這個publicId
-        const image = uploadedImages.find(
-          (img) => img.imageId === element.imageId,
-        );
-        console.log(image);
+        // 判斷是否處於編輯模式（檢查是否有productId）
+        const isEditMode = !!productDetails?._id;
+        let image;
+
+        if (isEditMode) {
+          // 如果是編輯模式，從productDetails的detailDescription中尋找對應的imageId
+          const detailImages = productDetails.detailDescription.flatMap(
+            (dd: any) => dd.elements,
+          );
+          image = detailImages.find(
+            (img: any) => img.imageId === element.imageId,
+          );
+        } else {
+          // 如果是新增模式，從uploadedImages中尋找對應的imageId
+          image = uploadedImages.find((img) => img.imageId === element.imageId);
+        }
+
+        console.log('Found image:', image);
         if (image) {
           try {
             await dispatch(adminDeleteFilesAsync(element.imageId));
@@ -70,7 +84,7 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
           }
         }
       }
-    }
+    });
 
     // 通過移除選定的區塊來更新區塊數組
     const updatedBlocks = blocks.filter((_: any, idx: number) => idx !== index);

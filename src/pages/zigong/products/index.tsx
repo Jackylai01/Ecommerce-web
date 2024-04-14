@@ -66,9 +66,7 @@ const ProductsPages: NextPage = () => {
   }, [dispatch, addProductSuccess, updateProductSuccess, addProductFailed]);
 
   const handleSubmit = async (data: any) => {
-    const detailDescription = productDetails?.detailDescription || [];
-
-    console.log(detailDescription);
+    const detailDescription = [...(productDetails?.detailDescription || [])];
 
     const imageElements = uploadedImages.map((image) => ({
       className: 'image-selectable',
@@ -81,13 +79,11 @@ const ProductsPages: NextPage = () => {
       ],
     }));
 
-    if (imageElements.length > 0) {
-      detailDescription.push(...imageElements);
-    }
+    const newDetailDescription = detailDescription.concat(imageElements);
 
     const formData = new FormData();
 
-    formData.append('detailDescription', JSON.stringify(detailDescription));
+    formData.append('detailDescription', JSON.stringify(newDetailDescription));
 
     Object.keys(data).forEach((key) => {
       if (
