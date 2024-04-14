@@ -60,7 +60,6 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
         console.log('Is edit mode:', isEditMode);
 
         if (isEditMode) {
-          // 从productDetails.detailDescription中移除对应的imageId
           const newDetailDescription = productDetails.detailDescription
             .map((detail: any) => ({
               ...detail,
