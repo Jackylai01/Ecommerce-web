@@ -49,6 +49,11 @@ const productSlice = createSlice({
     resetEditingProductId: (state) => {
       state.editingProductId = null;
     },
+    updateProductDetailDescription: (state, action) => {
+      if (state.productDetails) {
+        state.productDetails.detailDescription = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getAllProductsAsync.fulfilled, (state, action) => {
@@ -102,5 +107,6 @@ export const {
   resetProductDetails,
   setEditingProductId,
   resetEditingProductId,
+  updateProductDetailDescription,
 } = productSlice.actions;
 export default productSlice.reducer;

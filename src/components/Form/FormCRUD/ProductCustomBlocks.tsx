@@ -20,6 +20,7 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { CustomPageTemplate } from '@models/entities/custom-page-template';
 import { setPageBlocks } from '@reducers/admin/custom-page';
+import { updateProductDetailDescription } from '@reducers/admin/products';
 import { adminDeleteFilesAsync } from '@reducers/admin/upload/actions';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -36,7 +37,6 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isEdit, setIsEdit] = useState(false);
   const { uploadedImages } = useAppSelector((state) => state.adminUpload);
-
   const { productDetails } = useAppSelector((state) => state.adminProducts);
 
   const handleAddBlock = (template: CustomPageTemplate) => {
@@ -51,42 +51,61 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
   };
 
   const handleDeleteBlock = async (index: number) => {
-    // 獲取即將被刪除的區塊
     const blockToDelete = blocks[index];
+    console.log('Block to delete:', blockToDelete);
 
-    // 檢查區塊中是否有圖片元素，如果有，則檢查並刪除它們
-    blockToDelete.elements.forEach(async (element: any) => {
+    for (const element of blockToDelete.elements) {
       if (element.tagName === 'img' && element.imageId) {
-        // 判斷是否處於編輯模式（檢查是否有productId）
         const isEditMode = !!productDetails?._id;
-        let image;
+        console.log('Is edit mode:', isEditMode);
 
         if (isEditMode) {
-          // 如果是編輯模式，從productDetails的detailDescription中尋找對應的imageId
-          const detailImages = productDetails.detailDescription.flatMap(
-            (dd: any) => dd.elements,
-          );
-          image = detailImages.find(
-            (img: any) => img.imageId === element.imageId,
-          );
-        } else {
-          // 如果是新增模式，從uploadedImages中尋找對應的imageId
-          image = uploadedImages.find((img) => img.imageId === element.imageId);
-        }
+          // 从productDetails.detailDescription中移除对应的imageId
+          const newDetailDescription = productDetails.detailDescription
+            .map((detail: any) => ({
+              ...detail,
+              elements: detail.elements.filter(
+                (img: any) => img.imageId !== element.imageId,
+              ),
+            }))
+            .filter((detail: any) => detail.elements.length > 0);
 
-        console.log('Found image:', image);
-        if (image) {
-          try {
-            await dispatch(adminDeleteFilesAsync(element.imageId));
-            console.log('Image deleted successfully');
-          } catch (error) {
-            console.error('Failed to delete image:', error);
+          console.log('New detailDescription:', newDetailDescription);
+
+          dispatch(updateProductDetailDescription(newDetailDescription));
+
+          const imageExists = newDetailDescription.some((detail: any) =>
+            detail.elements.some((img: any) => img.imageId === element.imageId),
+          );
+
+          console.log('Image still exists:', imageExists);
+
+          if (!imageExists) {
+            try {
+              await dispatch(adminDeleteFilesAsync(element.imageId));
+              console.log('Image deleted successfully');
+            } catch (error) {
+              console.error('Failed to delete image:', error);
+            }
+          }
+        } else {
+          // 如果不在编辑模式，从uploadedImages中查找并删除图片
+          const imageIndex = uploadedImages.findIndex(
+            (img) => img.imageId === element.imageId,
+          );
+          if (imageIndex !== -1) {
+            try {
+              await dispatch(adminDeleteFilesAsync(element.imageId));
+              console.log('Image deleted successfully');
+            } catch (error) {
+              console.error('Failed to delete image:', error);
+            }
           }
         }
       }
-    });
+    }
 
-    // 通過移除選定的區塊來更新區塊數組
+    // 移除选定的区块来更新区块数组
     const updatedBlocks = blocks.filter((_: any, idx: number) => idx !== index);
     setValue(name, updatedBlocks, { shouldValidate: true });
   };
@@ -131,6 +150,12 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
   };
 
   useEffect(() => {
+    if (productDetails) {
+      setValue('detailDescription', productDetails.detailDescription);
+    }
+  }, [productDetails, setValue]);
+
+  useEffect(() => {
     // 每当uploadedImages更新时，同步更新blocks中的imageId
     const imageBlocks = uploadedImages.map((image) => ({
       className: 'image-selectable',
@@ -138,14 +163,12 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
         {
           tagName: 'img',
           src: image.imageUrl,
-          imageId: image.imageId, // 新的imageId
+          imageId: image.imageId,
         },
       ],
     }));
     setValue('detailDescription', imageBlocks);
   }, [uploadedImages, setValue]);
-
-  console.log(blocks);
 
   return (
     <VStack spacing={4} align='flex-start' w='100%' mt='2rem'>
