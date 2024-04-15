@@ -52,12 +52,10 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
 
   const handleDeleteBlock = async (index: number) => {
     const blockToDelete = blocks[index];
-    console.log('Block to delete:', blockToDelete);
 
     for (const element of blockToDelete.elements) {
       if (element.tagName === 'img' && element.imageId) {
         const isEditMode = !!productDetails?._id;
-        console.log('Is edit mode:', isEditMode);
 
         if (isEditMode) {
           const newDetailDescription = productDetails.detailDescription
@@ -69,15 +67,11 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
             }))
             .filter((detail: any) => detail.elements.length > 0);
 
-          console.log('New detailDescription:', newDetailDescription);
-
           dispatch(updateProductDetailDescription(newDetailDescription));
 
           const imageExists = newDetailDescription.some((detail: any) =>
             detail.elements.some((img: any) => img.imageId === element.imageId),
           );
-
-          console.log('Image still exists:', imageExists);
 
           if (!imageExists) {
             try {

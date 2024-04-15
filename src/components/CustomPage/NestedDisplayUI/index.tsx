@@ -10,7 +10,7 @@ import Items from './src/items';
 type Props = {
   elements: CustomPageElement[];
   isEdit: boolean;
-  onImageUpdate: any;
+  onImageUpdate?: any;
 };
 
 export type ElementProps = {

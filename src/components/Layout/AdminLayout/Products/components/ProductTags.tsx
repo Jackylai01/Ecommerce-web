@@ -110,7 +110,6 @@ const ProductTags = () => {
 
   const deleteRow = async () => {
     if (selectedProductTagsId) {
-      console.log(selectedProductTagsId);
       dispatch(deleteProductTagsAsync(selectedProductTagsId));
       onClose();
     }

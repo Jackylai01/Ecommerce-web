@@ -32,7 +32,6 @@ const MembersPages: NextPage = () => {
   const [modalContent, setModalContent] = useState('');
 
   const handleSubmitEmail = (emailData: any) => {
-    console.log(emailData);
     dispatch(notifySelectedUsersAsync(emailData));
     onClose();
   };

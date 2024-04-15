@@ -76,7 +76,11 @@ const productSlice = createSlice({
       }
     });
     builder.addCase(deleteProductAsync.fulfilled, (state, action) => {
-      state.productDetails = null;
+      if (state.list) {
+        state.list = state.list.filter(
+          (product) => product._id !== action.payload,
+        );
+      }
     });
     builder.addCase(deleteAllProductsAsync.fulfilled, (state) => {
       state.list = null;

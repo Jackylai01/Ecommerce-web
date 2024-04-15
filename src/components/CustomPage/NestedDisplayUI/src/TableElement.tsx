@@ -66,15 +66,14 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
   );
   const deleteColumn = useCallback(
     (columnIndex) => {
-      if (tableData.length > 0 && tableData[0].length > 1) {
-        const newData = tableData.map((row) =>
-          row.filter((_, idx) => idx !== columnIndex),
-        );
-        updateTableData(newData);
-      }
+      const newData = tableData.map((row) =>
+        row.filter((_, idx) => idx !== columnIndex),
+      );
+      updateTableData(newData);
     },
     [tableData, updateTableData],
   );
+
   return (
     <Box>
       {isEdit && (
@@ -109,14 +108,16 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
               <Th key={`th-${columnIndex}`}>
                 Column {columnIndex + 1}
                 {isEdit && (
-                  <IconButton
-                    aria-label='Delete column'
-                    icon={<DeleteIcon />}
-                    size='xs'
-                    onClick={() => deleteColumn(columnIndex)}
-                    ml='2'
-                    colorScheme='red'
-                  />
+                  <Td border='none'>
+                    <IconButton
+                      aria-label='Delete column'
+                      icon={<DeleteIcon />}
+                      size='xs'
+                      onClick={() => deleteColumn(columnIndex)}
+                      ml='2'
+                      colorScheme='red'
+                    />
+                  </Td>
                 )}
               </Th>
             ))}
