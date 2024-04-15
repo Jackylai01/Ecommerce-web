@@ -108,16 +108,14 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
               <Th key={`th-${columnIndex}`}>
                 Column {columnIndex + 1}
                 {isEdit && (
-                  <Td border='none'>
-                    <IconButton
-                      aria-label='Delete column'
-                      icon={<DeleteIcon />}
-                      size='xs'
-                      onClick={() => deleteColumn(columnIndex)}
-                      ml='2'
-                      colorScheme='red'
-                    />
-                  </Td>
+                  <IconButton
+                    aria-label='Delete column'
+                    icon={<DeleteIcon />}
+                    size='xs'
+                    onClick={() => deleteColumn(columnIndex)}
+                    ml='2'
+                    colorScheme='red'
+                  />
                 )}
               </Th>
             ))}

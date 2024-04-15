@@ -29,10 +29,7 @@ import Pagination from '@components/Pagination';
 import TablesTableRow from '@components/Tables/TablesTableRow';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import {
-  resetProductState,
-  setEditingProductId,
-} from '@reducers/admin/products';
+import { setEditingProductId } from '@reducers/admin/products';
 import {
   deleteProductAsync,
   getAllProductsAsync,
@@ -191,7 +188,6 @@ const ProductTableContainer = ({ onSubmit }: ProductContainerType) => {
   useEffect(() => {
     if (deleteProductSuccess || deleteProductError) {
       onMessageModalOpen();
-      dispatch(resetProductState());
     }
   }, [deleteProductSuccess, deleteProductError, onMessageModalOpen, dispatch]);
 
