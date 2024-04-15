@@ -142,7 +142,7 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
                 </Td>
               ))}
               {isEdit && (
-                <>
+                <Td border='none'>
                   <IconButton
                     aria-label='Delete row'
                     icon={<DeleteIcon />}
@@ -150,7 +150,7 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
                     onClick={() => deleteRow(rowIndex)}
                     colorScheme='red'
                   />
-                </>
+                </Td>
               )}
             </Tr>
           ))}
