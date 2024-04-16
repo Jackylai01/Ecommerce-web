@@ -42,12 +42,19 @@ const productSlice = createSlice({
     resetProductDetails: (state) => {
       state.productDetails = null;
     },
+    resetProductId: (state) => {
+      state.editingProductId = null;
+    },
     setEditingProductId: (state, action) => {
       state.editingProductId = action.payload;
     },
 
     resetEditingProductId: (state) => {
       state.editingProductId = null;
+    },
+    resetDeleteProductState(state) {
+      state.status.deleteProductSuccess = false;
+      state.error.deleteProductError = null;
     },
     updateProductDetailDescription: (state, action) => {
       if (state.productDetails) {
@@ -113,5 +120,7 @@ export const {
   setEditingProductId,
   resetEditingProductId,
   updateProductDetailDescription,
+  resetDeleteProductState,
+  resetProductId,
 } = productSlice.actions;
 export default productSlice.reducer;
