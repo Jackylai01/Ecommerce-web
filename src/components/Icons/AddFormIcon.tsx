@@ -4,7 +4,7 @@ import FormModal from '@components/Modal/FormModal';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { resetCustomPage } from '@reducers/admin/custom-page';
 import { resetTagsDetailState } from '@reducers/admin/product-tags';
-import { resetProductDetails } from '@reducers/admin/products';
+import { resetProductDetails, resetProductId } from '@reducers/admin/products';
 import { FC, ReactNode } from 'react';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
 
@@ -26,6 +26,7 @@ const AddButton: FC<AddButtonProps<any>> = ({
     dispatch(resetProductDetails());
     dispatch(resetTagsDetailState());
     dispatch(resetCustomPage());
+    dispatch(resetProductId());
     onOpen();
   };
 

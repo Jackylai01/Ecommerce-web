@@ -19,16 +19,13 @@ const TagElement = ({ element, isEdit }: ElementProps) => {
     dispatch(updateElementContent({ id: element.id, newContent: content }));
   };
 
-  if (element.elements)
+  if (element.elements && element.elements.length > 0) {
     return React.createElement(
       element.tagName,
-      {
-        className: element.className,
-      },
-      element.elements && (
-        <NestedDisplayUI elements={element.elements} isEdit={isEdit} />
-      ),
+      { className: element.className },
+      <NestedDisplayUI elements={element.elements} isEdit={isEdit} />,
     );
+  }
 
   if (isEdit) {
     return (
