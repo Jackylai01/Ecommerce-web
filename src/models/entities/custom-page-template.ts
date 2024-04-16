@@ -10,7 +10,6 @@ type CustomPageElement = {
   dataTemplate?: CustomPageElement[];
   imageId?: string;
   [key: string]: any;
-  id?: any;
 };
 
 type CustomPageBlock = {

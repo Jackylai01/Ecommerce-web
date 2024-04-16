@@ -34,7 +34,7 @@ export const customPageTemplates: CustomPageTemplate[] = [
     _id: 'table_01',
     cover: '/block/table-1.png',
     block: {
-      className: '',
+      className: 'table',
       elements: [
         {
           tagName: 'table',
