@@ -66,31 +66,41 @@ const ProductsPages: NextPage = () => {
   }, [dispatch, addProductSuccess, updateProductSuccess, addProductFailed]);
 
   const handleSubmit = async (data: any) => {
+    console.log('提交的数据:', data);
+
     const isUpdating = !!editingProductId;
-    let detailDescription = [] as any;
 
-    if (isUpdating && productDetails?.detailDescription) {
-      detailDescription = [...productDetails.detailDescription];
-    }
+    // 初始化或获取现有的 detailDescription
+    let detailDescription = data.detailDescription || [];
 
-    const imageElements = uploadedImages.map((image) => ({
-      className: 'image-selectable',
-      elements: [
-        {
-          tagName: 'img',
-          src: image.imageUrl,
-          imageId: image.imageId,
-        },
-      ],
-    }));
+    // 获取现有的所有图片 ID，用于检查重复
+    const existingImageIds = new Set(
+      detailDescription.flatMap((block: any) =>
+        block.elements.map((el: any) => el.imageId),
+      ),
+    );
 
-    const newDetailDescription = detailDescription.concat(imageElements);
-    console.log(newDetailDescription);
+    // 过滤出未添加的图片并创建新的图片元素
+    const newImageElements = uploadedImages
+      .filter((img) => !existingImageIds.has(img.imageId))
+      .map((image) => ({
+        className: 'image-selectable',
+        elements: [
+          {
+            tagName: 'img',
+            src: image.imageUrl,
+            imageId: image.imageId,
+          },
+        ],
+      }));
+
+    // 合并旧的 detailDescription 和新的图片元素
+    detailDescription = [...detailDescription, ...newImageElements];
 
     const formData = new FormData();
+    formData.append('detailDescription', JSON.stringify(detailDescription));
 
-    formData.append('detailDescription', JSON.stringify(newDetailDescription));
-
+    // 添加其他表单字段到 formData
     Object.keys(data).forEach((key) => {
       if (
         ![
@@ -99,8 +109,7 @@ const ProductsPages: NextPage = () => {
           'images',
           'specifications',
           'tags',
-        ].includes(key) &&
-        data[key] !== undefined
+        ].includes(key)
       ) {
         formData.append(key, data[key]);
       }
@@ -114,7 +123,6 @@ const ProductsPages: NextPage = () => {
         formData.append('images', image);
       });
     }
-
     if (data.tags && Array.isArray(data.tags)) {
       data.tags.forEach((tag: any) => {
         formData.append('tags', tag);
@@ -124,10 +132,12 @@ const ProductsPages: NextPage = () => {
       formData.append('specifications', JSON.stringify(data.specifications));
     }
 
-    if (editingProductId) {
+    // 根据是否有 id 判断是更新产品还是添加新产品
+    if (isUpdating) {
       dispatch(updateProductAsync({ id: editingProductId, body: formData }));
     } else {
       dispatch(addProductAsync(formData));
+      dispatch(resetAdminUpload());
     }
   };
 
