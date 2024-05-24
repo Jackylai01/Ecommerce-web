@@ -1,6 +1,7 @@
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { Box, Button, Container, Flex, IconButton } from '@chakra-ui/react';
 import { ProductFormContent } from '@components/Form/FormCRUD/ProductsContent';
+import LoadingLayout from '@components/Layout/LoadingLayout';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import {
@@ -20,7 +21,14 @@ const ProductEditPage = () => {
   const { id } = router.query;
   const dispatch = useAppDispatch();
   const methods = useForm();
-  const { productDetails } = useAppSelector((state) => state.adminProducts);
+  const {
+    productDetails,
+    status: {
+      updateProductFailed,
+      updateProductLoading,
+      updateProductStatusSuccess,
+    },
+  } = useAppSelector((state) => state.adminProducts);
   const { uploadedImages } = useAppSelector((state) => state.adminUpload);
 
   useEffect(() => {
@@ -103,36 +111,38 @@ const ProductEditPage = () => {
   };
 
   return (
-    <Container maxW='container.2x1' mt='5rem'>
-      <Flex justifyContent='space-between' alignItems='center' mb={4}>
-        <IconButton
-          icon={<ArrowBackIcon />}
-          aria-label='Back'
-          onClick={handleBack}
-          color={iconColor}
-        />
-        <Box as='h1' fontSize='2xl' color={textColor}>
-          編輯產品
-        </Box>
-        <Box width='40px' />
-      </Flex>
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(handleSubmit)}>
-          <Box
-            border='1px'
-            borderRadius='md'
-            borderColor='gray.200'
-            p={4}
-            boxShadow='sm'
-          >
-            <ProductFormContent />
+    <LoadingLayout isLoading={updateProductLoading}>
+      <Container maxW='container.2x1' mt='5rem'>
+        <Flex justifyContent='space-between' alignItems='center' mb={4}>
+          <IconButton
+            icon={<ArrowBackIcon />}
+            aria-label='Back'
+            onClick={handleBack}
+            color={iconColor}
+          />
+          <Box as='h1' fontSize='2xl' color={textColor}>
+            編輯產品
           </Box>
-          <Button mt={4} colorScheme='teal' type='submit'>
-            送出
-          </Button>
-        </form>
-      </FormProvider>
-    </Container>
+          <Box width='40px' />
+        </Flex>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(handleSubmit)}>
+            <Box
+              border='1px'
+              borderRadius='md'
+              borderColor='gray.200'
+              p={4}
+              boxShadow='sm'
+            >
+              <ProductFormContent />
+            </Box>
+            <Button mt={4} colorScheme='teal' type='submit'>
+              送出
+            </Button>
+          </form>
+        </FormProvider>
+      </Container>
+    </LoadingLayout>
   );
 };
 
