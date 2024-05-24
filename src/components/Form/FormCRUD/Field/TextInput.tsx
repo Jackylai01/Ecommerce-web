@@ -5,6 +5,7 @@ import {
   Input,
 } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface TextInputType {
   name: string;
@@ -29,6 +30,8 @@ export const TextInput = ({
   min,
   max,
 }: TextInputType) => {
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const {
     register,
     formState: { errors },
@@ -48,8 +51,8 @@ export const TextInput = ({
         h={height}
         min={min}
         max={max}
-        borderColor='black'
-        color='black'
+        borderColor={textColor}
+        color={textColor}
         _hover={{ borderColor: 'gray.400' }}
         sx={{
           ':-webkit-autofill': {

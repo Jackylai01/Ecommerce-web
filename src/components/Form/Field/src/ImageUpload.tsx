@@ -73,12 +73,15 @@ const ImageUploadForm: React.FC<InnerProps> = ({
         setLocalImages((prev) => [...prev, ...newImagePreviews]);
       }
       const effectiveFolderName = folderName || '預設資料夾名稱';
-      dispatch(
-        adminUploadAsync({ data: files, folderName: effectiveFolderName }),
-      ).finally(() => setShowProgressBar(false));
+
+      // 遍歷每個文件並調用 adminUploadAsync
+      files.forEach((file) => {
+        dispatch(
+          adminUploadAsync({ file, folderName: effectiveFolderName }),
+        ).finally(() => setShowProgressBar(false));
+      });
     }
   };
-
   const handleDeleteImage = async (imageId: string) => {
     setDeletedImageId(imageId);
     await dispatch(adminDeleteFilesAsync(imageId));

@@ -10,6 +10,7 @@ import {
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useAdminColorMode } from 'src/context/colorMode';
 import CustomSelect from './Field/CustomSelect';
 import ImageUpload from './Field/ImageUpload';
 import DynamicSpecifications from './Field/Specifications';
@@ -18,11 +19,7 @@ import { TextInput } from './Field/TextInput';
 import ToggleSwitch from './Field/ToggleSwitch';
 import ProductCustomBlocks from './ProductCustomBlocks';
 
-interface ProductFormContentType {
-  productId?: string | null;
-}
-
-export const ProductFormContent = ({ productId }: ProductFormContentType) => {
+export const ProductFormContent = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { setValue, getValues } = useFormContext();
@@ -31,6 +28,8 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
   const { list: categories } = useAppSelector(
     (state) => state.adminProductsCategory,
   );
+  const { id: productId } = router.query as any;
+
   const { list: tags } = useAppSelector((state) => state.adminProductsTags);
   const {
     productDetails,
@@ -39,6 +38,8 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
 
   const [coverImagePreview, setCoverImagePreview] = useState<any>(null);
   const [productImagesPreviews, setProductImagesPreviews] = useState<any>([]);
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
   const handleRemoveProductImage = () => {
     if (productId && coverImagePreview?.imageId) {
@@ -172,7 +173,7 @@ export const ProductFormContent = ({ productId }: ProductFormContentType) => {
   }, [dispatch, router.query.page]);
 
   return (
-    <VStack spacing={4} align='flex-start'>
+    <VStack spacing={4} align='flex-start' color={textColor}>
       <TextInput
         name='name'
         label='商品名稱'

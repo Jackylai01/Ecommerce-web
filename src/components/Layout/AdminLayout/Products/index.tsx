@@ -20,10 +20,8 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { ProductFormContent } from '@components/Form/FormCRUD/ProductsContent';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import ConfirmationModal from '@components/Modal/ConfirmationModal';
-import FormModal from '@components/Modal/FormModal';
 import MessageModal from '@components/Modal/MessageModal';
 import Pagination from '@components/Pagination';
 import TablesTableRow from '@components/Tables/TablesTableRow';
@@ -63,6 +61,7 @@ interface ProductContainerType {
 
 const ProductTableContainer = ({ onSubmit }: ProductContainerType) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
@@ -75,7 +74,6 @@ const ProductTableContainer = ({ onSubmit }: ProductContainerType) => {
     onOpen: onMessageModalOpen,
     onClose: onMessageModalClose,
   } = useDisclosure();
-  const router = useRouter();
   const toast = useToast();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -125,7 +123,7 @@ const ProductTableContainer = ({ onSubmit }: ProductContainerType) => {
           bg='blue.500'
           color='white'
           size='sm'
-          onClick={() => editRow(row._id)}
+          onClick={() => handleEdit(row._id)}
         >
           編輯
         </Button>
@@ -169,12 +167,7 @@ const ProductTableContainer = ({ onSubmit }: ProductContainerType) => {
   };
 
   const handleEdit = (productId: string) => {
-    dispatch(setEditingProductId(productId));
-    setIsEditModalOpen(true);
-  };
-
-  const editRow = (productId: any) => {
-    handleEdit(productId);
+    router.push(`/zigong/products/${productId}`);
   };
 
   const requestDelete = (id: any) => {
@@ -313,14 +306,6 @@ const ProductTableContainer = ({ onSubmit }: ProductContainerType) => {
           <Pagination metadata={metadata} />
         )}
       </LoadingLayout>
-      <FormModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        onSubmit={onSubmit}
-        title='編輯產品'
-      >
-        <ProductFormContent productId={editingProductId} />
-      </FormModal>
     </>
   );
 };

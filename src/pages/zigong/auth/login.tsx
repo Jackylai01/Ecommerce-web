@@ -14,9 +14,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Switch,
   Text,
-  useColorModeValue,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
@@ -31,14 +29,15 @@ import {
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 const Login = () => {
   const dispatch = useAppDispatch();
-  const titleColor = useColorModeValue('teal.300', 'teal.200');
-  const textColor = useColorModeValue('gray.400', 'white');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const router = useRouter();
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
   const {
     handleSubmit,
@@ -105,7 +104,7 @@ const Login = () => {
                 p='48px'
                 mt={{ md: '150px', lg: '80px' }}
               >
-                <Heading color={titleColor} fontSize='32px' mb='10px'>
+                <Heading color={textColor} fontSize='32px' mb='10px'>
                   Welcome Back
                 </Heading>
                 <Text
@@ -132,6 +131,7 @@ const Login = () => {
                     type='text'
                     placeholder='Your email address'
                     size='lg'
+                    color={textColor}
                   />
                   <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>
                     Password
@@ -147,18 +147,8 @@ const Login = () => {
                     type='password'
                     placeholder='Your password'
                     size='lg'
+                    color={textColor}
                   />
-                  <FormControl display='flex' alignItems='center'>
-                    <Switch id='remember-login' colorScheme='teal' me='10px' />
-                    <FormLabel
-                      htmlFor='remember-login'
-                      mb='0'
-                      ms='1'
-                      fontWeight='normal'
-                    >
-                      Remember me
-                    </FormLabel>
-                  </FormControl>
                   <Button
                     fontSize='10px'
                     type='submit'
@@ -188,7 +178,7 @@ const Login = () => {
                   <Text color={textColor} fontWeight='medium'>
                     Don&apos;t have an account?
                     <Link
-                      color={titleColor}
+                      color={textColor}
                       as='span'
                       ms='5px'
                       fontWeight='bold'
