@@ -130,7 +130,7 @@ export default function HeaderLinks({
             variant='transparent-with-icon'
             onClick={handleLogout}
           >
-            <Text display={{ sm: 'none', md: 'flex' }}>登出</Text>
+            <Text>登出</Text>
           </Button>
         ) : (
           <></>

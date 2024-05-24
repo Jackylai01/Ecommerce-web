@@ -8,12 +8,12 @@ import {
   DrawerOverlay,
   Flex,
   Stack,
-  useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react';
 import IconBox from '@components/Icons/IconBox';
 import NextLink from 'next/link';
 import React, { useRef } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface SidebarResponsiveProps {
   routes: any[];
@@ -28,7 +28,8 @@ const SidebarResponsive: React.FC<SidebarResponsiveProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement | null>(null);
-  const hamburgerColor = useColorModeValue('gray.500', 'white');
+  const { colorMode } = useAdminColorMode();
+  let hamburgerColor = colorMode === 'light' ? 'gray.500' : 'gray.200';
 
   const renderLink = (route: any, key: number) => {
     const IconComponent = route.icon;
@@ -41,11 +42,8 @@ const SidebarResponsive: React.FC<SidebarResponsiveProps> = ({
           display='flex'
           alignItems='center'
           justifyContent='flex-start'
-          variant='ghost'
-          w='full'
           mb='2'
           py='2'
-          px='4'
           bg={route.active ? 'teal.300' : 'transparent'}
           color={route.active ? 'white' : 'gray.400'}
           _hover={{ bg: 'teal.300' }}
@@ -69,16 +67,14 @@ const SidebarResponsive: React.FC<SidebarResponsiveProps> = ({
   const createLinks = (routes: any) => {
     return routes.map((route: any, key: number) => {
       if (route.category) {
-        // 如果存在category属性，表示这是一个包含嵌套views的路由
         return (
           <React.Fragment key={key}>
-            <div>{route.name}</div> {/* 渲染category名称 */}
+            <div>{route.name}</div>
             {route.views && createLinks(route.views)}{' '}
-            {/* 递归渲染views中的路由 */}
           </React.Fragment>
         );
       } else {
-        return renderLink(route, key); // 渲染普通路由
+        return renderLink(route, key);
       }
     });
   };
@@ -86,7 +82,7 @@ const SidebarResponsive: React.FC<SidebarResponsiveProps> = ({
   return (
     <Flex display={{ base: 'flex', xl: 'none' }} alignItems='center'>
       <Button ref={btnRef} onClick={onOpen} variant='unstyled'>
-        <HamburgerIcon color={hamburgerColor} w='5' h='5' />
+        <HamburgerIcon color={hamburgerColor} ml='1rem' w='5' h='5' />
       </Button>
       <Drawer
         isOpen={isOpen}

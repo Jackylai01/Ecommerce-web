@@ -30,7 +30,7 @@ const AdminNavbar = ({ fixed, secondary, onOpen }: AdminNavbarType) => {
     : 'none';
 
   const navbarBgValue = colorMode
-    ? 'linear-gradient(112.83deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.8) 110.84%)'
+    ? 'linear-gradient(112.83deg, rgba(34, 31, 31, 0.82) 0%, rgba(36, 36, 36, 0.8) 110.84%)'
     : 'linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)';
 
   const navbarBorderValue = colorMode ? '#FFFFFF' : 'rgba(255, 255, 255, 0.31)';
@@ -80,33 +80,19 @@ const AdminNavbar = ({ fixed, secondary, onOpen }: AdminNavbarType) => {
   return (
     <Flex
       position={navbarPosition as any}
-      boxShadow={navbarShadow}
       bg={navbarBg}
-      borderColor={navbarBorder}
-      filter={navbarFilter}
-      backdropFilter={navbarBackdrop}
-      borderWidth='1.5px'
-      borderStyle='solid'
       transitionDelay='0s, 0s, 0s, 0s'
       transitionDuration=' 0.25s, 0.25s, 0.25s, 0s'
       transition-property='box-shadow, background-color, filter, border'
       transitionTimingFunction='linear, linear, linear, linear'
-      alignItems={{ xl: 'center' }}
-      borderRadius='16px'
       display='flex'
       minH='75px'
+      alignItems={{ xl: 'center' }}
       justifyContent={{ xl: 'center' }}
-      lineHeight='25.6px'
-      mx='auto'
-      mt={secondaryMargin}
-      pb='8px'
       right='30px'
       px={{
         sm: paddingX,
         md: '30px',
-      }}
-      ps={{
-        xl: '12px',
       }}
       pt='8px'
       top='18px'
