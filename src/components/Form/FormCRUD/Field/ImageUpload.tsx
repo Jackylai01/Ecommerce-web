@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import React, { ChangeEvent, useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface PreviewImage {
   file?: File | null;
@@ -40,6 +41,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   onRemoveImage,
   deleteLoading,
 }) => {
+  const { colorMode } = useAdminColorMode();
+  const borderColor = colorMode === 'light' ? 'gray.700' : 'white';
   const [filePreviews, setFilePreviews] = useState<any[]>([]);
   const { setValue } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -108,7 +111,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         {label} {isRequired && <span style={{ color: 'red' }}>*</span>}
       </Text>
       <IconButton
-        icon={<AddIcon color='black' />}
+        icon={<AddIcon color={borderColor} />}
         onClick={handleButtonClick}
         aria-label={`Upload ${label}`}
       />
