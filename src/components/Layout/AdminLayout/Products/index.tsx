@@ -55,11 +55,7 @@ interface ProductRowData {
   stock?: number;
 }
 
-interface ProductContainerType {
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-}
-
-const ProductTableContainer = ({ onSubmit }: ProductContainerType) => {
+const ProductTableContainer = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 

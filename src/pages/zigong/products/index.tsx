@@ -7,10 +7,7 @@ import { ProductsConfig } from '@fixtures/Tabs-configs';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { resetProductState } from '@reducers/admin/products';
-import {
-  addProductAsync,
-  updateProductAsync,
-} from '@reducers/admin/products/actions';
+import { addProductAsync } from '@reducers/admin/products/actions';
 import { resetAdminUpload } from '@reducers/admin/upload';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
@@ -25,19 +22,10 @@ const ProductsPages: NextPage = () => {
   const dispatch = useAppDispatch();
 
   const {
-    editingProductId,
-    status: {
-      addProductSuccess,
-      addProductFailed,
-      addProductLoading,
-      updateProductLoading,
-      updateProductSuccess,
-      updateProductFailed,
-    },
+    status: { addProductSuccess, addProductFailed, addProductLoading },
     error: { addProductError },
   } = useAppSelector((state) => state.adminProducts);
   const { uploadedImages } = useAppSelector((state) => state.adminUpload);
-  const { productDetails } = useAppSelector((state) => state.adminProducts);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');
@@ -51,24 +39,15 @@ const ProductsPages: NextPage = () => {
       dispatch(resetAdminUpload());
     }
 
-    if (updateProductSuccess) {
-      setIsModalOpen(true);
-      setModalContent('產品更新成功！');
-      setModalTitle('更新產品');
-      dispatch(resetAdminUpload());
-    }
-
     if (addProductFailed) {
       setIsModalOpen(true);
       setModalContent('');
       dispatch(resetAdminUpload());
     }
-  }, [dispatch, addProductSuccess, updateProductSuccess, addProductFailed]);
+  }, [dispatch, addProductSuccess, addProductFailed]);
 
   const handleSubmit = async (data: any) => {
     console.log('提交的数据:', data);
-
-    const isUpdating = !!editingProductId;
 
     // 初始化或获取现有的 detailDescription
     let detailDescription = data.detailDescription || [];
@@ -132,13 +111,8 @@ const ProductsPages: NextPage = () => {
       formData.append('specifications', JSON.stringify(data.specifications));
     }
 
-    // 根据是否有 id 判断是更新产品还是添加新产品
-    if (isUpdating) {
-      dispatch(updateProductAsync({ id: editingProductId, body: formData }));
-    } else {
-      dispatch(addProductAsync(formData));
-      dispatch(resetAdminUpload());
-    }
+    dispatch(addProductAsync(formData));
+    dispatch(resetAdminUpload());
   };
 
   const handleCloseModal = () => {
@@ -153,14 +127,14 @@ const ProductsPages: NextPage = () => {
 
   return (
     <>
-      <LoadingLayout isLoading={addProductLoading || updateProductLoading}>
+      <LoadingLayout isLoading={addProductLoading}>
         <AddButton
           formTitle='Add Product'
           formContent={<ProductFormContent />}
           onSubmit={handleSubmit}
         />
         <TabsLayout tabsConfig={ProductsConfig}>
-          <ProductTableContainer onSubmit={handleSubmit} />
+          <ProductTableContainer />
         </TabsLayout>
         <MessageModal
           title={modalTitle}
