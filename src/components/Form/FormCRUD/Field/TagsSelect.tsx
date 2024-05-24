@@ -7,6 +7,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface TagsMultiSelectProps {
   name: string;
@@ -22,6 +23,8 @@ export const TagsMultiSelect = ({
   isRequired = false,
   ...selectProps
 }: TagsMultiSelectProps) => {
+  const { colorMode } = useAdminColorMode();
+  const borderColor = colorMode === 'light' ? 'gray.700' : 'white';
   const { setValue, watch, control, getValues } = useFormContext();
   const {
     field: { ref, ...inputProps },
@@ -53,7 +56,7 @@ export const TagsMultiSelect = ({
             <Checkbox
               key={option.value}
               value={option.value}
-              borderColor='black'
+              borderColor={borderColor}
               defaultValue={selectedTags}
             >
               {option.label}

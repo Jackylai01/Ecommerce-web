@@ -1,6 +1,7 @@
 import { FormControl, FormLabel, Select, SelectProps } from '@chakra-ui/react';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface CustomSelectProps extends SelectProps {
   name: string;
@@ -17,6 +18,9 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   ...selectProps
 }) => {
   const { control } = useFormContext();
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
   const {
     field: { ref, ...inputProps },
   } = useController({
@@ -36,8 +40,8 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
         placeholder='請選擇'
         {...inputProps}
         {...selectProps}
-        bg='white'
-        color='black'
+        bg={bgColor}
+        color={textColor}
       >
         {options.map((option) => (
           <option
