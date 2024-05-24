@@ -3,10 +3,13 @@ import { Box, Button, Container, Flex, IconButton } from '@chakra-ui/react';
 import { ProductFormContent } from '@components/Form/FormCRUD/ProductsContent';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { getProductByIdAsync } from '@reducers/admin/products/actions';
+import {
+  getProductByIdAsync,
+  updateProductAsync,
+} from '@reducers/admin/products/actions';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useAdminColorMode } from 'src/context/colorMode';
 
 const ProductEditPage = () => {
@@ -30,10 +33,12 @@ const ProductEditPage = () => {
     }
   }, [productDetails, methods]);
 
-  const handleSubmit = async (data: any) => {
-    // 處理表單提交邏輯
-    console.log('提交的数据:', data);
-    // 根據 id 判斷是更新還是新增產品
+  const handleSubmit: SubmitHandler<any> = async (data) => {
+    if (typeof id === 'string') {
+      dispatch(updateProductAsync({ id, body: data }));
+    } else {
+      console.error('Invalid id');
+    }
   };
 
   const handleBack = () => {
