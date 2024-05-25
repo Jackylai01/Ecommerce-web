@@ -47,8 +47,6 @@ const ProductsPages: NextPage = () => {
   }, [dispatch, addProductSuccess, addProductFailed]);
 
   const handleSubmit = async (data: any) => {
-    console.log('提交的数据:', data);
-
     // 初始化或获取现有的 detailDescription
     let detailDescription = data.detailDescription || [];
 
