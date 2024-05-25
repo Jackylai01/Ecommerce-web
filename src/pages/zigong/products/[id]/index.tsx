@@ -71,6 +71,7 @@ const ProductEditPage = () => {
       const formData = new FormData();
       formData.append('detailDescription', JSON.stringify(detailDescription));
 
+      // 添加其他表单字段到 formData
       Object.keys(data).forEach((key) => {
         if (
           ![
