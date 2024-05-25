@@ -29,6 +29,7 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
     },
     [dispatch, element.id],
   );
+
   const handleCellChange = useCallback(
     (rowIndex, columnIndex, content) => {
       if (tableData[rowIndex][columnIndex] !== content) {
@@ -46,6 +47,7 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
     },
     [dispatch, element.id, tableData],
   );
+
   const addRow = () => {
     const newRow = new Array(tableData[0]?.length || 1).fill('');
     updateTableData([...tableData, newRow]);
@@ -64,6 +66,7 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
     },
     [tableData, updateTableData],
   );
+
   const deleteColumn = useCallback(
     (columnIndex) => {
       const newData = tableData.map((row) =>
@@ -84,7 +87,7 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
             bg='gray.600'
             color='white'
             sx={{
-              _hover: 'none',
+              '&:hover': { backgroundColor: 'gray.500' },
             }}
           >
             Add Row
@@ -94,7 +97,7 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
             bg='gray.600'
             color='white'
             sx={{
-              _hover: 'none',
+              '&:hover': { backgroundColor: 'gray.500' },
             }}
           >
             Add Column

@@ -11,6 +11,7 @@ type Props = {
   elements: CustomPageElement[];
   isEdit: boolean;
   onImageUpdate?: any;
+  onBlur?: () => void; // 添加 onBlur 回调
 };
 
 export type ElementProps = {
@@ -18,9 +19,15 @@ export type ElementProps = {
   isEdit: boolean;
   id?: string | any;
   onImageUpdate?: any;
+  onBlur?: () => void; // 添加 onBlur 回调
 };
 
-const NestedDisplayUI = ({ elements, isEdit = true, onImageUpdate }: Props) => {
+const NestedDisplayUI = ({
+  elements,
+  isEdit = true,
+  onImageUpdate,
+  onBlur,
+}: Props) => {
   if (!elements || !elements.length) return <></>;
 
   return (
@@ -60,6 +67,7 @@ const NestedDisplayUI = ({ elements, isEdit = true, onImageUpdate }: Props) => {
                 key={element.id || generateUUID()}
                 element={element}
                 isEdit={isEdit}
+                onBlur={onBlur} // 传递 onBlur 回调
               />
             );
         }

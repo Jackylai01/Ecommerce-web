@@ -46,8 +46,10 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
         element.id = generateUUID();
       }
     });
+
     const updatedBlocks = [...blocks, newBlock];
     setValue(name, updatedBlocks, { shouldValidate: true });
+    dispatch(setPageBlocks(updatedBlocks));
   };
 
   const handleDeleteBlock = async (index: number) => {
@@ -124,7 +126,7 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
     updatedBlocks.splice(dropIndex, 0, itemToMove);
 
     dispatch(setPageBlocks(updatedBlocks));
-    setValue('detailDescription', remainingItems);
+    setValue(name, remainingItems);
   };
 
   const handleImageUploadSuccess = (imageId: string, imageUrl: string) => {
@@ -140,6 +142,12 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
       };
     });
     setValue(name, newBlocks, { shouldValidate: true });
+    dispatch(setPageBlocks(newBlocks)); // 确保状态被正确保存到 Redux 中
+  };
+
+  const handleBlur = () => {
+    const updatedBlocks = getValues(name);
+    dispatch(setPageBlocks(updatedBlocks));
   };
 
   useEffect(() => {
@@ -163,6 +171,14 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
     setValue('detailDescription', imageBlocks);
   }, [uploadedImages, setValue]);
 
+  const toggleEditMode = () => {
+    if (isEdit) {
+      const updatedBlocks = getValues(name);
+      dispatch(setPageBlocks(updatedBlocks));
+    }
+    setIsEdit(!isEdit);
+  };
+
   return (
     <VStack spacing={4} align='flex-start' w='100%' mt='2rem'>
       <Box fontSize='xl' mb='4'>
@@ -171,7 +187,7 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
       <Button
         leftIcon={<EditIcon />}
         colorScheme='blue'
-        onClick={() => setIsEdit(!isEdit)}
+        onClick={toggleEditMode}
         bg={isEdit ? 'red.300' : 'blue.300'}
       >
         {isEdit ? '退出編輯模式' : '進入編輯模式'}
@@ -187,6 +203,7 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
             elements={block.elements}
             isEdit={isEdit}
             onImageUpdate={handleImageUploadSuccess}
+            onBlur={handleBlur} // 添加 onBlur 事件
           />
           {isEdit && (
             <>
