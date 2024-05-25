@@ -1,9 +1,13 @@
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, IconButton, Input, VStack } from '@chakra-ui/react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useAdminColorMode } from 'src/context/colorMode';
 import { Specification } from './Specification';
 
 const DynamicSpecifications = () => {
+  const { colorMode } = useAdminColorMode();
+  const bgColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const { control, register } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -34,11 +38,13 @@ const DynamicSpecifications = () => {
               placeholder='颜色（如“黑色”）'
               w='full'
               mr={2}
-              sx={{ '::placeholder': { color: 'gray.500' } }}
+              borderColor={bgColor}
+              sx={{ '::placeholder': { color: 'white' } }}
+              color={textColor}
             />
             <IconButton
               aria-label='删除規格組合'
-              icon={<DeleteIcon color='black' />}
+              icon={<DeleteIcon color={textColor} />}
               onClick={() => remove(index)}
             />
           </Flex>

@@ -10,20 +10,28 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface SpecificationProps {
   specIndex: number;
 }
 
 export const Specification = ({ specIndex }: SpecificationProps) => {
-  const { control, register } = useFormContext();
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext();
+  const { colorMode } = useAdminColorMode();
+  const bgColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const { fields, append, remove } = useFieldArray({
     control,
     name: `specifications[${specIndex}].specs`,
   });
 
   const handleAddDetail = () => {
-    append({ key: '', value: '' });
+    append({ key: '', value: '', inventory: '' });
   };
 
   return (
@@ -36,27 +44,29 @@ export const Specification = ({ specIndex }: SpecificationProps) => {
           alignItems='end'
         >
           <FormControl>
-            <FormLabel>特性</FormLabel>
+            <FormLabel color={textColor}>特性</FormLabel>
             <Input
               {...register(`specifications[${specIndex}].specs[${index}].key`)}
               placeholder="例如'尺寸'"
-              color='black'
               sx={{ '::placeholder': { color: 'gray.500' } }}
+              borderColor={bgColor}
+              color={textColor}
             />
           </FormControl>
           <FormControl>
-            <FormLabel>值</FormLabel>
+            <FormLabel color={textColor}>值</FormLabel>
             <Input
               {...register(
                 `specifications[${specIndex}].specs[${index}].value`,
               )}
               placeholder="例如'M'"
-              color='black'
               sx={{ '::placeholder': { color: 'gray.500' } }}
+              borderColor={bgColor}
+              color={textColor}
             />
           </FormControl>
           <FormControl>
-            <FormLabel>庫存</FormLabel>
+            <FormLabel color={textColor}>庫存</FormLabel>
             <HStack>
               <Input
                 {...register(
@@ -65,10 +75,12 @@ export const Specification = ({ specIndex }: SpecificationProps) => {
                 placeholder='數量'
                 type='number'
                 sx={{ '::placeholder': { color: 'gray.500' } }}
+                borderColor={bgColor}
+                color={textColor}
               />
               <IconButton
                 aria-label='删除規格'
-                icon={<DeleteIcon color='black' />}
+                icon={<DeleteIcon color={textColor} />}
                 onClick={() => remove(index)}
               />
             </HStack>
