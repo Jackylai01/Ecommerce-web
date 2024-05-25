@@ -15,6 +15,7 @@ import {
   SubmitHandler,
   useForm,
 } from 'react-hook-form';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface FormModalProps<T extends FieldValues> {
   isOpen: boolean;
@@ -32,7 +33,9 @@ function FormModal<T extends FieldValues>({
   title,
 }: FormModalProps<T>) {
   const methods = useForm<T>();
-
+  const { colorMode } = useAdminColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const handleFormSubmit: SubmitHandler<T> = (data) => {
     onSubmit(data);
     onClose();
@@ -52,16 +55,16 @@ function FormModal<T extends FieldValues>({
         closeOnOverlayClick={false}
       >
         <ModalOverlay />
-        <ModalContent minH='620px' bg='white' color='black'>
+        <ModalContent minH='620px' bg={bgColor} color={textColor}>
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <form onSubmit={methods.handleSubmit(handleFormSubmit)}>
             <ModalBody>{children}</ModalBody>
             <ModalFooter>
-              <Button colorScheme='blue' color='white' mr={3} type='submit'>
+              <Button colorScheme='blue' color={textColor} mr={3} type='submit'>
                 Submit
               </Button>
-              <Button color='black' onClick={handleClose}>
+              <Button color={textColor} onClick={handleClose}>
                 Cancel
               </Button>
             </ModalFooter>

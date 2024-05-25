@@ -20,6 +20,7 @@ const AddButton: FC<AddButtonProps<any>> = ({
   onSubmit,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const dispatch = useAppDispatch();
 
   const handleAddButtonClick = () => {
