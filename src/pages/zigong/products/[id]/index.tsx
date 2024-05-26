@@ -2,14 +2,16 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { Box, Button, Container, Flex, IconButton } from '@chakra-ui/react';
 import { ProductFormContent } from '@components/Form/FormCRUD/ProductsContent';
 import LoadingLayout from '@components/Layout/LoadingLayout';
+import MessageModal from '@components/Modal/MessageModal';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import {
   getProductByIdAsync,
   updateProductAsync,
 } from '@reducers/admin/products/actions';
+import { resetAdminUpload } from '@reducers/admin/upload';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useAdminColorMode } from 'src/context/colorMode';
 
@@ -18,16 +20,16 @@ const ProductEditPage = () => {
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const iconColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<string>('');
+  const [modalTitle, setModalTitle] = useState<string>('新增產品');
   const { id } = router.query;
   const dispatch = useAppDispatch();
   const methods = useForm();
   const {
     productDetails,
-    status: {
-      updateProductFailed,
-      updateProductLoading,
-      updateProductStatusSuccess,
-    },
+    status: { updateProductFailed, updateProductLoading, updateProductSuccess },
+    error: { updateProductError },
   } = useAppSelector((state) => state.adminProducts);
   const { uploadedImages } = useAppSelector((state) => state.adminUpload);
 
@@ -42,6 +44,21 @@ const ProductEditPage = () => {
       methods.reset(productDetails);
     }
   }, [productDetails, methods]);
+
+  useEffect(() => {
+    if (updateProductSuccess) {
+      setIsModalOpen(true);
+      setModalContent('產品更新成功！');
+      setModalTitle('更新產品');
+      dispatch(resetAdminUpload());
+    }
+
+    if (updateProductFailed) {
+      setIsModalOpen(true);
+      setModalContent('');
+      dispatch(resetAdminUpload());
+    }
+  }, [dispatch, updateProductSuccess, updateProductFailed]);
 
   const handleSubmit: SubmitHandler<any> = async (data) => {
     if (typeof id === 'string') {
@@ -111,6 +128,9 @@ const ProductEditPage = () => {
     router.back();
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <LoadingLayout isLoading={updateProductLoading}>
       <Container maxW='container.2x1' mt='5rem'>
@@ -143,6 +163,14 @@ const ProductEditPage = () => {
           </form>
         </FormProvider>
       </Container>
+      <MessageModal
+        title={modalTitle}
+        isActive={isModalOpen}
+        error={updateProductError}
+        onClose={handleCloseModal}
+      >
+        {modalContent}
+      </MessageModal>
     </LoadingLayout>
   );
 };
