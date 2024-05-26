@@ -3,7 +3,6 @@ import { CustomPageElement } from '@models/entities/custom-page-template';
 import Icon from './src/Icon';
 import LoginBlock from './src/LoginBlock';
 import SelectableImage from './src/SelectableImage';
-import TableElement from './src/TableElement';
 import TagElement from './src/TagElement';
 import Items from './src/items';
 
@@ -44,14 +43,6 @@ const NestedDisplayUI = ({
             return (
               <Items key={generateUUID()} element={element} isEdit={isEdit} />
             );
-          case 'table':
-            return (
-              <TableElement
-                key={element.id || generateUUID()}
-                element={element}
-                isEdit={isEdit}
-              />
-            );
           case 'img':
             return (
               <SelectableImage
@@ -67,7 +58,7 @@ const NestedDisplayUI = ({
                 key={element.id || generateUUID()}
                 element={element}
                 isEdit={isEdit}
-                onBlur={onBlur} // 传递 onBlur 回调
+                onBlur={onBlur} // 傳遞 onBlur 回調
               />
             );
         }

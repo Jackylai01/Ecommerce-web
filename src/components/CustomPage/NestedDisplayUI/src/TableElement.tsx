@@ -13,12 +13,12 @@ import {
 import useAppDispatch from '@hooks/useAppDispatch';
 import { updateBlockElementData } from '@reducers/admin/custom-page';
 import dynamic from 'next/dynamic';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ElementProps } from '..';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-const TableElement = ({ element, isEdit }: ElementProps) => {
+const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
   const [tableData, setTableData] = useState(element.data || [[]]);
   const dispatch = useAppDispatch();
 
@@ -26,26 +26,24 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
     (newData) => {
       setTableData(newData);
       dispatch(updateBlockElementData({ id: element.id, newData }));
+      if (onBlur) onBlur(); // 确保父组件更新表单值
     },
-    [dispatch, element.id],
+    [dispatch, element.id, onBlur],
   );
 
   const handleCellChange = useCallback(
     (rowIndex, columnIndex, content) => {
-      if (tableData[rowIndex][columnIndex] !== content) {
-        const newData = tableData.map((row, idx) => {
-          if (idx === rowIndex) {
-            const newRow = [...row];
-            newRow[columnIndex] = content;
-            return newRow;
-          }
-          return row;
-        });
-        setTableData(newData);
-        dispatch(updateBlockElementData({ id: element.id, newData }));
-      }
+      const newData = tableData.map((row, idx) => {
+        if (idx === rowIndex) {
+          const newRow = [...row];
+          newRow[columnIndex] = content;
+          return newRow;
+        }
+        return row;
+      });
+      updateTableData(newData);
     },
-    [dispatch, element.id, tableData],
+    [tableData, updateTableData],
   );
 
   const addRow = () => {
@@ -77,6 +75,10 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
     [tableData, updateTableData],
   );
 
+  useEffect(() => {
+    setTableData(element.data || [[]]);
+  }, [element.data]);
+
   return (
     <Box>
       {isEdit && (
@@ -86,9 +88,7 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
             mr='2'
             bg='gray.600'
             color='white'
-            sx={{
-              '&:hover': { backgroundColor: 'gray.500' },
-            }}
+            _hover={{ backgroundColor: 'gray.500' }}
           >
             Add Row
           </Button>
@@ -96,9 +96,7 @@ const TableElement = ({ element, isEdit }: ElementProps) => {
             onClick={addColumn}
             bg='gray.600'
             color='white'
-            sx={{
-              '&:hover': { backgroundColor: 'gray.500' },
-            }}
+            _hover={{ backgroundColor: 'gray.500' }}
           >
             Add Column
           </Button>
