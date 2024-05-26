@@ -9,13 +9,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { CustomPageTemplate } from '@models/entities/custom-page-template';
-import {
-  FaEdit,
-  FaHeading,
-  FaPodcast,
-  FaRegImage,
-  FaTable,
-} from 'react-icons/fa';
+import { FaEdit, FaHeading, FaPodcast, FaRegImage } from 'react-icons/fa';
 
 type ContentSelectionModalProps = {
   isOpen: boolean;
@@ -37,8 +31,6 @@ const ContentSelectionModal = ({
       return <FaHeading />;
     } else if (templateId.includes('text')) {
       return <FaEdit />;
-    } else if (templateId.includes('table')) {
-      return <FaTable />;
     } else if (templateId.includes('post')) {
       return <FaPodcast />;
     } else {

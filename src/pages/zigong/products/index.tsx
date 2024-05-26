@@ -12,7 +12,6 @@ import { resetAdminUpload } from '@reducers/admin/upload';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
 
 const ProductTableContainer = dynamic(
   () => import('@components/Layout/AdminLayout/Products'),
@@ -21,7 +20,6 @@ const ProductTableContainer = dynamic(
 
 const ProductsPages: NextPage = () => {
   const dispatch = useAppDispatch();
-  const methods = useForm();
 
   const {
     status: { addProductSuccess, addProductFailed, addProductLoading },
@@ -89,8 +87,8 @@ const ProductsPages: NextPage = () => {
       }
     });
 
-    if (data.coverImage && data.coverImage[0]) {
-      formData.append('coverImage', data.coverImage[0]);
+    if (data.coverImage) {
+      formData.append('coverImage', data.coverImage);
     }
     if (data.images && data.images.length) {
       data.images.forEach((image: any) => {
@@ -122,26 +120,24 @@ const ProductsPages: NextPage = () => {
 
   return (
     <>
-      <FormProvider {...methods}>
-        <LoadingLayout isLoading={addProductLoading}>
-          <AddButton
-            formTitle='Add Product'
-            formContent={<ProductFormContent />}
-            onSubmit={handleSubmit}
-          />
-          <TabsLayout tabsConfig={ProductsConfig}>
-            <ProductTableContainer />
-          </TabsLayout>
-          <MessageModal
-            title={modalTitle}
-            isActive={isModalOpen}
-            error={addProductError}
-            onClose={handleCloseModal}
-          >
-            {modalContent}
-          </MessageModal>
-        </LoadingLayout>
-      </FormProvider>
+      <LoadingLayout isLoading={addProductLoading}>
+        <AddButton
+          formTitle='Add Product'
+          formContent={<ProductFormContent />}
+          onSubmit={handleSubmit}
+        />
+        <TabsLayout tabsConfig={ProductsConfig}>
+          <ProductTableContainer />
+        </TabsLayout>
+        <MessageModal
+          title={modalTitle}
+          isActive={isModalOpen}
+          error={addProductError}
+          onClose={handleCloseModal}
+        >
+          {modalContent}
+        </MessageModal>
+      </LoadingLayout>
     </>
   );
 };
