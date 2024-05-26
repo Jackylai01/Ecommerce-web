@@ -47,17 +47,14 @@ const ProductsPages: NextPage = () => {
   }, [dispatch, addProductSuccess, addProductFailed]);
 
   const handleSubmit = async (data: any) => {
-    // 初始化或获取现有的 detailDescription
     let detailDescription = data.detailDescription || [];
 
-    // 获取现有的所有图片 ID，用于检查重复
     const existingImageIds = new Set(
       detailDescription.flatMap((block: any) =>
         block.elements.map((el: any) => el.imageId),
       ),
     );
 
-    // 过滤出未添加的图片并创建新的图片元素
     const newImageElements = uploadedImages
       .filter((img) => !existingImageIds.has(img.imageId))
       .map((image) => ({
@@ -71,13 +68,11 @@ const ProductsPages: NextPage = () => {
         ],
       }));
 
-    // 合并旧的 detailDescription 和新的图片元素
     detailDescription = [...detailDescription, ...newImageElements];
 
     const formData = new FormData();
     formData.append('detailDescription', JSON.stringify(detailDescription));
 
-    // 添加其他表单字段到 formData
     Object.keys(data).forEach((key) => {
       if (
         ![

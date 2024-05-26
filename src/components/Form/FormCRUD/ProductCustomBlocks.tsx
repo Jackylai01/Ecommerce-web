@@ -84,7 +84,6 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
             }
           }
         } else {
-          // 如果不在编辑模式，从uploadedImages中查找并删除图片
           const imageIndex = uploadedImages.findIndex(
             (img) => img.imageId === element.imageId,
           );
@@ -100,7 +99,6 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
       }
     }
 
-    // 移除选定的区块来更新区块数组
     const updatedBlocks = blocks.filter((_: any, idx: number) => idx !== index);
     setValue(name, updatedBlocks, { shouldValidate: true });
   };
@@ -142,11 +140,12 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
       };
     });
     setValue(name, newBlocks, { shouldValidate: true });
-    dispatch(setPageBlocks(newBlocks)); // 确保状态被正确保存到 Redux 中
+    dispatch(setPageBlocks(newBlocks));
   };
 
   const handleBlur = () => {
     const updatedBlocks = getValues(name);
+    setValue(name, updatedBlocks, { shouldValidate: true });
     dispatch(setPageBlocks(updatedBlocks));
   };
 
@@ -157,7 +156,6 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
   }, [productDetails, setValue]);
 
   useEffect(() => {
-    // 每当uploadedImages更新时，同步更新blocks中的imageId
     const imageBlocks = uploadedImages.map((image) => ({
       className: 'image-selectable',
       elements: [
@@ -203,7 +201,7 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
             elements={block.elements}
             isEdit={isEdit}
             onImageUpdate={handleImageUploadSuccess}
-            onBlur={handleBlur} // 添加 onBlur 事件
+            onBlur={handleBlur}
           />
           {isEdit && (
             <>
