@@ -5,9 +5,7 @@ import { ADMIN_ROUTE } from '@fixtures/constants';
 import { isAdminLoggedIn, loadAdminToken } from '@helpers/token';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { AuthResponse } from '@models/responses/user.res';
 import { resetAdminAuth, setAdminUserInfo } from '@reducers/admin/auth';
-import { adminRefreshTokenAsync } from '@reducers/admin/auth/actions';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -46,49 +44,49 @@ const AdminLayout = ({ children }: Props) => {
   // 判定token是否過期，過期就重新取得token。後端回傳到期的時間(UTC)
   //  state 來確保只嘗試刷新 token 一次
 
-  const checkAndRefreshToken = () => {
-    let refreshTokenTimeout;
+  // const checkAndRefreshToken = () => {
+  //   let refreshTokenTimeout;
 
-    if (refreshTokenTimeout) {
-      // 如果之前已經設定了計時器，先清除
-      clearTimeout(refreshTokenTimeout);
-    }
+  //   if (refreshTokenTimeout) {
+  //     // 如果之前已經設定了計時器，先清除
+  //     clearTimeout(refreshTokenTimeout);
+  //   }
 
-    if (!userInfo?.expirationDate) return;
+  //   if (!userInfo?.expirationDate) return;
 
-    const expiration = new Date(userInfo.expirationDate);
-    const currentTime = new Date();
-    const timeBeforeExpiration = expiration.getTime() - currentTime.getTime();
+  //   const expiration = new Date(userInfo.expirationDate);
+  //   const currentTime = new Date();
+  //   const timeBeforeExpiration = expiration.getTime() - currentTime.getTime();
 
-    if (timeBeforeExpiration <= 30 * 1000 && !hasTriedRefreshing) {
-      dispatch(adminRefreshTokenAsync());
-      setHasTriedRefreshing(true);
-    } else if (timeBeforeExpiration > 30 * 1000) {
-      refreshTokenTimeout = setTimeout(() => {
-        dispatch(adminRefreshTokenAsync());
-        setHasTriedRefreshing(true);
-      }, timeBeforeExpiration - 30 * 1000);
-    }
-  };
+  //   if (timeBeforeExpiration <= 30 * 1000 && !hasTriedRefreshing) {
+  //     dispatch(adminRefreshTokenAsync());
+  //     setHasTriedRefreshing(true);
+  //   } else if (timeBeforeExpiration > 30 * 1000) {
+  //     refreshTokenTimeout = setTimeout(() => {
+  //       dispatch(adminRefreshTokenAsync());
+  //       setHasTriedRefreshing(true);
+  //     }, timeBeforeExpiration - 30 * 1000);
+  //   }
+  // };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  // 如果有 token 就直接載入Redux 的 狀態到 store
-  useEffect(() => {
-    const storedData = loadAdminToken();
-    if (storedData && storedData.userInfo) {
-      const authResponse: AuthResponse = {
-        accessToken: storedData.accessToken,
-        refreshToken: storedData.refreshToken,
-        userInfo: storedData.userInfo,
-        expirationDate: storedData.expirationDate,
-        currentSessionToken: storedData.currentSessionToken,
-      };
-      dispatch(setAdminUserInfo(authResponse));
-    }
-  }, [dispatch]);
+  // // 如果有 token 就直接載入Redux 的 狀態到 store
+  // useEffect(() => {
+  //   const storedData = loadAdminToken();
+  //   if (storedData && storedData.userInfo) {
+  //     const authResponse: AuthResponse = {
+  //       accessToken: storedData.accessToken,
+  //       refreshToken: storedData.refreshToken,
+  //       userInfo: storedData.userInfo,
+  //       expirationDate: storedData.expirationDate,
+  //       currentSessionToken: storedData.currentSessionToken,
+  //     };
+  //     dispatch(setAdminUserInfo(authResponse));
+  //   }
+  // }, [dispatch]);
 
   useEffect(() => {
     const tokenInfo = loadAdminToken();
@@ -98,9 +96,9 @@ const AdminLayout = ({ children }: Props) => {
   }, [dispatch, userInfo]);
 
   // 檢查 token 是否過期。usrInfo 裡面有個欄位是expirationDate
-  useEffect(() => {
-    checkAndRefreshToken();
-  }, [checkAndRefreshToken, userInfo]);
+  // // useEffect(() => {
+  // //   checkAndRefreshToken();
+  // // }, [checkAndRefreshToken, userInfo]);
 
   useEffect(() => {
     if (!isAdminLoggedIn() || (hasTriedRefreshing && !userInfo)) {

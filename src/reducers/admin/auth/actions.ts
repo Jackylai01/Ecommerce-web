@@ -24,6 +24,7 @@ import {
   apiAdminUsersTokenRefresh,
   apiAdminVerificationToken,
 } from '@services/admin/admin-auth/admin-users';
+import { resetAdminAuth } from '.';
 
 export enum AdminAuthAsyncAction {
   login = 'login',
@@ -76,9 +77,10 @@ export const adminRefreshTokenAsync = createAsyncThunk(
 
 export const adminLogoutAsync = createAsyncThunk(
   `${ReducerName.ADMIN_AUTH}/${AdminAuthAsyncAction.logout}`,
-  async () => {
+  async (_, { dispatch }) => {
     await apiAdminUsersLogout();
     removeAdminToken();
+    dispatch(resetAdminAuth());
   },
 );
 

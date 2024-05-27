@@ -8,8 +8,10 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
+import { ADMIN_ROUTE } from '@fixtures/constants';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 interface LogoutModalProps {
   isOpen: boolean;
@@ -18,10 +20,12 @@ interface LogoutModalProps {
 
 const LogoutModal = ({ isOpen, onClose }: LogoutModalProps) => {
   const router = useRouter();
-
+  const { colorMode } = useAdminColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   useEffect(() => {
     if (isOpen) {
-      router.push('/public/auth/login');
+      router.push(`/${ADMIN_ROUTE}/auth/login`);
     }
   }, [isOpen, router]);
 
@@ -37,7 +41,7 @@ const LogoutModal = ({ isOpen, onClose }: LogoutModalProps) => {
       isCentered
     >
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent bg={bgColor} color={textColor}>
         <ModalHeader>登出通知</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

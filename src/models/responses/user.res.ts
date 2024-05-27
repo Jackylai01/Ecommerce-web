@@ -4,6 +4,7 @@ export class AuthResponse {
   expirationDate!: string;
   userInfo!: UserInfo;
   currentSessionToken!: string;
+  currentSessionId?: string | null;
 }
 
 export class JwtResponse {
