@@ -59,7 +59,6 @@ const NestedDisplayUI = ({
                 key={element.id || generateUUID()}
                 element={element}
                 isEdit={isEdit}
-                onBlur={onBlur}
               />
             );
           default:
@@ -68,7 +67,7 @@ const NestedDisplayUI = ({
                 key={element.id || generateUUID()}
                 element={element}
                 isEdit={isEdit}
-                onBlur={onBlur}
+                onBlur={onBlur} // 传递 onBlur 回调
               />
             );
         }

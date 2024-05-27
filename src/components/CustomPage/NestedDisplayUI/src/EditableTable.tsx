@@ -37,15 +37,15 @@ const EditableTable = ({ element, isEdit }: ElementProps) => {
   const handleAddColumn = useCallback(() => {
     const newData = data.map((row) => [...row, '']);
     setData(newData);
-    dispatch(updateBlockElementData({ id: element._id, newData }));
-  }, [data, dispatch, element._id]);
+    dispatch(updateBlockElementData({ id: element.id, newData }));
+  }, [data, dispatch, element.id]);
 
   const handleAddRow = useCallback(() => {
     const newRow = new Array(data[0].length).fill('');
     const newData = [...data, newRow];
     setData(newData);
-    dispatch(updateBlockElementData({ id: element._id, newData }));
-  }, [data, dispatch, element._id]);
+    dispatch(updateBlockElementData({ id: element.id, newData }));
+  }, [data, dispatch, element.id]);
 
   const handleDeleteColumn = useCallback(
     (colIndex: number) => {
@@ -54,9 +54,9 @@ const EditableTable = ({ element, isEdit }: ElementProps) => {
         row.filter((_, index) => index !== colIndex),
       );
       setData(newData);
-      dispatch(updateBlockElementData({ id: element._id, newData }));
+      dispatch(updateBlockElementData({ id: element.id, newData }));
     },
-    [data, dispatch, element._id],
+    [data, dispatch, element.id],
   );
 
   const handleDeleteRow = useCallback(
@@ -64,9 +64,9 @@ const EditableTable = ({ element, isEdit }: ElementProps) => {
       if (data.length === 1) return; // 確保至少有一行
       const newData = data.filter((_, index) => index !== rowIndex);
       setData(newData);
-      dispatch(updateBlockElementData({ id: element._id, newData }));
+      dispatch(updateBlockElementData({ id: element.id, newData }));
     },
-    [data, dispatch, element._id],
+    [data, dispatch, element.id],
   );
 
   const handleCellChange = useCallback(
@@ -78,9 +78,9 @@ const EditableTable = ({ element, isEdit }: ElementProps) => {
           : row,
       );
       setData(newData);
-      dispatch(updateBlockElementData({ id: element._id, newData }));
+      dispatch(updateBlockElementData({ id: element.id, newData }));
     },
-    [data, dispatch, element._id],
+    [data, dispatch, element.id],
   );
 
   return (
