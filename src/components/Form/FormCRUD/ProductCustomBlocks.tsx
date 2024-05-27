@@ -41,6 +41,7 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
 
   const handleAddBlock = (template: CustomPageTemplate) => {
     const newBlock = JSON.parse(JSON.stringify(template.block));
+    console.log(newBlock);
     newBlock.elements.forEach((element: any) => {
       if (!element.id) {
         element.id = generateUUID();
@@ -171,8 +172,7 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
 
   const toggleEditMode = () => {
     if (isEdit) {
-      const updatedBlocks = getValues(name);
-      dispatch(setPageBlocks(updatedBlocks));
+      handleBlur(); // 確保退出編輯模式時數據被保存
     }
     setIsEdit(!isEdit);
   };

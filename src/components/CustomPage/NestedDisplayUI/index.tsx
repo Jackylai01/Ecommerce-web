@@ -1,5 +1,6 @@
 import generateUUID from '@helpers/generate-uuid';
 import { CustomPageElement } from '@models/entities/custom-page-template';
+import EditableTable from './src/EditableTable';
 import Icon from './src/Icon';
 import LoginBlock from './src/LoginBlock';
 import SelectableImage from './src/SelectableImage';
@@ -52,13 +53,22 @@ const NestedDisplayUI = ({
                 onImageUpdate={onImageUpdate}
               />
             );
+          case 'table':
+            return (
+              <EditableTable
+                key={element.id || generateUUID()}
+                element={element}
+                isEdit={isEdit}
+                onBlur={onBlur}
+              />
+            );
           default:
             return (
               <TagElement
                 key={element.id || generateUUID()}
                 element={element}
                 isEdit={isEdit}
-                onBlur={onBlur} // 傳遞 onBlur 回調
+                onBlur={onBlur}
               />
             );
         }
