@@ -64,7 +64,7 @@ const Header = ({
 
     const formData = new FormData();
     formData.append('profileImage', file);
-    dispatch(adminUploadProfileImageAsync({ formData, userId: userInfo?.id }));
+    dispatch(adminUploadProfileImageAsync({ formData, userId: userInfo?._id }));
   };
 
   useEffect(() => {

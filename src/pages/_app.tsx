@@ -38,17 +38,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
       newSocket.on('logout', () => {
         console.log('Received logout event');
-        setLogoutModalOpen(true); // 打开登出弹窗
-        dispatch(adminLogoutAsync()); // 触发登出动作
+        setLogoutModalOpen(true);
+        dispatch(adminLogoutAsync());
       });
 
       newSocket.on('connect_error', (error) => {
         console.error('WebSocket connect_error:', error);
       });
-    } else {
-      console.log(
-        'WebSocket connection not attempted: loginSuccess or userInfo._id not set',
-      );
     }
 
     return () => {

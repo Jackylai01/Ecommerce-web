@@ -59,7 +59,7 @@ const Configurator = ({
   }
 
   const onSubmit = (data: any, id: string) => {
-    dispatch(adminModifyProfileAsync({ data, id: userInfo?.id }));
+    dispatch(adminModifyProfileAsync({ data, id: userInfo?._id }));
   };
 
   const settingsRef = useRef<HTMLButtonElement>(null);
