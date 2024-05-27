@@ -90,6 +90,13 @@ const AdminLayout = ({ children }: Props) => {
     }
   }, [dispatch]);
 
+  useEffect(() => {
+    const tokenInfo = loadAdminToken();
+    if (tokenInfo && !userInfo) {
+      dispatch(setAdminUserInfo(tokenInfo));
+    }
+  }, [dispatch, userInfo]);
+
   // 檢查 token 是否過期。usrInfo 裡面有個欄位是expirationDate
   useEffect(() => {
     checkAndRefreshToken();

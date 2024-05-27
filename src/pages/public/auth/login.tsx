@@ -111,7 +111,6 @@ const Login: NextPage = () => {
 
   const ForgetSubmit = async (data: any) => {
     try {
-      console.log('ForgetSubmit called with:', data);
       await dispatch(clientForgetPasswordAsync(data));
       toast({
         title: '重設密碼信箱已寄送',

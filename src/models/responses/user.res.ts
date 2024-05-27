@@ -17,12 +17,13 @@ export class ProfileImage {
 }
 
 export class UserInfo {
-  id!: string;
+  _id!: string;
   username!: string;
   roles!: string[];
   currentSessionToken!: string;
   expirationDate: Date | null = null;
   phoneNumber!: string;
+  currentSessionId!: string;
 }
 
 export class ProfileResponse {
