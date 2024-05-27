@@ -31,7 +31,7 @@ const ContentSelectionModal = ({
       return <FaHeading />;
     } else if (templateId.includes('text')) {
       return <FaEdit />;
-    } else if (templateId.includes('post')) {
+    } else if (templateId.includes('table')) {
       return <FaPodcast />;
     } else {
       return <FaRegImage />;
