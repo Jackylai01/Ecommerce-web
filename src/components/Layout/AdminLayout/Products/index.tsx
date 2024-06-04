@@ -179,7 +179,6 @@ const ProductTableContainer = () => {
 
   const handleSortChange = (sortOption: string) => {
     setSort(sortOption);
-    dispatch(getAllProductsAsync({ page: 1, limit: 10, sort: sortOption }));
   };
 
   useEffect(() => {
