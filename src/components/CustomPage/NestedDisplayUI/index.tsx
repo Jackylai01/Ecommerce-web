@@ -1,9 +1,9 @@
 import generateUUID from '@helpers/generate-uuid';
 import { CustomPageElement } from '@models/entities/custom-page-template';
-import EditableTable from './src/EditableTable';
 import Icon from './src/Icon';
 import LoginBlock from './src/LoginBlock';
 import SelectableImage from './src/SelectableImage';
+import TableElement from './src/TableElement';
 import TagElement from './src/TagElement';
 import Items from './src/items';
 
@@ -11,7 +11,7 @@ type Props = {
   elements: CustomPageElement[];
   isEdit: boolean;
   onImageUpdate?: any;
-  onBlur?: () => void; // 添加 onBlur 回调
+  onBlur?: () => void;
 };
 
 export type ElementProps = {
@@ -19,7 +19,7 @@ export type ElementProps = {
   isEdit: boolean;
   id?: string | any;
   onImageUpdate?: any;
-  onBlur?: () => void; // 添加 onBlur 回调
+  onBlur?: () => void;
 };
 
 const NestedDisplayUI = ({
@@ -55,10 +55,11 @@ const NestedDisplayUI = ({
             );
           case 'table':
             return (
-              <EditableTable
+              <TableElement
                 key={element.id || generateUUID()}
                 element={element}
                 isEdit={isEdit}
+                onBlur={onBlur}
               />
             );
           default:
@@ -67,7 +68,7 @@ const NestedDisplayUI = ({
                 key={element.id || generateUUID()}
                 element={element}
                 isEdit={isEdit}
-                onBlur={onBlur} // 传递 onBlur 回调
+                onBlur={onBlur}
               />
             );
         }

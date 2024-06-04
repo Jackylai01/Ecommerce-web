@@ -170,11 +170,11 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
   }, [uploadedImages, setValue]);
 
   const toggleEditMode = () => {
-    if (isEdit) {
+    setIsEdit(!isEdit);
+    if (!isEdit) {
       const updatedBlocks = getValues(name);
       dispatch(setPageBlocks(updatedBlocks));
     }
-    setIsEdit(!isEdit);
   };
 
   return (

@@ -1,153 +1,102 @@
-import { DeleteIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import {
-  Box,
   Button,
   IconButton,
+  Input,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
+  VStack,
 } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
-import { updateBlockElementData } from '@reducers/admin/custom-page';
-import dynamic from 'next/dynamic';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { ElementProps } from '..';
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-
 const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
-  const [tableData, setTableData] = useState(element.data || [[]]);
   const dispatch = useAppDispatch();
-
-  const updateTableData = useCallback(
-    (newData) => {
-      setTableData(newData);
-      dispatch(updateBlockElementData({ id: element.id, newData }));
-      if (onBlur) onBlur(); // 确保父组件更新表单值
-    },
-    [dispatch, element.id, onBlur],
-  );
-
-  const handleCellChange = useCallback(
-    (rowIndex, columnIndex, content) => {
-      const newData = tableData.map((row, idx) => {
-        if (idx === rowIndex) {
-          const newRow = [...row];
-          newRow[columnIndex] = content;
-          return newRow;
-        }
-        return row;
-      });
-      updateTableData(newData);
-    },
-    [tableData, updateTableData],
-  );
-
-  const addRow = () => {
-    const newRow = new Array(tableData[0]?.length || 1).fill('');
-    updateTableData([...tableData, newRow]);
-  };
-
-  const addColumn = () => {
-    const newData =
-      tableData.length === 0 ? [['']] : tableData.map((row) => [...row, '']);
-    updateTableData(newData);
-  };
-
-  const deleteRow = useCallback(
-    (rowIndex) => {
-      const newData = tableData.filter((_, index) => index !== rowIndex);
-      updateTableData(newData);
-    },
-    [tableData, updateTableData],
-  );
-
-  const deleteColumn = useCallback(
-    (columnIndex) => {
-      const newData = tableData.map((row) =>
-        row.filter((_, idx) => idx !== columnIndex),
-      );
-      updateTableData(newData);
-    },
-    [tableData, updateTableData],
-  );
+  const { setValue, getValues } = useFormContext();
+  const [data, setData] = useState(element.data || []);
 
   useEffect(() => {
-    setTableData(element.data || [[]]);
-  }, [element.data]);
+    setData(element.data || []);
+  }, [element]);
+
+  const handleChange = (value: string, rowIndex: number, colIndex: number) => {
+    const newData = data.map((row, rIdx) =>
+      row.map((cell, cIdx) =>
+        rIdx === rowIndex && cIdx === colIndex ? value : cell,
+      ),
+    );
+    setData(newData);
+    updateFormData(newData);
+  };
+
+  const handleAddRow = () => {
+    const newData = [...data, new Array(data[0].length).fill('')];
+    setData(newData);
+    updateFormData(newData);
+  };
+
+  const handleDeleteRow = (index: number) => {
+    const newData = data.filter((_, idx) => idx !== index);
+    setData(newData);
+    updateFormData(newData);
+  };
+
+  const updateFormData = (newData: string[][]) => {
+    const updatedBlocks = getValues('detailDescription').map((block: any) => {
+      if (block.elements.some((el: any) => el.id === element.id)) {
+        return {
+          ...block,
+          elements: block.elements.map((el: any) =>
+            el.id === element.id ? { ...el, data: newData } : el,
+          ),
+        };
+      }
+      return block;
+    });
+
+    setValue('detailDescription', updatedBlocks, { shouldValidate: true });
+    if (onBlur) onBlur();
+  };
 
   return (
-    <Box>
-      {isEdit && (
-        <Box mb='4'>
-          <Button
-            onClick={addRow}
-            mr='2'
-            bg='gray.600'
-            color='white'
-            _hover={{ backgroundColor: 'gray.500' }}
-          >
-            Add Row
-          </Button>
-          <Button
-            onClick={addColumn}
-            bg='gray.600'
-            color='white'
-            _hover={{ backgroundColor: 'gray.500' }}
-          >
-            Add Column
-          </Button>
-        </Box>
-      )}
+    <VStack spacing={4} align='flex-start' w='100%'>
       <Table variant='simple'>
         <Thead>
           <Tr>
-            {tableData[0]?.map((_, columnIndex) => (
-              <Th key={`th-${columnIndex}`}>
-                Column {columnIndex + 1}
-                {isEdit && (
-                  <IconButton
-                    aria-label='Delete column'
-                    icon={<DeleteIcon />}
-                    size='xs'
-                    onClick={() => deleteColumn(columnIndex)}
-                    ml='2'
-                    colorScheme='red'
-                  />
-                )}
-              </Th>
+            {data[0].map((_, colIndex) => (
+              <Th key={colIndex}>標題名稱</Th>
             ))}
           </Tr>
         </Thead>
         <Tbody>
-          {tableData.map((row, rowIndex) => (
+          {data.map((row, rowIndex) => (
             <Tr key={rowIndex}>
-              {row.map((cell, columnIndex) => (
-                <Td key={`row-${rowIndex}-col-${columnIndex}`} border='1px'>
+              {row.map((cell, colIndex) => (
+                <Td key={colIndex}>
                   {isEdit ? (
-                    <ReactQuill
-                      theme='bubble'
-                      value={cell || ''}
-                      onChange={(content) =>
-                        handleCellChange(rowIndex, columnIndex, content)
+                    <Input
+                      value={cell}
+                      onChange={(e) =>
+                        handleChange(e.target.value, rowIndex, colIndex)
                       }
                     />
                   ) : (
-                    <div dangerouslySetInnerHTML={{ __html: cell || '' }} />
+                    cell
                   )}
                 </Td>
               ))}
               {isEdit && (
-                <Td border='none'>
+                <Td>
                   <IconButton
                     aria-label='Delete row'
                     icon={<DeleteIcon />}
-                    size='xs'
-                    onClick={() => deleteRow(rowIndex)}
-                    colorScheme='red'
+                    onClick={() => handleDeleteRow(rowIndex)}
                   />
                 </Td>
               )}
@@ -155,7 +104,12 @@ const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
           ))}
         </Tbody>
       </Table>
-    </Box>
+      {isEdit && (
+        <Button leftIcon={<AddIcon />} onClick={handleAddRow}>
+          新增一行
+        </Button>
+      )}
+    </VStack>
   );
 };
 
