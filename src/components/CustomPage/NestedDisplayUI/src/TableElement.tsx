@@ -2,7 +2,6 @@ import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import {
   Button,
   IconButton,
-  Input,
   Table,
   Tbody,
   Td,
@@ -11,13 +10,15 @@ import {
   Tr,
   VStack,
 } from '@chakra-ui/react';
-import useAppDispatch from '@hooks/useAppDispatch';
-import { useEffect, useState } from 'react';
+import { baseQuillToolbar } from '@fixtures/quill-configs';
+import dynamic from 'next/dynamic';
+import { useCallback, useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ElementProps } from '..';
 
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
 const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
-  const dispatch = useAppDispatch();
   const { setValue, getValues } = useFormContext();
   const [data, setData] = useState(element.data || []);
 
@@ -25,35 +26,26 @@ const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
     setData(element.data || []);
   }, [element]);
 
-  const handleChange = (value: string, rowIndex: number, colIndex: number) => {
-    const newData = data.map((row, rIdx) =>
-      row.map((cell, cIdx) =>
-        rIdx === rowIndex && cIdx === colIndex ? value : cell,
-      ),
-    );
-    setData(newData);
-    updateFormData(newData);
-  };
+  const handleChange = useCallback(
+    (value: string, rowIndex: number, colIndex: number) => {
+      setData((prevData) =>
+        prevData.map((row, rIdx) =>
+          row.map((cell, cIdx) =>
+            rIdx === rowIndex && cIdx === colIndex ? value : cell,
+          ),
+        ),
+      );
+    },
+    [],
+  );
 
-  const handleAddRow = () => {
-    const newData = [...data, new Array(data[0].length).fill('')];
-    setData(newData);
-    updateFormData(newData);
-  };
-
-  const handleDeleteRow = (index: number) => {
-    const newData = data.filter((_, idx) => idx !== index);
-    setData(newData);
-    updateFormData(newData);
-  };
-
-  const updateFormData = (newData: string[][]) => {
+  const handleBlur = useCallback(() => {
     const updatedBlocks = getValues('detailDescription').map((block: any) => {
       if (block.elements.some((el: any) => el.id === element.id)) {
         return {
           ...block,
           elements: block.elements.map((el: any) =>
-            el.id === element.id ? { ...el, data: newData } : el,
+            el.id === element.id ? { ...el, data } : el,
           ),
         };
       }
@@ -62,6 +54,17 @@ const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
 
     setValue('detailDescription', updatedBlocks, { shouldValidate: true });
     if (onBlur) onBlur();
+  }, [element.id, getValues, onBlur, setValue, data]);
+
+  const handleAddRow = () => {
+    setData((prevData) => [
+      ...prevData,
+      new Array(prevData[0].length).fill(''),
+    ]);
+  };
+
+  const handleDeleteRow = (index: number) => {
+    setData((prevData) => prevData.filter((_, idx) => idx !== index));
   };
 
   return (
@@ -69,7 +72,7 @@ const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
       <Table variant='simple'>
         <Thead>
           <Tr>
-            {data[0].map((_, colIndex) => (
+            {data[0]?.map((_, colIndex) => (
               <Th key={colIndex}>標題名稱</Th>
             ))}
           </Tr>
@@ -80,14 +83,17 @@ const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
               {row.map((cell, colIndex) => (
                 <Td key={colIndex}>
                   {isEdit ? (
-                    <Input
+                    <ReactQuill
+                      theme='bubble'
                       value={cell}
-                      onChange={(e) =>
-                        handleChange(e.target.value, rowIndex, colIndex)
+                      modules={{ toolbar: baseQuillToolbar }}
+                      onChange={(value) =>
+                        handleChange(value, rowIndex, colIndex)
                       }
+                      onBlur={handleBlur}
                     />
                   ) : (
-                    cell
+                    <div dangerouslySetInnerHTML={{ __html: cell }} />
                   )}
                 </Td>
               ))}

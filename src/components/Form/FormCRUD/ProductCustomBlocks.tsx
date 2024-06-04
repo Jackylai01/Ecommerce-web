@@ -166,8 +166,8 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
         },
       ],
     }));
-    setValue('detailDescription', imageBlocks);
-  }, [uploadedImages, setValue]);
+    setValue(name, imageBlocks);
+  }, [uploadedImages, setValue, name]);
 
   const toggleEditMode = () => {
     setIsEdit(!isEdit);
@@ -176,7 +176,6 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
       dispatch(setPageBlocks(updatedBlocks));
     }
   };
-
   return (
     <VStack spacing={4} align='flex-start' w='100%' mt='2rem'>
       <Box fontSize='xl' mb='4'>
