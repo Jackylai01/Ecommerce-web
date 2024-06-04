@@ -58,7 +58,6 @@ interface ProductRowData {
 const ProductTableContainer = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
@@ -72,6 +71,7 @@ const ProductTableContainer = () => {
   } = useDisclosure();
   const toast = useToast();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [sort, setSort] = useState('-createdAt');
 
   const {
     list: ProductList,
@@ -133,7 +133,6 @@ const ProductTableContainer = () => {
         </Button>
       </Box>
     ),
-
     (row: ProductRowData) => (
       <FormControl display='flex' alignItems='center'>
         <FormLabel htmlFor={`status-switch-${row._id}`} mb='0'>
@@ -178,6 +177,11 @@ const ProductTableContainer = () => {
     }
   };
 
+  const handleSortChange = (sortOption: string) => {
+    setSort(sortOption);
+    dispatch(getAllProductsAsync({ page: 1, limit: 10, sort: sortOption }));
+  };
+
   useEffect(() => {
     if (deleteProductSuccess) {
       onMessageModalOpen();
@@ -195,10 +199,10 @@ const ProductTableContainer = () => {
     const fetchData = async () => {
       const page = parseInt(router.query.page as string, 10) || 1;
       const limit = 10;
-      dispatch(getAllProductsAsync({ page, limit }));
+      dispatch(getAllProductsAsync({ page, limit, sort }));
     };
     fetchData();
-  }, [dispatch, router.query.page]);
+  }, [dispatch, router.query.page, sort]);
 
   useEffect(() => {
     if (updateProductStatusSuccess) {
@@ -244,11 +248,33 @@ const ProductTableContainer = () => {
                       variant='outline'
                     />
                     <MenuList shadow='md' bg={bgColor}>
-                      <MenuItem bg={bgColor} color={textColor}>
-                        編輯時間
+                      <MenuItem
+                        bg={bgColor}
+                        color={textColor}
+                        onClick={() => handleSortChange('-createdAt')}
+                      >
+                        創建時間 (最新)
                       </MenuItem>
-                      <MenuItem bg={bgColor} color={textColor}>
-                        建立時間
+                      <MenuItem
+                        bg={bgColor}
+                        color={textColor}
+                        onClick={() => handleSortChange('createdAt')}
+                      >
+                        創建時間 (最舊)
+                      </MenuItem>
+                      <MenuItem
+                        bg={bgColor}
+                        color={textColor}
+                        onClick={() => handleSortChange('-price')}
+                      >
+                        價格 (高到低)
+                      </MenuItem>
+                      <MenuItem
+                        bg={bgColor}
+                        color={textColor}
+                        onClick={() => handleSortChange('price')}
+                      >
+                        價格 (低到高)
                       </MenuItem>
                     </MenuList>
                   </Menu>

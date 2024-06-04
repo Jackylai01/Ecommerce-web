@@ -65,6 +65,20 @@ const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
     setData((prevData) => prevData.filter((_, idx) => idx !== index));
   };
 
+  // useEffect(() => {
+  //   const initialData = element.data || [];
+  //   const columnCount = initialData[0]?.length || 3;
+
+  //   const updatedData = initialData.map((row) => {
+  //     if (row.length < columnCount) {
+  //       return [...row, ...new Array(columnCount - row.length).fill('')];
+  //     }
+  //     return row;
+  //   });
+
+  //   setData(updatedData);
+  // }, [element]);
+
   return (
     <VStack spacing={4} align='flex-start' w='100%'>
       <Table variant='simple'>
