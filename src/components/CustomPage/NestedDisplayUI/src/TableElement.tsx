@@ -5,8 +5,6 @@ import {
   Table,
   Tbody,
   Td,
-  Th,
-  Thead,
   Tr,
   VStack,
 } from '@chakra-ui/react';
@@ -70,13 +68,6 @@ const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
   return (
     <VStack spacing={4} align='flex-start' w='100%'>
       <Table variant='simple'>
-        <Thead>
-          <Tr>
-            {data[0]?.map((_, colIndex) => (
-              <Th key={colIndex}>標題名稱</Th>
-            ))}
-          </Tr>
-        </Thead>
         <Tbody>
           {data.map((row, rowIndex) => (
             <Tr key={rowIndex}>
