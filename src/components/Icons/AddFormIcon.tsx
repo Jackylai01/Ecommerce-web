@@ -38,11 +38,12 @@ const AddButton: FC<AddButtonProps<any>> = ({
         isRound
         colorScheme='teal'
         aria-label='Add product button'
-        type='button'
         onClick={handleAddButtonClick}
-        position='fixed'
-        right='20px'
+        position='absolute'
+        right='10'
+        top='20'
         transform='translateY(0%)'
+        zIndex={1}
       />
       <FormModal
         isOpen={isOpen}

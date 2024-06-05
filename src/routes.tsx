@@ -20,7 +20,7 @@ var dashRoutes = [
   },
   {
     path: '/tables',
-    name: 'Tables',
+    name: 'Users',
     icon: StatsIcon,
     component: Tables,
     layout: `/${ADMIN_ROUTE}`,

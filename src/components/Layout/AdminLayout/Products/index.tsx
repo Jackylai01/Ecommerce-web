@@ -20,6 +20,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import Card from '@components/Card/Card';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import ConfirmationModal from '@components/Modal/ConfirmationModal';
 import MessageModal from '@components/Modal/MessageModal';
@@ -231,103 +232,105 @@ const ProductTableContainer = () => {
   return (
     <>
       <LoadingLayout isLoading={getAllProductsLoading || deleteProductLoading}>
-        <Box as='main' overflowX='auto' w='full' minWidth='800px'>
-          <Table variant='simple' color={bgColor} size='sm'>
-            <Thead>
-              <Tr>
-                {captions.map((caption, idx) => (
-                  <Th color='gray.400' key={idx}>
-                    {caption}
-                  </Th>
-                ))}
-                <Th>
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      aria-label='Options'
-                      icon={<MdOutlineSort color={borderColor} size='20px' />}
-                      variant='outline'
-                    />
-                    <MenuList shadow='md' bg={bgColor}>
-                      <MenuItem
-                        bg={bgColor}
-                        color={textColor}
-                        onClick={() => handleSortChange('-createdAt')}
-                      >
-                        創建時間 (最新)
-                      </MenuItem>
-                      <MenuItem
-                        bg={bgColor}
-                        color={textColor}
-                        onClick={() => handleSortChange('createdAt')}
-                      >
-                        創建時間 (最舊)
-                      </MenuItem>
-                      <MenuItem
-                        bg={bgColor}
-                        color={textColor}
-                        onClick={() => handleSortChange('-price')}
-                      >
-                        價格 (高到低)
-                      </MenuItem>
-                      <MenuItem
-                        bg={bgColor}
-                        color={textColor}
-                        onClick={() => handleSortChange('price')}
-                      >
-                        價格 (低到高)
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {ProductList && ProductList.length > 0 ? (
-                ProductList.map((product) => (
-                  <TablesTableRow
-                    key={product._id}
-                    row={product}
-                    renderCell={renderCell}
-                  />
-                ))
-              ) : (
+        <Card>
+          <Box as='main' overflowX='auto' w='full'>
+            <Table variant='simple' color={bgColor} size='sm'>
+              <Thead>
                 <Tr>
-                  <Td
-                    colSpan={captions.length + 1}
-                    textAlign='center'
-                    border='none'
-                    color='gray.700'
-                  >
-                    沒有找到產品，請新增產品。
-                  </Td>
+                  {captions.map((caption, idx) => (
+                    <Th color='gray.400' key={idx}>
+                      {caption}
+                    </Th>
+                  ))}
+                  <Th>
+                    <Menu>
+                      <MenuButton
+                        as={IconButton}
+                        aria-label='Options'
+                        icon={<MdOutlineSort color={borderColor} size='20px' />}
+                        variant='outline'
+                      />
+                      <MenuList shadow='md' bg={bgColor}>
+                        <MenuItem
+                          bg={bgColor}
+                          color={textColor}
+                          onClick={() => handleSortChange('-createdAt')}
+                        >
+                          創建時間 (最新)
+                        </MenuItem>
+                        <MenuItem
+                          bg={bgColor}
+                          color={textColor}
+                          onClick={() => handleSortChange('createdAt')}
+                        >
+                          創建時間 (最舊)
+                        </MenuItem>
+                        <MenuItem
+                          bg={bgColor}
+                          color={textColor}
+                          onClick={() => handleSortChange('-price')}
+                        >
+                          價格 (高到低)
+                        </MenuItem>
+                        <MenuItem
+                          bg={bgColor}
+                          color={textColor}
+                          onClick={() => handleSortChange('price')}
+                        >
+                          價格 (低到高)
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </Th>
                 </Tr>
-              )}
-            </Tbody>
-          </Table>
-        </Box>
-        <ConfirmationModal
-          isOpen={isOpen}
-          onClose={onClose}
-          title='確認要刪除?'
-          onConfirm={deleteRow}
-        >
-          {modalContent}
-        </ConfirmationModal>
-        <MessageModal
-          title='刪除產品'
-          isActive={isMessageModalOpen}
-          error={deleteProductError}
-          onClose={onMessageModalClose}
-        >
-          {deleteProductSuccess && <Box>產品已成功刪除。</Box>}
-          {deleteProductError && (
-            <Box color='red.500'>{deleteProductError}</Box>
+              </Thead>
+              <Tbody>
+                {ProductList && ProductList.length > 0 ? (
+                  ProductList.map((product) => (
+                    <TablesTableRow
+                      key={product._id}
+                      row={product}
+                      renderCell={renderCell}
+                    />
+                  ))
+                ) : (
+                  <Tr>
+                    <Td
+                      colSpan={captions.length + 1}
+                      textAlign='center'
+                      border='none'
+                      color='gray.700'
+                    >
+                      沒有找到產品，請新增產品。
+                    </Td>
+                  </Tr>
+                )}
+              </Tbody>
+            </Table>
+          </Box>
+          <ConfirmationModal
+            isOpen={isOpen}
+            onClose={onClose}
+            title='確認要刪除?'
+            onConfirm={deleteRow}
+          >
+            {modalContent}
+          </ConfirmationModal>
+          <MessageModal
+            title='刪除產品'
+            isActive={isMessageModalOpen}
+            error={deleteProductError}
+            onClose={onMessageModalClose}
+          >
+            {deleteProductSuccess && <Box>產品已成功刪除。</Box>}
+            {deleteProductError && (
+              <Box color='red.500'>{deleteProductError}</Box>
+            )}
+          </MessageModal>
+          {metadata && ProductList?.length !== 0 && (
+            <Pagination metadata={metadata} />
           )}
-        </MessageModal>
-        {metadata && ProductList?.length !== 0 && (
-          <Pagination metadata={metadata} />
-        )}
+        </Card>
       </LoadingLayout>
     </>
   );
