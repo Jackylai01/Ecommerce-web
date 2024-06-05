@@ -18,7 +18,8 @@ import ConfirmationModal from '@components/Modal/ConfirmationModal';
 import MessageModal from '@components/Modal/MessageModal';
 import TablesModal from '@components/Modal/TablesModal';
 import Pagination from '@components/Pagination';
-import TablesTableRow from '@components/Tables/TablesTableRow';
+import { TablesTableRow } from '@components/Tables/TablesTableRow';
+
 import { profileUsers } from '@helpers/tables';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';

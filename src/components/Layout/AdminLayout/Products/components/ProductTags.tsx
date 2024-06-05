@@ -14,7 +14,8 @@ import ConfirmationModal from '@components/Modal/ConfirmationModal';
 import FormModal from '@components/Modal/FormModal';
 import MessageModal from '@components/Modal/MessageModal';
 import Pagination from '@components/Pagination';
-import TablesTableRow from '@components/Tables/TablesTableRow';
+import { TablesTableRow } from '@components/Tables/TablesTableRow';
+
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import {

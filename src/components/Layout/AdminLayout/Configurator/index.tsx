@@ -75,7 +75,9 @@ const Configurator = ({
       >
         <DrawerContent bg={colorMode === 'light' ? 'gray.50' : 'gray.700'}>
           <DrawerHeader pt='24px' px='24px'>
-            <DrawerCloseButton />
+            <DrawerCloseButton
+              color={colorMode === 'light' ? 'gray.800' : 'white'}
+            />
             <Text
               fontSize='xl'
               fontWeight='bold'
