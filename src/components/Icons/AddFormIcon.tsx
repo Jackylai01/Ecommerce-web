@@ -1,5 +1,9 @@
 import { AddIcon } from '@chakra-ui/icons';
-import { IconButton, useDisclosure } from '@chakra-ui/react';
+import {
+  IconButton,
+  useBreakpointValue,
+  useDisclosure,
+} from '@chakra-ui/react';
 import FormModal from '@components/Modal/FormModal';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { resetCustomPage } from '@reducers/admin/custom-page';
@@ -20,7 +24,6 @@ const AddButton: FC<AddButtonProps<any>> = ({
   onSubmit,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const dispatch = useAppDispatch();
 
   const handleAddButtonClick = () => {
@@ -31,6 +34,9 @@ const AddButton: FC<AddButtonProps<any>> = ({
     onOpen();
   };
 
+  const topPosition = useBreakpointValue({ base: '80px', md: '10%' });
+  const marginRight = useBreakpointValue({ base: '8px', md: '20px' });
+
   return (
     <>
       <IconButton
@@ -40,9 +46,8 @@ const AddButton: FC<AddButtonProps<any>> = ({
         aria-label='Add product button'
         onClick={handleAddButtonClick}
         position='absolute'
-        right='10'
-        top='20'
-        transform='translateY(0%)'
+        right={marginRight}
+        top={topPosition}
         zIndex={1}
       />
       <FormModal
