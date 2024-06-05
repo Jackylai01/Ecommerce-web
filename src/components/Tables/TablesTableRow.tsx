@@ -6,7 +6,7 @@ interface TablesTableRowProps {
   renderCell: ((data: any) => JSX.Element)[];
 }
 
-function TablesTableRow({ row, renderCell }: TablesTableRowProps) {
+export function TablesTableRow({ row, renderCell }: TablesTableRowProps) {
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
@@ -18,6 +18,8 @@ function TablesTableRow({ row, renderCell }: TablesTableRowProps) {
           color={textColor}
           textAlign='left'
           verticalAlign='middle'
+          minWidth='120px'
+          whiteSpace='nowrap'
         >
           {cell(row)}
         </Td>
@@ -25,5 +27,3 @@ function TablesTableRow({ row, renderCell }: TablesTableRowProps) {
     </Tr>
   );
 }
-
-export default TablesTableRow;

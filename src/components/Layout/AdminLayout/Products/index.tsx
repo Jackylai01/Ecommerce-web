@@ -25,7 +25,8 @@ import LoadingLayout from '@components/Layout/LoadingLayout';
 import ConfirmationModal from '@components/Modal/ConfirmationModal';
 import MessageModal from '@components/Modal/MessageModal';
 import Pagination from '@components/Pagination';
-import TablesTableRow from '@components/Tables/TablesTableRow';
+import { TablesTableRow } from '@components/Tables/TablesTableRow';
+
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import {
@@ -238,7 +239,12 @@ const ProductTableContainer = () => {
               <Thead>
                 <Tr>
                   {captions.map((caption, idx) => (
-                    <Th color='gray.400' key={idx}>
+                    <Th
+                      color='gray.400'
+                      key={idx}
+                      minWidth='120px'
+                      whiteSpace='nowrap'
+                    >
                       {caption}
                     </Th>
                   ))}
@@ -308,6 +314,7 @@ const ProductTableContainer = () => {
               </Tbody>
             </Table>
           </Box>
+
           <ConfirmationModal
             isOpen={isOpen}
             onClose={onClose}
