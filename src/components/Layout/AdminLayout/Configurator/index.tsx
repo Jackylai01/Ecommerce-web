@@ -137,16 +137,13 @@ const Configurator = ({
                 </Text>
                 <Button
                   onClick={toggleColorMode}
+                  bg='none'
                   color={colorMode === 'light' ? 'gray.800' : 'whiteAlpha.900'}
                 >
                   Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
                 </Button>
               </Flex>
-              <Button
-                mt='4'
-                colorScheme='blue'
-                onClick={onOpenResetPasswordModal}
-              >
+              <Button colorScheme='blue' onClick={onOpenResetPasswordModal}>
                 重設密碼
               </Button>
               <Separator />

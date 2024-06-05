@@ -52,7 +52,8 @@ interface IClientUser {
 const Members = ({ title, captions }: AuthorsProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const textColor = useColorModeValue('gray.700', 'white');
+  const titleColor = useColorModeValue('gray.700', 'white');
+  const textColor = useColorModeValue('white', 'white');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -81,12 +82,18 @@ const Members = ({ title, captions }: AuthorsProps) => {
     (user: IClientUser) => <Text>{user.gender}</Text>,
     (user: IClientUser) => (
       <Box display='flex' gap='1'>
-        <Button bg='blue.300' size='sm' onClick={() => handleGetUser(user._id)}>
+        <Button
+          bg='blue.300'
+          size='sm'
+          color={textColor}
+          onClick={() => handleGetUser(user._id)}
+        >
           查看
         </Button>
         <Button
           bg='red.300'
           size='sm'
+          color={textColor}
           onClick={() => handleDeleteClick(user._id)}
         >
           刪除
@@ -150,13 +157,13 @@ const Members = ({ title, captions }: AuthorsProps) => {
       <LoadingLayout isLoading={deleteClientUserLoading}>
         <Card>
           <CardHeader p='6px 0px 22px 0px'>
-            <Text fontSize='xl' color={textColor} fontWeight='bold'>
+            <Text fontSize='xl' color={titleColor} fontWeight='bold'>
               {title}
             </Text>
           </CardHeader>
           <CardBody>
             <Box overflowX='auto' w='full'>
-              <Table variant='simple' color={textColor} size='sm'>
+              <Table variant='simple' color={titleColor} size='sm'>
                 <Thead>
                   <Tr>
                     {captions.map((caption, idx) => (

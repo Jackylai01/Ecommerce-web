@@ -39,7 +39,7 @@ interface ProductCategoryRowData {
 const ProductCategories = () => {
   const dispatch = useAppDispatch();
   const { colorMode } = useAdminColorMode();
-  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const textColor = colorMode === 'light' ? 'white' : 'white';
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingCategoryId, setEditingProductId] = useState<any>(null);
 
@@ -75,10 +75,20 @@ const ProductCategories = () => {
     (row: ProductCategoryRowData) => <Box>{row.description}</Box>,
     (row: ProductCategoryRowData) => (
       <Box display='flex' gap={2}>
-        <Button bg='blue.500' size='sm' onClick={() => editRow(row._id)}>
+        <Button
+          bg='blue.500'
+          size='sm'
+          color={textColor}
+          onClick={() => editRow(row._id)}
+        >
           編輯
         </Button>
-        <Button bg='red.300' size='sm' onClick={() => requestDelete(row._id)}>
+        <Button
+          bg='red.300'
+          size='sm'
+          color={textColor}
+          onClick={() => requestDelete(row._id)}
+        >
           刪除
         </Button>
       </Box>

@@ -70,13 +70,12 @@ const ProductTableContainer = () => {
     onClose: onMessageModalClose,
   } = useDisclosure();
   const toast = useToast();
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const [sort, setSort] = useState('-createdAt');
 
   const {
     list: ProductList,
     metadata,
-    productDetails,
     status: {
       getAllProductsLoading,
       deleteProductLoading,
@@ -109,7 +108,10 @@ const ProductTableContainer = () => {
     (row: ProductRowData) => <Box>{row.minimumPurchase}</Box>,
     (row: ProductRowData) => <Box>{row.maximumPurchase}</Box>,
     (row: ProductRowData) => (
-      <Badge color={row.status === 'onSale' ? 'green.300' : 'red.300'}>
+      <Badge
+        bg='none'
+        color={row.status === 'onSale' ? 'green.300' : 'red.300'}
+      >
         {row.status}
       </Badge>
     ),
