@@ -1,4 +1,3 @@
-'use client';
 import {
   Box,
   Button,
@@ -22,12 +21,30 @@ import {
   getSubstring,
 } from '@helpers/products';
 import useAppSelector from '@hooks/useAppSelector';
+import axios from 'axios';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+
+// TODO 實際的金流串接
 
 export const CheckoutPage: NextPage = () => {
   const [subTotal, setSubTotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
+  const [formAction, setFormAction] = useState('');
+  const [formInputs, setFormInputs] = useState<JSX.Element[]>([]);
+  const [paymentMethod, setPaymentMethod] = useState(''); // 選擇支付方式
+  const [formData, setFormData] = useState({
+    fullName: '',
+    address: '',
+    phone: '',
+    email: '',
+    orderId: '',
+    TotalAmount: '',
+    TradeDesc: '',
+    ItemName: '',
+    ReturnURL: '',
+    ChoosePayment: 'ALL',
+  });
 
   const { checkout } = useAppSelector((state) => state.clientCart);
 
@@ -37,6 +54,40 @@ export const CheckoutPage: NextPage = () => {
     setSubTotal(subTotal);
     setTax(tax);
   }, [checkout]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/api/ecpay/create-payment', {
+        ...formData,
+        orderId: 'some-generated-order-id', // 替換為實際訂單 ID
+        TotalAmount: subTotal + tax,
+        TradeDesc: 'Your order description',
+        ItemName: checkout.map((item) => item.name).join('#'),
+        ReturnURL: 'http://localhost:3000/payment-success', // 替換為實際回調 URL
+      });
+      const { apiURL, params } = response.data;
+
+      setFormAction(apiURL);
+      setFormInputs(
+        Object.entries(params).map(([key, value]) => (
+          <input key={key} name={key} value={String(value)} readOnly />
+        )),
+      );
+
+      const form = document.getElementById('ecpayForm') as HTMLFormElement;
+      if (form) {
+        form.submit();
+      }
+    } catch (error) {
+      console.error('Error creating payment', error);
+    }
+  };
 
   return (
     <Flex
@@ -98,22 +149,46 @@ export const CheckoutPage: NextPage = () => {
             <Stack spacing='2rem' color='black'>
               <Box>
                 <FormLabel>Full Name</FormLabel>
-                <Input type='text' placeholder='Full name' />
+                <Input
+                  type='text'
+                  name='fullName'
+                  placeholder='Full name'
+                  value={formData.fullName}
+                  onChange={handleChange}
+                />
               </Box>
 
               <Box>
                 <FormLabel>Address</FormLabel>
-                <Input type='text' placeholder='address' />
+                <Input
+                  type='text'
+                  name='address'
+                  placeholder='address'
+                  value={formData.address}
+                  onChange={handleChange}
+                />
               </Box>
 
               <Box>
                 <FormLabel>Phone</FormLabel>
-                <Input type='text' placeholder='phone number' />
+                <Input
+                  type='text'
+                  name='phone'
+                  placeholder='phone number'
+                  value={formData.phone}
+                  onChange={handleChange}
+                />
               </Box>
 
               <Box>
                 <FormLabel>Email</FormLabel>
-                <Input type='email' placeholder='email' />
+                <Input
+                  type='email'
+                  name='email'
+                  placeholder='email'
+                  value={formData.email}
+                  onChange={handleChange}
+                />
               </Box>
             </Stack>
           </CardBody>
@@ -163,7 +238,10 @@ export const CheckoutPage: NextPage = () => {
                 <Heading size='xs' my='1rem'>
                   Payment Option
                 </Heading>
-                <RadioGroup>
+                <RadioGroup
+                  onChange={(value) => setPaymentMethod(value)}
+                  value={paymentMethod}
+                >
                   <Stack>
                     <Radio value='cashOnDelivery'>Cash On Delivery</Radio>
                     <Radio value='momo'>Mobile Money Payment</Radio>
@@ -213,12 +291,17 @@ export const CheckoutPage: NextPage = () => {
                 bgColor: 'red.500',
               }}
               bg='red.300'
+              onClick={handleSubmit}
             >
               Pay ${formatPrice(subTotal)}
             </Button>
           </CardBody>
         </Card>
       </Box>
+      <form id='ecpayForm' method='post' action={formAction}>
+        {formInputs}
+        <input type='submit' value='送出參數' />
+      </form>
     </Flex>
   );
 };
