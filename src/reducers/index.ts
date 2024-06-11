@@ -12,6 +12,7 @@ import crudLayout from './crud-layout';
 import fileSelect from './file-select';
 import iconSelect from './icon-select';
 import layout from './layout';
+import publicProducts from './public/products';
 
 const appReducer = {
   layout,
@@ -28,6 +29,7 @@ const appReducer = {
   adminProductsCategory,
   adminProductsTags,
   adminClientUsers,
+  publicProducts,
 };
 
 export default appReducer;
