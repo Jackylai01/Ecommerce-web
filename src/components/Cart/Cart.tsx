@@ -87,7 +87,7 @@ export const Cart = () => {
             {cart.length === 0 ? (
               <>Your Cart is Empty</>
             ) : (
-              cart.map((item) => <CartItem key={item.id} item={item} />)
+              cart.map((item) => <CartItem key={item._id} item={item} />)
             )}
           </DrawerBody>
           {cart.length !== 0 && (

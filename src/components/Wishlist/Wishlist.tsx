@@ -10,20 +10,32 @@ import {
   PopoverTrigger,
   Text,
 } from '@chakra-ui/react';
-
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { resetItems } from '@reducers/client/cart';
+import { useEffect, useState } from 'react';
 import { BsHeart } from 'react-icons/bs';
 import { WishlistItem } from './WishlistItem';
 
 export const Wishlist = () => {
   const { wishlist } = useAppSelector((state) => state.clientCart);
+  const [localFavorites, setLocalFavorites] = useState<any>([]);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const savedFavorites = JSON.parse(
+      localStorage.getItem('favorites') || '[]',
+    );
+    setLocalFavorites(savedFavorites);
+  }, []);
 
   const handleResetWishlist = () => {
     dispatch(resetItems('wishlist'));
+    localStorage.removeItem('favorites');
+    setLocalFavorites([]);
   };
+
+  const totalFavorites = wishlist.length + localFavorites.length;
 
   return (
     <Popover>
@@ -37,7 +49,7 @@ export const Wishlist = () => {
           pos='relative'
         >
           <BsHeart size='0.9rem' /> <Text mx='1'>Wishlist</Text>
-          {wishlist.length !== 0 && (
+          {totalFavorites !== 0 && (
             <Flex
               pos='absolute'
               top='0px'
@@ -50,7 +62,7 @@ export const Wishlist = () => {
               align='center'
               justify='center'
             >
-              {wishlist.length}
+              {totalFavorites}
             </Flex>
           )}
         </Button>
@@ -61,14 +73,21 @@ export const Wishlist = () => {
           Wishlist
         </PopoverHeader>
         <PopoverBody p='1rem'>
-          {wishlist.length === 0 ? (
+          {totalFavorites === 0 ? (
             <>Your Wishlist is Empty</>
           ) : (
-            wishlist.map((item) => <WishlistItem key={item.id} item={item} />)
+            <>
+              {wishlist.map((item) => (
+                <WishlistItem key={item._id} item={item} />
+              ))}
+              {localFavorites.map((item: any) => (
+                <WishlistItem key={item._id} item={item} />
+              ))}
+            </>
           )}
         </PopoverBody>
         <PopoverFooter>
-          {wishlist.length !== 0 && (
+          {totalFavorites !== 0 && (
             <Button variant='outline' mr={3} onClick={handleResetWishlist}>
               Clear Wishlist
             </Button>

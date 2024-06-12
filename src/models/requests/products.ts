@@ -1,3 +1,5 @@
+import { ProductsResponse } from '@models/responses/products.res';
+
 export type ItemKey = 'cart' | 'wishlist' | 'checkout';
 
 export interface NavItem {
@@ -42,7 +44,7 @@ export interface IState {
   checkout: IItem[];
 }
 
-export interface IItem extends IProduct {
+export interface IItem extends ProductsResponse {
   count: number;
 }
 

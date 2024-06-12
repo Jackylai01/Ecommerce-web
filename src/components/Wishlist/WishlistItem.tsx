@@ -16,7 +16,7 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
   const dispatch = useAppDispatch();
 
   const itemIsAdded = useAppSelector((state) =>
-    isAdded(state, 'cart', item.id),
+    isAdded(state, 'cart', item._id),
   );
 
   return (
@@ -29,10 +29,10 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
       py='1'
     >
       <GridItem>
-        <Link href={`/product/${item.slug}`}>
+        <Link href={`/product/${item._id}`}>
           <a>
             <Image
-              src={item.mainImage}
+              src={item.coverImage.imageUrl}
               boxSize='20px'
               rounded='full'
               borderWidth='1px'
@@ -43,7 +43,7 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
         </Link>
       </GridItem>
       <GridItem colSpan={4}>
-        <Link href={`/product/${item.slug}`}>
+        <Link href={`/product/${item._id}`}>
           <a>
             <Text fontSize='sm' title={item.name}>
               {getSubstring(item.name, 17)}
@@ -66,7 +66,7 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
             color='gray.100'
             title='Remove from Cart'
             onClick={() =>
-              dispatch(removeItem({ key: 'cart', productId: item.id }))
+              dispatch(removeItem({ key: 'cart', productId: item._id }))
             }
           >
             <BsCartX />
@@ -94,7 +94,7 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
           colorScheme='red'
           size='xs'
           onClick={() =>
-            dispatch(removeItem({ key: 'wishlist', productId: item.id }))
+            dispatch(removeItem({ key: 'wishlist', productId: item._id }))
           }
         >
           <BsTrash />

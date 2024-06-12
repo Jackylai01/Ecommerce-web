@@ -1,27 +1,73 @@
-import { Button } from '@chakra-ui/react';
+import { Button, useToast } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-
-import { IProduct } from '@models/requests/products';
+import { ProductsResponse } from '@models/responses/products.res';
 import { addItem, isAdded, removeItem } from '@reducers/client/cart';
+import { useEffect, useState } from 'react';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 
 interface IAddToWishlistButtonProps {
-  product: IProduct;
+  product: ProductsResponse;
 }
 
 export const AddToWishlistButton = ({ product }: IAddToWishlistButtonProps) => {
   const dispatch = useAppDispatch();
-  const productIsAdded = useAppSelector((state) =>
-    isAdded(state, 'wishlist', product.id),
-  );
+  const toast = useToast();
+  const { userInfo } = useAppSelector((state) => state.clientAuth);
+  const [localFavorites, setLocalFavorites] = useState<string[]>([]);
+  const productIsAdded =
+    useAppSelector((state) => isAdded(state, 'wishlist', product._id)) ||
+    localFavorites.includes(product._id);
+
+  useEffect(() => {
+    const savedFavorites = JSON.parse(
+      localStorage.getItem('favorites') || '[]',
+    );
+    setLocalFavorites(savedFavorites.map((fav: { _id: string }) => fav._id));
+  }, []);
 
   const handleAddItem = () => {
-    dispatch(addItem({ key: 'wishlist', product, count: 1 }));
+    if (userInfo) {
+      dispatch(addItem({ key: 'wishlist', product, count: 1 }));
+    } else {
+      const savedFavorites = JSON.parse(
+        localStorage.getItem('favorites') || '[]',
+      );
+      if (
+        !savedFavorites.some((fav: { _id: string }) => fav._id === product._id)
+      ) {
+        savedFavorites.push(product);
+        localStorage.setItem('favorites', JSON.stringify(savedFavorites));
+        setLocalFavorites((prev) => [...prev, product._id]);
+      }
+      toast({
+        title: 'Product added to your local wishlist.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   const handleRemoveItem = () => {
-    dispatch(removeItem({ key: 'wishlist', productId: product.id }));
+    if (userInfo) {
+      dispatch(removeItem({ key: 'wishlist', productId: product._id }));
+    } else {
+      let savedFavorites = JSON.parse(
+        localStorage.getItem('favorites') || '[]',
+      );
+      savedFavorites = savedFavorites.filter(
+        (fav: { _id: string }) => fav._id !== product._id,
+      );
+      localStorage.setItem('favorites', JSON.stringify(savedFavorites));
+      setLocalFavorites((prev) => prev.filter((id) => id !== product._id));
+      toast({
+        title: 'Product removed from your local wishlist.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (

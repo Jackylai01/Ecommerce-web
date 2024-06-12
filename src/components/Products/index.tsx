@@ -1,94 +1,61 @@
 'use client';
-import { Box, Button, Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { CustomBreadcrumb } from '@components/CustomBreadcrumb';
+import LoadingLayout from '@components/Layout/LoadingLayout';
+import Pagination from '@components/Pagination';
 import { ProductCard } from '@components/ProductCard';
-import { usePagination } from '@mantine/hooks';
-import { IBreadcrumbItem, IProduct } from '@models/requests/products';
-
-import { useState } from 'react';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { IBreadcrumbItem } from '@models/requests/products';
+import { resetPublicProductState } from '@reducers/public/products';
+import { publicProductsListAsync } from '@reducers/public/products/actions';
+import { useEffect, useState } from 'react';
 
 interface AllProductsProps {
-  products: IProduct[];
   breadcrumbItems?: IBreadcrumbItem[];
 }
 
 const itemsPerPage = 10;
 
-export const AllProducts = ({
-  products,
-  breadcrumbItems,
-}: AllProductsProps) => {
-  const [visibleProducts, setVisibleProducts] = useState(
-    products.slice(0, itemsPerPage),
-  );
+export const AllProducts = ({ breadcrumbItems }: AllProductsProps) => {
+  const dispatch = useAppDispatch();
+  const {
+    list: productList,
+    metadata,
+    status: { productsListLoading },
+  } = useAppSelector((state) => state.publicProducts);
+  const [page, setPage] = useState(1);
 
-  const total = Math.ceil(products.length / itemsPerPage);
-  const pagination = usePagination({
-    total,
-    initialPage: 1,
-    onChange(page) {
-      const start = (page - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      setVisibleProducts(products.slice(start, end));
-    },
-  });
+  useEffect(() => {
+    dispatch(publicProductsListAsync({ page, limit: itemsPerPage }));
+
+    return () => {
+      dispatch(resetPublicProductState());
+    };
+  }, [dispatch, page]);
+
+  const hasProducts = productList && productList.length > 0;
 
   return (
     <>
       <CustomBreadcrumb items={breadcrumbItems} />
-      <Flex
-        flexWrap='wrap'
-        w={{ base: '100%', lg: '90%' }}
-        mx='auto'
-        justify={{ base: 'center', lg: 'space-between' }}
-      >
-        {visibleProducts.length > 0 ? (
-          visibleProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))
-        ) : (
-          <Box color='black'>No products found in this category.</Box>
-        )}
-      </Flex>
-      {itemsPerPage < products.length && (
+      <LoadingLayout isLoading={productsListLoading}>
         <Flex
-          justify='center'
+          flexWrap='wrap'
           w={{ base: '100%', lg: '90%' }}
           mx='auto'
-          py='2rem'
+          justify={{ base: 'center', lg: 'space-between' }}
         >
-          {pagination.range.map((range) =>
-            range === 'dots' ? (
-              <Button
-                borderWidth='1px'
-                borderColor='brand.primary'
-                color='brand.primary'
-                bgColor='white'
-                mx='1'
-                key={range}
-              >
-                ...
-              </Button>
-            ) : (
-              <Button
-                onClick={() => pagination.setPage(range)}
-                borderWidth='1px'
-                borderColor='brand.primary'
-                color={pagination.active === range ? 'white' : 'brand.primary'}
-                bgColor={
-                  pagination.active === range ? 'brand.primary' : 'white'
-                }
-                mx='1'
-                key={range}
-                _active={{ bgColor: 'none' }}
-                _hover={{ bgColor: 'none' }}
-              >
-                {range}
-              </Button>
-            ),
+          {hasProducts ? (
+            productList.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))
+          ) : (
+            <Box color='black'>No products found in this category.</Box>
           )}
         </Flex>
-      )}
+      </LoadingLayout>
+      {metadata && <Pagination metadata={metadata} />}
     </>
   );
 };

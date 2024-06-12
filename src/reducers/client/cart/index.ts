@@ -1,4 +1,5 @@
-import { IItem, IProduct, ItemKey } from '@models/requests/products';
+import { IItem, ItemKey } from '@models/requests/products';
+import { ProductsResponse } from '@models/responses/products.res';
 import { AppState } from '@models/store';
 import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 
@@ -22,7 +23,7 @@ const cartSlice = createSlice({
       state,
       action: PayloadAction<{
         key: ItemKey;
-        product: IProduct;
+        product: ProductsResponse;
         count?: number;
       }>,
     ) => {
@@ -30,10 +31,9 @@ const cartSlice = createSlice({
       const item: IItem = { ...product, count };
 
       const existingIndex = state[key].findIndex(
-        (item) => item.id === product.id,
+        (item) => item._id === product._id,
       );
       if (existingIndex !== -1) {
-        // 直接操作 count 属性
         state[key][existingIndex].count += count;
       } else {
         state[key].push(item);
@@ -44,14 +44,14 @@ const cartSlice = createSlice({
       action: PayloadAction<{ key: ItemKey; productId: string }>,
     ) => {
       const { key, productId } = action.payload;
-      state[key] = state[key].filter((item) => item.id !== productId);
+      state[key] = state[key].filter((item) => item._id !== productId);
     },
     increaseCount: (
       state,
       action: PayloadAction<{ key: ItemKey; productId: string }>,
     ) => {
       const { key, productId } = action.payload;
-      const index = state[key].findIndex((item) => item.id === productId);
+      const index = state[key].findIndex((item) => item._id === productId);
       if (index !== -1) {
         state[key][index].count += 1;
       }
@@ -61,7 +61,7 @@ const cartSlice = createSlice({
       action: PayloadAction<{ key: ItemKey; productId: string }>,
     ) => {
       const { key, productId } = action.payload;
-      const index = state[key].findIndex((item) => item.id === productId);
+      const index = state[key].findIndex((item) => item._id === productId);
       if (index !== -1 && state[key][index].count > 1) {
         state[key][index].count -= 1;
       }
@@ -77,14 +77,13 @@ export const { addItem, removeItem, increaseCount, decreaseCount, resetItems } =
 
 export const selectCart = (state: AppState) => state.clientCart;
 
-// 使用 createSelector 创建 isAdded selector
 export const isAdded = createSelector(
   [
     selectCart,
     (state: AppState, key: ItemKey, productId: string) => ({ key, productId }),
   ],
   (cart, { key, productId }) => {
-    return cart[key].some((item) => item.id === productId);
+    return cart[key].some((item) => item._id === productId);
   },
 );
 

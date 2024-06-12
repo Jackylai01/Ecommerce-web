@@ -1,6 +1,5 @@
 import { Hero } from '@components/Hero/Hero';
 import { AllProducts } from '@components/Products';
-import { fakeProducts } from '@helpers/products';
 
 export const revalidate = 60;
 
@@ -14,7 +13,7 @@ const ProductsPage = () => {
         btnLabel='View All Categories'
         btnLink='/categories'
       />
-      <AllProducts products={fakeProducts} />
+      <AllProducts breadcrumbItems={[]} />
     </>
   );
 };

@@ -8,26 +8,26 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-
 import { getSubstring } from '@helpers/products';
-import { IProduct } from '@models/requests/products';
+import { ProductsResponse } from '@models/responses/products.res';
 import Link from 'next/link';
 import { AddToWishlistButton } from './AddToWishlistButton';
 import { AddToCartButton } from './Cart/AddToCartButton';
-import { Rating } from './Rating';
 
 interface ProductCardProps {
-  product: IProduct;
+  product: ProductsResponse;
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
+  const coverImageUrl = product.coverImage?.imageUrl || '';
+
   return (
     <Card w='xs' pos='relative' m='0.5rem' bg='none' shadow='md'>
       <AddToWishlistButton product={product} />
       <CardBody>
-        <Link href={`/products/${product.slug}`}>
+        <Link href={`/products/${product.name}`}>
           <Box
-            bg={`center / contain no-repeat url(${product.mainImage})`}
+            bg={`center / contain no-repeat url(${coverImageUrl})`}
             borderRadius='lg'
             boxSize='200px'
             mx='auto'
@@ -35,7 +35,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         </Link>
         <Stack mt='6' spacing='3'>
           <Flex justify='space-between' align='center'>
-            <Link href={`/products/${product.slug}`}>
+            <Link href={`/products/${product.name}`}>
               <Heading size='sm'>{getSubstring(product.name, 20)}</Heading>
             </Link>
             <Flex color='black' fontWeight='bold'>
@@ -46,7 +46,6 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <Text fontSize='sm' color='black'>
             {getSubstring(product.description, 30)}{' '}
           </Text>
-          <Rating rating={product.rating} />
           <AddToCartButton product={product} />
         </Stack>
       </CardBody>

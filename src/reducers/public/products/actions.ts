@@ -13,16 +13,17 @@ export enum PublicListAsyncAction {
 }
 
 export const publicProductsListAsync = createAsyncThunk(
-  `${ReducerName.PUBLIC_PRODUCTS_LIST}/${PublicListAsyncAction.productsList}`,
+  `${ReducerName.PUBLIC_PRODUCTS}/${PublicListAsyncAction.productsList}`,
   async ({ page, limit }: QueryParams) => {
     const query: PagingQuery = { page, limit };
     const response = await apiPublicProductsList(query);
+
     return response.res.data;
   },
 );
 
 export const publicProductsDetailAsync = createAsyncThunk(
-  `${ReducerName.PUBLIC_PRODUCTS_LIST}/${PublicListAsyncAction.productsDetail}`,
+  `${ReducerName.PUBLIC_PRODUCTS}/${PublicListAsyncAction.productsDetail}`,
   async (id: string) => {
     const response = await apiPublicProductsDetail(id);
     return response.res.data;
