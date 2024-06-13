@@ -67,11 +67,9 @@ export const Wishlist = () => {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent bg='gray.700'>
+      <PopoverContent border='none'>
         <PopoverCloseButton />
-        <PopoverHeader color='b' fontWeight='bold'>
-          Wishlist
-        </PopoverHeader>
+        <PopoverHeader fontWeight='bold'>Wishlist</PopoverHeader>
         <PopoverBody p='1rem'>
           {totalFavorites === 0 ? (
             <>Your Wishlist is Empty</>
