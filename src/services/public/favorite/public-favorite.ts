@@ -19,3 +19,11 @@ export const apiPublicRemoveProductsFavorites = async (data: any) =>
 
 export const apiPublicGetProductsFavorites = async (userId: string) =>
   getRequest<ApiListResult<IFavorites>>(`/public/favorites/${userId}`);
+
+/**
+ * 前台-刪除全部的我的最愛
+ */
+export const apiPublicClearFavorites = async (userId: string) =>
+  postRequest<ApiListResult<IFavorites>>(`/public/favorites/clear-favorites`, {
+    userId,
+  });

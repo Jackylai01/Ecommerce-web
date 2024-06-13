@@ -10,6 +10,7 @@ import { getSubstring } from '@helpers/products';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { addItem, isAdded, removeItem } from '@reducers/client/cart';
+import { publicRemoveFavoritesAsync } from '@reducers/public/favorite/actions';
 import { BsCart, BsCartX, BsTrash } from 'react-icons/bs';
 
 interface WishlistItemProps {
@@ -18,13 +19,27 @@ interface WishlistItemProps {
 
 export const WishlistItem = ({ item }: WishlistItemProps) => {
   const dispatch = useAppDispatch();
+  const { userInfo } = useAppSelector((state) => state.clientAuth);
   const products = useAppSelector((state) => state.publicProducts.list);
 
   const product = products?.find((product) => product._id === item);
 
   const itemIsAdded = useAppSelector((state) => isAdded(state, 'cart', item));
 
-  if (!product) return null; // 如果找不到對應的產品，則返回 null
+  if (!product) return null;
+
+  const handleRemoveFavorite = () => {
+    if (userInfo) {
+      dispatch(
+        publicRemoveFavoritesAsync({
+          userId: userInfo._id,
+          productId: product._id,
+        }),
+      ).then(() => {
+        dispatch(removeItem({ key: 'wishlist', productId: product._id }));
+      });
+    }
+  };
 
   return (
     <Grid
@@ -96,9 +111,7 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
           variant='ghost'
           colorScheme='red'
           size='xs'
-          onClick={() =>
-            dispatch(removeItem({ key: 'wishlist', productId: product._id }))
-          }
+          onClick={handleRemoveFavorite}
         >
           <BsTrash />
         </Button>

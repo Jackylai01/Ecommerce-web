@@ -9,19 +9,41 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { resetItems } from '@reducers/client/cart';
+import { clearFavoritesAsync } from '@reducers/public/favorite/actions';
 import { BsHeart } from 'react-icons/bs';
 import { WishlistItem } from './WishlistItem';
 
 export const Wishlist = () => {
   const { favorites } = useAppSelector((state) => state.publicFavorites);
+  const { userInfo } = useAppSelector((state) => state.clientAuth);
   const dispatch = useAppDispatch();
+  const toast = useToast();
 
   const handleResetWishlist = () => {
-    dispatch(resetItems('wishlist'));
+    if (userInfo) {
+      dispatch(clearFavoritesAsync(userInfo._id)).then(() => {
+        toast({
+          title: 'All items removed from your wishlist.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      });
+    } else {
+      dispatch(resetItems('wishlist'));
+      localStorage.removeItem('favorites');
+      toast({
+        title: 'All items removed from your local wishlist.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   const totalFavorites = favorites.length;

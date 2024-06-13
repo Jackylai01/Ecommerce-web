@@ -4,6 +4,7 @@ import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
+  clearFavoritesAsync,
   publicAddFavoritesAsync,
   PublicFavoritesAsyncAction,
   publicGetFavoritesAsync,
@@ -43,7 +44,10 @@ const favoritesSlice = createSlice({
       );
     });
     builder.addCase(publicGetFavoritesAsync.fulfilled, (state, action) => {
-      state.favorites = action.payload.favorites; // 直接設置 favorites
+      state.favorites = action.payload.favorites;
+    });
+    builder.addCase(clearFavoritesAsync.fulfilled, (state, action) => {
+      state.favorites = [];
     });
     asyncMatcher(builder, ReducerName.PUBLIC_FAVORITES);
   },
