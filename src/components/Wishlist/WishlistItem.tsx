@@ -1,4 +1,11 @@
-import { Button, Grid, GridItem, Image, Link, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Link as ChakraLink,
+  Grid,
+  GridItem,
+  Image,
+  Text,
+} from '@chakra-ui/react';
 import { getSubstring } from '@helpers/products';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
@@ -29,27 +36,23 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
       py='1'
     >
       <GridItem>
-        <Link href={`/product/${product._id}`}>
-          <a>
-            <Image
-              src={product.coverImage.imageUrl}
-              boxSize='20px'
-              rounded='full'
-              borderWidth='1px'
-              borderColor='gray.300'
-              alt={product.name}
-            />
-          </a>
-        </Link>
+        <ChakraLink href={`/product/${product._id}`}>
+          <Image
+            src={product.coverImage.imageUrl}
+            boxSize='20px'
+            rounded='full'
+            borderWidth='1px'
+            borderColor='gray.300'
+            alt={product.name}
+          />
+        </ChakraLink>
       </GridItem>
       <GridItem colSpan={4}>
-        <Link href={`/product/${product._id}`}>
-          <a>
-            <Text fontSize='sm' title={product.name}>
-              {getSubstring(product.name, 17)}
-            </Text>
-          </a>
-        </Link>
+        <ChakraLink href={`/product/${product._id}`}>
+          <Text fontSize='sm' title={product.name}>
+            {getSubstring(product.name, 17)}
+          </Text>
+        </ChakraLink>
       </GridItem>
       <GridItem>
         <Text fontWeight='bold' fontSize='xs'>

@@ -33,7 +33,7 @@ export const publicGetFavoritesAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_FAVORITES}/${PublicFavoritesAsyncAction.getFavorites}`,
   async (userId: string) => {
     const response = await apiPublicGetProductsFavorites(userId);
-    console.log(response.res.data);
+
     return response.res.data;
   },
 );
