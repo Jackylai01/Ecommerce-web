@@ -32,7 +32,7 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
         <Link href={`/product/${item._id}`}>
           <a>
             <Image
-              src={item.coverImage.imageUrl}
+              src={item.coverImage?.imageUrl}
               boxSize='20px'
               rounded='full'
               borderWidth='1px'

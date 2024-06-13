@@ -2,28 +2,41 @@ import { ReducerName } from '@enums/reducer-name';
 import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
-import { IFavorites } from '@models/requests/favorites.req';
-import { createSlice } from '@reduxjs/toolkit';
+import { ProductsResponse } from '@models/responses/products.res';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
-  PublicFavoritesAsyncAction,
   publicAddFavoritesAsync,
+  PublicFavoritesAsyncAction,
   publicRemoveFavoritesAsync,
 } from './actions';
 
-type PublicProductFavoriteState = ApiState<PublicFavoritesAsyncAction> & {
-  favorites: IFavorites[] | null;
+interface IFavorites {
+  userId: string;
+  productId: string;
+}
+
+interface FavoritesState extends ApiState<PublicFavoritesAsyncAction> {
+  favorites: ProductsResponse[];
+}
+
+const initialState: FavoritesState = {
+  favorites: [],
+  ...newApiState<FavoritesState>(PublicFavoritesAsyncAction),
 };
 
-const initialState: PublicProductFavoriteState = {
-  favorites: null,
-  ...newApiState<PublicProductFavoriteState>(PublicFavoritesAsyncAction),
-};
-
-const publicFavoritesSlice = createSlice({
+const favoritesSlice = createSlice({
   name: ReducerName.PUBLIC_FAVORITES,
   initialState,
   reducers: {
-    resetPublicFavoritesState: () => initialState,
+    addFavorite: (state, action: PayloadAction<ProductsResponse>) => {
+      state.favorites.push(action.payload);
+    },
+    removeFavorite: (state, action: PayloadAction<string>) => {
+      state.favorites = state.favorites.filter(
+        (product) => product._id !== action.payload,
+      );
+    },
+    resetFavoritesState: () => initialState,
   },
   extraReducers: (builder) => {
     builder.addCase(publicAddFavoritesAsync.fulfilled, (state, action) => {
@@ -36,5 +49,6 @@ const publicFavoritesSlice = createSlice({
   },
 });
 
-export const { resetPublicFavoritesState } = publicFavoritesSlice.actions;
-export default publicFavoritesSlice.reducer;
+export const { addFavorite, removeFavorite, resetFavoritesState } =
+  favoritesSlice.actions;
+export default favoritesSlice.reducer;
