@@ -2,11 +2,13 @@ import { Button, useToast } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { ProductsResponse } from '@models/responses/products.res';
+import { addFavorite, removeFavorite } from '@reducers/public/favorite';
 import {
   publicAddFavoritesAsync,
   publicGetFavoritesAsync,
   publicRemoveFavoritesAsync,
 } from '@reducers/public/favorite/actions';
+
 import { useEffect } from 'react';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 
@@ -26,8 +28,7 @@ export const AddToWishlistButton = ({ product }: IAddToWishlistButtonProps) => {
     }
   }, [dispatch, userInfo]);
 
-  const productIsAdded =
-    Array.isArray(favorites) && favorites.includes(product._id);
+  const productIsAdded = favorites.includes(product._id);
 
   const handleAddItem = () => {
     if (userInfo) {
@@ -37,6 +38,7 @@ export const AddToWishlistButton = ({ product }: IAddToWishlistButtonProps) => {
           productId: product._id,
         }),
       ).then(() => {
+        dispatch(addFavorite(product._id));
         toast({
           title: 'Product added to your wishlist.',
           status: 'success',
@@ -62,6 +64,7 @@ export const AddToWishlistButton = ({ product }: IAddToWishlistButtonProps) => {
           productId: product._id,
         }),
       ).then(() => {
+        dispatch(removeFavorite(product._id));
         toast({
           title: 'Product removed from your wishlist.',
           status: 'success',

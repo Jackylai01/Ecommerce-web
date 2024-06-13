@@ -10,6 +10,7 @@ import { getSubstring } from '@helpers/products';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { addItem, isAdded, removeItem } from '@reducers/client/cart';
+import { removeFavorite } from '@reducers/public/favorite';
 import { publicRemoveFavoritesAsync } from '@reducers/public/favorite/actions';
 import { BsCart, BsCartX, BsTrash } from 'react-icons/bs';
 
@@ -36,7 +37,7 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
           productId: product._id,
         }),
       ).then(() => {
-        dispatch(removeItem({ key: 'wishlist', productId: product._id }));
+        dispatch(removeFavorite(product._id));
       });
     }
   };

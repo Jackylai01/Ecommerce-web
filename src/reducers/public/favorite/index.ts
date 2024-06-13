@@ -36,7 +36,9 @@ const favoritesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(publicAddFavoritesAsync.fulfilled, (state, action) => {
-      state.favorites.push(action.payload.productId);
+      if (!state.favorites.includes(action.payload.productId)) {
+        state.favorites.push(action.payload.productId);
+      }
     });
     builder.addCase(publicRemoveFavoritesAsync.fulfilled, (state, action) => {
       state.favorites = state.favorites.filter(
@@ -46,7 +48,7 @@ const favoritesSlice = createSlice({
     builder.addCase(publicGetFavoritesAsync.fulfilled, (state, action) => {
       state.favorites = action.payload.favorites;
     });
-    builder.addCase(clearFavoritesAsync.fulfilled, (state, action) => {
+    builder.addCase(clearFavoritesAsync.fulfilled, (state) => {
       state.favorites = [];
     });
     asyncMatcher(builder, ReducerName.PUBLIC_FAVORITES);
