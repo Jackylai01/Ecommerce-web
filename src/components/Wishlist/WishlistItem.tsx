@@ -1,23 +1,23 @@
-import { Button, Grid, GridItem, Image, Text } from '@chakra-ui/react';
+import { Button, Grid, GridItem, Image, Link, Text } from '@chakra-ui/react';
 import { getSubstring } from '@helpers/products';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { IItem } from '@models/requests/products';
 import { addItem, isAdded, removeItem } from '@reducers/client/cart';
-
-import Link from 'next/link';
 import { BsCart, BsCartX, BsTrash } from 'react-icons/bs';
 
 interface WishlistItemProps {
-  item: IItem;
+  item: string; // 這裡我們假設 item 是 productId
 }
 
 export const WishlistItem = ({ item }: WishlistItemProps) => {
   const dispatch = useAppDispatch();
+  const products = useAppSelector((state) => state.publicProducts.list);
 
-  const itemIsAdded = useAppSelector((state) =>
-    isAdded(state, 'cart', item._id),
-  );
+  const product = products?.find((product) => product._id === item);
+
+  const itemIsAdded = useAppSelector((state) => isAdded(state, 'cart', item));
+
+  if (!product) return null; // 如果找不到對應的產品，則返回 null
 
   return (
     <Grid
@@ -29,31 +29,31 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
       py='1'
     >
       <GridItem>
-        <Link href={`/product/${item._id}`}>
+        <Link href={`/product/${product._id}`}>
           <a>
             <Image
-              src={item.coverImage?.imageUrl}
+              src={product.coverImage.imageUrl}
               boxSize='20px'
               rounded='full'
               borderWidth='1px'
               borderColor='gray.300'
-              alt={item.name}
+              alt={product.name}
             />
           </a>
         </Link>
       </GridItem>
       <GridItem colSpan={4}>
-        <Link href={`/product/${item._id}`}>
+        <Link href={`/product/${product._id}`}>
           <a>
-            <Text fontSize='sm' title={item.name}>
-              {getSubstring(item.name, 17)}
+            <Text fontSize='sm' title={product.name}>
+              {getSubstring(product.name, 17)}
             </Text>
           </a>
         </Link>
       </GridItem>
       <GridItem>
         <Text fontWeight='bold' fontSize='xs'>
-          $ {item.price}
+          $ {product.price}
         </Text>
       </GridItem>
       <GridItem textAlign='right'>
@@ -66,7 +66,7 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
             color='gray.100'
             title='Remove from Cart'
             onClick={() =>
-              dispatch(removeItem({ key: 'cart', productId: item._id }))
+              dispatch(removeItem({ key: 'cart', productId: product._id }))
             }
           >
             <BsCartX />
@@ -80,7 +80,7 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
             color='white'
             title='Add to Cart'
             onClick={() =>
-              dispatch(addItem({ key: 'cart', product: item, count: 1 }))
+              dispatch(addItem({ key: 'cart', product, count: 1 }))
             }
           >
             <BsCart />
@@ -94,7 +94,7 @@ export const WishlistItem = ({ item }: WishlistItemProps) => {
           colorScheme='red'
           size='xs'
           onClick={() =>
-            dispatch(removeItem({ key: 'wishlist', productId: item._id }))
+            dispatch(removeItem({ key: 'wishlist', productId: product._id }))
           }
         >
           <BsTrash />

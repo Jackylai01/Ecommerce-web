@@ -1,7 +1,7 @@
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { ProductsResponse } from '@models/responses/products.res';
-import { addItem } from '@reducers/client/cart';
+import { publicGetFavoritesAsync } from '@reducers/public/favorite/actions';
+
 import { useEffect } from 'react';
 
 const useSyncFavorites = () => {
@@ -10,13 +10,7 @@ const useSyncFavorites = () => {
 
   useEffect(() => {
     if (userInfo) {
-      const localFavorites = JSON.parse(
-        localStorage.getItem('favorites') || '[]',
-      );
-      localFavorites.forEach((product: ProductsResponse) => {
-        dispatch(addItem({ key: 'wishlist', product, count: 1 }));
-      });
-      localStorage.removeItem('favorites');
+      dispatch(publicGetFavoritesAsync(userInfo._id));
     }
   }, [userInfo, dispatch]);
 };

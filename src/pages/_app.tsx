@@ -3,6 +3,7 @@ import Layout from '@components/Layout';
 import LogoutModal from '@components/Modal/LogoutModal';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import useSyncFavorites from '@hooks/useSyncFavorites';
 import { adminLogoutAsync } from '@reducers/admin/auth/actions';
 import wrapper from '@store';
 import '@styles/globals.scss';
@@ -13,6 +14,7 @@ import io, { Socket } from 'socket.io-client';
 import { theme } from 'src/theme/theme';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+  useSyncFavorites();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const dispatch = useAppDispatch();

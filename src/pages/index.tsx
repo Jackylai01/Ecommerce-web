@@ -4,14 +4,12 @@ import { Banner } from '@components/Home/Banner';
 import { FeaturedProducts } from '@components/Home/FeaturedProducts';
 import { TopCategories } from '@components/Home/TopCategories';
 import { fakeCategories, fakeProducts } from '@helpers/products';
-import useSyncFavorites from '@hooks/useSyncFavorites';
 import type { NextPage } from 'next';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const HomePage: NextPage = () => {
-  useSyncFavorites();
   return (
     <Box>
       <Banner />

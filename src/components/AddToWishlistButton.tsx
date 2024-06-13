@@ -2,8 +2,12 @@ import { Button, useToast } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { ProductsResponse } from '@models/responses/products.res';
-import { addItem, isAdded, removeItem } from '@reducers/client/cart';
-import { useEffect, useState } from 'react';
+import {
+  publicAddFavoritesAsync,
+  publicGetFavoritesAsync,
+  publicRemoveFavoritesAsync,
+} from '@reducers/public/favorite/actions';
+import { useEffect } from 'react';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 
 interface IAddToWishlistButtonProps {
@@ -14,35 +18,36 @@ export const AddToWishlistButton = ({ product }: IAddToWishlistButtonProps) => {
   const dispatch = useAppDispatch();
   const toast = useToast();
   const { userInfo } = useAppSelector((state) => state.clientAuth);
-  const [localFavorites, setLocalFavorites] = useState<string[]>([]);
-  const productIsAdded =
-    useAppSelector((state) => isAdded(state, 'wishlist', product._id)) ||
-    localFavorites.includes(product._id);
+  const favorites = useAppSelector((state) => state.publicFavorites.favorites);
 
   useEffect(() => {
-    const savedFavorites = JSON.parse(
-      localStorage.getItem('favorites') || '[]',
-    );
-    setLocalFavorites(savedFavorites.map((fav: { _id: string }) => fav._id));
-  }, []);
+    if (userInfo) {
+      dispatch(publicGetFavoritesAsync(userInfo._id));
+    }
+  }, [dispatch, userInfo]);
+
+  const productIsAdded =
+    Array.isArray(favorites) && favorites.includes(product._id);
 
   const handleAddItem = () => {
     if (userInfo) {
-      dispatch(addItem({ key: 'wishlist', product, count: 1 }));
+      dispatch(
+        publicAddFavoritesAsync({
+          userId: userInfo._id,
+          productId: product._id,
+        }),
+      ).then(() => {
+        toast({
+          title: 'Product added to your wishlist.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      });
     } else {
-      const savedFavorites = JSON.parse(
-        localStorage.getItem('favorites') || '[]',
-      );
-      if (
-        !savedFavorites.some((fav: { _id: string }) => fav._id === product._id)
-      ) {
-        savedFavorites.push(product);
-        localStorage.setItem('favorites', JSON.stringify(savedFavorites));
-        setLocalFavorites((prev) => [...prev, product._id]);
-      }
       toast({
-        title: 'Product added to your local wishlist.',
-        status: 'success',
+        title: 'Please log in to add items to your wishlist.',
+        status: 'warning',
         duration: 3000,
         isClosable: true,
       });
@@ -51,19 +56,23 @@ export const AddToWishlistButton = ({ product }: IAddToWishlistButtonProps) => {
 
   const handleRemoveItem = () => {
     if (userInfo) {
-      dispatch(removeItem({ key: 'wishlist', productId: product._id }));
+      dispatch(
+        publicRemoveFavoritesAsync({
+          userId: userInfo._id,
+          productId: product._id,
+        }),
+      ).then(() => {
+        toast({
+          title: 'Product removed from your wishlist.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      });
     } else {
-      let savedFavorites = JSON.parse(
-        localStorage.getItem('favorites') || '[]',
-      );
-      savedFavorites = savedFavorites.filter(
-        (fav: { _id: string }) => fav._id !== product._id,
-      );
-      localStorage.setItem('favorites', JSON.stringify(savedFavorites));
-      setLocalFavorites((prev) => prev.filter((id) => id !== product._id));
       toast({
-        title: 'Product removed from your local wishlist.',
-        status: 'success',
+        title: 'Please log in to remove items from your wishlist.',
+        status: 'warning',
         duration: 3000,
         isClosable: true,
       });
