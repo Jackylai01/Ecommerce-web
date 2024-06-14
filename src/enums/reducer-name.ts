@@ -11,6 +11,7 @@ export enum ReducerName {
   ADMIN_CLIENT_USER = 'adminClientUser',
   ADMIN_SETTING = 'adminSetting',
   ADMIN_CUSTOM_PAGE = 'adminCustomPage',
+  ADMIN_DISCOUNT = 'adminDiscount',
   ICON_SELECT = 'iconSelect',
   FILE_SELECT = 'fileSelect',
   ADMIN_ADMIN_USER = 'adminAdminUser',
