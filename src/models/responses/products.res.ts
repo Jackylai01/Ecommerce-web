@@ -1,6 +1,8 @@
 export type ProductsResponse = {
   // 產品_id
   _id: string;
+  // 路由產品名稱
+  slug: string;
   // 商品名稱
   name: string;
   // 商品描述

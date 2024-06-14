@@ -24,8 +24,8 @@ export const publicProductsListAsync = createAsyncThunk(
 
 export const publicProductsDetailAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_PRODUCTS}/${PublicListAsyncAction.productsDetail}`,
-  async (id: string) => {
-    const response = await apiPublicProductsDetail(id);
+  async (idSlug: string) => {
+    const response = await apiPublicProductsDetail(idSlug);
     return response.res.data;
   },
 );

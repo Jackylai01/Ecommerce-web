@@ -58,9 +58,6 @@ export const Wishlist = () => {
 
   const totalFavorites = favorites.filter((fav) => fav).length;
 
-  console.log('Total Favorites:', totalFavorites);
-  console.log('Favorites Array:', favorites);
-
   return (
     <Popover>
       <PopoverTrigger>

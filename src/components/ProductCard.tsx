@@ -25,7 +25,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     <Card w='xs' pos='relative' m='0.5rem' bg='none' shadow='md'>
       <AddToWishlistButton product={product} />
       <CardBody>
-        <Link href={`/products/${product.name}`}>
+        <Link href={`/products/${product._id}-${product.slug}`}>
           <Box
             bg={`center / contain no-repeat url(${coverImageUrl})`}
             borderRadius='lg'
@@ -35,7 +35,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         </Link>
         <Stack mt='6' spacing='3'>
           <Flex justify='space-between' align='center'>
-            <Link href={`/products/${product.name}`}>
+            <Link href={`/products/${product._id}-${product.slug}`}>
               <Heading size='sm'>{getSubstring(product.name, 20)}</Heading>
             </Link>
             <Flex color='black' fontWeight='bold'>

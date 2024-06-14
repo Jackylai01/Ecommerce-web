@@ -44,7 +44,7 @@ export const AllProducts = ({ breadcrumbItems }: AllProductsProps) => {
           flexWrap='wrap'
           w={{ base: '100%', lg: '90%' }}
           mx='auto'
-          justify={{ base: 'center', lg: 'space-between' }}
+          justify={{ base: 'center', lg: 'flex-start' }}
         >
           {hasProducts ? (
             productList.map((product) => (
