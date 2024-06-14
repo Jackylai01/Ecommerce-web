@@ -25,7 +25,9 @@ const favoritesSlice = createSlice({
   initialState,
   reducers: {
     addFavorite: (state, action: PayloadAction<string>) => {
-      state.favorites.push(action.payload);
+      if (!state.favorites.includes(action.payload)) {
+        state.favorites.push(action.payload);
+      }
     },
     removeFavorite: (state, action: PayloadAction<string>) => {
       state.favorites = state.favorites.filter(
@@ -36,17 +38,17 @@ const favoritesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(publicAddFavoritesAsync.fulfilled, (state, action) => {
-      if (!state.favorites.includes(action.payload.productId)) {
-        state.favorites.push(action.payload.productId);
+      const { productId } = action.payload;
+      if (!state.favorites.includes(productId)) {
+        state.favorites.push(productId);
       }
     });
     builder.addCase(publicRemoveFavoritesAsync.fulfilled, (state, action) => {
-      state.favorites = state.favorites.filter(
-        (fav) => fav !== action.payload.productId,
-      );
+      const { productId } = action.payload;
+      state.favorites = state.favorites.filter((fav) => fav !== productId);
     });
     builder.addCase(publicGetFavoritesAsync.fulfilled, (state, action) => {
-      state.favorites = action.payload.favorites;
+      state.favorites = action.payload.favorites.filter((fav: any) => fav);
     });
     builder.addCase(clearFavoritesAsync.fulfilled, (state) => {
       state.favorites = [];

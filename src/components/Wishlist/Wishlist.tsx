@@ -14,7 +14,11 @@ import {
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { resetItems } from '@reducers/client/cart';
-import { clearFavoritesAsync } from '@reducers/public/favorite/actions';
+import {
+  clearFavoritesAsync,
+  publicGetFavoritesAsync,
+} from '@reducers/public/favorite/actions';
+import { useEffect } from 'react';
 import { BsHeart } from 'react-icons/bs';
 import { WishlistItem } from './WishlistItem';
 
@@ -23,6 +27,12 @@ export const Wishlist = () => {
   const { userInfo } = useAppSelector((state) => state.clientAuth);
   const dispatch = useAppDispatch();
   const toast = useToast();
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(publicGetFavoritesAsync(userInfo._id));
+    }
+  }, [dispatch, userInfo]);
 
   const handleResetWishlist = () => {
     if (userInfo) {
@@ -46,7 +56,10 @@ export const Wishlist = () => {
     }
   };
 
-  const totalFavorites = favorites.length;
+  const totalFavorites = favorites.filter((fav) => fav).length;
+
+  console.log('Total Favorites:', totalFavorites);
+  console.log('Favorites Array:', favorites);
 
   return (
     <Popover>
@@ -86,8 +99,8 @@ export const Wishlist = () => {
             <>Your Wishlist is Empty</>
           ) : (
             <>
-              {favorites.map((item) => (
-                <WishlistItem key={item} item={item} />
+              {favorites.map((item, key) => (
+                <WishlistItem key={key} item={item} />
               ))}
             </>
           )}
