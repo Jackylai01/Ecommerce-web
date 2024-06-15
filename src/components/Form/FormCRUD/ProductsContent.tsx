@@ -1,6 +1,7 @@
 import { VStack } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { getAllDiscountsAsync } from '@reducers/admin/discount/actions';
 import { getAllProductsCategoryAsync } from '@reducers/admin/product-category/actions';
 import { getAllProductsTagsAsync } from '@reducers/admin/product-tags/actions';
 import {
@@ -28,12 +29,12 @@ export const ProductFormContent = () => {
   const { list: categories } = useAppSelector(
     (state) => state.adminProductsCategory,
   );
-  const { id: productId } = router.query as any;
-
   const { list: tags } = useAppSelector((state) => state.adminProductsTags);
+  const { list: discounts } = useAppSelector((state) => state.adminDiscount);
+  const { id: productId } = router.query as any;
   const {
     productDetails,
-    status: { deleteProductImageLoading, deleteProductImageSuccess },
+    status: { deleteProductImageLoading },
   } = useAppSelector((state) => state.adminProducts);
 
   const [coverImagePreview, setCoverImagePreview] = useState<any>(null);
@@ -55,23 +56,27 @@ export const ProductFormContent = () => {
   };
 
   const categoryOptions =
-    categories
-      ?.map((category) => ({
-        value: category._id ?? '',
-        label: category.name ?? '',
-      }))
-      .filter((option) => option.value !== '' && option.label !== '') || [];
+    categories?.map((category) => ({
+      value: category._id ?? '',
+      label: category.name ?? '',
+    })) || [];
 
   const tagsOptions =
-    tags
-      ?.map((tag) => ({
-        value: tag._id ?? '',
-        label: tag.name ?? '',
-      }))
-      .filter((option) => option.value !== '' && option.label !== '') || [];
+    tags?.map((tag) => ({
+      value: tag._id ?? '',
+      label: tag.name ?? '',
+    })) || [];
+
+  const discountOptions =
+    discounts?.map((discount) => ({
+      value: discount._id ?? '',
+      label: discount.name ?? '',
+    })) || [];
 
   useEffect(() => {
     dispatch(getAllProductsCategoryAsync({ page: 1, limit: 100 }));
+    dispatch(getAllProductsTagsAsync({ page: 1, limit: 100 }));
+    dispatch(getAllDiscountsAsync({ page: 1, limit: 100 }));
     if (productId) {
       dispatch(getProductByIdAsync(productId));
     }
@@ -90,6 +95,7 @@ export const ProductFormContent = () => {
       setValue('maximumPurchase', productDetails.maximumPurchase);
       setValue('cost', productDetails.cost);
       setValue('tags', productDetails.tags);
+      setValue('discount', productDetails.discount);
 
       if (productDetails.specifications) {
         setValue(
@@ -113,7 +119,6 @@ export const ProductFormContent = () => {
         })),
       );
 
-      // 更新 detailDescription
       const detailDescription = productDetails.detailDescription.map(
         (block: any) => {
           if (block.className === 'image-selectable') {
@@ -141,7 +146,6 @@ export const ProductFormContent = () => {
 
   useEffect(() => {
     if (uploadedImages.length > 0 && !productId) {
-      // 僅在新增產品時執行
       const imageBlocks = uploadedImages.map((image) => ({
         className: 'image-selectable',
         elements: [
@@ -156,21 +160,6 @@ export const ProductFormContent = () => {
       setValue('detailDescription', imageBlocks);
     }
   }, [uploadedImages, productId, setValue]);
-
-  useEffect(() => {
-    if (productDetails && productDetails.coverImage) {
-      setCoverImagePreview({
-        url: productDetails.coverImage.imageUrl,
-        file: null,
-        imageId: productDetails.coverImage.imageId,
-      });
-    }
-  }, [productDetails]);
-
-  useEffect(() => {
-    const page = parseInt(router.query.page as string, 10) || 1;
-    dispatch(getAllProductsTagsAsync({ page, limit: 10 }));
-  }, [dispatch, router.query.page]);
 
   return (
     <VStack spacing={4} align='flex-start' color={textColor}>
@@ -210,7 +199,6 @@ export const ProductFormContent = () => {
         placeholder='請輸入商品總成本'
       />
       <TextInput name='stock' label='庫存' placeholder='請輸入商品總庫存' />
-
       <CustomSelect
         name='category'
         label='產品類別'
@@ -218,6 +206,12 @@ export const ProductFormContent = () => {
         isRequired
       />
       <TagsMultiSelect name='tags' label='產品標籤' options={tagsOptions} />
+      <CustomSelect
+        name='discount'
+        label='折扣方案'
+        options={discountOptions}
+        isRequired={false}
+      />
       <ToggleSwitch
         name='status'
         label='產品狀態'

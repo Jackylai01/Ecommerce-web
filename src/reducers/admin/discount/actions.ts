@@ -8,6 +8,7 @@ import {
   apiGetDiscountById,
   apiGetDiscounts,
   apiUpdateDiscount,
+  apiUpdateDiscountStatus,
 } from '@services/admin/admin-discount/admin-discount';
 
 export enum DiscountAction {
@@ -16,6 +17,7 @@ export enum DiscountAction {
   addDiscount = 'addDiscount',
   updateDiscount = 'updateDiscount',
   deleteDiscount = 'deleteDiscount',
+  updateDiscountStatus = 'updateDiscountStatus',
 }
 
 export const getAllDiscountsAsync = createAsyncThunk(
@@ -56,5 +58,13 @@ export const deleteDiscountAsync = createAsyncThunk(
   async (id: string) => {
     await apiDeleteDiscount(id);
     return id;
+  },
+);
+
+export const updateDiscountStatusAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_DISCOUNT}/${DiscountAction.updateDiscountStatus}`,
+  async ({ id, isActive }: { id: string; isActive: boolean }) => {
+    const response = await apiUpdateDiscountStatus(id, { isActive });
+    return response.result.data;
   },
 );

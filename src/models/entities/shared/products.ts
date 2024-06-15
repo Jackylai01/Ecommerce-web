@@ -40,6 +40,8 @@ export interface Product extends BaseEntity {
   tempProductIds?: string;
   // 商品總成本
   cost?: number;
+  // 折扣模組
+  discount?: any;
   // 商品標籤
   tags?: string[];
   // 自訂模組，可以根據您的實際需求添加額外的類型定義

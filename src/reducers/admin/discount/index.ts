@@ -1,3 +1,4 @@
+// src/reducers/admin/discount/index.ts
 import { ReducerName } from '@enums/reducer-name';
 import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
@@ -12,18 +13,21 @@ import {
   getAllDiscountsAsync,
   getDiscountByIdAsync,
   updateDiscountAsync,
+  updateDiscountStatusAsync, // 添加這個 import
 } from './actions';
 
 type DiscountState = ApiState<DiscountAction> & {
   list: Discount[] | null;
   metadata: Metadata | null;
   discountDetails: Discount | null;
+  editingDiscountId: string | null;
 };
 
 const initialState: DiscountState = {
   list: null,
   metadata: null,
   discountDetails: null,
+  editingDiscountId: null,
   ...newApiState<DiscountState>(DiscountAction),
 };
 
@@ -34,6 +38,13 @@ const discountSlice = createSlice({
     resetDiscountState: () => initialState,
     resetDiscountDetailState: (state) => {
       state.discountDetails = null;
+    },
+    setEditingDiscountId: (state, action) => {
+      state.editingDiscountId = action.payload;
+    },
+
+    resetDiscountId: (state) => {
+      state.editingDiscountId = null;
     },
   },
   extraReducers: (builder) => {
@@ -54,6 +65,15 @@ const discountSlice = createSlice({
         );
       }
     });
+    builder.addCase(updateDiscountStatusAsync.fulfilled, (state, action) => {
+      if (state.list) {
+        state.list = state.list.map((discount) =>
+          discount._id === action.payload._id
+            ? { ...discount, isActive: action.payload.isActive }
+            : discount,
+        );
+      }
+    });
     builder.addCase(deleteDiscountAsync.fulfilled, (state, action) => {
       if (state.list) {
         state.list = state.list.filter(
@@ -66,6 +86,10 @@ const discountSlice = createSlice({
   },
 });
 
-export const { resetDiscountState, resetDiscountDetailState } =
-  discountSlice.actions;
+export const {
+  resetDiscountState,
+  resetDiscountDetailState,
+  setEditingDiscountId,
+  resetDiscountId,
+} = discountSlice.actions;
 export default discountSlice.reducer;

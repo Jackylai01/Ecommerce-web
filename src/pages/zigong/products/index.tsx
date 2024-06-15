@@ -81,6 +81,7 @@ const ProductsPages: NextPage = () => {
           'images',
           'specifications',
           'tags',
+          'discount',
         ].includes(key)
       ) {
         formData.append(key, data[key]);
@@ -90,16 +91,22 @@ const ProductsPages: NextPage = () => {
     if (data.coverImage) {
       formData.append('coverImage', data.coverImage);
     }
+    if (data.discount) {
+      formData.append('discount', data.discount);
+    }
+
     if (data.images && data.images.length) {
       data.images.forEach((image: any) => {
         formData.append('images', image);
       });
     }
+
     if (data.tags && Array.isArray(data.tags)) {
       data.tags.forEach((tag: any) => {
         formData.append('tags', tag);
       });
     }
+
     if (data.specifications) {
       formData.append('specifications', JSON.stringify(data.specifications));
     }

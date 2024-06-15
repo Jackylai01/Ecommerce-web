@@ -2,6 +2,7 @@ import adminAuth from './admin/auth';
 import adminClientUsers from './admin/client-users';
 import customPage from './admin/custom-page';
 import dashBoardTheme from './admin/dash-board/themeSlice';
+import adminDiscount from './admin/discount';
 import adminProductsCategory from './admin/product-category';
 import adminProductsTags from './admin/product-tags';
 import adminProducts from './admin/products';
@@ -32,6 +33,7 @@ const appReducer = {
   adminClientUsers,
   publicProducts,
   publicFavorites,
+  adminDiscount,
 };
 
 export default appReducer;

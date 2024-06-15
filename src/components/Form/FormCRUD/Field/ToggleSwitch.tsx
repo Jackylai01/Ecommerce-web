@@ -5,8 +5,8 @@ import { Controller, useFormContext } from 'react-hook-form';
 interface ToggleSwitchProps {
   name: string;
   label?: string;
-  onValue: string;
-  offValue: string;
+  onValue: string | boolean;
+  offValue: string | boolean;
   onLabel: string;
   offLabel: string;
 }
@@ -22,6 +22,8 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   const { control, watch } = useFormContext();
   const value = watch(name);
 
+  const isChecked = value === onValue;
+
   return (
     <FormControl display='flex' alignItems='center'>
       {label && (
@@ -32,26 +34,25 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       <Controller
         name={name}
         control={control}
-        defaultValue={onValue}
+        defaultValue={offValue}
         render={({ field: { onChange, ref } }) => (
           <Switch
             id={name}
             ref={ref}
-            isChecked={value === onValue}
+            isChecked={isChecked}
             onChange={(e) => onChange(e.target.checked ? onValue : offValue)}
             sx={{
               '.chakra-switch__track': {
                 boxShadow: '0 0 0 1px #afafaf',
               },
               '.chakra-switch__thumb': {
-                bg: value === onValue ? 'white' : 'gray.300',
+                bg: isChecked ? 'white' : 'gray.300',
               },
             }}
           />
         )}
       />
-
-      <Text ml={2}>{value === onValue ? onLabel : offLabel}</Text>
+      <Text ml={2}>{isChecked ? onLabel : offLabel}</Text>
     </FormControl>
   );
 };

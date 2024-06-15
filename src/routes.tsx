@@ -1,4 +1,5 @@
 import {
+  CartIcon,
   CreditIcon,
   HomeIcon,
   PersonIcon,
@@ -6,6 +7,7 @@ import {
 } from '@components/Icons/Icons';
 import Billing from '@components/Layout/AdminLayout/Billing';
 import Dashboard from '@components/Layout/AdminLayout/Dashboard';
+import DiscountTableContainer from '@components/Layout/AdminLayout/Discount';
 import Profile from '@components/Layout/AdminLayout/Profile';
 import Tables from '@components/Layout/AdminLayout/Tables';
 import { ADMIN_ROUTE } from '@fixtures/constants';
@@ -39,7 +41,13 @@ var dashRoutes = [
     component: Billing,
     layout: `/${ADMIN_ROUTE}`,
   },
-
+  {
+    path: '/discounts',
+    name: 'Discounts',
+    icon: CartIcon,
+    component: DiscountTableContainer,
+    layout: `/${ADMIN_ROUTE}`,
+  },
   {
     name: 'ACCOUNT PAGES',
     category: 'account',
