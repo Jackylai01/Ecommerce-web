@@ -22,6 +22,7 @@ const DiscountEditPage = () => {
   const { id } = router.query;
   const dispatch = useAppDispatch();
   const methods = useForm();
+
   const {
     discountDetails,
     status: {
@@ -41,12 +42,6 @@ const DiscountEditPage = () => {
       dispatch(getDiscountByIdAsync(id as string));
     }
   }, [id, dispatch]);
-
-  useEffect(() => {
-    if (discountDetails) {
-      methods.reset(discountDetails);
-    }
-  }, [discountDetails, methods]);
 
   useEffect(() => {
     if (updateDiscountSuccess) {

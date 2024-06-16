@@ -5,6 +5,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiAddDiscount,
   apiDeleteDiscount,
+  apiGenerateDiscountCode,
   apiGetDiscountById,
   apiGetDiscounts,
   apiUpdateDiscount,
@@ -18,6 +19,7 @@ export enum DiscountAction {
   updateDiscount = 'updateDiscount',
   deleteDiscount = 'deleteDiscount',
   updateDiscountStatus = 'updateDiscountStatus',
+  generateDiscountCode = 'generateDiscountCode',
 }
 
 export const getAllDiscountsAsync = createAsyncThunk(
@@ -65,6 +67,20 @@ export const updateDiscountStatusAsync = createAsyncThunk(
   `${ReducerName.ADMIN_DISCOUNT}/${DiscountAction.updateDiscountStatus}`,
   async ({ id, isActive }: { id: string; isActive: boolean }) => {
     const response = await apiUpdateDiscountStatus(id, { isActive });
+    return response.result.data;
+  },
+);
+
+export const generateDiscountCodeAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_DISCOUNT}/${DiscountAction.generateDiscountCode}`,
+  async ({
+    discountId,
+    usageLimit,
+  }: {
+    discountId: string;
+    usageLimit: number;
+  }) => {
+    const response = await apiGenerateDiscountCode({ discountId, usageLimit });
     return response.result.data;
   },
 );

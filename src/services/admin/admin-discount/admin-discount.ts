@@ -58,3 +58,19 @@ export const apiUpdateDiscountStatus = async (
 export const apiDeleteDiscount = async (id: string) => {
   return deleteRequest<ApiResult<Discount>>(`/zigong/discounts/${id}`);
 };
+
+/**
+ * 生成折扣碼
+ */
+export const apiGenerateDiscountCode = async ({
+  discountId,
+  usageLimit,
+}: {
+  discountId: string;
+  usageLimit: number;
+}) => {
+  return postRequest<ApiResult<Discount>>('/zigong/discounts/code', {
+    discountId,
+    usageLimit,
+  });
+};

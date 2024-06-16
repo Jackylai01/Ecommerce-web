@@ -1,4 +1,3 @@
-// src/reducers/admin/discount/index.ts
 import { ReducerName } from '@enums/reducer-name';
 import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
@@ -10,6 +9,7 @@ import {
   DiscountAction,
   addDiscountAsync,
   deleteDiscountAsync,
+  generateDiscountCodeAsync,
   getAllDiscountsAsync,
   getDiscountByIdAsync,
   updateDiscountAsync,
@@ -79,6 +79,12 @@ const discountSlice = createSlice({
         state.list = state.list.filter(
           (discount) => discount._id !== action.payload,
         );
+      }
+    });
+    builder.addCase(generateDiscountCodeAsync.fulfilled, (state, action) => {
+      if (state.discountDetails) {
+        state.discountDetails.discountCode = action.payload.discountCode;
+        state.discountDetails.usageLimit = action.payload.usageLimit;
       }
     });
 

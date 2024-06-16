@@ -1,30 +1,29 @@
-import { VStack } from '@chakra-ui/react';
+import { Button, VStack } from '@chakra-ui/react';
 import CustomSelect from '@components/Form/FormCRUD/Field/CustomSelect';
-import { TextInput } from '@components/Form/FormCRUD/Field/TextInput';
+import TextInput from '@components/Form/FormCRUD/Field/TextInput';
 import ToggleSwitch from '@components/Form/FormCRUD/Field/ToggleSwitch';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import {
-  getAllDiscountsAsync,
+  generateDiscountCodeAsync,
   getDiscountByIdAsync,
 } from '@reducers/admin/discount/actions';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 const DiscountForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { id: discountId } = router.query as any;
   const { discountDetails } = useAppSelector((state) => state.adminDiscount);
-  const { setValue } = useFormContext();
+  const { setValue, getValues, control } = useFormContext();
 
   useEffect(() => {
-    dispatch(getAllDiscountsAsync({ page: 1, limit: 100 }));
     if (discountId) {
       dispatch(getDiscountByIdAsync(discountId));
     }
-  }, [dispatch]);
+  }, [dispatch, discountId]);
 
   useEffect(() => {
     if (discountDetails) {
@@ -32,14 +31,31 @@ const DiscountForm = () => {
       setValue('type', discountDetails.type);
       setValue('value', discountDetails.value);
       setValue('calculationMethod', discountDetails.calculationMethod);
-      setValue('startDate', discountDetails.startDate);
-      setValue('endDate', discountDetails.endDate);
+      setValue(
+        'startDate',
+        discountDetails.startDate
+          ? new Date(discountDetails.startDate).toISOString().slice(0, 10)
+          : '',
+      );
+      setValue(
+        'endDate',
+        discountDetails.endDate
+          ? new Date(discountDetails.endDate).toISOString().slice(0, 10)
+          : '',
+      );
       setValue('minimumAmount', discountDetails.minimumAmount);
       setValue('discountCode', discountDetails.discountCode);
       setValue('usageLimit', discountDetails.usageLimit);
       setValue('isActive', discountDetails.isActive);
     }
   }, [discountDetails, setValue]);
+
+  const handleGenerateDiscountCode = async () => {
+    if (discountId) {
+      const usageLimit = getValues('usageLimit');
+      await dispatch(generateDiscountCodeAsync({ discountId, usageLimit }));
+    }
+  };
 
   return (
     <VStack spacing={4}>
@@ -48,6 +64,7 @@ const DiscountForm = () => {
         label='折扣名稱'
         placeholder='請輸入折扣名稱'
         isRequired
+        defaultValue={discountDetails?.name || ''}
       />
       <CustomSelect
         name='type'
@@ -61,6 +78,7 @@ const DiscountForm = () => {
           { value: 'orderCodeDiscount', label: '訂單代碼折扣' },
         ]}
         isRequired
+        defaultValue={discountDetails?.type || ''}
       />
       <TextInput
         name='value'
@@ -68,6 +86,7 @@ const DiscountForm = () => {
         placeholder='請輸入折扣值'
         type='number'
         isRequired
+        defaultValue={discountDetails?.value || ''}
       />
       <CustomSelect
         name='calculationMethod'
@@ -77,45 +96,73 @@ const DiscountForm = () => {
           { value: 'fixedAmount', label: '固定金額' },
         ]}
         isRequired
+        defaultValue={discountDetails?.calculationMethod || ''}
       />
-      <TextInput
+
+      <Controller
         name='startDate'
-        label='開始日期'
-        type='date'
-        placeholder='請填入開始日期'
-        isRequired
+        control={control}
+        render={({ field }) => (
+          <TextInput
+            {...field}
+            type='date'
+            label='开始日期'
+            placeholder=''
+            isRequired
+          />
+        )}
       />
-      <TextInput
+      <Controller
         name='endDate'
-        label='結束日期'
-        placeholder='請填入結束日期'
-        type='date'
-        isRequired
+        control={control}
+        render={({ field }) => (
+          <TextInput
+            {...field}
+            type='date'
+            placeholder=''
+            label='结束日期'
+            isRequired
+          />
+        )}
       />
       <TextInput
         name='minimumAmount'
         label='最低金額'
         placeholder='請填入最低金額'
         type='number'
+        defaultValue={discountDetails?.minimumAmount || ''}
       />
       <TextInput
         name='discountCode'
         label='折扣碼'
         placeholder='請填入折扣碼'
+        isReadOnly
+        defaultValue={discountDetails?.discountCode || ''}
       />
+      <Button onClick={handleGenerateDiscountCode}>生成折扣碼</Button>
       <TextInput
         name='usageLimit'
         label='使用上限次數'
         placeholder='請填入使用上限次數'
         type='number'
+        defaultValue={discountDetails?.usageLimit || ''}
       />
-      <ToggleSwitch
+      <Controller
         name='isActive'
-        label='折扣狀態'
-        onValue={true}
-        offValue={false}
-        onLabel='啟用'
-        offLabel='停用'
+        control={control}
+        defaultValue={discountDetails?.isActive || false}
+        render={({ field: { onChange, value } }) => (
+          <ToggleSwitch
+            name='isActive'
+            label='折扣狀態'
+            onValue={true}
+            offValue={false}
+            onLabel='啟用'
+            offLabel='停用'
+            value={value}
+            onChange={onChange}
+          />
+        )}
       />
     </VStack>
   );

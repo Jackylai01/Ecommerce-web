@@ -13,13 +13,16 @@ interface TextInputType {
   placeholder: string;
   isRequired?: boolean;
   type?: string;
-  as?: React.ElementType; // 添加这一行来支持Textarea组件
-  height?: string; // 添加高度属性
+  as?: React.ElementType;
+  height?: string;
   min?: number;
   max?: number;
+  isReadOnly?: boolean;
+  defaultValue?: string | number; // 更新 defaultValue 类型
+  value?: any;
 }
 
-export const TextInput = ({
+const TextInput = ({
   name,
   label,
   placeholder,
@@ -29,6 +32,9 @@ export const TextInput = ({
   height,
   min,
   max,
+  isReadOnly = false,
+  defaultValue,
+  value,
 }: TextInputType) => {
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
@@ -53,6 +59,9 @@ export const TextInput = ({
         max={max}
         borderColor={textColor}
         color={textColor}
+        isReadOnly={isReadOnly}
+        defaultValue={defaultValue}
+        value={value}
         _hover={{ borderColor: 'gray.400' }}
         sx={{
           ':-webkit-autofill': {
@@ -74,3 +83,5 @@ export const TextInput = ({
     </FormControl>
   );
 };
+
+export default TextInput;

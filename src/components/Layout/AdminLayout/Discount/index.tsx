@@ -179,7 +179,7 @@ const DiscountTableContainer = () => {
   };
 
   const handleEdit = (discountId: string) => {
-    router.push(`/admin/discounts/${discountId}`);
+    router.push(`/zigong/discounts/${discountId}`);
   };
 
   const requestDelete = (id: any) => {
