@@ -1,11 +1,12 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { ElementType, FC } from 'react';
 import { useAdminColorMode } from 'src/context/colorMode';
 
 interface TabItemWithIcon {
   label: string;
-  icon: React.ElementType;
+  icon: ElementType;
 }
+
 interface TabsComponentProps {
   tabItems: TabItemWithIcon[];
   onChange: (index: number) => void;

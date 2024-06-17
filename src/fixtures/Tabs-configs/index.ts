@@ -1,5 +1,5 @@
 import { TabItem } from '@models/entities/shared/Tabs';
-import { MdCategory, MdList, MdLocalOffer } from 'react-icons/md';
+import { MdCategory, MdList, MdLocalOffer, MdSearch } from 'react-icons/md';
 
 export const ProductsConfig: TabItem[] = [
   {
@@ -30,4 +30,9 @@ export const UsersConfig: TabItem[] = [
     path: '/zigong/member',
     icon: MdCategory,
   },
+];
+
+export const tabsConfig: TabItem[] = [
+  { label: '折扣模組', path: '/zigong/discounts', icon: MdList },
+  { label: '查詢折扣碼', path: '/zigong/discounts/usage', icon: MdSearch },
 ];

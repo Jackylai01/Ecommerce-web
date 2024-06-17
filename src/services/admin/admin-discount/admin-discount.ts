@@ -41,7 +41,6 @@ export const apiUpdateDiscount = async (id: string, body: FormData) => {
 };
 
 /**更新折扣狀態 */
-
 export const apiUpdateDiscountStatus = async (
   id: string,
   body: { isActive: boolean },
@@ -74,3 +73,33 @@ export const apiGenerateDiscountCode = async ({
     usageLimit,
   });
 };
+
+/**
+ * 應用折扣至訂單
+ */
+export const apiApplyDiscountToOrder = async ({
+  orderId,
+  discountId,
+}: {
+  orderId: string;
+  discountId: string;
+}) => {
+  return putRequest<ApiResult<Discount>>(`/zigong/discounts/apply/${orderId}`, {
+    discountId,
+  });
+};
+
+/**
+ * 查詢折扣碼使用歷史
+ */
+export const apiGetDiscountUsageByCode = async (code: string) => {
+  return getRequest<ApiResult<any>>(`/zigong/discounts/usage/${code}`);
+};
+
+/**
+ * 獲取全部折扣使用情形
+ */
+export const apiGetAllDiscountsUsage = async (query: PagingQuery) =>
+  getRequest<ApiPaginationResult<any>>(
+    formatQueryString('/zigong/discounts/usage', query),
+  );

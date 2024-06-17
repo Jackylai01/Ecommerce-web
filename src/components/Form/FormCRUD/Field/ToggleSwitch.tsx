@@ -8,8 +8,8 @@ interface ToggleSwitchProps {
   offValue: string | boolean;
   onLabel: string;
   offLabel: string;
-  value: string | boolean;
-  onChange: (value: string | boolean) => void;
+  value?: string | boolean;
+  onChange?: (value: string | boolean) => void;
 }
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
@@ -34,7 +34,11 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       <Switch
         id={name}
         isChecked={isChecked}
-        onChange={(e) => onChange(e.target.checked ? onValue : offValue)}
+        onChange={(e) => {
+          if (onChange) {
+            onChange(e.target.checked ? onValue : offValue);
+          }
+        }}
         sx={{
           '.chakra-switch__track': {
             boxShadow: '0 0 0 1px #afafaf',

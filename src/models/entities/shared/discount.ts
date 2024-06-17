@@ -14,8 +14,10 @@ export interface Discount extends BaseEntity {
   startDate: Date;
   endDate: Date;
   minimumAmount?: number;
-  discountCode?: string;
+  productId?: any;
+  discountCode?: string[];
   usageLimit?: number;
   usedCount?: number;
   isActive?: boolean;
+  usageHistory?: any;
 }

@@ -9,7 +9,7 @@ import {
   getDiscountByIdAsync,
 } from '@reducers/admin/discount/actions';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 const DiscountForm = () => {
@@ -18,6 +18,9 @@ const DiscountForm = () => {
   const { id: discountId } = router.query as any;
   const { discountDetails } = useAppSelector((state) => state.adminDiscount);
   const { setValue, getValues, control } = useFormContext();
+  const [codeType, setCodeType] = useState<'single' | 'generate' | 'custom'>(
+    'single',
+  );
 
   useEffect(() => {
     if (discountId) {
@@ -30,7 +33,6 @@ const DiscountForm = () => {
       setValue('name', discountDetails.name);
       setValue('type', discountDetails.type);
       setValue('value', discountDetails.value);
-      setValue('calculationMethod', discountDetails.calculationMethod);
       setValue(
         'startDate',
         discountDetails.startDate
@@ -51,10 +53,8 @@ const DiscountForm = () => {
   }, [discountDetails, setValue]);
 
   const handleGenerateDiscountCode = async () => {
-    if (discountId) {
-      const usageLimit = getValues('usageLimit');
-      await dispatch(generateDiscountCodeAsync({ discountId, usageLimit }));
-    }
+    const usageLimit = getValues('usageLimit');
+    await dispatch(generateDiscountCodeAsync({ discountId, usageLimit }));
   };
 
   return (
@@ -132,21 +132,72 @@ const DiscountForm = () => {
         type='number'
         defaultValue={discountDetails?.minimumAmount || ''}
       />
-      <TextInput
-        name='discountCode'
-        label='折扣碼'
-        placeholder='請填入折扣碼'
-        isReadOnly
-        defaultValue={discountDetails?.discountCode || ''}
+
+      <CustomSelect
+        name='codeType'
+        label='折扣碼類型'
+        options={[
+          { value: 'single', label: '單一折扣碼' },
+          { value: 'generate', label: '生成隨機折扣碼' },
+          { value: 'custom', label: '自定義多個折扣碼' },
+        ]}
+        onChange={(e) =>
+          setCodeType(e.target.value as 'single' | 'generate' | 'custom')
+        }
       />
-      <Button onClick={handleGenerateDiscountCode}>生成折扣碼</Button>
-      <TextInput
-        name='usageLimit'
-        label='使用上限次數'
-        placeholder='請填入使用上限次數'
-        type='number'
-        defaultValue={discountDetails?.usageLimit || ''}
-      />
+
+      {codeType === 'single' && (
+        <>
+          <TextInput
+            name='discountCode'
+            label='折扣碼'
+            placeholder='請填入折扣碼'
+            isRequired
+            defaultValue={discountDetails?.discountCode || ''}
+          />
+          <TextInput
+            name='usageLimit'
+            label='使用上限次數'
+            placeholder='請填入使用上限次數'
+            type='number'
+            defaultValue={discountDetails?.usageLimit || ''}
+          />
+        </>
+      )}
+
+      {codeType === 'generate' && (
+        <>
+          <TextInput
+            name='generateCodesCount'
+            label='生成折扣碼數量'
+            placeholder='請輸入生成折扣碼數量'
+            type='number'
+            defaultValue={1}
+          />
+          <Button onClick={handleGenerateDiscountCode} disabled={!discountId}>
+            生成折扣碼
+          </Button>
+        </>
+      )}
+
+      {codeType === 'custom' && (
+        <>
+          <TextInput
+            name='customCodes'
+            label='自定義折扣碼（用逗號分隔）'
+            placeholder='請填入自定義折扣碼，用逗號分隔'
+            isRequired
+          />
+          <TextInput
+            name='usageLimit'
+            label='使用上限次數'
+            placeholder='請填入使用上限次數'
+            type='number'
+            defaultValue={discountDetails?.usageLimit || ''}
+          />
+        </>
+      )}
+
       <Controller
         name='isActive'
         control={control}

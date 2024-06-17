@@ -16,7 +16,9 @@ import CustomSelect from './Field/CustomSelect';
 import ImageUpload from './Field/ImageUpload';
 import DynamicSpecifications from './Field/Specifications';
 import { TagsMultiSelect } from './Field/TagsSelect';
-import { TextInput } from './Field/TextInput';
+
+import TextInput from './Field/TextInput';
+
 import ToggleSwitch from './Field/ToggleSwitch';
 import ProductCustomBlocks from './ProductCustomBlocks';
 

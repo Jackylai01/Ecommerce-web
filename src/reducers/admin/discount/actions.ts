@@ -4,9 +4,12 @@ import { QueryParams } from '@models/entities/shared/query';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiAddDiscount,
+  apiApplyDiscountToOrder,
   apiDeleteDiscount,
   apiGenerateDiscountCode,
+  apiGetAllDiscountsUsage,
   apiGetDiscountById,
+  apiGetDiscountUsageByCode,
   apiGetDiscounts,
   apiUpdateDiscount,
   apiUpdateDiscountStatus,
@@ -20,6 +23,9 @@ export enum DiscountAction {
   deleteDiscount = 'deleteDiscount',
   updateDiscountStatus = 'updateDiscountStatus',
   generateDiscountCode = 'generateDiscountCode',
+  applyDiscountToOrder = 'applyDiscountToOrder',
+  getDiscountUsageByCode = 'getDiscountUsageByCode',
+  getAllDiscountsUsage = 'getAllDiscountsUsage',
 }
 
 export const getAllDiscountsAsync = createAsyncThunk(
@@ -82,5 +88,30 @@ export const generateDiscountCodeAsync = createAsyncThunk(
   }) => {
     const response = await apiGenerateDiscountCode({ discountId, usageLimit });
     return response.result.data;
+  },
+);
+
+export const applyDiscountToOrderAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_DISCOUNT}/${DiscountAction.applyDiscountToOrder}`,
+  async ({ orderId, discountId }: { orderId: string; discountId: string }) => {
+    const response = await apiApplyDiscountToOrder({ orderId, discountId });
+    return response.result.data;
+  },
+);
+
+export const getDiscountUsageByCodeAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_DISCOUNT}/${DiscountAction.getDiscountUsageByCode}`,
+  async (code: string) => {
+    const response = await apiGetDiscountUsageByCode(code);
+    return response.result.data;
+  },
+);
+
+export const getAllDiscountsUsageAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_DISCOUNT}/${DiscountAction.getAllDiscountsUsage}`,
+  async ({ page, limit }: QueryParams) => {
+    const query: PagingQuery = { page, limit };
+    const response = await apiGetAllDiscountsUsage(query);
+    return response.result;
   },
 );

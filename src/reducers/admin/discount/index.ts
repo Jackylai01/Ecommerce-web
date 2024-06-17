@@ -11,9 +11,11 @@ import {
   deleteDiscountAsync,
   generateDiscountCodeAsync,
   getAllDiscountsAsync,
+  getAllDiscountsUsageAsync,
   getDiscountByIdAsync,
+  getDiscountUsageByCodeAsync,
   updateDiscountAsync,
-  updateDiscountStatusAsync, // 添加這個 import
+  updateDiscountStatusAsync,
 } from './actions';
 
 type DiscountState = ApiState<DiscountAction> & {
@@ -21,6 +23,7 @@ type DiscountState = ApiState<DiscountAction> & {
   metadata: Metadata | null;
   discountDetails: Discount | null;
   editingDiscountId: string | null;
+  discountUsage: any[] | null;
 };
 
 const initialState: DiscountState = {
@@ -28,10 +31,11 @@ const initialState: DiscountState = {
   metadata: null,
   discountDetails: null,
   editingDiscountId: null,
+  discountUsage: null,
   ...newApiState<DiscountState>(DiscountAction),
 };
 
-const discountSlice = createSlice({
+export const discountSlice = createSlice({
   name: ReducerName.ADMIN_DISCOUNT,
   initialState,
   reducers: {
@@ -42,7 +46,6 @@ const discountSlice = createSlice({
     setEditingDiscountId: (state, action) => {
       state.editingDiscountId = action.payload;
     },
-
     resetDiscountId: (state) => {
       state.editingDiscountId = null;
     },
@@ -86,6 +89,13 @@ const discountSlice = createSlice({
         state.discountDetails.discountCode = action.payload.discountCode;
         state.discountDetails.usageLimit = action.payload.usageLimit;
       }
+    });
+    builder.addCase(getDiscountUsageByCodeAsync.fulfilled, (state, action) => {
+      state.discountUsage = action.payload;
+    });
+    builder.addCase(getAllDiscountsUsageAsync.fulfilled, (state, action) => {
+      state.list = action.payload.data;
+      state.metadata = action.payload.metadata;
     });
 
     asyncMatcher(builder, ReducerName.ADMIN_DISCOUNT);
