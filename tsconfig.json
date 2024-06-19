@@ -33,6 +33,12 @@
       "@images/*": ["public/images/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/helpers/pdf.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/helpers/pdf.js",
+    "src/pages/api/callback.ts"
+  ],
   "exclude": ["node_modules"]
 }

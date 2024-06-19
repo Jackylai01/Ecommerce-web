@@ -23,4 +23,5 @@ export enum ReducerName {
   PRODUCT_TAGS = 'productTags',
   PUBLIC_PRODUCTS = 'publicProducts',
   PUBLIC_FAVORITES = 'publicFavorites',
+  PUBLIC_SHIPMENT = 'publicShipment',
 }
