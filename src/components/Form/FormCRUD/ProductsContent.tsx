@@ -25,7 +25,7 @@ import ProductCustomBlocks from './ProductCustomBlocks';
 export const ProductFormContent = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { setValue, getValues } = useFormContext();
+  const { setValue } = useFormContext();
 
   const { uploadedImages } = useAppSelector((state) => state.adminUpload);
   const { list: categories } = useAppSelector(
