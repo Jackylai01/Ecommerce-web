@@ -36,7 +36,9 @@ const clientAuthSlice = createSlice({
   initialState,
   reducers: {
     setClientUserInfo: (state, action: PayloadAction<AuthResponse>) => {
-      state.userInfo = action.payload.userInfo;
+      if (state.userInfo) {
+        state.userInfo = action.payload.userInfo;
+      }
     },
     resetClientAuthStatus: (state) => {
       state.status = initialState.status;

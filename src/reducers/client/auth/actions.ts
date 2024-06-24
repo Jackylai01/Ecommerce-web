@@ -33,9 +33,9 @@ export const clientLoginAsync = createAsyncThunk(
   `${ReducerName.CLIENT_AUTH}}/${ClientAuthAsyncAction.login}`,
   async (data: LoginRequest) => {
     const response = await apiClientUsersLogin(data);
-
-    saveClientToken(response.result.data);
-    return response.result.data;
+    console.log(response);
+    saveClientToken(response.res.data);
+    return response.res.data;
   },
 );
 
