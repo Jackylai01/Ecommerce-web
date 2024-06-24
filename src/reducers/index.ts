@@ -13,6 +13,7 @@ import crudLayout from './crud-layout';
 import fileSelect from './file-select';
 import iconSelect from './icon-select';
 import layout from './layout';
+import publicCategory from './public/categories';
 import publicFavorites from './public/favorite';
 import publicProducts from './public/products';
 import publicShipment from './public/shipment';
@@ -36,6 +37,7 @@ const appReducer = {
   publicFavorites,
   adminDiscount,
   publicShipment,
+  publicCategory,
 };
 
 export default appReducer;

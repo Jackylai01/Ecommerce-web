@@ -1,58 +1,56 @@
-'use client';
-import { Card, CardBody, Grid, Heading } from '@chakra-ui/react';
-import { ICategory } from '@models/requests/products';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Box, Image, Link, SimpleGrid, Text } from '@chakra-ui/react';
 
-interface AllCategoriesProps {
-  categories: ICategory[];
+interface CategoryProps {
+  categories: Array<{
+    _id: string;
+    name: string;
+    coverImage: {
+      imageUrl: string;
+    };
+  }>;
 }
-export const AllCategories = ({ categories }: AllCategoriesProps) => {
+
+export const AllCategories = ({ categories }: CategoryProps) => {
   return (
-    <Grid
-      py='2rem'
-      w={{ base: '100%', lg: '90%' }}
-      templateColumns={{
-        base: 'repeat(1, 1fr)',
-        lg: 'repeat(2, 1fr)',
-      }}
-      gap='20px'
-      mx='auto'
-    >
-      {categories.map((category) => (
-        <CategoryCard key={category.id} category={category} />
-      ))}
-    </Grid>
+    <Box w='90%' mx='auto' py='2rem'>
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={10}>
+        {categories.map((category) => (
+          <Box
+            key={category._id}
+            borderWidth='1px'
+            borderRadius='lg'
+            overflow='hidden'
+            textAlign='center'
+            p='4'
+            display='flex'
+            flexDirection='column'
+            justifyContent='center'
+            alignItems='center'
+          >
+            <Link href={`/categories/${category.name}`}>
+              <Box
+                w='100%'
+                h='200px'
+                display='flex'
+                justifyContent='center'
+                alignItems='center'
+                mb='4'
+              >
+                <Image
+                  src={category.coverImage.imageUrl}
+                  alt={category.name}
+                  objectFit='contain'
+                  maxW='100%'
+                  maxH='100%'
+                />
+              </Box>
+              <Text fontWeight='bold' fontSize='xl'>
+                {category.name}
+              </Text>
+            </Link>
+          </Box>
+        ))}
+      </SimpleGrid>
+    </Box>
   );
 };
-
-interface CategoryCardProps {
-  category: ICategory;
-}
-
-const CategoryCard = ({ category }: CategoryCardProps) => (
-  <Link href={`/categories/${category.id}`}>
-    <Card
-      direction='column'
-      align='center'
-      overflow='hidden'
-      variant='outline'
-      w='100%'
-      p='10px'
-      h='100%'
-      _hover={{ cursor: 'pointer', bgColor: 'gray.100' }}
-      bg='none'
-      shadow='md'
-    >
-      <Image
-        src={category.image}
-        alt={category.name}
-        height={200}
-        width={200}
-      />
-      <CardBody>
-        <Heading size={{ base: 'sm', lg: 'md' }}>{category.name}</Heading>
-      </CardBody>
-    </Card>
-  </Link>
-);
