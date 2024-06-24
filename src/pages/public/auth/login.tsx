@@ -6,7 +6,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Image,
   Input,
   InputGroup,
   InputRightElement,
@@ -33,23 +32,16 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-interface BubbleStyle {
-  left: string;
-  animationDuration: string;
-}
-
 const Login: NextPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [showPassword, setShowPassword] = useState(false);
   const toast = useToast();
-  const [bubbles, setBubbles] = useState<BubbleStyle[]>([]);
 
   const {
     register,
     handleSubmit,
-
     formState: { errors },
   } = useForm();
 
@@ -80,14 +72,6 @@ const Login: NextPage = () => {
   };
 
   useEffect(() => {
-    const generatedBubbles = [...Array(15)].map((_, i) => ({
-      left: `${Math.random() * 100}%`,
-      animationDuration: `${Math.random() * 5 + 5}s`,
-    }));
-    setBubbles(generatedBubbles);
-  }, []);
-
-  useEffect(() => {
     if (loginSuccess) {
       toast({
         title: '登入成功',
@@ -100,7 +84,7 @@ const Login: NextPage = () => {
 
     if (loginFailed && loginError) {
       toast({
-        title: '登入失败',
+        title: '登入失敗',
         description: loginError,
         status: 'error',
         duration: 5000,
@@ -119,7 +103,6 @@ const Login: NextPage = () => {
         duration: 5000,
         isClosable: true,
       });
-
       onClose();
     } catch (error) {
       toast({
@@ -134,106 +117,72 @@ const Login: NextPage = () => {
 
   return (
     <LoadingLayout isLoading={loginLoading}>
-      <Flex
-        as='main'
-        alignItems='center'
-        justifyContent='center'
-        bgImage="url('/images/login/login-background.png')"
-        bgSize='cover'
-        bgPosition='center'
-        bgRepeat='no-repeat'
-        height='100vh'
-      >
+      <Flex as='main' h='70vh' alignItems='center' justifyContent='center'>
         <Box
           as='form'
-          width={{ base: '80%', md: '70%' }}
-          boxShadow='0 8px 8px rgba(0, 0, 0, 0.7)'
-          borderRadius='md'
+          width={{ base: '90%', md: '50%', lg: '40%' }}
+          boxShadow='lg'
+          borderRadius='lg'
           overflow='hidden'
-          mt={{ base: '0rem', md: '2rem' }}
+          mt={{ base: '0', md: '2rem' }}
           onSubmit={handleSubmit(onSubmit)}
+          bg='white'
         >
-          <Flex as='article' direction={{ base: 'column', sm: 'row' }}>
-            <Box
-              as='section'
-              display='flex'
-              alignItems='center'
-              justifyContent='center'
-              flex={1}
-              bgGradient='linear(to-r, blue.500, blue.900)'
-            >
-              {bubbles.map((style, i) => (
-                <Box key={i} className='bubble' style={style} />
-              ))}
-              <Image
-                w={{ base: '50%', md: '100%', sm: '100%' }}
-                src='/images/login/paper-map.png'
-                alt='SVG Image'
+          <Flex as='article' direction='column' p={8}>
+            <Box textAlign='center' mb={8}>
+              <Box as='h1' fontSize='2xl' fontWeight='bold'>
+                歡迎回來
+              </Box>
+              <Box as='p' color='gray.600'>
+                請登入您的帳號以繼續
+              </Box>
+            </Box>
+            <FormControl id='email' mb={4} isInvalid={!!errors.email}>
+              <FormLabel>信箱</FormLabel>
+              <Input
+                type='email'
+                placeholder='請輸入您的信箱'
+                {...register('email', { required: '請填入正確信箱' })}
               />
-            </Box>
-            <Box flex={1} p={5} bg='white'>
-              <FormControl id='email' mb={4}>
-                <FormLabel>信箱</FormLabel>
+              {errors.email && (
+                <FormErrorMessage>{errors.email.message}</FormErrorMessage>
+              )}
+            </FormControl>
+            <FormControl id='password' mb={4} isInvalid={!!errors.password}>
+              <FormLabel>密碼</FormLabel>
+              <InputGroup>
                 <Input
-                  type='text'
-                  {...register('email', { required: '請填入正確信箱' })}
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder='請輸入您的密碼'
+                  {...register('password', {
+                    required: '請填入密碼',
+                  })}
                 />
-                {errors.email && (
-                  <Box as='p' color='red'>
-                    {errors.email.message}
-                  </Box>
-                )}
-              </FormControl>
-              <FormControl id='password' mb={4}>
-                <FormLabel>密碼</FormLabel>
-                <InputGroup>
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder='Enter password'
-                    {...register('password', {
-                      required: '請填入密碼',
-                    })}
-                  />
-                  <InputRightElement width='4.5rem'>
-                    <Button
-                      h='1.75rem'
-                      size='sm'
-                      bg='none'
-                      onClick={handlePasswordVisibility}
-                      _hover={{ bg: 'transparent' }}
-                    >
-                      {showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-                {errors.password && (
-                  <Box as='p' color='red'>
-                    {errors.password.message}
-                  </Box>
-                )}
-              </FormControl>
-              <Button type='submit' colorScheme='blue' width='full' mb={4}>
-                登入
-              </Button>
-              <Flex
-                as='span'
-                fontSize={{ base: '0.75rem', md: '1rem' }}
-                justifyContent='space-between'
-              >
-                <Link
-                  color='blue.500'
-                  onClick={() => router.push(`/public/auth/register`)}
-                >
-                  尚未註冊?
-                </Link>
-                <Link color='blue.500' onClick={onOpen}>
-                  忘記密碼
-                </Link>
-                <Link color='blue.500' onClick={() => router.push('/')}>
-                  回首頁
-                </Link>
-              </Flex>
-            </Box>
+                <InputRightElement width='4.5rem'>
+                  <Button
+                    h='1.75rem'
+                    size='sm'
+                    onClick={handlePasswordVisibility}
+                    bg='none'
+                    _hover={{ bg: 'transparent' }}
+                  >
+                    {showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              {errors.password && (
+                <FormErrorMessage>{errors.password.message}</FormErrorMessage>
+              )}
+            </FormControl>
+            <Button type='submit' colorScheme='blue' width='full' mb={4}>
+              登入
+            </Button>
+            <Flex justifyContent='space-between' fontSize='sm' color='gray.600'>
+              <Link onClick={onOpen}>忘記密碼?</Link>
+              <Link onClick={() => router.push(`/public/auth/register`)}>
+                尚未註冊?
+              </Link>
+            </Flex>
           </Flex>
         </Box>
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -247,7 +196,7 @@ const Login: NextPage = () => {
                   <FormLabel>電子郵件</FormLabel>
                   <Input
                     type='email'
-                    placeholder='Email'
+                    placeholder='請輸入您的信箱'
                     {...registerForget('email', { required: '請輸入電子信箱' })}
                   />
                   {errorsForget.email && (

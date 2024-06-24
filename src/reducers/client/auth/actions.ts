@@ -66,8 +66,9 @@ export const clientRefreshTokenAsync = createAsyncThunk(
 export const clientLogoutAsync = createAsyncThunk(
   `${ReducerName.CLIENT_AUTH}/${ClientAuthAsyncAction.logout}`,
   async () => {
-    await apiClientUsersLogout();
+    const response = await apiClientUsersLogout();
     removeClientToken();
+    return response.result;
   },
 );
 

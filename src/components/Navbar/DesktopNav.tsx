@@ -1,12 +1,24 @@
-import { Box, Flex, Stack } from '@chakra-ui/react';
+import { Box, Button, Flex, Stack } from '@chakra-ui/react';
 import { navItems } from '@helpers/products';
+import useAppSelector from '@hooks/useAppSelector';
+
+import useAppDispatch from '@hooks/useAppDispatch';
+import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import Link from 'next/link';
+import router from 'next/router';
 import { AppLogo } from '../AppLogo';
 import { Cart } from '../Cart/Cart';
 import { Search } from '../Search/Search';
 import { Wishlist } from '../Wishlist/Wishlist';
 
 export function DesktopNav() {
+  const dispatch = useAppDispatch();
+  const userInfo = useAppSelector((state) => state.clientAuth.userInfo);
+
+  const handleLogout = () => {
+    dispatch(clientLogoutAsync());
+  };
+
   return (
     <Flex
       justify='space-between'
@@ -27,11 +39,24 @@ export function DesktopNav() {
             <Link href={navItem.href}>{navItem.label}</Link>
           </Box>
         ))}
+
         <Search />
       </Stack>
       <Stack direction='row' spacing={2}>
         <Wishlist />
         <Cart />
+        {userInfo ? (
+          <Button colorScheme='blue' onClick={handleLogout}>
+            登出
+          </Button>
+        ) : (
+          <Button
+            colorScheme='blue'
+            onClick={() => router.push('/public/auth/login')}
+          >
+            登入
+          </Button>
+        )}
       </Stack>
     </Flex>
   );

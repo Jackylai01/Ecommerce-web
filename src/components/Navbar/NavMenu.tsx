@@ -13,7 +13,11 @@ import {
 } from '@chakra-ui/react';
 
 import { navItems } from '@helpers/products';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useRef } from 'react';
 import { VscListFlat } from 'react-icons/vsc';
 import { AppLogo } from '../AppLogo';
@@ -21,6 +25,14 @@ import { AppLogo } from '../AppLogo';
 export const NavMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef: any = useRef();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const userInfo = useAppSelector((state) => state.clientAuth.userInfo);
+
+  const handleLogout = () => {
+    dispatch(clientLogoutAsync());
+    onClose();
+  };
 
   return (
     <>
@@ -47,6 +59,7 @@ export const NavMenu = () => {
                 <Box
                   p='0.5rem'
                   _hover={{ bgColor: 'brand.primaryLight', color: 'white' }}
+                  onClick={onClose}
                 >
                   {navItem.label}
                 </Box>
@@ -55,7 +68,29 @@ export const NavMenu = () => {
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant='outline' mr={3} onClick={onClose}>
+            {userInfo ? (
+              <Button
+                bg='blue.600'
+                color='white'
+                _hover={{ bg: 'blue.700' }}
+                onClick={handleLogout}
+              >
+                登出
+              </Button>
+            ) : (
+              <Button
+                colorScheme='blue'
+                color='white'
+                _hover={{ bg: 'green.700' }}
+                onClick={() => {
+                  router.push('/public/auth/login');
+                  onClose();
+                }}
+              >
+                登入
+              </Button>
+            )}
+            <Button variant='outline' ml={3} onClick={onClose}>
               Close
             </Button>
           </DrawerFooter>

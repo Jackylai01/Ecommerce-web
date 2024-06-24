@@ -45,7 +45,8 @@ export const apiClientUsersTokenRefresh = async () =>
 /**
  * 使用者登出
  */
-export const apiClientUsersLogout = async () => postRequest('/client/logout');
+export const apiClientUsersLogout = async () =>
+  postRequest<ApiResult<any>>('/client/logout');
 
 /**
  * 使用者忘記密碼
