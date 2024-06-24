@@ -170,6 +170,21 @@ const ProductDetails = () => {
           </Stack>
         </GridItem>
       </Grid>
+      <Box mt='4'>
+        {product.detailDescription.map((block: any, index: number) => (
+          <Box key={index} className={block.className} mb='4'>
+            {block.elements.map((element: any, elemIndex: number) => {
+              const Tag = element.tagName;
+              return (
+                <Tag
+                  key={elemIndex}
+                  dangerouslySetInnerHTML={{ __html: element.context }}
+                />
+              );
+            })}
+          </Box>
+        ))}
+      </Box>
     </>
   );
 };
