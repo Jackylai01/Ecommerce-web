@@ -89,6 +89,16 @@ export const CheckoutPage: NextPage = () => {
     }
   };
 
+  if (checkout.length === 0) {
+    return (
+      <Flex justify='center' align='center' h='100vh'>
+        <Text fontSize='2xl' fontWeight='bold'>
+          您的購物車是空的
+        </Text>
+      </Flex>
+    );
+  }
+
   return (
     <Flex
       w={{ base: '100%', lg: '90%' }}
@@ -107,10 +117,10 @@ export const CheckoutPage: NextPage = () => {
           <CardBody>
             <Stack spacing='2rem'>
               {checkout.map((item) => (
-                <Flex key={item.id} align='center' justify='space-between'>
+                <Flex key={item._id} align='center' justify='space-between'>
                   <Flex align='center'>
                     <Image
-                      src={item.mainImage}
+                      src={item.coverImage.imageUrl}
                       boxSize='100px'
                       bgSize='contain'
                     />
@@ -298,10 +308,6 @@ export const CheckoutPage: NextPage = () => {
           </CardBody>
         </Card>
       </Box>
-      <form id='ecpayForm' method='post' action={formAction}>
-        {formInputs}
-        <input type='submit' value='送出參數' />
-      </form>
     </Flex>
   );
 };

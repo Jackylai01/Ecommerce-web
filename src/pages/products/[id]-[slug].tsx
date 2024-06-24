@@ -48,8 +48,6 @@ const ProductDetails = () => {
       const fullPath = router.query['id]-[slug'];
       if (typeof fullPath === 'string') {
         const [id, slug] = fullPath.split('-');
-        console.log('ID:', id); // 檢查 id 的值
-        console.log('Slug:', slug); // 檢查 slug 的值
         if (id && slug) {
           dispatch(publicProductsDetailAsync(`${id}-${slug}`));
         }
@@ -69,6 +67,7 @@ const ProductDetails = () => {
   const handleBuyNow = () => {
     dispatch(resetItems('checkout'));
     dispatch(addItem({ key: 'checkout', product, count: quantity }));
+    router.push('/checkout');
   };
 
   if (productsDetailLoading || !product) {
@@ -145,16 +144,14 @@ const ProductDetails = () => {
             disabled={productIsAddedToCart}
           />
           <Divider my='1rem' />
-          <ChakraLink href='/checkout'>
-            <Button
-              variant='outline'
-              bgColor='red.200'
-              mr='1rem'
-              onClick={handleBuyNow}
-            >
-              Buy Now
-            </Button>
-          </ChakraLink>
+          <Button
+            variant='outline'
+            bgColor='red.200'
+            mr='1rem'
+            onClick={handleBuyNow}
+          >
+            Buy Now
+          </Button>
           <AddToCartButton product={product} count={quantity} />
           <Stack py='2rem'>
             <Box borderWidth={1} borderColor='gray.100' p='1rem'>
