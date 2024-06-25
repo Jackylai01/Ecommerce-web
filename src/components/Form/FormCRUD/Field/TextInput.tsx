@@ -42,6 +42,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
     const {
       register,
       setValue,
+      watch,
       formState: { errors },
     } = useFormContext();
 
@@ -50,6 +51,8 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
     useEffect(() => {
       register(name, { required: isRequired });
     }, [register, name, isRequired]);
+
+    const value = watch(name);
 
     return (
       <FormControl isInvalid={isInvalid} isRequired={isRequired}>
@@ -81,6 +84,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
               WebkitBoxShadow: '0 0 0 30px white inset',
             },
           }}
+          value={value || ''}
           ref={ref}
           onChange={(e) => setValue(name, e.target.value)}
         />

@@ -36,6 +36,7 @@ function FormModal<T extends FieldValues>({
   const { colorMode } = useAdminColorMode();
   const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const buttonColor = colorMode === 'light' ? 'white' : 'white';
 
   const handleFormSubmit: SubmitHandler<T> = (data) => {
     onSubmit(data);
@@ -61,7 +62,12 @@ function FormModal<T extends FieldValues>({
           <form onSubmit={methods.handleSubmit(handleFormSubmit)}>
             <ModalBody>{children}</ModalBody>
             <ModalFooter>
-              <Button colorScheme='blue' color={textColor} mr={3} type='submit'>
+              <Button
+                colorScheme='blue'
+                color={buttonColor}
+                mr={3}
+                type='submit'
+              >
                 Submit
               </Button>
               <Button color={textColor} onClick={handleClose}>
