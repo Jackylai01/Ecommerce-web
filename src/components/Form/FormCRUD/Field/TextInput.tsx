@@ -4,9 +4,10 @@ import {
   FormLabel,
   Input,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useAdminColorMode } from 'src/context/colorMode';
+
 interface TextInputType {
   name: string;
   label: string;
@@ -18,9 +19,8 @@ interface TextInputType {
   min?: number;
   max?: number;
   isReadOnly?: boolean;
-  defaultValue?: any;
-  value?: any;
 }
+
 const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
   (
     {
@@ -28,14 +28,12 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
       label,
       placeholder,
       isRequired = false,
-      type,
+      type = 'text',
       as,
       height,
       min,
       max,
       isReadOnly = false,
-      defaultValue,
-      value,
     },
     ref,
   ) => {
@@ -43,20 +41,23 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
     const textColor = colorMode === 'light' ? 'gray.700' : 'white';
     const {
       register,
+      setValue,
       formState: { errors },
     } = useFormContext();
 
     const isInvalid = Boolean(errors[name]);
 
+    useEffect(() => {
+      register(name, { required: isRequired });
+    }, [register, name, isRequired]);
+
     return (
       <FormControl isInvalid={isInvalid} isRequired={isRequired}>
         <FormLabel htmlFor={name}>{label}</FormLabel>
-
         <Input
           as={as || 'input'}
           id={name}
           placeholder={placeholder}
-          {...register(name)}
           type={type}
           h={height}
           min={min}
@@ -64,8 +65,6 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
           borderColor={textColor}
           color={textColor}
           isReadOnly={isReadOnly}
-          defaultValue={defaultValue}
-          value={value}
           _hover={{ borderColor: 'gray.400' }}
           sx={{
             ':-webkit-autofill': {
@@ -83,11 +82,13 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
             },
           }}
           ref={ref}
+          onChange={(e) => setValue(name, e.target.value)}
         />
         <FormErrorMessage>{errors[name]?.message}</FormErrorMessage>
       </FormControl>
     );
   },
 );
+
 TextInput.displayName = 'TextInput';
 export default TextInput;
