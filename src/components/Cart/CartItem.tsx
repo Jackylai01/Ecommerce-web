@@ -38,7 +38,7 @@ export const CartItem = ({ item }: CartItemProps) => {
         <Link href={`/products/${item.slug}`} passHref>
           <a>
             <Image
-              src={item.mainImage}
+              src={item.coverImage.imageUrl}
               boxSize='40px'
               rounded='full'
               borderWidth='1px'
@@ -60,7 +60,7 @@ export const CartItem = ({ item }: CartItemProps) => {
           <Button
             color='black'
             onClick={() =>
-              dispatch(decreaseCount({ key: 'cart', productId: item.id }))
+              dispatch(decreaseCount({ key: 'cart', productId: item._id }))
             }
           >
             -
@@ -76,7 +76,7 @@ export const CartItem = ({ item }: CartItemProps) => {
           />
           <Button
             onClick={() =>
-              dispatch(increaseCount({ key: 'cart', productId: item.id }))
+              dispatch(increaseCount({ key: 'cart', productId: item._id }))
             }
             color='black'
           >
@@ -92,7 +92,7 @@ export const CartItem = ({ item }: CartItemProps) => {
           variant='ghost'
           colorScheme='red'
           onClick={() =>
-            dispatch(removeItem({ key: 'cart', productId: item.id }))
+            dispatch(removeItem({ key: 'cart', productId: item._id }))
           }
         >
           <BsTrash />

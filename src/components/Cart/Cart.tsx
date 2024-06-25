@@ -36,7 +36,7 @@ export const Cart = () => {
         addItem({ key: 'checkout', product: cartItem, count: cartItem.count }),
       );
     });
-    // 重置购物车
+
     dispatch(resetItems('cart'));
     onClose();
   };
@@ -87,7 +87,7 @@ export const Cart = () => {
             {cart.length === 0 ? (
               <>Your Cart is Empty</>
             ) : (
-              cart.map((item) => <CartItem key={item._id} item={item} />)
+              cart.map((item: any) => <CartItem key={item._id} item={item} />)
             )}
           </DrawerBody>
           {cart.length !== 0 && (
