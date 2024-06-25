@@ -60,6 +60,7 @@ const TagsPages: NextPage = () => {
   const handleSubmit = async (data: any) => {
     dispatch(addProductTagsAsync(data));
   };
+
   useEffect(() => {
     return () => {
       dispatch(resetTagsState());

@@ -18,3 +18,10 @@ export const apiPublicProductsList = async (query: PagingQuery) =>
  */
 export const apiPublicProductsDetail = async (idSlug: string) =>
   getRequest<ApiResult<ProductsResponse>>(`/public/products/${idSlug}`);
+
+/**
+ * 前台-取得單一類別產品的產品列表
+ * @throws 404 NotFound 查無此產品
+ */
+export const apiGetProductsByCategory = async (categoryId: string) =>
+  getRequest<ApiResult<any>>(`/products/category/${categoryId}`);

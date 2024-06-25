@@ -7,7 +7,6 @@ import {
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useAdminColorMode } from 'src/context/colorMode';
-
 interface TextInputType {
   name: string;
   label: string;
@@ -22,7 +21,6 @@ interface TextInputType {
   defaultValue?: any;
   value?: any;
 }
-
 const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
   (
     {
@@ -46,17 +44,14 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
     const {
       register,
       formState: { errors },
-      watch,
     } = useFormContext();
 
     const isInvalid = Boolean(errors[name]);
 
-    // Watch the value of the input field
-    const inputValue = watch(name);
-
     return (
       <FormControl isInvalid={isInvalid} isRequired={isRequired}>
         <FormLabel htmlFor={name}>{label}</FormLabel>
+
         <Input
           as={as || 'input'}
           id={name}
@@ -70,7 +65,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
           color={textColor}
           isReadOnly={isReadOnly}
           defaultValue={defaultValue}
-          value={inputValue || value}
+          value={value}
           _hover={{ borderColor: 'gray.400' }}
           sx={{
             ':-webkit-autofill': {
@@ -94,6 +89,5 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
     );
   },
 );
-
 TextInput.displayName = 'TextInput';
 export default TextInput;

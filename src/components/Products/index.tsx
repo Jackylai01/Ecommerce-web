@@ -1,4 +1,3 @@
-'use client';
 import { Box, Flex } from '@chakra-ui/react';
 import { CustomBreadcrumb } from '@components/CustomBreadcrumb';
 import LoadingLayout from '@components/Layout/LoadingLayout';
@@ -13,14 +12,17 @@ import { useEffect, useState } from 'react';
 
 interface AllProductsProps {
   breadcrumbItems?: IBreadcrumbItem[];
+  products: any[]; // Ensure products are of the correct type
 }
 
 const itemsPerPage = 10;
 
-export const AllProducts = ({ breadcrumbItems }: AllProductsProps) => {
+export const AllProducts = ({
+  breadcrumbItems,
+  products,
+}: AllProductsProps) => {
   const dispatch = useAppDispatch();
   const {
-    list: productList,
     metadata,
     status: { productsListLoading },
   } = useAppSelector((state) => state.publicProducts);
@@ -34,7 +36,7 @@ export const AllProducts = ({ breadcrumbItems }: AllProductsProps) => {
     };
   }, [dispatch, page]);
 
-  const hasProducts = productList && productList.length > 0;
+  const hasProducts = products && products.length > 0;
 
   return (
     <>
@@ -47,7 +49,7 @@ export const AllProducts = ({ breadcrumbItems }: AllProductsProps) => {
           justify={{ base: 'center', lg: 'flex-start' }}
         >
           {hasProducts ? (
-            productList.map((product) => (
+            products.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))
           ) : (

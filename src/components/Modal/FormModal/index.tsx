@@ -20,7 +20,7 @@ import { useAdminColorMode } from 'src/context/colorMode';
 interface FormModalProps<T extends FieldValues> {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: any;
+  onSubmit: SubmitHandler<T>;
   children: ReactNode;
   title: string;
 }
@@ -36,9 +36,9 @@ function FormModal<T extends FieldValues>({
   const { colorMode } = useAdminColorMode();
   const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+
   const handleFormSubmit: SubmitHandler<T> = (data) => {
     onSubmit(data);
-    onClose();
   };
 
   const handleClose = () => {

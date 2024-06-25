@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import ImageUpload from './Field/ImageUpload';
-import { TextInput } from './Field/TextInput';
+import TextInput from './Field/TextInput';
 
 interface ProductCategoryContentType {
   categoryId?: string;
@@ -19,7 +19,7 @@ export const ProductCategoryForm = ({
 }: ProductCategoryContentType) => {
   const dispatch = useAppDispatch();
   const [coverImagePreview, setCoverImagePreview] = useState<any>('');
-  const { setValue } = useFormContext();
+  const { setValue, register } = useFormContext();
   const {
     categoryDetails,
     status: { deleteProductCategoryImageLoading },

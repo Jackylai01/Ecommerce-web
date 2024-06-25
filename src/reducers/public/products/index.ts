@@ -7,6 +7,7 @@ import { ProductsResponse } from '@models/responses/products.res';
 import { createSlice } from '@reduxjs/toolkit';
 import {
   PublicListAsyncAction,
+  getProductsByCategoryAsync,
   publicProductsDetailAsync,
   publicProductsListAsync,
 } from './actions';
@@ -15,13 +16,14 @@ type PublicProductState = ApiState<PublicListAsyncAction> & {
   list: ProductsResponse[] | null;
   metadata: Metadata | undefined;
   detail: any;
+  categoryProducts: null | any;
 };
 
 const initialState: PublicProductState = {
   list: null,
   metadata: undefined,
   detail: null,
-
+  categoryProducts: null,
   ...newApiState<PublicProductState>(PublicListAsyncAction),
 };
 
@@ -41,6 +43,9 @@ const publicProductSlice = createSlice({
     });
     builder.addCase(publicProductsDetailAsync.fulfilled, (state, action) => {
       state.detail = action.payload;
+    });
+    builder.addCase(getProductsByCategoryAsync.fulfilled, (state, action) => {
+      state.categoryProducts = action.payload;
     });
 
     asyncMatcher(builder, ReducerName.PUBLIC_PRODUCTS);

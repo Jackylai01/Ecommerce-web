@@ -6,4 +6,5 @@ export type CategoryResponse = {
     imageUrl: string;
     imageId: string;
   };
+  slug: string;
 };

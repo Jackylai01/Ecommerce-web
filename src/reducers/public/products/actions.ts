@@ -3,6 +3,7 @@ import { PagingQuery } from '@models/entities/shared/pagination';
 import { QueryParams } from '@models/entities/shared/query';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
+  apiGetProductsByCategory,
   apiPublicProductsDetail,
   apiPublicProductsList,
 } from '@services/public/products/public-products';
@@ -10,6 +11,7 @@ import {
 export enum PublicListAsyncAction {
   productsList = 'productsList',
   productsDetail = 'productsDetail',
+  getProductsByCategory = 'getProductsByCategory',
 }
 
 export const publicProductsListAsync = createAsyncThunk(
@@ -27,5 +29,13 @@ export const publicProductsDetailAsync = createAsyncThunk(
   async (idSlug: string) => {
     const response = await apiPublicProductsDetail(idSlug);
     return response.res.data;
+  },
+);
+
+export const getProductsByCategoryAsync = createAsyncThunk(
+  `${ReducerName.PUBLIC_PRODUCTS}/${PublicListAsyncAction.getProductsByCategory}`,
+  async (categoryId: string) => {
+    const response = await apiGetProductsByCategory(categoryId);
+    return response.result;
   },
 );

@@ -7,6 +7,7 @@ interface CategoryProps {
     coverImage: {
       imageUrl: string;
     };
+    slug: string;
   }>;
 }
 
@@ -27,7 +28,10 @@ export const AllCategories = ({ categories }: CategoryProps) => {
             justifyContent='center'
             alignItems='center'
           >
-            <Link href={`/categories/${category.name}`}>
+            <Link
+              key={category._id}
+              href={`/categories/${category._id}-${category.slug}`}
+            >
               <Box
                 w='100%'
                 h='200px'
