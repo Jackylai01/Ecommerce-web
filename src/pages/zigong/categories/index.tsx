@@ -54,9 +54,8 @@ const CategoriesPages: NextPage = () => {
   };
 
   const handleSubmit = async (data: any) => {
-    console.log('提交的數據:', data); // 確認 `data` 包含 `name` 和 `description`
-
     const formData = new FormData();
+
     Object.keys(data).forEach((key) => {
       if (key !== 'coverImage') {
         formData.append(key, data[key] ?? '');
@@ -67,15 +66,13 @@ const CategoriesPages: NextPage = () => {
       formData.append('name', data.name);
     }
 
-    if (data.coverImage && data.coverImage.length > 0) {
-      formData.append('coverImage', data.coverImage[0]);
+    if (data.coverImage) {
+      formData.append('coverImage', data.coverImage);
     }
 
     if (data.detailDescription) {
       formData.append('detailDescription', data.detailDescription);
     }
-
-    console.log('FormData:', formData); // 確認 FormData 結構
 
     dispatch(addProductCategoryAsync(formData));
   };
