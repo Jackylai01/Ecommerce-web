@@ -14,39 +14,58 @@ import {
   RadioGroup,
   Stack,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import {
   calculateItemsTotal,
   formatPrice,
   getSubstring,
 } from '@helpers/products';
+import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import axios from 'axios';
+import {
+  createOrderAsync,
+  createPaymentAsync,
+  handleClientReplyAsync,
+  redirectToLogisticsSelectionAsync,
+} from '@reducers/public/payments/actions';
+
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 
-// TODO 實際的金流串接
-
-export const CheckoutPage: NextPage = () => {
+const CheckoutPage: NextPage = () => {
+  const dispatch = useAppDispatch();
+  const toast = useToast();
   const [subTotal, setSubTotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
-  const [formAction, setFormAction] = useState('');
-  const [formInputs, setFormInputs] = useState<JSX.Element[]>([]);
-  const [paymentMethod, setPaymentMethod] = useState(''); // 選擇支付方式
+  const [paymentMethod, setPaymentMethod] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     address: '',
     phone: '',
     email: '',
-    orderId: '',
-    TotalAmount: '',
-    TradeDesc: '',
-    ItemName: '',
-    ReturnURL: '',
-    ChoosePayment: 'ALL',
   });
 
+  const [logisticsResult, setLogisticsResult] = useState<any>(null);
   const { checkout } = useAppSelector((state) => state.clientCart);
+  const {
+    order,
+    logisticsSelection,
+    status: { createOrderSuccess, createOrderLoading, createOrderFailed },
+  } = useAppSelector((state) => state.publicPayments);
+  const { userInfo } = useAppSelector((state) => state.clientAuth);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const logisticsResult = queryParams.get('logisticsResult');
+    const orderId = queryParams.get('orderId');
+    if (logisticsResult) {
+      setLogisticsResult(JSON.parse(decodeURIComponent(logisticsResult)));
+    }
+    if (orderId && !order) {
+      dispatch(handleClientReplyAsync({ orderId }));
+    }
+  }, [dispatch, order]);
 
   useEffect(() => {
     const subTotal = calculateItemsTotal(checkout);
@@ -60,44 +79,89 @@ export const CheckoutPage: NextPage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleOrderSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await axios.post('/api/ecpay/create-payment', {
-        ...formData,
-        orderId: 'some-generated-order-id', // 替換為實際訂單 ID
-        TotalAmount: subTotal + tax,
+    if (!userInfo) {
+      toast({
+        title: '請先登錄',
+        description: '您需要登錄才能創建訂單',
+        status: 'warning',
+        isClosable: true,
+      });
+      return;
+    }
+    const orderData = {
+      userId: userInfo._id,
+      products: checkout,
+      totalPrice: subTotal + tax,
+      shippingAddress: formData,
+    };
+    await dispatch(createOrderAsync(orderData));
+  };
+
+  const handlePaymentSubmit = async () => {
+    if (order) {
+      const paymentData = {
+        orderId: order._id,
         TradeDesc: 'Your order description',
         ItemName: checkout.map((item) => item.name).join('#'),
-        ReturnURL: 'http://localhost:3000/payment-success', // 替換為實際回調 URL
-      });
-      const { apiURL, params } = response.data;
-
-      setFormAction(apiURL);
-      setFormInputs(
-        Object.entries(params).map(([key, value]) => (
-          <input key={key} name={key} value={String(value)} readOnly />
-        )),
-      );
-
-      const form = document.getElementById('ecpayForm') as HTMLFormElement;
-      if (form) {
-        form.submit();
-      }
-    } catch (error) {
-      console.error('Error creating payment', error);
+        ReturnURL: 'http://localhost:3000/public/payment-success',
+        ChoosePayment: 'ALL',
+      };
+      await dispatch(createPaymentAsync(paymentData));
     }
   };
 
-  if (checkout.length === 0) {
-    return (
-      <Flex justify='center' align='center' h='100vh'>
-        <Text fontSize='2xl' fontWeight='bold'>
-          您的購物車是空的
-        </Text>
-      </Flex>
-    );
-  }
+  const handleLogisticsSelection = async () => {
+    if (order) {
+      const response = await dispatch(
+        redirectToLogisticsSelectionAsync(order._id),
+      );
+      const { url, data } = response.payload;
+
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = url;
+      form.style.display = 'none';
+
+      Object.keys(data).forEach((key) => {
+        const input = document.createElement('input');
+        input.name = key;
+        input.value = data[key];
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      form.submit();
+    }
+  };
+
+  useEffect(() => {
+    if (createOrderSuccess) {
+      handleLogisticsSelection();
+    }
+    if (createOrderFailed) {
+      toast({
+        title: '建立訂單失敗',
+        description: '請重試',
+        status: 'error',
+        isClosable: true,
+      });
+    }
+  }, [createOrderSuccess, createOrderFailed, handleLogisticsSelection, toast]);
+
+  useEffect(() => {
+    if (logisticsResult) {
+      toast({
+        title: '物流選擇成功',
+        description: '請繼續付款',
+        status: 'success',
+        isClosable: true,
+      });
+    }
+  }, [logisticsResult, toast]);
+
+  console.log('checkout 頁面', userInfo);
 
   return (
     <Flex
@@ -230,12 +294,8 @@ export const CheckoutPage: NextPage = () => {
                   rounded='full'
                   ml='-40px'
                   px='2rem'
-                  _hover={{
-                    bgColor: 'brand.primaryDark',
-                  }}
-                  _active={{
-                    bgColor: 'brand.primaryDark',
-                  }}
+                  _hover={{ bgColor: 'brand.primaryDark' }}
+                  _active={{ bgColor: 'brand.primaryDark' }}
                   color='black'
                   bg='red.200'
                 >
@@ -294,14 +354,23 @@ export const CheckoutPage: NextPage = () => {
               color='white'
               w='100%'
               rounded='full'
-              _hover={{
-                bgColor: 'red.200',
-              }}
-              _active={{
-                bgColor: 'red.500',
-              }}
+              _hover={{ bgColor: 'red.200' }}
+              _active={{ bgColor: 'red.500' }}
               bg='red.300'
-              onClick={handleSubmit}
+              onClick={handleOrderSubmit}
+            >
+              Create Order
+            </Button>
+            <Button
+              bgColor='brand.primary'
+              color='white'
+              w='100%'
+              rounded='full'
+              _hover={{ bgColor: 'red.200' }}
+              _active={{ bgColor: 'red.500' }}
+              bg='red.300'
+              onClick={handlePaymentSubmit}
+              mt='1rem'
             >
               Pay ${formatPrice(subTotal)}
             </Button>

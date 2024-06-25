@@ -15,6 +15,7 @@ import iconSelect from './icon-select';
 import layout from './layout';
 import publicCategory from './public/categories';
 import publicFavorites from './public/favorite';
+import publicPayments from './public/payments';
 import publicProducts from './public/products';
 import publicShipment from './public/shipment';
 
@@ -38,6 +39,7 @@ const appReducer = {
   adminDiscount,
   publicShipment,
   publicCategory,
+  publicPayments,
 };
 
 export default appReducer;

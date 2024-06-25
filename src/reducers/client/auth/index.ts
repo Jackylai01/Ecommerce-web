@@ -3,7 +3,6 @@ import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
 import {
-  AuthResponse,
   ProfileResponse,
   UserCreateAccountResponse,
   UserInfo,
@@ -35,15 +34,12 @@ const clientAuthSlice = createSlice({
   name: ReducerName.CLIENT_AUTH,
   initialState,
   reducers: {
-    setClientUserInfo: (state, action: PayloadAction<AuthResponse>) => {
-      if (state.userInfo) {
-        state.userInfo = action.payload.userInfo;
-      }
+    setClientUserInfo: (state, action: PayloadAction<any>) => {
+      state.userInfo = action.payload.userInfo;
     },
     resetClientAuthStatus: (state) => {
       state.status = initialState.status;
     },
-
     resetClientAuth: () => initialState,
   },
   extraReducers: (builder) => {

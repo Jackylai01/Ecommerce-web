@@ -13,12 +13,14 @@ import {
 } from '@chakra-ui/react';
 
 import { navItems } from '@helpers/products';
+import { loadClientToken } from '@helpers/token';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { setClientUserInfo } from '@reducers/client/auth';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { VscListFlat } from 'react-icons/vsc';
 import { AppLogo } from '../AppLogo';
 
@@ -27,12 +29,21 @@ export const NavMenu = () => {
   const btnRef: any = useRef();
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const userInfo = useAppSelector((state) => state.clientAuth.userInfo);
-
+  const {
+    userInfo,
+    error: { loginError },
+  } = useAppSelector((state) => state.clientAuth);
   const handleLogout = () => {
     dispatch(clientLogoutAsync());
     onClose();
   };
+
+  useEffect(() => {
+    const tokenInfo = loadClientToken();
+    if (tokenInfo) {
+      dispatch(setClientUserInfo(tokenInfo));
+    }
+  }, [dispatch]);
 
   return (
     <>

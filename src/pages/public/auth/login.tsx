@@ -22,7 +22,6 @@ import {
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { resetClientAuth } from '@reducers/client/auth';
 import {
   clientForgetPasswordAsync,
   clientLoginAsync,
@@ -61,14 +60,13 @@ const Login: NextPage = () => {
   const handlePasswordVisibility = () => setShowPassword(!showPassword);
 
   useEffect(() => {
-    if (userInfo && !userInfo.roles.includes('client')) {
+    if (userInfo) {
       router.push('/');
     }
   }, [userInfo, router]);
 
-  const onSubmit = async (data: any) => {
-    dispatch(resetClientAuth());
-    await dispatch(clientLoginAsync(data));
+  const onSubmit = (data: any) => {
+    dispatch(clientLoginAsync(data));
   };
 
   useEffect(() => {
@@ -114,6 +112,8 @@ const Login: NextPage = () => {
       });
     }
   };
+
+  console.log('登入 頁面', userInfo);
 
   return (
     <LoadingLayout isLoading={loginLoading}>
