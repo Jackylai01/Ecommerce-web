@@ -52,10 +52,6 @@ const productSlice = createSlice({
     resetEditingProductId: (state) => {
       state.editingProductId = null;
     },
-    resetDeleteProductState(state) {
-      state.status.deleteProductSuccess = false;
-      state.error.deleteProductError = null;
-    },
     updateProductDetailDescription: (state, action) => {
       if (state.productDetails) {
         state.productDetails.detailDescription = action.payload;
@@ -120,7 +116,7 @@ export const {
   setEditingProductId,
   resetEditingProductId,
   updateProductDetailDescription,
-  resetDeleteProductState,
+
   resetProductId,
 } = productSlice.actions;
 export default productSlice.reducer;

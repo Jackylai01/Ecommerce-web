@@ -203,12 +203,12 @@ const ProductCategories = () => {
           {modalContent}
         </ConfirmationModal>
         <MessageModal
-          title='刪除產品'
+          title='刪除產品類別'
           isActive={isMessageModalOpen}
           error={deleteProductsCategoryError}
           onClose={onMessageModalClose}
         >
-          {deleteProductsCategorySuccess && <Box>產品已成功刪除。</Box>}
+          {deleteProductsCategorySuccess && <Box>產品類別已成功刪除。</Box>}
           {deleteProductsCategoryError && (
             <Box color='red.500'>{deleteProductsCategoryError}</Box>
           )}

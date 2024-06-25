@@ -7,6 +7,7 @@ import {
 import FormModal from '@components/Modal/FormModal';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { resetCustomPage } from '@reducers/admin/custom-page';
+import { resetCategoryState } from '@reducers/admin/product-category';
 import {
   resetTagsDetailState,
   resetTagsState,
@@ -32,6 +33,7 @@ const AddButton: FC<AddButtonProps<any>> = ({
   const handleAddButtonClick = () => {
     dispatch(resetProductDetails());
     dispatch(resetTagsDetailState());
+    dispatch(resetCategoryState());
     dispatch(resetCustomPage());
     dispatch(resetProductId());
     dispatch(resetTagsState());

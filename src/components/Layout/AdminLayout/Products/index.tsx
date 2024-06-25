@@ -29,11 +29,7 @@ import { TablesTableRow } from '@components/Tables/TablesTableRow';
 
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import {
-  resetDeleteProductState,
-  resetProductId,
-  setEditingProductId,
-} from '@reducers/admin/products';
+import { resetProductId, setEditingProductId } from '@reducers/admin/products';
 import {
   deleteProductAsync,
   getAllProductsAsync,
@@ -188,12 +184,10 @@ const ProductTableContainer = () => {
   useEffect(() => {
     if (deleteProductSuccess) {
       onMessageModalOpen();
-      dispatch(resetDeleteProductState());
       dispatch(resetProductId());
     }
     if (deleteProductError) {
       onMessageModalOpen();
-      dispatch(resetDeleteProductState());
       dispatch(resetProductId());
     }
   }, [deleteProductSuccess, deleteProductError, onMessageModalOpen, dispatch]);
