@@ -22,7 +22,19 @@ const items: IBreadcrumbItem[] = [
 const CategoryPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { id, slug } = router.query;
+  const query = router.query['id]-[slug'];
+
+  useEffect(() => {
+    if (typeof query === 'string') {
+      const [id, slug] = query.split('-');
+      console.log('Parsed id:', id);
+      console.log('Parsed slug:', slug);
+
+      if (id && slug) {
+        dispatch(getCategoryByIdAsync({ id, slug }));
+      }
+    }
+  }, [query, dispatch]);
 
   const {
     category,
@@ -30,12 +42,7 @@ const CategoryPage = () => {
     status: { getCategoryByIdLoading },
   } = useAppSelector((state) => state.publicCategory);
 
-  useEffect(() => {
-    if (typeof id === 'string' && typeof slug === 'string') {
-      dispatch(getCategoryByIdAsync({ id, slug }));
-    }
-  }, [id, slug, dispatch]);
-
+  console.log('CategoryPage products:', products);
   return (
     <LoadingLayout isLoading={getCategoryByIdLoading}>
       {category && (

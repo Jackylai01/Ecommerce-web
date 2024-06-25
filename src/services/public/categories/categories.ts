@@ -15,4 +15,4 @@ export const apiGetCategories = async (query: PagingQuery) =>
 export const apiGetPublicCategoryById = async (id: string, slug: string) =>
   getRequest<
     ApiResult<{ category: CategoryResponse; products: ProductsResponse[] }>
-  >(`/categories/${id}-${slug}`);
+  >(`/public/categories/${id}-${slug}`);

@@ -25,6 +25,7 @@ export const getCategoryByIdAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_CATEGORIES}/${CategoryAsyncAction.getCategoryById}`,
   async ({ id, slug }: { id: string; slug: string }) => {
     const response = await apiGetPublicCategoryById(id, slug);
-    return response.res.data;
+
+    return response.result.data;
   },
 );
