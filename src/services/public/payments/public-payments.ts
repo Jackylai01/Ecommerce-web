@@ -1,6 +1,5 @@
 import { ordersRequest } from '@models/requests/orders.req';
 import { paymentsRequest } from '@models/requests/payment.req';
-import { logistics } from '@models/requests/shipment';
 import { ordersResponse } from '@models/responses/orders.res';
 import { clientShipmentReply } from '@models/responses/shipment.res';
 import { ApiResult, postRequest } from '../../shared/api';
@@ -16,12 +15,10 @@ export const apiPublicCreateOrder = async (data: ordersRequest) =>
  * 前台-選擇物流選擇頁
  */
 
-export const apiPublicRedirectToLogisticsSelection = async (
-  orderId: logistics,
-) =>
+export const apiPublicRedirectToLogisticsSelection = async (orderId: string) =>
   postRequest<ApiResult<any>>(
     `/public/shipment/redirect-to-logistics-selection`,
-    orderId,
+    { orderId },
   );
 
 /**

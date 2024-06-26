@@ -10,10 +10,18 @@ import {
   Heading,
   Image,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Radio,
   RadioGroup,
   Stack,
   Text,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import {
@@ -36,12 +44,16 @@ import { useEffect, useState } from 'react';
 const CheckoutPage: NextPage = () => {
   const dispatch = useAppDispatch();
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [subTotal, setSubTotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     address: '',
+    city: '',
+    postalCode: '',
+    country: '',
     phone: '',
     email: '',
   });
@@ -53,6 +65,7 @@ const CheckoutPage: NextPage = () => {
     logisticsSelection,
     status: { createOrderSuccess, createOrderLoading, createOrderFailed },
   } = useAppSelector((state) => state.publicPayments);
+
   const { userInfo } = useAppSelector((state) => state.clientAuth);
 
   useEffect(() => {
@@ -92,9 +105,15 @@ const CheckoutPage: NextPage = () => {
     }
     const orderData = {
       userId: userInfo._id,
-      products: checkout,
+      products: checkout.map((item) => ({
+        product: item._id,
+        quantity: item.count,
+        priceAtPurchase: item.price,
+      })),
       totalPrice: subTotal + tax,
-      shippingAddress: formData,
+      shippingAddress: {
+        ...formData,
+      },
     };
     await dispatch(createOrderAsync(orderData));
   };
@@ -117,28 +136,28 @@ const CheckoutPage: NextPage = () => {
       const response = await dispatch(
         redirectToLogisticsSelectionAsync(order._id),
       );
-      const { url, data } = response.payload;
 
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = url;
-      form.style.display = 'none';
-
-      Object.keys(data).forEach((key) => {
-        const input = document.createElement('input');
-        input.name = key;
-        input.value = data[key];
-        form.appendChild(input);
-      });
-
-      document.body.appendChild(form);
-      form.submit();
+      if (
+        response.payload &&
+        response.payload.data &&
+        response.payload.data.html
+      ) {
+        const newWindow = window.open();
+        newWindow?.document.write(response.payload.data.html);
+      } else {
+        toast({
+          title: '選擇物流失敗',
+          description: '無法獲取物流選擇頁面，請重試',
+          status: 'error',
+          isClosable: true,
+        });
+      }
     }
   };
 
   useEffect(() => {
     if (createOrderSuccess) {
-      handleLogisticsSelection();
+      onOpen();
     }
     if (createOrderFailed) {
       toast({
@@ -148,7 +167,13 @@ const CheckoutPage: NextPage = () => {
         isClosable: true,
       });
     }
-  }, [createOrderSuccess, createOrderFailed, handleLogisticsSelection, toast]);
+  }, [
+    createOrderSuccess,
+    createOrderFailed,
+    handleLogisticsSelection,
+    onOpen,
+    toast,
+  ]);
 
   useEffect(() => {
     if (logisticsResult) {
@@ -161,7 +186,15 @@ const CheckoutPage: NextPage = () => {
     }
   }, [logisticsResult, toast]);
 
-  console.log('checkout 頁面', userInfo);
+  if (checkout.length === 0) {
+    return (
+      <Flex justify='center' align='center' h='100vh'>
+        <Text fontSize='2xl' fontWeight='bold'>
+          您的購物車是空的
+        </Text>
+      </Flex>
+    );
+  }
 
   return (
     <Flex
@@ -239,6 +272,39 @@ const CheckoutPage: NextPage = () => {
                   name='address'
                   placeholder='address'
                   value={formData.address}
+                  onChange={handleChange}
+                />
+              </Box>
+
+              <Box>
+                <FormLabel>City</FormLabel>
+                <Input
+                  type='text'
+                  name='city'
+                  placeholder='city'
+                  value={formData.city}
+                  onChange={handleChange}
+                />
+              </Box>
+
+              <Box>
+                <FormLabel>Postal Code</FormLabel>
+                <Input
+                  type='text'
+                  name='postalCode'
+                  placeholder='postal code'
+                  value={formData.postalCode}
+                  onChange={handleChange}
+                />
+              </Box>
+
+              <Box>
+                <FormLabel>Country</FormLabel>
+                <Input
+                  type='text'
+                  name='country'
+                  placeholder='country'
+                  value={formData.country}
                   onChange={handleChange}
                 />
               </Box>
@@ -377,6 +443,29 @@ const CheckoutPage: NextPage = () => {
           </CardBody>
         </Card>
       </Box>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>選擇物流</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>請點擊以下按鈕選擇物流：</Text>
+            <Button
+              mt='1rem'
+              colorScheme='teal'
+              onClick={handleLogisticsSelection}
+            >
+              前往選擇物流
+            </Button>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={onClose}>
+              關閉
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 };
