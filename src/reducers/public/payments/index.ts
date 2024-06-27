@@ -9,6 +9,7 @@ import {
   createOrderAsync,
   createPaymentAsync,
   getPaymentNotifyAsync,
+  getShipmentDataAsync,
   handleClientReplyAsync,
   redirectToLogisticsSelectionAsync,
 } from './actions';
@@ -19,6 +20,7 @@ type PaymentState = ApiState<PaymentAsyncAction> & {
   clientReply: any;
   payment: any;
   paymentNotify: any;
+  shipmentData: any;
 };
 
 const initialState: PaymentState = {
@@ -27,6 +29,7 @@ const initialState: PaymentState = {
   clientReply: null,
   payment: null,
   paymentNotify: null,
+  shipmentData: null,
   ...newApiState<PaymentState>(PaymentAsyncAction),
 };
 
@@ -54,6 +57,9 @@ const paymentSlice = createSlice({
     });
     builder.addCase(getPaymentNotifyAsync.fulfilled, (state, action) => {
       state.paymentNotify = action.payload;
+    });
+    builder.addCase(getShipmentDataAsync.fulfilled, (state, action) => {
+      state.shipmentData = action.payload;
     });
 
     asyncMatcher(builder, ReducerName.PUBLIC_PAYMENTS);

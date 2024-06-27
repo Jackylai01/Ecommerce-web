@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiCreatePayments,
   apiGetPaymentNotify,
+  apiGetShipmentData,
   apiPublicCreateOrder,
   apiPublicHandleClientReply,
   apiPublicRedirectToLogisticsSelection,
@@ -14,6 +15,7 @@ export enum PaymentAsyncAction {
   handleClientReply = 'handleClientReply',
   createPayment = 'createPayment',
   getPaymentNotify = 'getPaymentNotify',
+  getShipmentData = 'getShipmentData',
 }
 
 export const createOrderAsync = createAsyncThunk(
@@ -34,8 +36,8 @@ export const redirectToLogisticsSelectionAsync = createAsyncThunk(
 
 export const handleClientReplyAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.handleClientReply}`,
-  async (data: any) => {
-    const response = await apiPublicHandleClientReply(data);
+  async ({ orderId, ResultData }: { orderId: string; ResultData: any }) => {
+    const response = await apiPublicHandleClientReply(orderId, ResultData);
     return response.result.data;
   },
 );
@@ -52,6 +54,14 @@ export const getPaymentNotifyAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.getPaymentNotify}`,
   async (data: any) => {
     const response = await apiGetPaymentNotify(data);
+    return response.result.data;
+  },
+);
+
+export const getShipmentDataAsync = createAsyncThunk(
+  `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.getShipmentData}`,
+  async ({ uniqueId, orderId }: { uniqueId: string; orderId: string }) => {
+    const response = await apiGetShipmentData(uniqueId, orderId);
     return response.result.data;
   },
 );

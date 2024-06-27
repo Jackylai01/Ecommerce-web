@@ -42,7 +42,6 @@ const CategoryPage = () => {
     status: { getCategoryByIdLoading },
   } = useAppSelector((state) => state.publicCategory);
 
-  console.log('CategoryPage products:', products);
   return (
     <LoadingLayout isLoading={getCategoryByIdLoading}>
       {category && (

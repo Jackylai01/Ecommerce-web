@@ -20,10 +20,17 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  Table,
+  Tbody,
+  Td,
   Text,
+  Th,
+  Thead,
+  Tr,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import LoadingLayout from '@components/Layout/LoadingLayout';
 import {
   calculateItemsTotal,
   formatPrice,
@@ -34,15 +41,16 @@ import useAppSelector from '@hooks/useAppSelector';
 import {
   createOrderAsync,
   createPaymentAsync,
-  handleClientReplyAsync,
+  getShipmentDataAsync,
   redirectToLogisticsSelectionAsync,
 } from '@reducers/public/payments/actions';
-
 import { NextPage } from 'next';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 const CheckoutPage: NextPage = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [subTotal, setSubTotal] = useState<number>(0);
@@ -58,27 +66,56 @@ const CheckoutPage: NextPage = () => {
     email: '',
   });
 
-  const [logisticsResult, setLogisticsResult] = useState<any>(null);
   const { checkout } = useAppSelector((state) => state.clientCart);
   const {
     order,
     logisticsSelection,
-    status: { createOrderSuccess, createOrderLoading, createOrderFailed },
+    paymentNotify,
+    shipmentData: shipmentDataFromState,
+    status: {
+      createOrderSuccess,
+      createOrderLoading,
+      createOrderFailed,
+      getPaymentNotifyLoading,
+      getShipmentDataFailed,
+      getShipmentDataLoading,
+    },
   } = useAppSelector((state) => state.publicPayments);
 
   const { userInfo } = useAppSelector((state) => state.clientAuth);
 
+  // 將 order 狀態存儲到 localStorage
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const logisticsResult = queryParams.get('logisticsResult');
-    const orderId = queryParams.get('orderId');
-    if (logisticsResult) {
-      setLogisticsResult(JSON.parse(decodeURIComponent(logisticsResult)));
+    if (order) {
+      localStorage.setItem('order', JSON.stringify(order));
     }
-    if (orderId && !order) {
-      dispatch(handleClientReplyAsync({ orderId }));
+  }, [order]);
+
+  useEffect(() => {
+    if (router.isReady) {
+      const { uniqueId, orderId } = router.query;
+
+      if (uniqueId && orderId) {
+        dispatch(
+          getShipmentDataAsync({
+            uniqueId: Array.isArray(uniqueId) ? uniqueId[0] : uniqueId,
+            orderId: Array.isArray(orderId) ? orderId[0] : orderId,
+          }),
+        );
+      }
     }
-  }, [dispatch, order]);
+  }, [router.isReady, router.query, dispatch]);
+
+  useEffect(() => {
+    if (paymentNotify) {
+      toast({
+        title: '物流選擇成功',
+        description: '請繼續付款',
+        status: 'success',
+        isClosable: true,
+      });
+    }
+  }, [paymentNotify, toast]);
 
   useEffect(() => {
     const subTotal = calculateItemsTotal(checkout);
@@ -111,9 +148,7 @@ const CheckoutPage: NextPage = () => {
         priceAtPurchase: item.price,
       })),
       totalPrice: subTotal + tax,
-      shippingAddress: {
-        ...formData,
-      },
+      shippingAddress: { ...formData },
     };
     await dispatch(createOrderAsync(orderData));
   };
@@ -131,27 +166,21 @@ const CheckoutPage: NextPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (logisticsSelection) {
+      localStorage.setItem('logisticsSelection', logisticsSelection);
+      const newWindow = window.open('/logistics');
+      if (newWindow) {
+        newWindow.focus();
+      } else {
+        console.error('Failed to open new window');
+      }
+    }
+  }, [logisticsSelection]);
+
   const handleLogisticsSelection = async () => {
     if (order) {
-      const response = await dispatch(
-        redirectToLogisticsSelectionAsync(order._id),
-      );
-
-      if (
-        response.payload &&
-        response.payload.data &&
-        response.payload.data.html
-      ) {
-        const newWindow = window.open();
-        newWindow?.document.write(response.payload.data.html);
-      } else {
-        toast({
-          title: '選擇物流失敗',
-          description: '無法獲取物流選擇頁面，請重試',
-          status: 'error',
-          isClosable: true,
-        });
-      }
+      dispatch(redirectToLogisticsSelectionAsync(order._id));
     }
   };
 
@@ -167,26 +196,19 @@ const CheckoutPage: NextPage = () => {
         isClosable: true,
       });
     }
-  }, [
-    createOrderSuccess,
-    createOrderFailed,
-    handleLogisticsSelection,
-    onOpen,
-    toast,
-  ]);
+  }, [createOrderSuccess, createOrderFailed, onOpen, toast]);
 
-  useEffect(() => {
-    if (logisticsResult) {
-      toast({
-        title: '物流選擇成功',
-        description: '請繼續付款',
-        status: 'success',
-        isClosable: true,
-      });
-    }
-  }, [logisticsResult, toast]);
+  if (getPaymentNotifyLoading || createOrderLoading || getShipmentDataLoading) {
+    return (
+      <Flex justify='center' align='center' h='100vh'>
+        <Text fontSize='2xl' fontWeight='bold'>
+          加載中...
+        </Text>
+      </Flex>
+    );
+  }
 
-  if (checkout.length === 0) {
+  if (!checkout.length && !shipmentDataFromState) {
     return (
       <Flex justify='center' align='center' h='100vh'>
         <Text fontSize='2xl' fontWeight='bold'>
@@ -197,276 +219,372 @@ const CheckoutPage: NextPage = () => {
   }
 
   return (
-    <Flex
-      w={{ base: '100%', lg: '90%' }}
-      mx='auto'
-      flexDir={{ base: 'column', lg: 'row' }}
-      gap='2rem'
-      shadow='md'
-    >
-      <Stack spacing={10} w={{ base: '100%', lg: '60%' }}>
-        <Card borderWidth='1px' bg='none' borderColor='gray.200' shadow='none'>
-          <CardHeader>
-            <Heading size='md' color='black'>
-              Review Items
-            </Heading>
-          </CardHeader>
-          <CardBody>
-            <Stack spacing='2rem'>
-              {checkout.map((item) => (
-                <Flex key={item._id} align='center' justify='space-between'>
-                  <Flex align='center'>
-                    <Image
-                      src={item.coverImage.imageUrl}
-                      boxSize='100px'
-                      bgSize='contain'
+    <LoadingLayout isLoading={getPaymentNotifyLoading || createOrderLoading}>
+      <Flex
+        w={{ base: '100%', lg: '90%' }}
+        mx='auto'
+        flexDir={{ base: 'column', lg: 'row' }}
+        gap='2rem'
+        shadow='md'
+      >
+        <Stack spacing={10} w={{ base: '100%', lg: '60%' }}>
+          <Card
+            borderWidth='1px'
+            bg='none'
+            borderColor='gray.200'
+            shadow='none'
+          >
+            <CardHeader>
+              <Heading size='md' color='black'>
+                Review Items
+              </Heading>
+            </CardHeader>
+            <CardBody>
+              <Stack spacing='2rem'>
+                {checkout.length
+                  ? checkout.map((item) => (
+                      <Box key={item._id}>
+                        <Flex align='center'>
+                          <Image
+                            src={item.coverImage.imageUrl}
+                            boxSize='100px'
+                            bgSize='contain'
+                          />
+                          <Box mx='1rem'>
+                            <Text
+                              fontWeight='bold'
+                              fontSize={{ base: 'sm', lg: 'lg' }}
+                              maxW='500px'
+                              color='black'
+                            >
+                              {item.name}
+                            </Text>
+                            <Text color='gray.500'>
+                              {getSubstring(item.description, 50)}
+                            </Text>
+                          </Box>
+                        </Flex>
+                        <Box textAlign='right'>
+                          <Text
+                            fontWeight='bold'
+                            fontSize={{ base: 'md', lg: 'lg' }}
+                          >
+                            ${formatPrice(item.price)}
+                          </Text>
+                          <Text fontSize={{ base: 'sm', lg: 'md' }}>
+                            Quantity: {item.count}
+                          </Text>
+                        </Box>
+                      </Box>
+                    ))
+                  : shipmentDataFromState?.orderId.products.map((item: any) => (
+                      <Box key={item.product._id}>
+                        <Flex align='center'>
+                          <Image
+                            src={item.product.coverImage.imageUrl}
+                            boxSize='100px'
+                            bgSize='contain'
+                          />
+                          <Box mx='1rem'>
+                            <Text
+                              fontWeight='bold'
+                              fontSize={{ base: 'sm', lg: 'lg' }}
+                              maxW='500px'
+                              color='black'
+                            >
+                              {item.product.name}
+                            </Text>
+                            <Text color='gray.500'>
+                              {getSubstring(item.product.description, 50)}
+                            </Text>
+                          </Box>
+                        </Flex>
+                        <Box textAlign='right'>
+                          <Text
+                            fontWeight='bold'
+                            fontSize={{ base: 'md', lg: 'lg' }}
+                          >
+                            ${formatPrice(item.priceAtPurchase)}
+                          </Text>
+                          <Text fontSize={{ base: 'sm', lg: 'md' }}>
+                            Quantity: {item.quantity}
+                          </Text>
+                        </Box>
+                      </Box>
+                    ))}
+              </Stack>
+            </CardBody>
+          </Card>
+          <Card borderWidth='1px' bg='none' shadow='none'>
+            <CardHeader>
+              <Heading size='md'>Delivery Information</Heading>
+            </CardHeader>
+            <CardBody>
+              {shipmentDataFromState ? (
+                <Table variant='simple' colorScheme='gray'>
+                  <Thead>
+                    <Tr>
+                      <Th>Field</Th>
+                      <Th>Details</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    <Tr>
+                      <Td>Full Name</Td>
+                      <Td>{shipmentDataFromState.receiverName}</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Address</Td>
+                      <Td>{shipmentDataFromState.receiverAddress}</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>City</Td>
+                      <Td>
+                        {shipmentDataFromState.orderId.shippingAddress.city}
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Postal Code</Td>
+                      <Td>
+                        {
+                          shipmentDataFromState.orderId.shippingAddress
+                            .postalCode
+                        }
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Country</Td>
+                      <Td>
+                        {shipmentDataFromState.orderId.shippingAddress.country}
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Phone</Td>
+                      <Td>{shipmentDataFromState.receiverCellPhone}</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Email</Td>
+                      <Td>{shipmentDataFromState.receiverEmail}</Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              ) : (
+                <Stack spacing='2rem' color='black'>
+                  <Box>
+                    <FormLabel>Full Name</FormLabel>
+                    <Input
+                      type='text'
+                      name='fullName'
+                      placeholder='Full name'
+                      value={formData.fullName}
+                      onChange={handleChange}
                     />
-                    <Box mx='1rem'>
-                      <Text
-                        fontWeight='bold'
-                        fontSize={{ base: 'sm', lg: 'lg' }}
-                        maxW='500px'
-                        color='black'
-                      >
-                        {item.name}
-                      </Text>
-                      <Text color='gray.500'>
-                        {getSubstring(item.description, 50)}
-                      </Text>
-                    </Box>
-                  </Flex>
-                  <Box textAlign='right'>
-                    <Text fontWeight='bold' fontSize={{ base: 'md', lg: 'lg' }}>
-                      ${formatPrice(item.price)}
-                    </Text>
-                    <Text fontSize={{ base: 'sm', lg: 'md' }}>
-                      Quantity: {item.count}
-                    </Text>
                   </Box>
+
+                  <Box>
+                    <FormLabel>Address</FormLabel>
+                    <Input
+                      type='text'
+                      name='address'
+                      placeholder='address'
+                      value={formData.address}
+                      onChange={handleChange}
+                    />
+                  </Box>
+
+                  <Box>
+                    <FormLabel>City</FormLabel>
+                    <Input
+                      type='text'
+                      name='city'
+                      placeholder='city'
+                      value={formData.city}
+                      onChange={handleChange}
+                    />
+                  </Box>
+
+                  <Box>
+                    <FormLabel>Postal Code</FormLabel>
+                    <Input
+                      type='text'
+                      name='postalCode'
+                      placeholder='postal code'
+                      value={formData.postalCode}
+                      onChange={handleChange}
+                    />
+                  </Box>
+
+                  <Box>
+                    <FormLabel>Country</FormLabel>
+                    <Input
+                      type='text'
+                      name='country'
+                      placeholder='country'
+                      value={formData.country}
+                      onChange={handleChange}
+                    />
+                  </Box>
+
+                  <Box>
+                    <FormLabel>Phone</FormLabel>
+                    <Input
+                      type='text'
+                      name='phone'
+                      placeholder='phone number'
+                      value={formData.phone}
+                      onChange={handleChange}
+                    />
+                  </Box>
+
+                  <Box>
+                    <FormLabel>Email</FormLabel>
+                    <Input
+                      type='email'
+                      name='email'
+                      placeholder='email'
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
+                  </Box>
+                </Stack>
+              )}
+            </CardBody>
+          </Card>
+        </Stack>
+
+        <Box w={{ base: '100%', lg: '40%' }}>
+          <Card
+            borderWidth='1px'
+            bg='none'
+            borderColor='gray.200'
+            color='black'
+            p='2rem'
+            shadow='md'
+          >
+            <CardHeader>
+              <Heading size='md'>Payment Details</Heading>
+            </CardHeader>
+            <CardBody>
+              <Stack spacing='2rem'>
+                <Flex>
+                  <Input
+                    type='text'
+                    placeholder='Enter Coupon Code'
+                    rounded='full'
+                  />
+                  <Button
+                    bgColor='brand.primary'
+                    rounded='full'
+                    ml='-40px'
+                    px='2rem'
+                    _hover={{ bgColor: 'brand.primaryDark' }}
+                    _active={{ bgColor: 'brand.primaryDark' }}
+                    color='black'
+                    bg='red.200'
+                  >
+                    Apply Coupon
+                  </Button>
                 </Flex>
-              ))}
-            </Stack>
-          </CardBody>
-        </Card>
-        <Card borderWidth='1px' bg='none' shadow='none'>
-          <CardHeader>
-            <Heading size='md'>Delivery Information</Heading>
-          </CardHeader>
-          <CardBody>
-            <Stack spacing='2rem' color='black'>
-              <Box>
-                <FormLabel>Full Name</FormLabel>
-                <Input
-                  type='text'
-                  name='fullName'
-                  placeholder='Full name'
-                  value={formData.fullName}
-                  onChange={handleChange}
-                />
-              </Box>
+                <Divider mt='1rem' />
 
-              <Box>
-                <FormLabel>Address</FormLabel>
-                <Input
-                  type='text'
-                  name='address'
-                  placeholder='address'
-                  value={formData.address}
-                  onChange={handleChange}
-                />
-              </Box>
-
-              <Box>
-                <FormLabel>City</FormLabel>
-                <Input
-                  type='text'
-                  name='city'
-                  placeholder='city'
-                  value={formData.city}
-                  onChange={handleChange}
-                />
-              </Box>
-
-              <Box>
-                <FormLabel>Postal Code</FormLabel>
-                <Input
-                  type='text'
-                  name='postalCode'
-                  placeholder='postal code'
-                  value={formData.postalCode}
-                  onChange={handleChange}
-                />
-              </Box>
-
-              <Box>
-                <FormLabel>Country</FormLabel>
-                <Input
-                  type='text'
-                  name='country'
-                  placeholder='country'
-                  value={formData.country}
-                  onChange={handleChange}
-                />
-              </Box>
-
-              <Box>
-                <FormLabel>Phone</FormLabel>
-                <Input
-                  type='text'
-                  name='phone'
-                  placeholder='phone number'
-                  value={formData.phone}
-                  onChange={handleChange}
-                />
-              </Box>
-
-              <Box>
-                <FormLabel>Email</FormLabel>
-                <Input
-                  type='email'
-                  name='email'
-                  placeholder='email'
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </Box>
-            </Stack>
-          </CardBody>
-        </Card>
-      </Stack>
-
-      <Box w={{ base: '100%', lg: '40%' }}>
-        <Card
-          borderWidth='1px'
-          bg='none'
-          borderColor='gray.200'
-          color='black'
-          p='2rem'
-          shadow='md'
-        >
-          <CardHeader>
-            <Heading size='md'>Payment Details</Heading>
-          </CardHeader>
-          <CardBody>
-            <Stack spacing='2rem'>
-              <Flex>
-                <Input
-                  type='text'
-                  placeholder='Enter Coupon Code'
-                  rounded='full'
-                />
-                <Button
-                  bgColor='brand.primary'
-                  rounded='full'
-                  ml='-40px'
-                  px='2rem'
-                  _hover={{ bgColor: 'brand.primaryDark' }}
-                  _active={{ bgColor: 'brand.primaryDark' }}
-                  color='black'
-                  bg='red.200'
-                >
-                  Apply Coupon
-                </Button>
-              </Flex>
+                <Box>
+                  <Heading size='xs' my='1rem'>
+                    Payment Option
+                  </Heading>
+                  <RadioGroup
+                    onChange={(value) => setPaymentMethod(value)}
+                    value={paymentMethod}
+                  >
+                    <Stack>
+                      <Radio value='cashOnDelivery'>Cash On Delivery</Radio>
+                      <Radio value='momo'>Mobile Money Payment</Radio>
+                      <Radio value='3'>Credit Card (Master/Visa)</Radio>
+                    </Stack>
+                  </RadioGroup>
+                </Box>
+              </Stack>
               <Divider mt='1rem' />
 
               <Box>
-                <Heading size='xs' my='1rem'>
-                  Payment Option
-                </Heading>
-                <RadioGroup
-                  onChange={(value) => setPaymentMethod(value)}
-                  value={paymentMethod}
-                >
-                  <Stack>
-                    <Radio value='cashOnDelivery'>Cash On Delivery</Radio>
-                    <Radio value='momo'>Mobile Money Payment</Radio>
-                    <Radio value='3'>Credit Card (Master/Visa)</Radio>
-                  </Stack>
-                </RadioGroup>
+                <Flex justify='space-between' align='center' my='1rem'>
+                  <Text fontWeight='bold'>Sub Total</Text>
+                  <Text fontWeight='bold'>${formatPrice(subTotal)}</Text>
+                </Flex>
+
+                <Flex justify='space-between' align='center' my='1rem'>
+                  <Text fontWeight='bold'>Tax(10%)</Text>
+                  <Text fontWeight='bold'>${formatPrice(tax)}</Text>
+                </Flex>
+
+                <Flex justify='space-between' align='center' my='1rem'>
+                  <Text fontWeight='bold'>Coupon Discount</Text>
+                  <Text fontWeight='bold'>-${formatPrice(tax)}</Text>
+                </Flex>
+
+                <Flex justify='space-between' align='center' my='1rem'>
+                  <Text fontWeight='bold'>Shipping Cost</Text>
+                  <Text fontWeight='bold'>-${formatPrice(0)}</Text>
+                </Flex>
+                <Divider />
+                <Flex justify='space-between' align='center' my='1rem'>
+                  <Text fontWeight='bold'>Total</Text>
+                  <Text fontWeight='bold'>${formatPrice(subTotal)}</Text>
+                </Flex>
               </Box>
-            </Stack>
-            <Divider mt='1rem' />
 
-            <Box>
-              <Flex justify='space-between' align='center' my='1rem'>
-                <Text fontWeight='bold'>Sub Total</Text>
-                <Text fontWeight='bold'>${formatPrice(subTotal)}</Text>
-              </Flex>
+              <Button
+                bgColor='brand.primary'
+                color='white'
+                w='100%'
+                rounded='full'
+                _hover={{ bgColor: 'red.200' }}
+                _active={{ bgColor: 'red.500' }}
+                bg='red.300'
+                onClick={handleOrderSubmit}
+              >
+                Create Order
+              </Button>
+              <Button
+                bgColor='brand.primary'
+                color='white'
+                w='100%'
+                rounded='full'
+                _hover={{ bgColor: 'red.200' }}
+                _active={{ bgColor: 'red.500' }}
+                bg='red.300'
+                onClick={handlePaymentSubmit}
+                mt='1rem'
+              >
+                Pay ${formatPrice(subTotal)}
+              </Button>
+            </CardBody>
+          </Card>
+        </Box>
 
-              <Flex justify='space-between' align='center' my='1rem'>
-                <Text fontWeight='bold'>Tax(10%)</Text>
-                <Text fontWeight='bold'>${formatPrice(tax)}</Text>
-              </Flex>
-
-              <Flex justify='space-between' align='center' my='1rem'>
-                <Text fontWeight='bold'>Coupon Discount</Text>
-                <Text fontWeight='bold'>-${formatPrice(tax)}</Text>
-              </Flex>
-
-              <Flex justify='space-between' align='center' my='1rem'>
-                <Text fontWeight='bold'>Shipping Cost</Text>
-                <Text fontWeight='bold'>-${formatPrice(0)}</Text>
-              </Flex>
-              <Divider />
-              <Flex justify='space-between' align='center' my='1rem'>
-                <Text fontWeight='bold'>Total</Text>
-                <Text fontWeight='bold'>${formatPrice(subTotal)}</Text>
-              </Flex>
-            </Box>
-
-            <Button
-              bgColor='brand.primary'
-              color='white'
-              w='100%'
-              rounded='full'
-              _hover={{ bgColor: 'red.200' }}
-              _active={{ bgColor: 'red.500' }}
-              bg='red.300'
-              onClick={handleOrderSubmit}
-            >
-              Create Order
-            </Button>
-            <Button
-              bgColor='brand.primary'
-              color='white'
-              w='100%'
-              rounded='full'
-              _hover={{ bgColor: 'red.200' }}
-              _active={{ bgColor: 'red.500' }}
-              bg='red.300'
-              onClick={handlePaymentSubmit}
-              mt='1rem'
-            >
-              Pay ${formatPrice(subTotal)}
-            </Button>
-          </CardBody>
-        </Card>
-      </Box>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>選擇物流</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>請點擊以下按鈕選擇物流：</Text>
-            <Button
-              mt='1rem'
-              colorScheme='teal'
-              onClick={handleLogisticsSelection}
-            >
-              前往選擇物流
-            </Button>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
-              關閉
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Flex>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>選擇物流</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text>請點擊以下按鈕選擇物流：</Text>
+              <Button
+                mt='1rem'
+                colorScheme='teal'
+                onClick={handleLogisticsSelection}
+              >
+                前往選擇物流
+              </Button>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme='blue' mr={3} onClick={onClose}>
+                關閉
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Flex>
+    </LoadingLayout>
   );
 };
 

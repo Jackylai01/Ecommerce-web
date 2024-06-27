@@ -2,7 +2,7 @@ import { ordersRequest } from '@models/requests/orders.req';
 import { paymentsRequest } from '@models/requests/payment.req';
 import { ordersResponse } from '@models/responses/orders.res';
 import { clientShipmentReply } from '@models/responses/shipment.res';
-import { ApiResult, postRequest } from '../../shared/api';
+import { ApiResult, getRequest, postRequest } from '../../shared/api';
 
 /**
  * 前台-建立訂單
@@ -25,10 +25,13 @@ export const apiPublicRedirectToLogisticsSelection = async (orderId: string) =>
  * 前台-綠界回傳物流選擇結果
  */
 
-export const apiPublicHandleClientReply = async (ResultDate: any) => {
+export const apiPublicHandleClientReply = async (
+  orderId: string,
+  ResultData: any,
+) => {
   return postRequest<ApiResult<clientShipmentReply>>(
-    `/public/shipment/client-reply`,
-    ResultDate,
+    `/public/shipment/client-reply?orderId=${orderId}`,
+    ResultData,
   );
 };
 
@@ -44,3 +47,10 @@ export const apiCreatePayments = async (data: paymentsRequest) =>
  */
 export const apiGetPaymentNotify = async (data: any) =>
   postRequest<ApiResult<any>>(`/ecpay/notify`, data);
+
+/**
+ * 前台-根據uniqueId和orderId獲得物流的資訊
+ */
+
+export const apiGetShipmentData = async (uniqueId: string, orderId: string) =>
+  getRequest<ApiResult<any>>(`/public/shipment/data/${uniqueId}/${orderId}`);
