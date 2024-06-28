@@ -39,6 +39,7 @@ import {
 import { calculateLogisticsFee } from '@helpers/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { setOrder } from '@reducers/public/payments';
 import {
   createOrderAsync,
   createPaymentAsync,
@@ -75,6 +76,7 @@ const CheckoutPage: NextPage = () => {
     logisticsSelection,
     paymentNotify,
     shipmentData: shipmentDataFromState,
+    payment,
     status: {
       createOrderSuccess,
       createOrderLoading,
@@ -82,17 +84,31 @@ const CheckoutPage: NextPage = () => {
       getPaymentNotifyLoading,
       getShipmentDataFailed,
       getShipmentDataLoading,
+      createPaymentSuccess,
+      createPaymentFailed,
+      createPaymentLoading,
     },
   } = useAppSelector((state) => state.publicPayments);
 
   const { userInfo } = useAppSelector((state) => state.clientAuth);
 
-  // 將 order 狀態存儲到 localStorage
   useEffect(() => {
     if (order) {
       localStorage.setItem('order', JSON.stringify(order));
     }
   }, [order]);
+
+  useEffect(() => {
+    const savedOrder = localStorage.getItem('order');
+    if (savedOrder) {
+      try {
+        const parsedOrder = JSON.parse(savedOrder);
+        dispatch(setOrder(parsedOrder));
+      } catch (e) {
+        console.error('Failed to parse saved order:', e);
+      }
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -158,6 +174,7 @@ const CheckoutPage: NextPage = () => {
         product: item._id,
         quantity: item.count,
         priceAtPurchase: item.price,
+        name: item.name,
       })),
       totalPrice: subTotal + tax,
       shippingAddress: { ...formData },
@@ -169,14 +186,27 @@ const CheckoutPage: NextPage = () => {
     if (order) {
       const paymentData = {
         orderId: order._id,
-        TradeDesc: 'Your order description',
-        ItemName: checkout.map((item) => item.name).join('#'),
-        ReturnURL: 'http://localhost:3000/public/payment-success',
+        TradeDesc: `購買於 我的商店 - 訂單編號 ${order._id}`,
+        ItemName: order.products.map((item: any) => item.name).join('#'),
         ChoosePayment: 'ALL',
       };
       await dispatch(createPaymentAsync(paymentData));
     }
   };
+
+  useEffect(() => {
+    if (createPaymentSuccess && payment) {
+      localStorage.setItem('paymentForm', payment);
+      router.push('/payment');
+    } else if (createPaymentFailed) {
+      toast({
+        title: '建立付款失敗',
+        description: '請重試',
+        status: 'error',
+        isClosable: true,
+      });
+    }
+  }, [createPaymentSuccess, createPaymentFailed, payment, router, toast]);
 
   useEffect(() => {
     if (logisticsSelection) {
@@ -591,7 +621,6 @@ const CheckoutPage: NextPage = () => {
             </CardBody>
           </Card>
         </Box>
-
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>

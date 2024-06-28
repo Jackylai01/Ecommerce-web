@@ -1,4 +1,3 @@
-// slice.ts
 import { ReducerName } from '@enums/reducer-name';
 import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
@@ -9,6 +8,7 @@ import {
   createOrderAsync,
   createPaymentAsync,
   getPaymentNotifyAsync,
+  getPaymentResultAsync,
   getShipmentDataAsync,
   handleClientReplyAsync,
   redirectToLogisticsSelectionAsync,
@@ -21,6 +21,7 @@ type PaymentState = ApiState<PaymentAsyncAction> & {
   payment: any;
   paymentNotify: any;
   shipmentData: any;
+  MerchantTradeNo: any;
 };
 
 const initialState: PaymentState = {
@@ -30,6 +31,7 @@ const initialState: PaymentState = {
   payment: null,
   paymentNotify: null,
   shipmentData: null,
+  MerchantTradeNo: null,
   ...newApiState<PaymentState>(PaymentAsyncAction),
 };
 
@@ -38,6 +40,9 @@ const paymentSlice = createSlice({
   initialState,
   reducers: {
     resetPaymentState: () => initialState,
+    setOrder: (state, action) => {
+      state.order = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(createOrderAsync.fulfilled, (state, action) => {
@@ -58,6 +63,9 @@ const paymentSlice = createSlice({
     builder.addCase(getPaymentNotifyAsync.fulfilled, (state, action) => {
       state.paymentNotify = action.payload;
     });
+    builder.addCase(getPaymentResultAsync.fulfilled, (state, action) => {
+      state.MerchantTradeNo = action.payload;
+    });
     builder.addCase(getShipmentDataAsync.fulfilled, (state, action) => {
       state.shipmentData = action.payload;
     });
@@ -66,5 +74,5 @@ const paymentSlice = createSlice({
   },
 });
 
-export const { resetPaymentState } = paymentSlice.actions;
+export const { resetPaymentState, setOrder } = paymentSlice.actions;
 export default paymentSlice.reducer;
