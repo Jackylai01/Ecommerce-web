@@ -36,6 +36,7 @@ import {
   formatPrice,
   getSubstring,
 } from '@helpers/products';
+import { calculateLogisticsFee } from '@helpers/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import {
@@ -55,6 +56,8 @@ const CheckoutPage: NextPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [subTotal, setSubTotal] = useState<number>(0);
   const [tax, setTax] = useState<number>(0);
+  const [logisticsFee, setLogisticsFee] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
@@ -122,7 +125,17 @@ const CheckoutPage: NextPage = () => {
     const tax = 0.1 * subTotal;
     setSubTotal(subTotal);
     setTax(tax);
-  }, [checkout]);
+
+    if (shipmentDataFromState) {
+      const logisticsFee = calculateLogisticsFee(
+        shipmentDataFromState,
+        shipmentDataFromState.orderId.totalPrice,
+      );
+      setLogisticsFee(logisticsFee);
+
+      setTotal(subTotal + logisticsFee); // 不計入稅
+    }
+  }, [checkout, shipmentDataFromState]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -169,14 +182,9 @@ const CheckoutPage: NextPage = () => {
   useEffect(() => {
     if (logisticsSelection) {
       localStorage.setItem('logisticsSelection', logisticsSelection);
-      const newWindow = window.open('/logistics');
-      if (newWindow) {
-        newWindow.focus();
-      } else {
-        console.error('Failed to open new window');
-      }
+      router.push('/logistics');
     }
-  }, [logisticsSelection]);
+  }, [logisticsSelection, router]);
 
   const handleLogisticsSelection = async () => {
     if (order) {
@@ -197,6 +205,8 @@ const CheckoutPage: NextPage = () => {
       });
     }
   }, [createOrderSuccess, createOrderFailed, onOpen, toast]);
+
+  const { uniqueId } = router.query;
 
   if (getPaymentNotifyLoading || createOrderLoading || getShipmentDataLoading) {
     return (
@@ -508,7 +518,14 @@ const CheckoutPage: NextPage = () => {
               <Box>
                 <Flex justify='space-between' align='center' my='1rem'>
                   <Text fontWeight='bold'>Sub Total</Text>
-                  <Text fontWeight='bold'>${formatPrice(subTotal)}</Text>
+                  <Text fontWeight='bold'>
+                    $
+                    {formatPrice(
+                      shipmentDataFromState
+                        ? shipmentDataFromState.orderId.totalPrice
+                        : subTotal,
+                    )}
+                  </Text>
                 </Flex>
 
                 <Flex justify='space-between' align='center' my='1rem'>
@@ -523,27 +540,37 @@ const CheckoutPage: NextPage = () => {
 
                 <Flex justify='space-between' align='center' my='1rem'>
                   <Text fontWeight='bold'>Shipping Cost</Text>
-                  <Text fontWeight='bold'>-${formatPrice(0)}</Text>
+                  <Text fontWeight='bold'>${formatPrice(logisticsFee)}</Text>
                 </Flex>
                 <Divider />
                 <Flex justify='space-between' align='center' my='1rem'>
                   <Text fontWeight='bold'>Total</Text>
-                  <Text fontWeight='bold'>${formatPrice(subTotal)}</Text>
+                  <Text fontWeight='bold'>
+                    $
+                    {formatPrice(
+                      shipmentDataFromState
+                        ? shipmentDataFromState.orderId.totalPrice +
+                            logisticsFee
+                        : total,
+                    )}
+                  </Text>
                 </Flex>
               </Box>
 
-              <Button
-                bgColor='brand.primary'
-                color='white'
-                w='100%'
-                rounded='full'
-                _hover={{ bgColor: 'red.200' }}
-                _active={{ bgColor: 'red.500' }}
-                bg='red.300'
-                onClick={handleOrderSubmit}
-              >
-                Create Order
-              </Button>
+              {!uniqueId && (
+                <Button
+                  bgColor='brand.primary'
+                  color='white'
+                  w='100%'
+                  rounded='full'
+                  _hover={{ bgColor: 'red.200' }}
+                  _active={{ bgColor: 'red.500' }}
+                  bg='red.300'
+                  onClick={handleOrderSubmit}
+                >
+                  Create Order
+                </Button>
+              )}
               <Button
                 bgColor='brand.primary'
                 color='white'
@@ -555,7 +582,12 @@ const CheckoutPage: NextPage = () => {
                 onClick={handlePaymentSubmit}
                 mt='1rem'
               >
-                Pay ${formatPrice(subTotal)}
+                Pay $
+                {formatPrice(
+                  shipmentDataFromState
+                    ? shipmentDataFromState.orderId.totalPrice + logisticsFee
+                    : total,
+                )}
               </Button>
             </CardBody>
           </Card>
