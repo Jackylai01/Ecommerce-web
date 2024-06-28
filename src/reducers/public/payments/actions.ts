@@ -60,8 +60,8 @@ export const getPaymentNotifyAsync = createAsyncThunk(
 
 export const getShipmentDataAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.getShipmentData}`,
-  async ({ uniqueId, orderId }: { uniqueId: string; orderId: string }) => {
-    const response = await apiGetShipmentData(uniqueId, orderId);
+  async (uniqueId: string) => {
+    const response = await apiGetShipmentData(uniqueId);
     return response.result.data;
   },
 );

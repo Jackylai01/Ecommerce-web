@@ -96,14 +96,13 @@ const CheckoutPage: NextPage = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      const { uniqueId, orderId } = router.query;
+      const { uniqueId } = router.query;
 
-      if (uniqueId && orderId) {
+      if (uniqueId) {
         dispatch(
-          getShipmentDataAsync({
-            uniqueId: Array.isArray(uniqueId) ? uniqueId[0] : uniqueId,
-            orderId: Array.isArray(orderId) ? orderId[0] : orderId,
-          }),
+          getShipmentDataAsync(
+            Array.isArray(uniqueId) ? uniqueId[0] : uniqueId,
+          ),
         );
       }
     }

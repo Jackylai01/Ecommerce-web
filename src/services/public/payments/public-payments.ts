@@ -52,5 +52,5 @@ export const apiGetPaymentNotify = async (data: any) =>
  * 前台-根據uniqueId和orderId獲得物流的資訊
  */
 
-export const apiGetShipmentData = async (uniqueId: string, orderId: string) =>
-  getRequest<ApiResult<any>>(`/public/shipment/data/${uniqueId}/${orderId}`);
+export const apiGetShipmentData = async (uniqueId: string) =>
+  getRequest<ApiResult<any>>(`/public/shipment/data/${uniqueId}`);
