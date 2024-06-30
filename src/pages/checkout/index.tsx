@@ -620,7 +620,7 @@ const CheckoutPage: NextPage = () => {
                 </Flex>
               </Box>
 
-              {!uniqueId && (
+              {!uniqueId ? (
                 <Button
                   bgColor='brand.primary'
                   color='white'
@@ -633,25 +633,26 @@ const CheckoutPage: NextPage = () => {
                 >
                   Create Order
                 </Button>
+              ) : (
+                <Button
+                  bgColor='brand.primary'
+                  color='white'
+                  w='100%'
+                  rounded='full'
+                  _hover={{ bgColor: 'red.200' }}
+                  _active={{ bgColor: 'red.500' }}
+                  bg='red.300'
+                  onClick={handlePaymentSubmit}
+                  mt='1rem'
+                >
+                  Pay $
+                  {formatPrice(
+                    shipmentDataFromState
+                      ? shipmentDataFromState.orderId.totalPrice + logisticsFee
+                      : total,
+                  )}
+                </Button>
               )}
-              <Button
-                bgColor='brand.primary'
-                color='white'
-                w='100%'
-                rounded='full'
-                _hover={{ bgColor: 'red.200' }}
-                _active={{ bgColor: 'red.500' }}
-                bg='red.300'
-                onClick={handlePaymentSubmit}
-                mt='1rem'
-              >
-                Pay $
-                {formatPrice(
-                  shipmentDataFromState
-                    ? shipmentDataFromState.orderId.totalPrice + logisticsFee
-                    : total,
-                )}
-              </Button>
             </CardBody>
           </Card>
         </Box>
