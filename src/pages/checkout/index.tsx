@@ -30,7 +30,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import LoadingLayout from '@components/Layout/LoadingLayout';
+import DotAnimationLoadingLayout from '@components/Layout/LoadingLayout/dotAnimationLoading';
 import {
   calculateItemsTotal,
   formatPrice,
@@ -53,6 +53,7 @@ import React, { useEffect, useState } from 'react';
 const CheckoutPage: NextPage = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { uniqueId } = router.query;
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [subTotal, setSubTotal] = useState<number>(0);
@@ -78,7 +79,6 @@ const CheckoutPage: NextPage = () => {
   const {
     order,
     logisticsSelection,
-    paymentNotify,
     shipmentData: shipmentDataFromState,
     payment,
     status: {
@@ -91,6 +91,7 @@ const CheckoutPage: NextPage = () => {
       createPaymentSuccess,
       createPaymentFailed,
       createPaymentLoading,
+      redirectToLogisticsSelectionLoading,
     },
   } = useAppSelector((state) => state.publicPayments);
 
@@ -127,17 +128,6 @@ const CheckoutPage: NextPage = () => {
       }
     }
   }, [router.isReady, router.query, dispatch]);
-
-  useEffect(() => {
-    if (paymentNotify) {
-      toast({
-        title: '物流選擇成功',
-        description: '請繼續付款',
-        status: 'success',
-        isClosable: true,
-      });
-    }
-  }, [paymentNotify, toast]);
 
   useEffect(() => {
     const subTotal = calculateItemsTotal(checkout);
@@ -239,30 +229,26 @@ const CheckoutPage: NextPage = () => {
     }
   }, [createOrderSuccess, createOrderFailed, onOpen, toast]);
 
-  const { uniqueId } = router.query;
-
-  if (getPaymentNotifyLoading || createOrderLoading || getShipmentDataLoading) {
-    return (
-      <Flex justify='center' align='center' h='100vh'>
-        <Text fontSize='2xl' fontWeight='bold'>
-          加載中...
-        </Text>
-      </Flex>
-    );
-  }
-
   if (!checkout.length && !shipmentDataFromState) {
     return (
       <Flex justify='center' align='center' h='100vh'>
         <Text fontSize='2xl' fontWeight='bold'>
-          您的購物車是空的
+          請稍等...
         </Text>
       </Flex>
     );
   }
 
   return (
-    <LoadingLayout isLoading={getPaymentNotifyLoading || createOrderLoading}>
+    <DotAnimationLoadingLayout
+      isLoading={
+        createOrderLoading ||
+        getShipmentDataLoading ||
+        redirectToLogisticsSelectionLoading ||
+        createPaymentLoading
+      }
+      loadingText='處理中...請稍後'
+    >
       <Flex
         w={{ base: '100%', lg: '90%' }}
         mx='auto'
@@ -669,7 +655,7 @@ const CheckoutPage: NextPage = () => {
             </CardBody>
           </Card>
         </Box>
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>選擇物流</ModalHeader>
@@ -692,7 +678,7 @@ const CheckoutPage: NextPage = () => {
           </ModalContent>
         </Modal>
       </Flex>
-    </LoadingLayout>
+    </DotAnimationLoadingLayout>
   );
 };
 

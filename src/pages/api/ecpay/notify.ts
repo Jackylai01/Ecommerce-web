@@ -14,11 +14,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
       const result = await response.text();
       if (result === '1|OK') {
-        // 处理成功后重定向到前端成功页面
-        res.redirect('/payment-success');
+        const { MerchantTradeNo } = paymentData;
+        res.redirect(
+          `/payment-result/payment-success?MerchantTradeNo=${MerchantTradeNo}`,
+        );
       } else {
-        // 处理失败后重定向到前端失败页面
-        res.redirect('/payment-failure');
+        res.redirect('/payment-result/payment-failure');
       }
     } catch (error) {
       console.error('Error processing payment:', error);

@@ -48,3 +48,9 @@ export const apiCreatePayments = async (data: paymentsRequest) =>
 
 export const apiGetShipmentData = async (uniqueId: string) =>
   getRequest<ApiResult<any>>(`/public/shipment/data/${uniqueId}`);
+
+/**
+ * 前台-回傳付款成功金流結果
+ */
+export const apiGetPaymentStatus = async (MerchantTradeNo: string) =>
+  postRequest<ApiResult<any>>(`/ecpay/payment-status/${MerchantTradeNo}`);
