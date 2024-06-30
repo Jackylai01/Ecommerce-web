@@ -43,23 +43,6 @@ export const apiCreatePayments = async (data: paymentsRequest) =>
   postRequest<ApiResult<any>>(`/ecpay/create-payment`, data);
 
 /**
- * 前台-全方位金流通製製作
- */
-export const apiGetPaymentNotify = async (data: any) =>
-  postRequest<ApiResult<any>>(`/ecpay/notify`, data);
-
-/**
- * 前台-全方位金流回傳結果
- *
- */
-
-export const apiGetPaymentResult = async (MerchantTradeNo: string) => {
-  return getRequest<ApiResult<any>>(
-    `/ecpay/result?MerchantTradeNo=${MerchantTradeNo}`,
-  );
-};
-
-/**
  * 前台-根據uniqueId和orderId獲得物流的資訊
  */
 

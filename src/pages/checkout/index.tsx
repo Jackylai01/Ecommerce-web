@@ -68,6 +68,10 @@ const CheckoutPage: NextPage = () => {
     country: '',
     phone: '',
     email: '',
+    carrierType: '', // 載具類型
+    carrierNum: '', // 載具號碼
+    taxId: '', // 統一編號
+    donateCode: '', // 捐贈碼
   });
 
   const { checkout } = useAppSelector((state) => state.clientCart);
@@ -482,6 +486,50 @@ const CheckoutPage: NextPage = () => {
                       name='email'
                       placeholder='email'
                       value={formData.email}
+                      onChange={handleChange}
+                    />
+                  </Box>
+
+                  <Box>
+                    <FormLabel>Carrier Type</FormLabel>
+                    <Input
+                      type='text'
+                      name='carrierType'
+                      placeholder='carrier type'
+                      value={formData.carrierType}
+                      onChange={handleChange}
+                    />
+                  </Box>
+
+                  <Box>
+                    <FormLabel>Carrier Number</FormLabel>
+                    <Input
+                      type='text'
+                      name='carrierNum'
+                      placeholder='carrier number'
+                      value={formData.carrierNum}
+                      onChange={handleChange}
+                    />
+                  </Box>
+
+                  <Box>
+                    <FormLabel>Tax ID</FormLabel>
+                    <Input
+                      type='text'
+                      name='taxId'
+                      placeholder='tax ID'
+                      value={formData.taxId}
+                      onChange={handleChange}
+                    />
+                  </Box>
+
+                  <Box>
+                    <FormLabel>Donate Code</FormLabel>
+                    <Input
+                      type='text'
+                      name='donateCode'
+                      placeholder='donate code'
+                      value={formData.donateCode}
                       onChange={handleChange}
                     />
                   </Box>

@@ -2,8 +2,6 @@ import { ReducerName } from '@enums/reducer-name';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiCreatePayments,
-  apiGetPaymentNotify,
-  apiGetPaymentResult,
   apiGetShipmentData,
   apiPublicCreateOrder,
   apiPublicHandleClientReply,
@@ -17,7 +15,6 @@ export enum PaymentAsyncAction {
   createPayment = 'createPayment',
   getPaymentNotify = 'getPaymentNotify',
   getShipmentData = 'getShipmentData',
-  sendMerchantTradeNo = 'sendMerchantTradeNo',
 }
 
 export const createOrderAsync = createAsyncThunk(
@@ -48,22 +45,6 @@ export const createPaymentAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.createPayment}`,
   async (data: any) => {
     const response = await apiCreatePayments(data);
-    return response.result.data;
-  },
-);
-
-export const getPaymentNotifyAsync = createAsyncThunk(
-  `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.getPaymentNotify}`,
-  async (data: any) => {
-    const response = await apiGetPaymentNotify(data);
-    return response.result.data;
-  },
-);
-
-export const getPaymentResultAsync = createAsyncThunk(
-  `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.sendMerchantTradeNo}`,
-  async (MerchantTradeNo: string) => {
-    const response = await apiGetPaymentResult(MerchantTradeNo);
     return response.result.data;
   },
 );
