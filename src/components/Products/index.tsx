@@ -12,17 +12,15 @@ import { useEffect, useState } from 'react';
 
 interface AllProductsProps {
   breadcrumbItems?: IBreadcrumbItem[];
-  products: any[]; // Ensure products are of the correct type
+  products?: any[];
 }
 
 const itemsPerPage = 10;
 
-export const AllProducts = ({
-  breadcrumbItems,
-  products,
-}: AllProductsProps) => {
+export const AllProducts = ({ breadcrumbItems }: AllProductsProps) => {
   const dispatch = useAppDispatch();
   const {
+    list: productsList,
     metadata,
     status: { productsListLoading },
   } = useAppSelector((state) => state.publicProducts);
@@ -36,7 +34,7 @@ export const AllProducts = ({
     };
   }, [dispatch, page]);
 
-  const hasProducts = products && products.length > 0;
+  const hasProducts = productsList && productsList.length > 0;
 
   return (
     <>
@@ -49,7 +47,7 @@ export const AllProducts = ({
           justify={{ base: 'center', lg: 'flex-start' }}
         >
           {hasProducts ? (
-            products.map((product) => (
+            productsList?.map((product: any) => (
               <ProductCard key={product._id} product={product} />
             ))
           ) : (

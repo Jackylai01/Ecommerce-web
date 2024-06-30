@@ -20,7 +20,7 @@ export const publicProductsListAsync = createAsyncThunk(
     const query: PagingQuery = { page, limit };
     const response = await apiPublicProductsList(query);
 
-    return response.res.data;
+    return response.result;
   },
 );
 
