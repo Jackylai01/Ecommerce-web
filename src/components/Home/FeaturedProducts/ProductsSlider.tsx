@@ -34,7 +34,7 @@ export const ProductsSlider = ({ products }: ProductsSlider) => {
     <Box w='100%' h='100%'>
       <Swiper {...sliderSettings} style={{ width: '100%', height: '100%' }}>
         {products.map((product) => (
-          <SwiperSlide key={product.id} style={slideStyles}>
+          <SwiperSlide key={product._id} style={slideStyles}>
             <ProductCard product={product} />
           </SwiperSlide>
         ))}

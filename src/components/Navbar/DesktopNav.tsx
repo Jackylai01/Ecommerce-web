@@ -1,11 +1,21 @@
 import { Box, Flex, Stack } from '@chakra-ui/react';
 import { navItems } from '@helpers/products';
+import useAppSelector from '@hooks/useAppSelector';
 
+import useAppDispatch from '@hooks/useAppDispatch';
+import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import Link from 'next/link';
 import { AppLogo } from '../AppLogo';
 import { Search } from '../Search/Search';
 
 export function DesktopNav() {
+  const dispatch = useAppDispatch();
+  const userInfo = useAppSelector((state) => state.clientAuth.userInfo);
+
+  const handleLogout = () => {
+    dispatch(clientLogoutAsync());
+  };
+
   return (
     <Flex
       justify='space-between'

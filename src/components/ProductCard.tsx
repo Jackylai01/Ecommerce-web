@@ -9,13 +9,12 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { getSubstring } from '@helpers/products';
-import { ProductsResponse } from '@models/responses/products.res';
 import Link from 'next/link';
 import { AddToWishlistButton } from './AddToWishlistButton';
 import { AddToCartButton } from './Cart/AddToCartButton';
 
 interface ProductCardProps {
-  product: ProductsResponse;
+  product: any;
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {

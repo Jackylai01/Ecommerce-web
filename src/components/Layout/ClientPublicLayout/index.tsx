@@ -6,10 +6,10 @@ type Props = {
 
 const ClientPublicLayout = ({ children }: Props) => {
   return (
-    <main className='auth-layout'>
-      <article className='auth-layout__container'>
+    <main>
+      <article>
         <Navbar />
-        <aside className='auth-layout__aside'>{children}</aside>
+        <aside>{children}</aside>
       </article>
     </main>
   );

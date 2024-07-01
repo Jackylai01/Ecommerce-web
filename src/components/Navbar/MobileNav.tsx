@@ -1,5 +1,4 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { AppLogo } from '../AppLogo';
 import { Search } from '../Search/Search';
 import { NavMenu } from './NavMenu';
 
@@ -10,20 +9,17 @@ export function MobileNav() {
         justify='space-between'
         alignItems='center'
         display={{ base: 'flex', lg: 'none' }}
-        px='2rem'
-        py='1rem'
-        borderBottom='1px'
         borderColor='gray.200'
-        flex={1}
+        w='20%'
       >
         <NavMenu />
-        <AppLogo />
       </Flex>
       <Box
         px='2rem'
         py='0.5rem'
         mb='1rem'
         display={{ base: 'block', lg: 'none' }}
+        w='100%'
       >
         <Search />
       </Box>

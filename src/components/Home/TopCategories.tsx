@@ -1,23 +1,21 @@
 'use client';
-import {
-  Box,
-  Button,
-  Card,
-  CardBody,
-  Grid,
-  GridItem,
-  Heading,
-} from '@chakra-ui/react';
+import { Box, Button, Grid, GridItem } from '@chakra-ui/react';
 import { SectionHeading } from '@components/SectionHeading';
-import { ICategory } from '@models/requests/products';
-import Image from 'next/image';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { getCategoriesListAsync } from '@reducers/public/categories/actions';
 import Link from 'next/link';
+import { useEffect } from 'react';
+import TopCategoryCard from './TopCategoryCard';
 
-interface TopCategoriesProps {
-  categories: ICategory[];
-}
+export const TopCategories = () => {
+  const dispatch = useAppDispatch();
+  const { list: categories } = useAppSelector((state) => state.publicCategory);
 
-export const TopCategories = ({ categories }: TopCategoriesProps) => {
+  useEffect(() => {
+    dispatch(getCategoriesListAsync({ page: 1, limit: 10 }));
+  }, [dispatch]);
+
   return (
     <Box w={{ base: '100%', lg: '90%' }} mx='auto' py='3rem' px='2rem'>
       <SectionHeading title=' Shop Our Top Categories' />
@@ -29,13 +27,13 @@ export const TopCategories = ({ categories }: TopCategoriesProps) => {
         }}
         gap='4'
       >
-        {categories.map((category) => (
-          <GridItem key={category._id}>
-            <TopCategoryCard category={category} />
-          </GridItem>
-        ))}
+        {categories &&
+          categories.map((category) => (
+            <GridItem key={category._id}>
+              <TopCategoryCard category={category} />
+            </GridItem>
+          ))}
       </Grid>
-
       <Link href='/categories'>
         <Button
           bgColor='white'
@@ -51,35 +49,3 @@ export const TopCategories = ({ categories }: TopCategoriesProps) => {
     </Box>
   );
 };
-
-interface TopCategoryCardProps {
-  category: ICategory;
-}
-
-const TopCategoryCard = ({ category }: TopCategoryCardProps) => (
-  <Link href={`/categories/${category._id}-${category.slug}`}>
-    <Card
-      direction='row'
-      align='center'
-      overflow='hidden'
-      variant='outline'
-      w='100%'
-      p='10px'
-      h='100%'
-      _hover={{ cursor: 'pointer', bgColor: 'gray.100' }}
-      bg='none'
-      shadow='md'
-    >
-      <Image
-        src={category.coverImage.imageUrl}
-        alt={category.name}
-        height={100}
-        width={100}
-      />
-
-      <CardBody>
-        <Heading size={{ base: 'sm', lg: 'md' }}>{category.name}</Heading>
-      </CardBody>
-    </Card>
-  </Link>
-);

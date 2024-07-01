@@ -1,18 +1,18 @@
 import {
   Box,
+  Link as ChakraLink,
   Flex,
   IconButton,
-  Link,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Stack,
   useToast,
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { resetClientAuth } from '@reducers/client/auth';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import router from 'next/router';
 import { useEffect } from 'react';
@@ -43,6 +43,7 @@ export const Navbar = () => {
         duration: 5000,
         isClosable: true,
       });
+      dispatch(resetClientAuth());
       router.push('/public/auth/login');
     } else if (logoutFailed) {
       toast({
@@ -57,42 +58,47 @@ export const Navbar = () => {
 
   return (
     <LoadingLayout isLoading={logoutLoading}>
-      <Box className='navbar-wrapper' h='120px'>
+      <Box h='120px'>
         <Box pos='fixed' w='100%' bgColor='white' mb='1rem' zIndex={10}>
-          <Flex justify='space-between' alignItems='center'>
+          <Flex justify='center' alignItems='center' px='2rem' py='1rem'>
             <DesktopNav />
             <MobileNav />
-            <Stack direction='row' spacing={2} alignItems='center'>
+            <Flex
+              w={{ base: '100%', lg: 'auto' }}
+              maxW={{ base: '100%', lg: 'auto' }}
+            >
               <Wishlist />
               <Cart />
-              {userInfo ? (
-                <Menu>
-                  <MenuButton
-                    as={IconButton}
+              <Box>
+                {userInfo ? (
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      icon={<FaUser />}
+                      variant='ghost'
+                      color='black'
+                      _hover={{ bg: 'transparent' }}
+                      p='1rem'
+                    />
+                    <MenuList>
+                      <MenuItem>
+                        <ChakraLink href='/client'>會員管理</ChakraLink>
+                      </MenuItem>
+                      <MenuItem onClick={handleLogout}>登出</MenuItem>
+                    </MenuList>
+                  </Menu>
+                ) : (
+                  <IconButton
                     icon={<FaUser />}
                     variant='ghost'
                     color='black'
-                    mr='1rem'
                     _hover={{ bg: 'transparent' }}
+                    onClick={() => router.push('/public/auth/login')}
+                    aria-label='Login'
                   />
-                  <MenuList>
-                    <MenuItem>
-                      <Link href='/client'>會員管理</Link>
-                    </MenuItem>
-                    <MenuItem onClick={handleLogout}>登出</MenuItem>
-                  </MenuList>
-                </Menu>
-              ) : (
-                <IconButton
-                  icon={<FaUser />}
-                  variant='ghost'
-                  color='black'
-                  _hover={{ bg: 'transparent' }}
-                  onClick={() => router.push('/public/auth/login')}
-                  aria-label='Login'
-                />
-              )}
-            </Stack>
+                )}
+              </Box>
+            </Flex>
           </Flex>
         </Box>
       </Box>
