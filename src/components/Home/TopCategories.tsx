@@ -57,7 +57,7 @@ interface TopCategoryCardProps {
 }
 
 const TopCategoryCard = ({ category }: TopCategoryCardProps) => (
-  <Link href={`/categories/${category.id}`}>
+  <Link href={`/categories/${category._id}-${category.slug}`}>
     <Card
       direction='row'
       align='center'
@@ -71,7 +71,7 @@ const TopCategoryCard = ({ category }: TopCategoryCardProps) => (
       shadow='md'
     >
       <Image
-        src={category.image}
+        src={category.coverImage.imageUrl}
         alt={category.name}
         height={100}
         width={100}

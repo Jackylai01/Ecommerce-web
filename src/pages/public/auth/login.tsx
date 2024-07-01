@@ -77,7 +77,6 @@ const Login: NextPage = () => {
         duration: 3000,
         isClosable: true,
       });
-      router.push('/');
     }
 
     if (loginFailed && loginError) {

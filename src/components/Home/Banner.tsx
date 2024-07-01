@@ -38,9 +38,9 @@ export const Banner = () => {
             <Button
               borderRadius='50px'
               minW='10rem'
-              bgColor='brand.primary'
+              bgColor='black'
               color='white'
-              _hover={{ bgColor: 'brand.primaryDark' }}
+              _hover={{ bgColor: 'gray.700' }}
             >
               Shop Now
             </Button>
