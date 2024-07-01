@@ -23,8 +23,6 @@ export function DesktopNav() {
       display={{ base: 'none', lg: 'flex' }}
       px='2rem'
       py='1rem'
-      borderBottom='1px'
-      borderColor='gray.200'
       flex={1}
     >
       <Stack direction='row' gap={6} flex={1} alignItems='center'>

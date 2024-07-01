@@ -14,8 +14,10 @@ import {
   VStack,
   keyframes,
 } from '@chakra-ui/react';
+import ClientLayout from '@components/Layout/ClientLayout';
 import { HistoryItem } from '@components/Layout/ClientLayout/HistoryItem';
 import { OrderItem } from '@components/Layout/ClientLayout/OrderItem';
+import { Navbar } from '@components/Navbar/NavBar';
 
 const clientDashboard = () => {
   const fadeIn = keyframes`
@@ -24,7 +26,8 @@ const clientDashboard = () => {
 `;
 
   return (
-    <>
+    <ClientLayout>
+      <Navbar />
       <Box
         w='80%'
         mx='auto'
@@ -225,7 +228,7 @@ const clientDashboard = () => {
           </TabPanels>
         </Tabs>
       </Box>
-    </>
+    </ClientLayout>
   );
 };
 
