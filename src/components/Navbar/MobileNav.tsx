@@ -1,8 +1,6 @@
-import { Box, Flex, Stack } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { AppLogo } from '../AppLogo';
-import { Cart } from '../Cart/Cart';
 import { Search } from '../Search/Search';
-import { Wishlist } from '../Wishlist/Wishlist';
 import { NavMenu } from './NavMenu';
 
 export function MobileNav() {
@@ -16,13 +14,10 @@ export function MobileNav() {
         py='1rem'
         borderBottom='1px'
         borderColor='gray.200'
+        flex={1}
       >
         <NavMenu />
         <AppLogo />
-        <Stack direction='row' spacing={1}>
-          <Wishlist />
-          <Cart />
-        </Stack>
       </Flex>
       <Box
         px='2rem'
