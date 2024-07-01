@@ -13,7 +13,7 @@ export interface IRating {
 }
 
 export interface IProduct {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   price: number;
@@ -25,9 +25,11 @@ export interface IProduct {
 }
 
 export interface ICategory {
-  id: string;
+  _id: string;
   name: string;
-  image: string;
+  coverImage: {
+    imageUrl: string;
+  };
   slug: string;
 }
 

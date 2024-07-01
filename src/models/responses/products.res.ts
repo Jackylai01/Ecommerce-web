@@ -1,16 +1,8 @@
-export type ProductsResponse = {
-  // 產品_id
-  _id: string;
-  // 路由產品名稱
-  slug: string;
-  // 商品名稱
-  name: string;
-  // 商品描述
-  description: string;
-  // 價格
-  price: number;
+import { ICategory, IProduct } from '@models/requests/products';
+
+export interface ProductsResponse extends Omit<IProduct, 'category'> {
   // 商品類別或標籤
-  category: any[];
+  category: ICategory;
   // 商品封面照片
   coverImage: {
     imageUrl: string;
@@ -27,11 +19,11 @@ export type ProductsResponse = {
   // 最低購買數量
   minimumPurchase?: number;
   // 最高購買數量
-  maximumPurchase?: number; // 最大购买数量
+  maximumPurchase?: number;
   // 產品標籤
   tags: any[];
   // 商品編號(自訂) 例:bka-1130156
   code?: string;
   // 自訂模組
   blocks: any[];
-};
+}

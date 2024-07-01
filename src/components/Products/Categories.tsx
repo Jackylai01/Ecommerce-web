@@ -1,4 +1,5 @@
-import { Box, Image, Link, SimpleGrid, Text } from '@chakra-ui/react';
+import { Box, Image, SimpleGrid, Text } from '@chakra-ui/react';
+import Link from 'next/link';
 
 interface CategoryProps {
   categories: Array<{
@@ -29,28 +30,30 @@ export const AllCategories = ({ categories }: CategoryProps) => {
             alignItems='center'
           >
             <Link
-              key={category._id}
               href={`/categories/${category._id}-${category.slug}`}
+              passHref
             >
-              <Box
-                w='100%'
-                h='200px'
-                display='flex'
-                justifyContent='center'
-                alignItems='center'
-                mb='4'
-              >
-                <Image
-                  src={category.coverImage.imageUrl}
-                  alt={category.name}
-                  objectFit='contain'
-                  maxW='100%'
-                  maxH='100%'
-                />
-              </Box>
-              <Text fontWeight='bold' fontSize='xl'>
-                {category.name}
-              </Text>
+              <a style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Box
+                  w='100%'
+                  h='200px'
+                  display='flex'
+                  justifyContent='center'
+                  alignItems='center'
+                  mb='4'
+                >
+                  <Image
+                    src={category.coverImage.imageUrl}
+                    alt={category.name}
+                    objectFit='contain'
+                    maxW='100%'
+                    maxH='100%'
+                  />
+                </Box>
+                <Text fontWeight='bold' fontSize='xl'>
+                  {category.name}
+                </Text>
+              </a>
             </Link>
           </Box>
         ))}

@@ -21,12 +21,14 @@ import { Rating } from '@components/Rating';
 import { getSubstring } from '@helpers/products';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { IBreadcrumbItem, IProduct } from '@models/requests/products';
+import { IBreadcrumbItem } from '@models/requests/products';
+import { ProductsResponse } from '@models/responses/products.res';
 import { addItem, isAdded, resetItems } from '@reducers/client/cart';
 
 interface ProductDetailsProps {
-  product: IProduct;
+  product: ProductsResponse;
 }
+
 const items: IBreadcrumbItem[] = [
   {
     name: 'Products',
@@ -43,7 +45,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
   const dispatch = useAppDispatch();
 
   const productIsAddedToCart = useAppSelector((state) =>
-    isAdded(state, 'cart', product.id),
+    isAdded(state, 'cart', product._id),
   );
 
   const handleBuyNow = () => {
@@ -55,10 +57,10 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
     <>
       <CustomBreadcrumb
         items={[
-          ...items, // 确保items定义在某处或移动到组件内
+          ...items,
           {
             name: product.category.name,
-            link: `/categories/${product.category.id}`,
+            link: `/categories/${product.category._id}-${product.category.slug}`,
           },
           {
             name: getSubstring(product.name, 20),
