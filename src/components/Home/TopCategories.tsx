@@ -30,7 +30,7 @@ export const TopCategories = ({ categories }: TopCategoriesProps) => {
         gap='4'
       >
         {categories.map((category) => (
-          <GridItem key={category.id}>
+          <GridItem key={category._id}>
             <TopCategoryCard category={category} />
           </GridItem>
         ))}
