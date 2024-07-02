@@ -3,9 +3,11 @@ import adminClientUsers from './admin/client-users';
 import customPage from './admin/custom-page';
 import dashBoardTheme from './admin/dash-board/themeSlice';
 import adminDiscount from './admin/discount';
+import adminOrders from './admin/orders';
 import adminProductsCategory from './admin/product-category';
 import adminProductsTags from './admin/product-tags';
 import adminProducts from './admin/products';
+import adminShipment from './admin/shipments';
 import adminUpload from './admin/upload';
 import clientAuth from './client/auth';
 import clientCart from './client/cart';
@@ -40,6 +42,8 @@ const appReducer = {
   publicShipment,
   publicCategory,
   publicPayments,
+  adminOrders,
+  adminShipment,
 };
 
 export default appReducer;

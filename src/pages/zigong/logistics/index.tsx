@@ -20,8 +20,13 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { NextPage } from 'next';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 const LogisticsPages: NextPage = () => {
+  const { colorMode } = useAdminColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+
   return (
     <>
       <Box maxW='1200px' mx='auto' p='40px 20px'>
@@ -97,10 +102,11 @@ const LogisticsPages: NextPage = () => {
         </Grid>
 
         <Box
-          bg='white'
+          bg={bgColor}
           borderRadius='16px'
           boxShadow='0 4px 20px rgba(0, 0, 0, 0.05)'
           mb='40px'
+          color={textColor}
         >
           <Flex
             bgGradient='linear(to-r, #3a5eff, #6687ff)'
@@ -158,16 +164,15 @@ const LogisticsPages: NextPage = () => {
               </TabList>
 
               <TabPanels>
-                {/* 訂單概覽 */}
                 <TabPanel>
                   <Table variant='simple' size='lg'>
                     <Thead>
                       <Tr>
-                        <Th>訂單編號</Th>
-                        <Th>狀態</Th>
-                        <Th>收件人</Th>
-                        <Th>更新時間</Th>
-                        <Th>操作</Th>
+                        <Th color={textColor}>訂單編號</Th>
+                        <Th color={textColor}>狀態</Th>
+                        <Th color={textColor}>收件人</Th>
+                        <Th color={textColor}>更新時間</Th>
+                        <Th color={textColor}>操作</Th>
                       </Tr>
                     </Thead>
                     <Tbody>

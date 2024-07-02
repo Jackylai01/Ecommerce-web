@@ -4,6 +4,11 @@ export interface QueryParams {
   page?: number;
   limit?: number;
   sort?: any;
+  startDate?: string;
+  endDate?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  status?: string;
 }
 
 export const routeToChinese: Enum = {

@@ -52,7 +52,7 @@ var dashRoutes = [
   },
   {
     path: '/payment',
-    name: 'Payment',
+    name: 'Orders',
     icon: StatsIcon,
     component: PayPalIcon,
     layout: `/${ADMIN_ROUTE}`,

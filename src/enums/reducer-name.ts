@@ -27,4 +27,6 @@ export enum ReducerName {
   PUBLIC_CATEGORIES = 'publicCategories',
   PUBLIC_PAYMENTS = 'publicPayments',
   CLIENT_CART = 'clientCart',
+  ADMIN_ORDERS = 'adminOrders',
+  ADMIN_SHIPMENTS = 'adminShipments',
 }
