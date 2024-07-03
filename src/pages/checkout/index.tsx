@@ -31,12 +31,12 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import DotAnimationLoadingLayout from '@components/Layout/LoadingLayout/dotAnimationLoading';
+import { calculateLogisticsFee } from '@fixtures/shipment';
 import {
   calculateItemsTotal,
   formatPrice,
   getSubstring,
 } from '@helpers/products';
-import { calculateLogisticsFee } from '@helpers/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { setOrder } from '@reducers/public/payments';

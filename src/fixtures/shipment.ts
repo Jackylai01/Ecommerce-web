@@ -25,3 +25,24 @@ export const calculateLogisticsFee = (shipment: any, totalPrice: number) => {
   }
   return logisticsFee;
 };
+
+export const logisticsSubTypeMap = {
+  FAMI: '全家物流(B2C)',
+  UNIMART: '7-ELEVEN超商物流(B2C)',
+  UNIMARTFREEZE: '7-ELEVEN冷凍店取(B2C)',
+  FAMIC2C: '全家物流(C2C)',
+  UNIMARTC2C: '7-ELEVEN超商物流(C2C)',
+  HILIFE: '萊爾富物流(B2C)',
+  HILIFEC2C: '萊爾富物流(C2C)',
+  OKMARTC2C: 'OK超商(C2C)',
+  TCAT: '黑貓物流',
+  POST: '中華郵政',
+};
+
+export const shipmentStatusMap = {
+  Pending: '未出貨',
+  Paid: '已出貨',
+};
+
+export type ShipmentStatus = keyof typeof shipmentStatusMap;
+export type LogisticsSubType = keyof typeof logisticsSubTypeMap;

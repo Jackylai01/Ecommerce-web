@@ -2,10 +2,14 @@ import { ReducerName } from '@enums/reducer-name';
 import { PagingQuery } from '@models/entities/shared/pagination';
 import { QueryParams } from '@models/entities/shared/query';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { apiAdminGetOrders } from '@services/admin/admin-orders/admin-orders';
+import {
+  apiAdminGetOrders,
+  apiAdminGetOrdersDetails,
+} from '@services/admin/admin-orders/admin-orders';
 
 export enum AdminOrdersAction {
   getOrders = 'getAllDiscounts',
+  getOrdersDetails = 'getOrdersDetails',
 }
 
 export const getAdminAllOrdersAsync = createAsyncThunk(
@@ -30,5 +34,13 @@ export const getAdminAllOrdersAsync = createAsyncThunk(
     };
     const response = await apiAdminGetOrders(query);
     return response.result;
+  },
+);
+
+export const getAdminOrdersDetailAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_ORDERS}/${AdminOrdersAction.getOrdersDetails}`,
+  async (orderId: string) => {
+    const response = await apiAdminGetOrdersDetails(orderId);
+    return response.result.data;
   },
 );
