@@ -6,9 +6,8 @@ export interface ordersResponse {
   totalPrice: number;
   status: 'Pending' | 'Paid' | 'Shipped' | 'Completed' | 'Cancelled';
   paymentResult?: {
-    ecpayData?: {
-      ChoosePayment: string;
-    };
+    commonData?: any;
+    ecpayData?: any;
   };
   products: {
     name: string;

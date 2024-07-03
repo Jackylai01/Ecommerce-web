@@ -1,0 +1,46 @@
+.tables-container {
+  max-width: 100%;
+  overflow-x: auto;
+  position: relative;
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto; // Ensure that the table layout is responsive
+  }
+
+  &__header-cell,
+  &__body-cell {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__header-cell {
+    background-color: #f2f2f2;
+  }
+
+  &__sticky-column {
+    position: sticky;
+    left: 0;
+    background-color: white;
+    z-index: 10;
+    @include phone-width() {
+      min-width: 100px;
+      max-width: 100px;
+      white-space: normal;
+    }
+  }
+
+  &__gradient-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 100%;
+    pointer-events: none;
+  }
+}
