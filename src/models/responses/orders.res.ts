@@ -11,9 +11,20 @@ export interface ordersResponse {
     commonData?: any;
     ecpayData?: any;
   };
+  shippingAddress?: {
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+    phone: string;
+    email: string;
+  };
   products: {
     name: string;
   }[];
+  receiverName: string;
+  receiverCellPhone: string;
+  receiverEmail: string;
   createdAt: string;
 }
 

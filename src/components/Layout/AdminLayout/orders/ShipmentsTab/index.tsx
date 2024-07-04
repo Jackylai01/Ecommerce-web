@@ -145,7 +145,6 @@ const ShipmentsTab = () => {
                         <Badge colorScheme='gray'>無狀態</Badge>
                       )}
                     </Td>
-
                     <Td className='tables-container__body-cell'>
                       <Button
                         leftIcon={<FaTruck />}
