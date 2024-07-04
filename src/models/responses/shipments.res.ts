@@ -2,6 +2,7 @@ export interface ShipmentResponse {
   _id: string;
   orderId: {
     _id: string;
+    paymentResult: any;
   };
   LogisticsID: string;
   tempLogisticsID: string;

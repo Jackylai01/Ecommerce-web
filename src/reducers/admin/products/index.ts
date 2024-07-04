@@ -116,7 +116,6 @@ export const {
   setEditingProductId,
   resetEditingProductId,
   updateProductDetailDescription,
-
   resetProductId,
 } = productSlice.actions;
 export default productSlice.reducer;

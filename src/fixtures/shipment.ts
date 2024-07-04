@@ -42,6 +42,7 @@ export const logisticsSubTypeMap = {
 export const shipmentStatusMap = {
   Pending: '未出貨',
   Paid: '已出貨',
+  Created: '等待處理',
 };
 
 export type ShipmentStatus = keyof typeof shipmentStatusMap;
