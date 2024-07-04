@@ -11,6 +11,12 @@ const instance = axios.create({
   withCredentials: true,
 });
 
+export const formInstance = axios.create({
+  baseURL: BASE_API_URL,
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  withCredentials: true,
+});
+
 instance.interceptors.request.use(
   (config) => {
     const isAdmin = config.url?.includes(ADMIN_API_ROUTE);
@@ -26,6 +32,25 @@ instance.interceptors.request.use(
 
   (error) => {
     return Promise.reject(error);
+  },
+);
+
+formInstance.interceptors.response.use(
+  (response) => {
+    return {
+      res: response,
+      status: response.status,
+      result: response.data,
+    } as any;
+  },
+  async (error) => {
+    if (!error.isAxiosError) {
+      return Promise.reject(error);
+    }
+
+    return Promise.reject(
+      error.response?.data?.message || error.response?.status,
+    );
   },
 );
 

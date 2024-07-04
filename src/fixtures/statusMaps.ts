@@ -15,3 +15,9 @@ export const statusMap: { [key in Transaction['status']]: string } = {
   Completed: '完成',
   Cancelled: '取消',
 };
+
+export const tradeStatusMap: { [key: string]: string } = {
+  '0': '未付款',
+  '1': '已付款',
+  '10200095': '交易失敗',
+};

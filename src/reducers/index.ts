@@ -4,6 +4,7 @@ import customPage from './admin/custom-page';
 import dashBoardTheme from './admin/dash-board/themeSlice';
 import adminDiscount from './admin/discount';
 import adminOrders from './admin/orders';
+import adminPayments from './admin/payments';
 import adminProductsCategory from './admin/product-category';
 import adminProductsTags from './admin/product-tags';
 import adminProducts from './admin/products';
@@ -44,6 +45,7 @@ const appReducer = {
   publicPayments,
   adminOrders,
   adminShipment,
+  adminPayments,
 };
 
 export default appReducer;

@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Metadata } from '../../models/entities/shared/pagination';
-import instance from './instance';
+import instance, { formInstance } from './instance';
 
 type AxiosRequestHeaders = Record<string, string | number | boolean>;
 
@@ -33,6 +33,15 @@ export const deleteRequest = async <T>(
   headers?: AxiosRequestHeaders,
 ) => {
   return instance.delete<any, ApiResponse<T>>(url, { headers });
+};
+
+export const postFormRequest = async <T>(
+  url: string,
+  data?: any,
+  headers?: AxiosRequestHeaders,
+) => {
+  const requestData = new URLSearchParams(data);
+  return formInstance.post<any, ApiResponse<T>>(url, requestData, { headers });
 };
 
 export type ApiResponse<T> = {

@@ -12,23 +12,40 @@ import {
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import Pagination from '@components/Pagination';
 import { ShipmentStatus, shipmentStatusMap } from '@fixtures/shipment';
+import { tradeStatusMap } from '@fixtures/statusMaps';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { ShipmentResponse } from '@models/responses/shipments.res';
+import { getAdminEcPayQueryAsync } from '@reducers/admin/payments/actions';
 import { CreateShipmentsAsync } from '@reducers/admin/shipments/actions';
 import { useEffect, useRef, useState } from 'react';
-import { FaPrint, FaTruck } from 'react-icons/fa';
+import { FaTruck } from 'react-icons/fa';
 
 const ShipmentsTab = () => {
   const {
     pendingList: pendingShipments,
-    shipments,
     metadata: shipmentsMetadata,
     status: { createShipmentsLoading },
   } = useAppSelector((state) => state.adminShipment);
+  const { ecPayOrders } = useAppSelector((state) => state.adminPayments);
+
   const dispatch = useAppDispatch();
   const [isOverflowing, setIsOverflowing] = useState(false);
   const tableRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (pendingShipments) {
+      pendingShipments.forEach((shipment: ShipmentResponse) => {
+        if (shipment.orderId.paymentResult?.ecpayData.MerchantTradeNo) {
+          dispatch(
+            getAdminEcPayQueryAsync(
+              shipment.orderId.paymentResult.ecpayData.MerchantTradeNo,
+            ),
+          );
+        }
+      });
+    }
+  }, [dispatch, pendingShipments]);
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -74,6 +91,7 @@ const ShipmentsTab = () => {
                 <Th className='tables-container__header-cell'>承運商</Th>
                 <Th className='tables-container__header-cell'>收件人</Th>
                 <Th className='tables-container__header-cell'>出貨狀態</Th>
+                <Th className='tables-container__header-cell'>付款狀態</Th>
                 <Th className='tables-container__header-cell'>操作</Th>
               </Tr>
             </Thead>
@@ -98,6 +116,16 @@ const ShipmentsTab = () => {
                       </Badge>
                     </Td>
                     <Td className='tables-container__body-cell'>
+                      {ecPayOrders?.TradeStatus ? (
+                        <Badge colorScheme='blue'>
+                          {tradeStatusMap[ecPayOrders?.TradeStatus]}
+                        </Badge>
+                      ) : (
+                        <Badge colorScheme='gray'>無狀態</Badge>
+                      )}
+                    </Td>
+
+                    <Td className='tables-container__body-cell'>
                       <Button
                         leftIcon={<FaTruck />}
                         colorScheme='green'
@@ -106,14 +134,6 @@ const ShipmentsTab = () => {
                         onClick={() => handleCreateShipment(shipment)}
                       >
                         建立正式物流訂單
-                      </Button>
-                      <Button
-                        leftIcon={<FaPrint />}
-                        colorScheme='blue'
-                        size='sm'
-                        m={1}
-                      >
-                        列印物流托運單
                       </Button>
                     </Td>
                   </Tr>

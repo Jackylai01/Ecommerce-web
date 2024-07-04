@@ -29,4 +29,5 @@ export enum ReducerName {
   CLIENT_CART = 'clientCart',
   ADMIN_ORDERS = 'adminOrders',
   ADMIN_SHIPMENTS = 'adminShipments',
+  ADMIN_PAYMENTS = 'adminPayments',
 }
