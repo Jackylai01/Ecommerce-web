@@ -4,7 +4,10 @@ import PrintShipments from '@components/Layout/AdminLayout/orders/PrintShipments
 import ShipmentsTab from '@components/Layout/AdminLayout/orders/ShipmentsTab';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { getAdminAllOrdersAsync } from '@reducers/admin/orders/actions';
-import { getPendingShipmentsAsync } from '@reducers/admin/shipments/actions';
+import {
+  getFormalShipmentsAsync,
+  getPendingShipmentsAsync,
+} from '@reducers/admin/shipments/actions';
 import { NextPage } from 'next';
 import { useEffect } from 'react';
 
@@ -14,6 +17,7 @@ const FinanceManagement: NextPage = () => {
   useEffect(() => {
     dispatch(getAdminAllOrdersAsync({ page: 1, limit: 10 }));
     dispatch(getPendingShipmentsAsync({ page: 1, limit: 10 }));
+    dispatch(getFormalShipmentsAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
   return (

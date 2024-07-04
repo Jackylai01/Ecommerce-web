@@ -8,6 +8,7 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import Pagination from '@components/Pagination';
@@ -17,7 +18,11 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { ShipmentResponse } from '@models/responses/shipments.res';
 import { getAdminEcPayQueryAsync } from '@reducers/admin/payments/actions';
-import { createShipmentsAsync } from '@reducers/admin/shipments/actions';
+import {
+  createShipmentsAsync,
+  getFormalShipmentsAsync,
+  getPendingShipmentsAsync,
+} from '@reducers/admin/shipments/actions';
 import { useEffect, useRef, useState } from 'react';
 import { FaTruck } from 'react-icons/fa';
 
@@ -25,13 +30,14 @@ const ShipmentsTab = () => {
   const {
     pendingList: pendingShipments,
     metadata: shipmentsMetadata,
-    status: { createShipmentsLoading },
+    status: { createShipmentsLoading, createShipmentsSuccess },
   } = useAppSelector((state) => state.adminShipment);
   const { ecPayOrders } = useAppSelector((state) => state.adminPayments);
 
   const dispatch = useAppDispatch();
   const [isOverflowing, setIsOverflowing] = useState(false);
   const tableRef = useRef<HTMLDivElement | null>(null);
+  const toast = useToast();
 
   useEffect(() => {
     if (pendingShipments) {
@@ -71,6 +77,21 @@ const ShipmentsTab = () => {
       }),
     );
   };
+
+  useEffect(() => {
+    if (createShipmentsSuccess) {
+      dispatch(getPendingShipmentsAsync({ page: 1, limit: 10 }));
+      dispatch(getFormalShipmentsAsync({ page: 1, limit: 10 }));
+      toast({
+        title: '建立成功',
+        description: '正式物流訂單已成功建立。',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right',
+      });
+    }
+  }, [dispatch, createShipmentsSuccess, toast]);
 
   return (
     <LoadingLayout isLoading={createShipmentsLoading}>

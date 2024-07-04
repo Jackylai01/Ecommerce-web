@@ -18,10 +18,7 @@ import {
 } from '@fixtures/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import {
-  getFormalShipmentsAsync,
-  printTradeShipmentsAsync,
-} from '@reducers/admin/shipments/actions';
+import { printTradeShipmentsAsync } from '@reducers/admin/shipments/actions';
 import { useEffect, useRef, useState } from 'react';
 
 const PrintShipments = () => {
@@ -32,10 +29,6 @@ const PrintShipments = () => {
 
   const [isOverflowing, setIsOverflowing] = useState(false);
   const tableRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    dispatch(getFormalShipmentsAsync({ page: 1, limit: 10 }));
-  }, [dispatch]);
 
   useEffect(() => {
     const checkOverflow = () => {
