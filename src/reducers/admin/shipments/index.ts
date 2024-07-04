@@ -7,20 +7,31 @@ import { ShipmentResponse } from '@models/responses/shipments.res';
 import { createSlice } from '@reduxjs/toolkit';
 import {
   AdminShipmentActions,
-  CreateShipmentsAsync,
+  createShipmentsAsync,
+  getFormalShipmentsAsync,
   getPendingShipmentsAsync,
+  printTradeShipmentsAsync,
+  queryLogisticsAsync,
 } from './actions';
 
 type AdminShipmentState = ApiState<AdminShipmentActions> & {
   pendingList: ShipmentResponse[] | null;
+  formalList: ShipmentResponse[] | null;
+  FormalMetadata: Metadata | null;
   metadata: Metadata | null;
   shipments: any;
+  printTradeShipments: any;
+  queryLogistics: any;
 };
 
 const initialState: AdminShipmentState = {
   pendingList: null,
+  formalList: null,
   shipments: null,
+  queryLogistics: null,
+  FormalMetadata: null,
   metadata: null,
+  printTradeShipments: null,
   ...newApiState<AdminShipmentState>(AdminShipmentActions),
 };
 
@@ -35,8 +46,18 @@ export const adminShipmentSlice = createSlice({
       state.pendingList = action.payload.data;
       state.metadata = action.payload.metadata;
     });
-    builder.addCase(CreateShipmentsAsync.fulfilled, (state, action) => {
+    builder.addCase(createShipmentsAsync.fulfilled, (state, action) => {
       state.shipments = action.payload;
+    });
+    builder.addCase(queryLogisticsAsync.fulfilled, (state, action) => {
+      state.queryLogistics = action.payload;
+    });
+    builder.addCase(getFormalShipmentsAsync.fulfilled, (state, action) => {
+      state.formalList = action.payload.data;
+      state.FormalMetadata = action.payload.metadata;
+    });
+    builder.addCase(printTradeShipmentsAsync.fulfilled, (state, action) => {
+      state.printTradeShipments = action.payload;
     });
     asyncMatcher(builder, ReducerName.ADMIN_SHIPMENTS);
   },

@@ -1,5 +1,6 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import OrdersTab from '@components/Layout/AdminLayout/orders/OrdersTab';
+import PrintShipments from '@components/Layout/AdminLayout/orders/PrintShipments';
 import ShipmentsTab from '@components/Layout/AdminLayout/orders/ShipmentsTab';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { getAdminAllOrdersAsync } from '@reducers/admin/orders/actions';
@@ -22,6 +23,7 @@ const FinanceManagement: NextPage = () => {
           <TabList>
             <Tab>所有訂單</Tab>
             <Tab>待出貨</Tab>
+            <Tab>列印出貨單</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
@@ -29,6 +31,9 @@ const FinanceManagement: NextPage = () => {
             </TabPanel>
             <TabPanel>
               <ShipmentsTab />
+            </TabPanel>
+            <TabPanel>
+              <PrintShipments />
             </TabPanel>
           </TabPanels>
         </Tabs>

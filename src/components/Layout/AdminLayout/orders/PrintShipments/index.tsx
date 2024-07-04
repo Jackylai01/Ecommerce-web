@@ -11,41 +11,31 @@ import {
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import Pagination from '@components/Pagination';
-import { ShipmentStatus, shipmentStatusMap } from '@fixtures/shipment';
-import { tradeStatusMap } from '@fixtures/statusMaps';
+import {
+  ShipmentStatus,
+  getStatusShipmentColorScheme,
+  shipmentStatusMap,
+} from '@fixtures/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { ShipmentResponse } from '@models/responses/shipments.res';
-import { getAdminEcPayQueryAsync } from '@reducers/admin/payments/actions';
-import { createShipmentsAsync } from '@reducers/admin/shipments/actions';
+import {
+  getFormalShipmentsAsync,
+  printTradeShipmentsAsync,
+} from '@reducers/admin/shipments/actions';
 import { useEffect, useRef, useState } from 'react';
-import { FaTruck } from 'react-icons/fa';
 
-const ShipmentsTab = () => {
-  const {
-    pendingList: pendingShipments,
-    metadata: shipmentsMetadata,
-    status: { createShipmentsLoading },
-  } = useAppSelector((state) => state.adminShipment);
-  const { ecPayOrders } = useAppSelector((state) => state.adminPayments);
-
+const PrintShipments = () => {
   const dispatch = useAppDispatch();
+  const { formalList, FormalMetadata, printTradeShipments } = useAppSelector(
+    (state) => state.adminShipment,
+  );
+
   const [isOverflowing, setIsOverflowing] = useState(false);
   const tableRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (pendingShipments) {
-      pendingShipments.forEach((shipment: ShipmentResponse) => {
-        if (shipment.orderId.paymentResult?.ecpayData.MerchantTradeNo) {
-          dispatch(
-            getAdminEcPayQueryAsync(
-              shipment.orderId.paymentResult.ecpayData.MerchantTradeNo,
-            ),
-          );
-        }
-      });
-    }
-  }, [dispatch, pendingShipments]);
+    dispatch(getFormalShipmentsAsync({ page: 1, limit: 10 }));
+  }, [dispatch]);
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -61,19 +51,25 @@ const ShipmentsTab = () => {
     return () => window.removeEventListener('resize', checkOverflow);
   }, []);
 
-  const handleCreateShipment = (shipment: ShipmentResponse) => {
-    dispatch(
-      createShipmentsAsync({
-        tempLogisticsID: shipment.tempLogisticsID,
-        merchantTradeNo:
-          shipment.orderId.paymentResult?.ecpayData.MerchantTradeNo,
-        orderId: shipment.orderId._id,
-      }),
-    );
+  const handlePrint = async (LogisticsID: string, LogisticsSubType: any) => {
+    dispatch(printTradeShipmentsAsync({ LogisticsID, LogisticsSubType }));
   };
 
+  useEffect(() => {
+    if (printTradeShipments) {
+      const printWindow = window.open('', '_blank', 'width=800,height=600');
+      if (printWindow) {
+        printWindow.document.write(printTradeShipments);
+        printWindow.document.close();
+        printWindow.focus();
+      } else {
+        alert('無法打開新窗口。請檢查您的瀏覽器設定允許彈出窗口。');
+      }
+    }
+  }, [printTradeShipments]);
+
   return (
-    <LoadingLayout isLoading={createShipmentsLoading}>
+    <LoadingLayout isLoading={false}>
       <Box
         bg='white'
         borderRadius='16px'
@@ -91,13 +87,12 @@ const ShipmentsTab = () => {
                 <Th className='tables-container__header-cell'>承運商</Th>
                 <Th className='tables-container__header-cell'>收件人</Th>
                 <Th className='tables-container__header-cell'>出貨狀態</Th>
-                <Th className='tables-container__header-cell'>付款狀態</Th>
                 <Th className='tables-container__header-cell'>操作</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {pendingShipments &&
-                pendingShipments.map((shipment: ShipmentResponse) => (
+              {formalList &&
+                formalList.map((shipment) => (
                   <Tr key={shipment._id}>
                     <Td className='tables-container__body-cell tables-container__sticky-column'>
                       {shipment.tempLogisticsID}
@@ -109,31 +104,29 @@ const ShipmentsTab = () => {
                       {shipment.receiverName}
                     </Td>
                     <Td className='tables-container__body-cell'>
-                      <Badge colorScheme='orange'>
+                      <Badge
+                        colorScheme={getStatusShipmentColorScheme(
+                          shipment.shipmentStatus,
+                        )}
+                      >
                         {shipmentStatusMap[
                           shipment.shipmentStatus as ShipmentStatus
                         ] || shipment.shipmentStatus}
                       </Badge>
                     </Td>
                     <Td className='tables-container__body-cell'>
-                      {ecPayOrders?.TradeStatus ? (
-                        <Badge colorScheme='blue'>
-                          {tradeStatusMap[ecPayOrders?.TradeStatus]}
-                        </Badge>
-                      ) : (
-                        <Badge colorScheme='gray'>無狀態</Badge>
-                      )}
-                    </Td>
-
-                    <Td className='tables-container__body-cell'>
                       <Button
-                        leftIcon={<FaTruck />}
-                        colorScheme='green'
+                        colorScheme='blue'
                         size='sm'
                         m={1}
-                        onClick={() => handleCreateShipment(shipment)}
+                        onClick={() =>
+                          handlePrint(
+                            shipment.LogisticsID,
+                            shipment.logisticsSubType,
+                          )
+                        }
                       >
-                        建立正式物流訂單
+                        列印
                       </Button>
                     </Td>
                   </Tr>
@@ -144,10 +137,10 @@ const ShipmentsTab = () => {
             <Box className='tables-container__gradient-overlay' />
           )}
         </Box>
-        {shipmentsMetadata && <Pagination metadata={shipmentsMetadata} />}
+        {FormalMetadata && <Pagination metadata={FormalMetadata} />}
       </Box>
     </LoadingLayout>
   );
 };
 
-export default ShipmentsTab;
+export default PrintShipments;

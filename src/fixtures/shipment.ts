@@ -39,6 +39,19 @@ export const logisticsSubTypeMap = {
   POST: '中華郵政',
 };
 
+export const getStatusShipmentColorScheme = (status: any) => {
+  switch (status) {
+    case 'Pending':
+      return 'yellow';
+    case 'Paid':
+      return 'blue';
+    case 'Created':
+      return 'green';
+    default:
+      return 'gray';
+  }
+};
+
 export const shipmentStatusMap = {
   Pending: '未出貨',
   Paid: '已出貨',

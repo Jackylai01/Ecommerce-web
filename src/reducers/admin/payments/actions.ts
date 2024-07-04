@@ -10,7 +10,6 @@ export const getAdminEcPayQueryAsync = createAsyncThunk(
   `${ReducerName.ADMIN_PAYMENTS}/${AdminEcPayOrdersAction.getEcPayOrders}`,
   async (MerchantTradeNo: string) => {
     const response = await apiGetQueryECPayOrder(MerchantTradeNo);
-
     return response.result.data;
   },
 );
