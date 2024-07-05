@@ -12,6 +12,7 @@ import {
   getPendingShipmentsAsync,
   printTradeShipmentsAsync,
   queryLogisticsAsync,
+  updateTempTradeAsync,
 } from './actions';
 
 type AdminShipmentState = ApiState<AdminShipmentActions> & {
@@ -22,6 +23,7 @@ type AdminShipmentState = ApiState<AdminShipmentActions> & {
   shipments: any;
   printTradeShipments: any;
   queryLogistics: any;
+  updateTempTrade: any;
 };
 
 const initialState: AdminShipmentState = {
@@ -32,6 +34,7 @@ const initialState: AdminShipmentState = {
   FormalMetadata: null,
   metadata: null,
   printTradeShipments: null,
+  updateTempTrade: null,
   ...newApiState<AdminShipmentState>(AdminShipmentActions),
 };
 
@@ -42,6 +45,9 @@ export const adminShipmentSlice = createSlice({
     resetShipmentState: () => initialState,
   },
   extraReducers: (builder) => {
+    builder.addCase(updateTempTradeAsync.fulfilled, (state, action) => {
+      state.updateTempTrade = action.payload;
+    });
     builder.addCase(getPendingShipmentsAsync.fulfilled, (state, action) => {
       state.pendingList = action.payload.data;
       state.metadata = action.payload.metadata;

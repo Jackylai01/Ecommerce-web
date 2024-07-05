@@ -9,6 +9,12 @@ import {
 } from '@services/shared/api';
 
 /**
+ * 更新臨時物流資訊
+ */
+export const apiUpdateTempTrade = async (data: any) =>
+  postRequest<ApiResult<any>>('/zigong/shipment/update-temp-trade', data);
+
+/**
  * 獲取未出貨的訂單-資料庫獲取
  */
 export const apiGetPendingShipments = async (query: PagingQuery) =>
