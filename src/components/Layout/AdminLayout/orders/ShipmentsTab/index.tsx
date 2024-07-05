@@ -25,12 +25,18 @@ import {
 } from '@reducers/admin/shipments/actions';
 import { useEffect, useRef, useState } from 'react';
 import { FaTruck } from 'react-icons/fa';
+import { useAdminColorMode } from 'src/context/colorMode';
 
 const ShipmentsTab = () => {
   const {
     pendingList: pendingShipments,
     metadata: shipmentsMetadata,
-    status: { createShipmentsLoading, createShipmentsSuccess },
+    status: {
+      createShipmentsLoading,
+      createShipmentsSuccess,
+      createShipmentsFailed,
+    },
+    error: { createShipmentsError },
   } = useAppSelector((state) => state.adminShipment);
   const { ecPayOrders } = useAppSelector((state) => state.adminPayments);
 
@@ -38,6 +44,10 @@ const ShipmentsTab = () => {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const tableRef = useRef<HTMLDivElement | null>(null);
   const toast = useToast();
+
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
 
   useEffect(() => {
     if (pendingShipments) {
@@ -90,13 +100,22 @@ const ShipmentsTab = () => {
         isClosable: true,
         position: 'top-right',
       });
+    } else if (createShipmentsError) {
+      toast({
+        title: '建立失敗',
+        description: `正式物流訂單建立失敗。${createShipmentsError}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right',
+      });
     }
   }, [dispatch, createShipmentsSuccess, toast]);
 
   return (
     <LoadingLayout isLoading={createShipmentsLoading}>
       <Box
-        bg='white'
+        bg={bgColor}
         borderRadius='16px'
         boxShadow='md'
         overflow='hidden'
@@ -104,39 +123,93 @@ const ShipmentsTab = () => {
       >
         <Box className='tables-container' ref={tableRef}>
           <Table className='tables-container__table' variant='simple'>
-            <Thead bg='gray.50'>
+            <Thead bg={bgColor}>
               <Tr>
-                <Th className='tables-container__header-cell tables-container__sticky-column'>
-                  訂單ID
+                <Th
+                  className='tables-container__header-cell tables-container__sticky-column'
+                  bg={bgColor}
+                  color={textColor}
+                >
+                  物流臨時訂單ID
                 </Th>
-                <Th className='tables-container__header-cell'>承運商</Th>
-                <Th className='tables-container__header-cell'>收件人</Th>
-                <Th className='tables-container__header-cell'>出貨狀態</Th>
-                <Th className='tables-container__header-cell'>付款狀態</Th>
-                <Th className='tables-container__header-cell'>操作</Th>
+                <Th
+                  className='tables-container__header-cell'
+                  bg={bgColor}
+                  color={textColor}
+                >
+                  承運商
+                </Th>
+                <Th
+                  className='tables-container__header-cell'
+                  bg={bgColor}
+                  color={textColor}
+                >
+                  收件人
+                </Th>
+                <Th
+                  className='tables-container__header-cell'
+                  bg={bgColor}
+                  color={textColor}
+                >
+                  出貨狀態
+                </Th>
+                <Th
+                  className='tables-container__header-cell'
+                  bg={bgColor}
+                  color={textColor}
+                >
+                  付款狀態
+                </Th>
+                <Th
+                  className='tables-container__header-cell'
+                  bg={bgColor}
+                  color={textColor}
+                >
+                  操作
+                </Th>
               </Tr>
             </Thead>
             <Tbody>
               {pendingShipments &&
                 pendingShipments.map((shipment: ShipmentResponse) => (
                   <Tr key={shipment._id}>
-                    <Td className='tables-container__body-cell tables-container__sticky-column'>
+                    <Td
+                      className='tables-container__body-cell tables-container__sticky-column'
+                      bg={bgColor}
+                      color={textColor}
+                    >
                       {shipment.tempLogisticsID}
                     </Td>
-                    <Td className='tables-container__body-cell'>
+                    <Td
+                      className='tables-container__body-cell'
+                      bg={bgColor}
+                      color={textColor}
+                    >
                       {shipment.carrier}
                     </Td>
-                    <Td className='tables-container__body-cell'>
+                    <Td
+                      className='tables-container__body-cell'
+                      bg={bgColor}
+                      color={textColor}
+                    >
                       {shipment.receiverName}
                     </Td>
-                    <Td className='tables-container__body-cell'>
+                    <Td
+                      className='tables-container__body-cell'
+                      bg={bgColor}
+                      color={textColor}
+                    >
                       <Badge colorScheme='orange'>
                         {shipmentStatusMap[
                           shipment.shipmentStatus as ShipmentStatus
                         ] || shipment.shipmentStatus}
                       </Badge>
                     </Td>
-                    <Td className='tables-container__body-cell'>
+                    <Td
+                      className='tables-container__body-cell'
+                      bg={bgColor}
+                      color={textColor}
+                    >
                       {ecPayOrders?.TradeStatus ? (
                         <Badge colorScheme='blue'>
                           {tradeStatusMap[ecPayOrders?.TradeStatus]}
@@ -145,7 +218,11 @@ const ShipmentsTab = () => {
                         <Badge colorScheme='gray'>無狀態</Badge>
                       )}
                     </Td>
-                    <Td className='tables-container__body-cell'>
+                    <Td
+                      className='tables-container__body-cell'
+                      bg={bgColor}
+                      color={textColor}
+                    >
                       <Button
                         leftIcon={<FaTruck />}
                         colorScheme='green'

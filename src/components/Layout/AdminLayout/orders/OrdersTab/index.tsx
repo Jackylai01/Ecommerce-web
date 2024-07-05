@@ -28,6 +28,7 @@ import {
 } from '@reducers/admin/orders/actions';
 import { useEffect, useRef, useState } from 'react';
 import { FaFilter, FaPlus } from 'react-icons/fa';
+import { useAdminColorMode } from 'src/context/colorMode';
 import OrdersDetail from '../OrdersDetail';
 
 const OrdersTab = () => {
@@ -49,6 +50,11 @@ const OrdersTab = () => {
   });
   const tableRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useAppDispatch();
+
+  const { colorMode } = useAdminColorMode();
+  const textColor = colorMode === 'light' ? 'gray.700' : 'white';
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
+  const priceColor = colorMode === 'light' ? 'black' : 'white';
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -114,20 +120,14 @@ const OrdersTab = () => {
   };
 
   return (
-    <Box
-      bg='white'
-      borderRadius='16px'
-      boxShadow='md'
-      overflow='hidden'
-      minH='450px'
-    >
+    <Box borderRadius='16px' boxShadow='md' overflow='hidden' minH='450px'>
       <Flex justify='flex-end' align='center' mb='8'>
         <Button leftIcon={<FaPlus />} colorScheme='purple' size='lg'>
           新增交易
         </Button>
       </Flex>
       <Box
-        bg='white'
+        bg={bgColor}
         borderRadius='16px'
         boxShadow='md'
         p='6'
@@ -139,12 +139,12 @@ const OrdersTab = () => {
           fontSize='xl'
           fontWeight='semibold'
           mb='4'
-          color='gray.700'
+          color={textColor}
         >
           <FaFilter className='mr-2 text-indigo-600' /> 篩選器
         </Heading>
         <Grid templateColumns={{ base: '1fr', md: 'repeat(4, 1fr)' }} gap='6'>
-          <Box position='relative'>
+          <Box position='relative' color={textColor}>
             <Input
               type='date'
               name='startDate'
@@ -154,7 +154,7 @@ const OrdersTab = () => {
               pl='10'
             />
           </Box>
-          <Box position='relative'>
+          <Box position='relative' color={textColor}>
             <Input
               type='date'
               name='endDate'
@@ -164,9 +164,14 @@ const OrdersTab = () => {
               pl='10'
             />
           </Box>
-          <Box position='relative'>
+          <Box position='relative' color={textColor}>
             <InputGroup>
-              <InputLeftAddon children='最低金額' />
+              <InputLeftAddon
+                children='最低金額'
+                bg={priceColor}
+                color={bgColor}
+                border='10px'
+              />
               <Input
                 type='number'
                 name='minPrice'
@@ -176,9 +181,14 @@ const OrdersTab = () => {
               />
             </InputGroup>
           </Box>
-          <Box position='relative'>
+          <Box position='relative' color={textColor}>
             <InputGroup>
-              <InputLeftAddon children='最高金額' />
+              <InputLeftAddon
+                children='最高金額'
+                color={bgColor}
+                bg={priceColor}
+                border='10px'
+              />
               <Input
                 type='number'
                 name='maxPrice'
@@ -188,7 +198,7 @@ const OrdersTab = () => {
               />
             </InputGroup>
           </Box>
-          <Box position='relative' w='100%'>
+          <Box position='relative' w='100%' color={textColor}>
             <Select
               name='status'
               placeholder='全部狀態'
@@ -216,26 +226,81 @@ const OrdersTab = () => {
       </Box>
       <Box className='tables-container' ref={tableRef}>
         <Table className='tables-container__table' variant='simple'>
-          <Thead bg='gray.50'>
+          <Thead bg={bgColor}>
             <Tr>
-              <Th className='tables-container__header-cell tables-container__sticky-column'>
+              <Th
+                className='tables-container__header-cell tables-container__sticky-column'
+                bg={bgColor}
+                color={textColor}
+              >
                 用戶
               </Th>
-              <Th className='tables-container__header-cell'>訂單編號</Th>
-              <Th className='tables-container__header-cell'>總金額</Th>
-              <Th className='tables-container__header-cell'>對帳狀態</Th>
-              <Th className='tables-container__header-cell'>收件地址</Th>
-              <Th className='tables-container__header-cell'>收件人</Th>
-              <Th className='tables-container__header-cell'>收件人手機</Th>
-              <Th className='tables-container__header-cell'>收件人信箱</Th>
-              <Th className='tables-container__header-cell'>操作</Th>
+              <Th
+                className='tables-container__header-cell'
+                bg={bgColor}
+                color={textColor}
+              >
+                訂單編號
+              </Th>
+              <Th
+                className='tables-container__header-cell'
+                bg={bgColor}
+                color={textColor}
+              >
+                總金額
+              </Th>
+              <Th
+                className='tables-container__header-cell'
+                bg={bgColor}
+                color={textColor}
+              >
+                訂單狀態
+              </Th>
+              <Th
+                className='tables-container__header-cell'
+                bg={bgColor}
+                color={textColor}
+              >
+                收件地址
+              </Th>
+              <Th
+                className='tables-container__header-cell'
+                bg={bgColor}
+                color={textColor}
+              >
+                收件人
+              </Th>
+              <Th
+                className='tables-container__header-cell'
+                bg={bgColor}
+                color={textColor}
+              >
+                收件人手機
+              </Th>
+              <Th
+                className='tables-container__header-cell'
+                bg={bgColor}
+                color={textColor}
+              >
+                收件人信箱
+              </Th>
+              <Th
+                className='tables-container__header-cell'
+                bg={bgColor}
+                color={textColor}
+              >
+                操作
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
             {list &&
               list.map((order) => (
-                <Tr key={order._id}>
-                  <Td className='tables-container__body-cell tables-container__sticky-column'>
+                <Tr key={order._id} color={textColor}>
+                  <Td
+                    className='tables-container__body-cell tables-container__sticky-column'
+                    bg={bgColor}
+                  >
                     {order.user.username}
                   </Td>
                   <Td className='tables-container__body-cell'>

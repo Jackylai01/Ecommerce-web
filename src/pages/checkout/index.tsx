@@ -74,6 +74,7 @@ const CheckoutPage: NextPage = () => {
     taxId: '', // 統一編號
     donateCode: '', // 捐贈碼
   });
+  const [isOrderButtonDisabled, setIsOrderButtonDisabled] = useState(false);
 
   const { checkout } = useAppSelector((state) => state.clientCart);
   const {
@@ -162,6 +163,7 @@ const CheckoutPage: NextPage = () => {
       });
       return;
     }
+    setIsOrderButtonDisabled(true);
     const orderData = {
       userId: userInfo._id,
       products: checkout.map((item) => ({
@@ -226,6 +228,7 @@ const CheckoutPage: NextPage = () => {
         status: 'error',
         isClosable: true,
       });
+      setIsOrderButtonDisabled(false);
     }
   }, [createOrderSuccess, createOrderFailed, onOpen, toast]);
 
@@ -630,6 +633,7 @@ const CheckoutPage: NextPage = () => {
                   _active={{ bgColor: 'red.500' }}
                   bg='red.300'
                   onClick={handleOrderSubmit}
+                  disabled={isOrderButtonDisabled}
                 >
                   Create Order
                 </Button>
