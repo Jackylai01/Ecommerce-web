@@ -43,8 +43,14 @@ export const createShipmentsAsync = createAsyncThunk(
 
 export const queryLogisticsAsync = createAsyncThunk(
   `${ReducerName.ADMIN_SHIPMENTS}/${AdminShipmentActions.queryLogistics}`,
-  async (data: any) => {
-    const response = await apiQueryLogistics(data);
+  async ({
+    logisticsID,
+    merchantTradeNo,
+  }: {
+    logisticsID: string;
+    merchantTradeNo: string;
+  }) => {
+    const response = await apiQueryLogistics(logisticsID, merchantTradeNo);
     return response.result.data;
   },
 );

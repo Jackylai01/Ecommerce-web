@@ -30,11 +30,14 @@ export const apiCreateShipments = async (data: any) =>
  * 查詢單一正式訂單-綠界獲取
  */
 
-export const apiQueryLogistics = async (data: any) =>
-  postRequest<ApiResult<any>>(
-    '/zigong/shipment/query-logistics-trade-info',
-    data,
-  );
+export const apiQueryLogistics = async (
+  logisticsID: string,
+  merchantTradeNo: string,
+) =>
+  postRequest<ApiResult<any>>('/zigong/shipment/query-logistics-trade-info', {
+    logisticsID,
+    merchantTradeNo,
+  });
 
 /**
  * 查全部正式訂單列表-資料庫獲取-由 LogisticsID 判定

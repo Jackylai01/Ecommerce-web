@@ -157,10 +157,7 @@ const LogisticsPages: NextPage = () => {
             <Tabs>
               <TabList>
                 <Tab>訂單概覽</Tab>
-                <Tab>庫存管理</Tab>
                 <Tab>退貨管理</Tab>
-                <Tab>付款狀態</Tab>
-                <Tab>訂單狀態更新</Tab>
               </TabList>
 
               <TabPanels>
@@ -217,54 +214,6 @@ const LogisticsPages: NextPage = () => {
                     </Tbody>
                   </Table>
                 </TabPanel>
-
-                {/* 庫存管理 */}
-                <TabPanel>
-                  <Table variant='simple' size='lg'>
-                    <Thead>
-                      <Tr>
-                        <Th>商品編號</Th>
-                        <Th>名稱</Th>
-                        <Th>庫存</Th>
-                        <Th>更新時間</Th>
-                        <Th>操作</Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      <Tr>
-                        <Td>#9876</Td>
-                        <Td>商品A</Td>
-                        <Td>50</Td>
-                        <Td>2023-07-02 14:30</Td>
-                        <Td>
-                          <Button
-                            bg='linear-gradient(135deg, #3a5eff, #6687ff)'
-                            color='white'
-                            borderRadius='25px'
-                          >
-                            詳情
-                          </Button>
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td>#5432</Td>
-                        <Td>商品B</Td>
-                        <Td>30</Td>
-                        <Td>2023-07-01 10:00</Td>
-                        <Td>
-                          <Button
-                            bg='linear-gradient(135deg, #3a5eff, #6687ff)'
-                            color='white'
-                            borderRadius='25px'
-                          >
-                            詳情
-                          </Button>
-                        </Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </TabPanel>
-
                 {/* 退貨管理 */}
                 <TabPanel>
                   <Table variant='simple' size='lg'>
@@ -313,110 +262,6 @@ const LogisticsPages: NextPage = () => {
                             borderRadius='25px'
                           >
                             詳情
-                          </Button>
-                        </Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </TabPanel>
-
-                {/* 付款狀態 */}
-                <TabPanel>
-                  <Table variant='simple' size='lg'>
-                    <Thead>
-                      <Tr>
-                        <Th>訂單編號</Th>
-                        <Th>付款狀態</Th>
-                        <Th>付款日期</Th>
-                        <Th>操作</Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      <Tr>
-                        <Td>#8765</Td>
-                        <Td>
-                          <Badge colorScheme='green' p='1' borderRadius='20px'>
-                            已付款
-                          </Badge>
-                        </Td>
-                        <Td>2023-07-03 12:00</Td>
-                        <Td>
-                          <Button
-                            bg='linear-gradient(135deg, #3a5eff, #6687ff)'
-                            color='white'
-                            borderRadius='25px'
-                          >
-                            查看詳情
-                          </Button>
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td>#6543</Td>
-                        <Td>
-                          <Badge colorScheme='yellow' p='1' borderRadius='20px'>
-                            待付款
-                          </Badge>
-                        </Td>
-                        <Td>2023-07-02 14:30</Td>
-                        <Td>
-                          <Button
-                            bg='linear-gradient(135deg, #3a5eff, #6687ff)'
-                            color='white'
-                            borderRadius='25px'
-                          >
-                            查看詳情
-                          </Button>
-                        </Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </TabPanel>
-
-                {/* 訂單狀態更新 */}
-                <TabPanel>
-                  <Table variant='simple' size='lg'>
-                    <Thead>
-                      <Tr>
-                        <Th>訂單編號</Th>
-                        <Th>狀態</Th>
-                        <Th>更新時間</Th>
-                        <Th>操作</Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      <Tr>
-                        <Td>#9876</Td>
-                        <Td>
-                          <Badge colorScheme='green' p='1' borderRadius='20px'>
-                            已送達
-                          </Badge>
-                        </Td>
-                        <Td>2023-07-03 09:30</Td>
-                        <Td>
-                          <Button
-                            bg='linear-gradient(135deg, #3a5eff, #6687ff)'
-                            color='white'
-                            borderRadius='25px'
-                          >
-                            更新
-                          </Button>
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td>#5432</Td>
-                        <Td>
-                          <Badge colorScheme='yellow' p='1' borderRadius='20px'>
-                            運送中
-                          </Badge>
-                        </Td>
-                        <Td>2023-07-02 16:00</Td>
-                        <Td>
-                          <Button
-                            bg='linear-gradient(135deg, #3a5eff, #6687ff)'
-                            color='white'
-                            borderRadius='25px'
-                          >
-                            更新
                           </Button>
                         </Td>
                       </Tr>

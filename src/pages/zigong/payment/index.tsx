@@ -39,7 +39,7 @@ const FinanceManagement: NextPage = () => {
           <TabList color={bgColor}>
             <Tab>所有訂單</Tab>
             <Tab>待出貨</Tab>
-            <Tab>列印出貨單</Tab>
+            <Tab>物流管理</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>

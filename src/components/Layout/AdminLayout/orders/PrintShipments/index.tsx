@@ -2,12 +2,20 @@ import {
   Badge,
   Box,
   Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import Pagination from '@components/Pagination';
@@ -18,15 +26,17 @@ import {
 } from '@fixtures/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { printTradeShipmentsAsync } from '@reducers/admin/shipments/actions';
+import {
+  printTradeShipmentsAsync,
+  queryLogisticsAsync,
+} from '@reducers/admin/shipments/actions';
 import { useEffect, useRef, useState } from 'react';
 
 const PrintShipments = () => {
   const dispatch = useAppDispatch();
-  const { formalList, FormalMetadata, printTradeShipments } = useAppSelector(
-    (state) => state.adminShipment,
-  );
-
+  const { formalList, FormalMetadata, printTradeShipments, queryLogistics } =
+    useAppSelector((state) => state.adminShipment);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isOverflowing, setIsOverflowing] = useState(false);
   const tableRef = useRef<HTMLDivElement | null>(null);
 
@@ -46,6 +56,14 @@ const PrintShipments = () => {
 
   const handlePrint = async (LogisticsID: string, LogisticsSubType: any) => {
     dispatch(printTradeShipmentsAsync({ LogisticsID, LogisticsSubType }));
+  };
+
+  const handleQueryLogistics = async (
+    logisticsID: string,
+    merchantTradeNo: string,
+  ) => {
+    dispatch(queryLogisticsAsync({ logisticsID, merchantTradeNo }));
+    onOpen();
   };
 
   useEffect(() => {
@@ -121,6 +139,20 @@ const PrintShipments = () => {
                       >
                         列印
                       </Button>
+                      <Button
+                        colorScheme='teal'
+                        size='sm'
+                        m={1}
+                        onClick={() =>
+                          handleQueryLogistics(
+                            shipment.LogisticsID,
+                            shipment.orderId.paymentResult.ecpayData
+                              .MerchantTradeNo,
+                          )
+                        }
+                      >
+                        查看物流狀態
+                      </Button>
                     </Td>
                   </Tr>
                 ))}
@@ -132,6 +164,30 @@ const PrintShipments = () => {
         </Box>
         {FormalMetadata && <Pagination metadata={FormalMetadata} />}
       </Box>
+      <Drawer isOpen={isOpen} placement='right' onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>物流狀態</DrawerHeader>
+          <DrawerBody>
+            {queryLogistics ? (
+              <Box>
+                <p>Logistics ID: {queryLogistics.LogisticsID}</p>
+                <p>Merchant Trade No: {queryLogistics.MerchantTradeNo}</p>
+                <p>Status: {queryLogistics.Status}</p>
+              </Box>
+            ) : (
+              <p>Loading...</p>
+            )}
+          </DrawerBody>
+
+          <DrawerFooter>
+            <Button variant='outline' mr={3} onClick={onClose}>
+              關閉
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </LoadingLayout>
   );
 };

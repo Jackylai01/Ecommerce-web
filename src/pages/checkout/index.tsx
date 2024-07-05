@@ -233,6 +233,10 @@ const CheckoutPage: NextPage = () => {
     }
   }, [createOrderSuccess, createOrderFailed, onOpen, toast]);
 
+  useEffect(() => {
+    onClose();
+  }, [onClose]);
+
   if (!checkout.length && !shipmentDataFromState) {
     return (
       <Flex justify='center' align='center' h='100vh'>
@@ -242,10 +246,6 @@ const CheckoutPage: NextPage = () => {
       </Flex>
     );
   }
-
-  useEffect(() => {
-    onClose();
-  }, [onClose]);
 
   return (
     <DotAnimationLoadingLayout

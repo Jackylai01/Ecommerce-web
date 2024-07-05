@@ -158,7 +158,7 @@ const ShipmentsTab = () => {
                   bg={bgColor}
                   color={textColor}
                 >
-                  付款狀態
+                  對帳狀態(綠界回傳)
                 </Th>
                 <Th
                   className='tables-container__header-cell'
