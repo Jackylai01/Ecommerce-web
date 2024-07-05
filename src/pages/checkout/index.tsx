@@ -61,6 +61,7 @@ const CheckoutPage: NextPage = () => {
   const [logisticsFee, setLogisticsFee] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const [paymentMethod, setPaymentMethod] = useState('');
+
   const [formData, setFormData] = useState({
     fullName: '',
     address: '',
@@ -241,6 +242,10 @@ const CheckoutPage: NextPage = () => {
       </Flex>
     );
   }
+
+  useEffect(() => {
+    onClose();
+  }, [onClose]);
 
   return (
     <DotAnimationLoadingLayout
