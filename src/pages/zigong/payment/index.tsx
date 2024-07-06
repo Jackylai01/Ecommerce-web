@@ -1,8 +1,10 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import OrdersTab from '@components/Layout/AdminLayout/orders/OrdersTab';
 import PrintShipments from '@components/Layout/AdminLayout/orders/PrintShipments';
+import RefundReview from '@components/Layout/AdminLayout/orders/RefundReview';
 import ShipmentsTab from '@components/Layout/AdminLayout/orders/ShipmentsTab';
 import useAppDispatch from '@hooks/useAppDispatch';
+import { getPendingRefundRequestsAsync } from '@reducers/admin/admin-refunds/actions';
 import { resetAdminOrdersState } from '@reducers/admin/orders';
 import { getAdminAllOrdersAsync } from '@reducers/admin/orders/actions';
 import { resetShipmentState } from '@reducers/admin/shipments';
@@ -23,6 +25,7 @@ const FinanceManagement: NextPage = () => {
     dispatch(getAdminAllOrdersAsync({ page: 1, limit: 10 }));
     dispatch(getPendingShipmentsAsync({ page: 1, limit: 10 }));
     dispatch(getFormalShipmentsAsync({ page: 1, limit: 10 }));
+    dispatch(getPendingRefundRequestsAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -40,6 +43,7 @@ const FinanceManagement: NextPage = () => {
             <Tab>所有訂單</Tab>
             <Tab>待出貨</Tab>
             <Tab>物流管理</Tab>
+            <Tab>退貨請求</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
@@ -50,6 +54,9 @@ const FinanceManagement: NextPage = () => {
             </TabPanel>
             <TabPanel>
               <PrintShipments />
+            </TabPanel>
+            <TabPanel>
+              <RefundReview />
             </TabPanel>
           </TabPanels>
         </Tabs>

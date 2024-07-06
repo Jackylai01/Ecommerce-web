@@ -1,3 +1,4 @@
+import adminRefunds from './admin/admin-refunds';
 import adminAuth from './admin/auth';
 import adminClientUsers from './admin/client-users';
 import customPage from './admin/custom-page';
@@ -12,6 +13,7 @@ import adminShipment from './admin/shipments';
 import adminUpload from './admin/upload';
 import clientAuth from './client/auth';
 import clientCart from './client/cart';
+import clientRefunds from './client/refunds';
 import crudLayout from './crud-layout';
 import fileSelect from './file-select';
 import iconSelect from './icon-select';
@@ -46,6 +48,8 @@ const appReducer = {
   adminOrders,
   adminShipment,
   adminPayments,
+  clientRefunds,
+  adminRefunds,
 };
 
 export default appReducer;

@@ -26,6 +26,7 @@ import {
 } from '@fixtures/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { resetShipmentState } from '@reducers/admin/shipments';
 import {
   printTradeShipmentsAsync,
   queryLogisticsAsync,
@@ -34,8 +35,13 @@ import { useEffect, useRef, useState } from 'react';
 
 const PrintShipments = () => {
   const dispatch = useAppDispatch();
-  const { formalList, FormalMetadata, printTradeShipments, queryLogistics } =
-    useAppSelector((state) => state.adminShipment);
+  const {
+    formalList,
+    FormalMetadata,
+    printTradeShipments,
+    queryLogistics,
+    status: { printTradeSuccess },
+  } = useAppSelector((state) => state.adminShipment);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isOverflowing, setIsOverflowing] = useState(false);
   const tableRef = useRef<HTMLDivElement | null>(null);
@@ -78,6 +84,10 @@ const PrintShipments = () => {
       }
     }
   }, [printTradeShipments]);
+
+  useEffect(() => {
+    dispatch(resetShipmentState());
+  }, [printTradeSuccess]);
 
   return (
     <LoadingLayout isLoading={false}>

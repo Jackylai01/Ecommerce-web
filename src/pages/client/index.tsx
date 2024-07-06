@@ -1,29 +1,25 @@
 import {
   Box,
-  Button,
-  FormControl,
-  FormLabel,
   Heading,
-  Input,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  Text,
   VStack,
   keyframes,
 } from '@chakra-ui/react';
 import ClientLayout from '@components/Layout/ClientLayout';
 import { HistoryItem } from '@components/Layout/ClientLayout/HistoryItem';
 import { OrderItem } from '@components/Layout/ClientLayout/OrderItem';
+import RefundForm from '@components/Layout/ClientLayout/RefundForm';
 import { Navbar } from '@components/Navbar/NavBar';
 
 const clientDashboard = () => {
   const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  `;
 
   return (
     <ClientLayout>
@@ -92,6 +88,12 @@ const clientDashboard = () => {
             >
               個人資料
             </Tab>
+            <Tab
+              _selected={{ bg: '#c0a080', color: 'white' }}
+              _hover={{ bg: 'rgba(192, 160, 128, 0.1)' }}
+            >
+              退貨申請
+            </Tab>
           </TabList>
 
           <TabPanels p='40px'>
@@ -141,8 +143,8 @@ const clientDashboard = () => {
                 borderRadius='12px'
                 boxShadow='0 10px 20px rgba(0, 0, 0, 0.05)'
               >
-                <Text fontSize='20px'>您的當前積分：</Text>
-                <Text
+                <Box fontSize='20px'>您的當前積分：</Box>
+                <Box
                   fontSize='64px'
                   fontWeight='600'
                   color='#c0a080'
@@ -151,17 +153,17 @@ const clientDashboard = () => {
                   textShadow='2px 2px 4px rgba(0,0,0,0.1)'
                 >
                   10,000 點
-                </Text>
-                <Text textAlign='center' mt='10px'>
+                </Box>
+                <Box textAlign='center' mt='10px'>
                   可兌換價值 NT$1,000 的商品
-                </Text>
+                </Box>
               </Box>
             </TabPanel>
             <TabPanel animation={`${fadeIn} 0.5s ease`}>
               <Heading as='h2' fontSize='24px' mb='20px'>
                 個人資料
               </Heading>
-              <Box
+              {/* <Box
                 as='form'
                 maxW='500px'
                 mx='auto'
@@ -174,7 +176,7 @@ const clientDashboard = () => {
                   <FormLabel color='#3a4f66'>姓名</FormLabel>
                   <Input
                     type='text'
-                    value='張三'
+                    defaultValue='張三'
                     placeholder='請輸入您的姓名'
                     border='2px solid #e0e0e0'
                     borderRadius='12px'
@@ -188,7 +190,7 @@ const clientDashboard = () => {
                   <FormLabel color='#3a4f66'>電子郵件</FormLabel>
                   <Input
                     type='email'
-                    value='zhangsan@example.com'
+                    defaultValue='zhangsan@example.com'
                     placeholder='請輸入您的電子郵件'
                     border='2px solid #e0e0e0'
                     borderRadius='12px'
@@ -202,7 +204,7 @@ const clientDashboard = () => {
                   <FormLabel color='#3a4f66'>手機號碼</FormLabel>
                   <Input
                     type='tel'
-                    value='0912345678'
+                    defaultValue='0912345678'
                     placeholder='請輸入您的手機號碼'
                     border='2px solid #e0e0e0'
                     borderRadius='12px'
@@ -222,8 +224,14 @@ const clientDashboard = () => {
                   _hover={{ bg: '#b08f60', transform: 'translateY(-2px)' }}
                 >
                   更新個人資料
-                </Button>
-              </Box>
+                </Button> */}
+              {/* </Box> */}
+            </TabPanel>
+            <TabPanel animation={`${fadeIn} 0.5s ease`}>
+              <Heading as='h2' fontSize='24px' mb='20px'>
+                退貨申請
+              </Heading>
+              <RefundForm />
             </TabPanel>
           </TabPanels>
         </Tabs>
