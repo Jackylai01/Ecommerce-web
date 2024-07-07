@@ -20,9 +20,12 @@ import {
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { refundsResponse } from '@models/responses/refunds';
 import {
   approveReturnRequestAsync,
+  getPendingRefundRequestsAsync,
   rejectReturnRequestAsync,
+  searchPendingRefundAsync,
 } from '@reducers/admin/admin-refunds/actions';
 
 import { useEffect, useState } from 'react';
@@ -32,6 +35,7 @@ const RefundReview = () => {
   const toast = useToast();
   const {
     reviewData,
+    refunds,
     status: {
       approveReturnRequestLoading,
       approveReturnRequestSuccess,
@@ -43,6 +47,7 @@ const RefundReview = () => {
     error: { approveReturnRequestError, rejectReturnRequestError },
   } = useAppSelector((state) => state.adminRefunds);
 
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -73,6 +78,18 @@ const RefundReview = () => {
     );
   };
 
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      dispatch(searchPendingRefundAsync(searchTerm));
+    } else {
+      dispatch(getPendingRefundRequestsAsync({ page: 1, limit: 10 }));
+    }
+  };
+
+  useEffect(() => {
+    dispatch(getPendingRefundRequestsAsync({ page: 1, limit: 10 }));
+  }, [dispatch]);
+
   useEffect(() => {
     if (rejectReturnRequestSuccess) {
       toast({
@@ -96,6 +113,7 @@ const RefundReview = () => {
     rejectReturnRequestFailed,
     rejectReturnRequestError,
   ]);
+
   useEffect(() => {
     if (approveReturnRequestSuccess) {
       toast({
@@ -120,11 +138,27 @@ const RefundReview = () => {
     approveReturnRequestError,
   ]);
 
+  const reasonMapping: any = {
+    'quality-issue': '商品質量問題',
+    'wrong-item': '收到錯誤商品',
+    damaged: '商品損壞',
+    'not-as-described': '商品與描述不符',
+    other: '其他原因',
+  };
+
+  const dataToDisplay: refundsResponse[] = Array.isArray(
+    searchTerm.trim() ? refunds : reviewData,
+  )
+    ? searchTerm.trim()
+      ? refunds
+      : reviewData
+    : [];
+
   return (
     <LoadingLayout
       isLoading={approveReturnRequestLoading || rejectReturnRequestLoading}
     >
-      <Box maxW='1200px' mx='auto' p='2rem'>
+      <Box w='100%'>
         <Flex
           justify='space-between'
           align='center'
@@ -140,16 +174,22 @@ const RefundReview = () => {
           <Flex gap='1rem'>
             <Input
               placeholder='搜索訂單號或客戶名稱'
-              width='250px'
+              width='100%'
               borderRadius='25px'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Button colorScheme='blue' borderRadius='25px'>
+            <Button
+              colorScheme='blue'
+              borderRadius='25px'
+              onClick={handleSearch}
+            >
               搜索
             </Button>
           </Flex>
         </Flex>
         <List spacing='2rem'>
-          {reviewData?.map((refund: any) => (
+          {dataToDisplay?.map((refund: any) => (
             <ListItem
               key={refund._id}
               p='1.5rem'
@@ -175,22 +215,21 @@ const RefundReview = () => {
               <VStack align='start' spacing='0.5rem' mb='1rem'>
                 <Text>
                   <strong>客戶：</strong>
-                  {refund.userId.name}
+                  {refund.userId.username}
                 </Text>
                 <Text>
                   <strong>訂單：</strong>
-                  {refund.orderId.orderNumber}
+                  {refund.orderId.paymentResult.ecpayData.MerchantTradeNo}
                 </Text>
+                {refund.orderId.products.map((product: any) => (
+                  <Text key={product._id}>
+                    <strong>商品：</strong>
+                    {product.name} x {product.quantity} - NT$
+                    {product.priceAtPurchase}
+                  </Text>
+                ))}
                 <Text>
-                  <strong>商品：</strong>
-                  {refund.orderId.productName}
-                </Text>
-                <Text>
-                  <strong>數量：</strong>
-                  {refund.orderId.quantity}
-                </Text>
-                <Text>
-                  <strong>金額：</strong>NT$ {refund.orderId.totalAmount}
+                  <strong>金額：</strong>NT$ {refund.orderId.totalPrice}
                 </Text>
               </VStack>
               <Box
@@ -201,7 +240,17 @@ const RefundReview = () => {
                 fontStyle='italic'
                 borderLeft='3px solid blue.600'
               >
-                {refund.reason}
+                {reasonMapping[refund.reason]}
+              </Box>
+              <Box
+                bg='gray.50'
+                p='1rem'
+                borderRadius='6px'
+                mb='1rem'
+                fontStyle='italic'
+                borderLeft='3px solid blue.600'
+              >
+                {refund.description || ''}
               </Box>
               <Box>
                 <Button
@@ -236,7 +285,6 @@ const RefundReview = () => {
             </ListItem>
           ))}
         </List>
-
         <Modal isOpen={isOpen} onClose={onClose} size='full'>
           <ModalOverlay />
           <ModalContent
@@ -263,8 +311,7 @@ const RefundReview = () => {
               </Button>
               <Image
                 src={selectedImages[currentImageIndex]}
-                maxH='80%'
-                maxW='80%'
+                style={{ maxHeight: '80%', maxWidth: '80%' }}
               />
               <Button
                 onClick={handleNextImage}
@@ -279,19 +326,6 @@ const RefundReview = () => {
             </ModalBody>
           </ModalContent>
         </Modal>
-        <Flex justify='center' mt='2rem' gap='0.5rem'>
-          <Button borderRadius='25px'>
-            <i className='fas fa-chevron-left'></i>
-          </Button>
-          <Button borderRadius='25px' bg='blue.600' color='white'>
-            1
-          </Button>
-          <Button borderRadius='25px'>2</Button>
-          <Button borderRadius='25px'>3</Button>
-          <Button borderRadius='25px'>
-            <i className='fas fa-chevron-right'></i>
-          </Button>
-        </Flex>
       </Box>
     </LoadingLayout>
   );

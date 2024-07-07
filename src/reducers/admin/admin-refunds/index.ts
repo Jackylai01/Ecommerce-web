@@ -10,18 +10,21 @@ import {
   approveReturnRequestAsync,
   getPendingRefundRequestsAsync,
   rejectReturnRequestAsync,
+  searchPendingRefundAsync,
 } from './actions';
 
 type adminQuestReturnState = ApiState<adminRefundAction> & {
   reviewData: refundsResponse[] | null;
-  refunds: refundsResponse | null;
+  refunds: any;
   metadata: Metadata | null;
+  getSearchTerm: any;
 };
 
 const initialState: adminQuestReturnState = {
   reviewData: null,
   refunds: null,
   metadata: null,
+  getSearchTerm: null,
   ...newApiState<adminQuestReturnState>(adminRefundAction),
 };
 
@@ -44,6 +47,9 @@ const adminQuestReturnStateSlice = createSlice({
     });
     builder.addCase(rejectReturnRequestAsync.fulfilled, (state, action) => {
       state.refunds = action.payload;
+    });
+    builder.addCase(searchPendingRefundAsync.fulfilled, (state, action) => {
+      state.refunds = action.payload.data;
     });
     asyncMatcher(builder, ReducerName.ADMIN_REQUESTRETURN);
   },

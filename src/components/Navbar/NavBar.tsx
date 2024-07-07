@@ -1,6 +1,5 @@
 import {
   Box,
-  Link as ChakraLink,
   Flex,
   IconButton,
   Menu,
@@ -14,6 +13,7 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { resetClientAuth } from '@reducers/client/auth';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
+import Link from 'next/link';
 import router from 'next/router';
 import { useEffect } from 'react';
 import { FaUser } from 'react-icons/fa';
@@ -21,7 +21,6 @@ import { Cart } from '../Cart/Cart';
 import { Wishlist } from '../Wishlist/Wishlist';
 import { DesktopNav } from './DesktopNav';
 import { MobileNav } from './MobileNav';
-
 export const Navbar = () => {
   const dispatch = useAppDispatch();
   const toast = useToast();
@@ -82,7 +81,7 @@ export const Navbar = () => {
                     />
                     <MenuList>
                       <MenuItem>
-                        <ChakraLink href='/client'>會員管理</ChakraLink>
+                        <Link href='/client'>會員管理</Link>
                       </MenuItem>
                       <MenuItem onClick={handleLogout}>登出</MenuItem>
                     </MenuList>

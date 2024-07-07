@@ -4,7 +4,6 @@ import PrintShipments from '@components/Layout/AdminLayout/orders/PrintShipments
 import RefundReview from '@components/Layout/AdminLayout/orders/RefundReview';
 import ShipmentsTab from '@components/Layout/AdminLayout/orders/ShipmentsTab';
 import useAppDispatch from '@hooks/useAppDispatch';
-import { getPendingRefundRequestsAsync } from '@reducers/admin/admin-refunds/actions';
 import { resetAdminOrdersState } from '@reducers/admin/orders';
 import { getAdminAllOrdersAsync } from '@reducers/admin/orders/actions';
 import { resetShipmentState } from '@reducers/admin/shipments';
@@ -25,7 +24,6 @@ const FinanceManagement: NextPage = () => {
     dispatch(getAdminAllOrdersAsync({ page: 1, limit: 10 }));
     dispatch(getPendingShipmentsAsync({ page: 1, limit: 10 }));
     dispatch(getFormalShipmentsAsync({ page: 1, limit: 10 }));
-    dispatch(getPendingRefundRequestsAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
   useEffect(() => {

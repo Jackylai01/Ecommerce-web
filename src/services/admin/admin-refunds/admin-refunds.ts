@@ -31,3 +31,11 @@ export const apiAdminRejectReturnRequest = async (refundId: string) => {
     refundId,
   );
 };
+
+/** 搜索退貨申請 */
+
+export const apiAdminSearchPendingRefund = async (searchTerm: string) => {
+  return getRequest<ApiResult<refundsResponse>>(
+    `/refunds/search/${searchTerm}`,
+  );
+};

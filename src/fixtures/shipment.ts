@@ -39,6 +39,14 @@ export const logisticsSubTypeMap = {
   POST: '中華郵政',
 };
 
+export const reasonMapping: any = {
+  'quality-issue': '商品質量問題',
+  'wrong-item': '收到錯誤商品',
+  damaged: '商品損壞',
+  'not-as-described': '商品與描述不符',
+  other: '其他原因',
+};
+
 export const getStatusShipmentColorScheme = (status: any) => {
   switch (status) {
     case 'Pending':

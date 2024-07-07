@@ -5,6 +5,7 @@ import {
   FormLabel,
   Input,
   Select,
+  Textarea,
   useToast,
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
@@ -87,6 +88,13 @@ const RefundForm = () => {
             type='text'
             {...register('orderId', { required: true })}
             placeholder='請輸入訂單號碼'
+          />
+        </FormControl>
+        <FormControl mb='24px'>
+          <FormLabel>退貨說明</FormLabel>
+          <Textarea
+            {...register('description', { required: true })}
+            placeholder='請輸入退貨說明'
           />
         </FormControl>
         <FormControl mb='24px'>

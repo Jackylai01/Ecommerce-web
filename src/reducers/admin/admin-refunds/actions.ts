@@ -4,6 +4,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiAdminApproveReturnRequest,
   apiAdminRejectReturnRequest,
+  apiAdminSearchPendingRefund,
   apiGetPendingRefundRequests,
 } from '@services/admin/admin-refunds/admin-refunds';
 
@@ -11,6 +12,7 @@ export enum adminRefundAction {
   getPendingRefundRequests = 'getPendingRefundRequests',
   approveReturnRequest = 'approveReturnRequest',
   rejectReturnRequest = 'rejectReturnRequest',
+  getSearchTerm = 'getSearchTerm',
 }
 
 export const getPendingRefundRequestsAsync = createAsyncThunk(
@@ -34,5 +36,14 @@ export const rejectReturnRequestAsync = createAsyncThunk(
   async (refundId: string) => {
     const response = await apiAdminRejectReturnRequest(refundId);
     return response.result.data;
+  },
+);
+
+export const searchPendingRefundAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_REQUESTRETURN}/${adminRefundAction.getSearchTerm}`,
+  async (searchTerm: string) => {
+    const response = await apiAdminSearchPendingRefund(searchTerm);
+    console.log(response);
+    return response.result;
   },
 );
