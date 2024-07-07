@@ -33,8 +33,20 @@ export const approveReturnRequestAsync = createAsyncThunk(
 
 export const rejectReturnRequestAsync = createAsyncThunk(
   `${ReducerName.ADMIN_REQUESTRETURN}/${adminRefundAction.rejectReturnRequest}`,
-  async (refundId: string) => {
-    const response = await apiAdminRejectReturnRequest(refundId);
+  async ({
+    refundId,
+    emailSubject,
+    emailBody,
+  }: {
+    refundId: string;
+    emailSubject: string;
+    emailBody: string;
+  }) => {
+    const response = await apiAdminRejectReturnRequest(
+      refundId,
+      emailSubject,
+      emailBody,
+    );
     return response.result.data;
   },
 );

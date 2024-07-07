@@ -68,7 +68,7 @@ const RefundForm = () => {
 
   useEffect(() => {
     dispatch(resetQuestReturnState());
-  }, [requestReturnSuccess]);
+  }, [requestReturnSuccess, requestReturnError, requestReturnFailed]);
 
   return (
     <LoadingLayout isLoading={requestReturnLoading}>

@@ -12,6 +12,7 @@ import {
 import ClientLayout from '@components/Layout/ClientLayout';
 import { HistoryItem } from '@components/Layout/ClientLayout/HistoryItem';
 import { OrderItem } from '@components/Layout/ClientLayout/OrderItem';
+import Profiles from '@components/Layout/ClientLayout/Profiles';
 import RefundForm from '@components/Layout/ClientLayout/RefundForm';
 import { Navbar } from '@components/Navbar/NavBar';
 
@@ -55,7 +56,6 @@ const clientDashboard = () => {
             尊貴會員專區
           </Heading>
         </Box>
-
         <Tabs variant='soft-rounded' colorScheme='orange'>
           <TabList
             justifyContent='center'
@@ -95,7 +95,6 @@ const clientDashboard = () => {
               退貨申請
             </Tab>
           </TabList>
-
           <TabPanels p='40px'>
             <TabPanel animation={`${fadeIn} 0.5s ease`}>
               <Heading as='h2' fontSize='24px' mb='20px'>
@@ -163,69 +162,7 @@ const clientDashboard = () => {
               <Heading as='h2' fontSize='24px' mb='20px'>
                 個人資料
               </Heading>
-              {/* <Box
-                as='form'
-                maxW='500px'
-                mx='auto'
-                bg='white'
-                p='30px'
-                borderRadius='12px'
-                boxShadow='0 10px 20px rgba(0, 0, 0, 0.05)'
-              >
-                <FormControl mb='25px'>
-                  <FormLabel color='#3a4f66'>姓名</FormLabel>
-                  <Input
-                    type='text'
-                    defaultValue='張三'
-                    placeholder='請輸入您的姓名'
-                    border='2px solid #e0e0e0'
-                    borderRadius='12px'
-                    _focus={{
-                      borderColor: '#c0a080',
-                      boxShadow: '0 0 0 3px rgba(192, 160, 128, 0.2)',
-                    }}
-                  />
-                </FormControl>
-                <FormControl mb='25px'>
-                  <FormLabel color='#3a4f66'>電子郵件</FormLabel>
-                  <Input
-                    type='email'
-                    defaultValue='zhangsan@example.com'
-                    placeholder='請輸入您的電子郵件'
-                    border='2px solid #e0e0e0'
-                    borderRadius='12px'
-                    _focus={{
-                      borderColor: '#c0a080',
-                      boxShadow: '0 0 0 3px rgba(192, 160, 128, 0.2)',
-                    }}
-                  />
-                </FormControl>
-                <FormControl mb='25px'>
-                  <FormLabel color='#3a4f66'>手機號碼</FormLabel>
-                  <Input
-                    type='tel'
-                    defaultValue='0912345678'
-                    placeholder='請輸入您的手機號碼'
-                    border='2px solid #e0e0e0'
-                    borderRadius='12px'
-                    _focus={{
-                      borderColor: '#c0a080',
-                      boxShadow: '0 0 0 3px rgba(192, 160, 128, 0.2)',
-                    }}
-                  />
-                </FormControl>
-                <Button
-                  type='submit'
-                  bg='#c0a080'
-                  color='white'
-                  w='full'
-                  size='lg'
-                  borderRadius='30px'
-                  _hover={{ bg: '#b08f60', transform: 'translateY(-2px)' }}
-                >
-                  更新個人資料
-                </Button> */}
-              {/* </Box> */}
+              <Profiles />
             </TabPanel>
             <TabPanel animation={`${fadeIn} 0.5s ease`}>
               <Heading as='h2' fontSize='24px' mb='20px'>

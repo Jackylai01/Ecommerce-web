@@ -11,13 +11,20 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalHeader,
   ModalOverlay,
   Text,
+  Textarea,
   VStack,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
+import Pagination from '@components/Pagination';
+import {
+  getReviewsStatusColors,
+  reviewStatusMapping,
+} from '@fixtures/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { refundsResponse } from '@models/responses/refunds';
@@ -36,6 +43,7 @@ const RefundReview = () => {
   const {
     reviewData,
     refunds,
+    metadata,
     status: {
       approveReturnRequestLoading,
       approveReturnRequestSuccess,
@@ -51,13 +59,42 @@ const RefundReview = () => {
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  const [rejectRefundId, setRejectRefundId] = useState<string | null>(null);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailBody, setEmailBody] = useState('');
 
   const handleApprove = (id: string) => {
     dispatch(approveReturnRequestAsync(id));
   };
 
-  const handleReject = (id: string) => {
-    dispatch(rejectReturnRequestAsync(id));
+  const handleReject = () => {
+    if (rejectRefundId) {
+      dispatch(
+        rejectReturnRequestAsync({
+          refundId: rejectRefundId,
+          emailSubject,
+          emailBody,
+        }),
+      );
+      setIsRejectModalOpen(false);
+      setEmailSubject('');
+      setEmailBody('');
+    }
+  };
+
+  const openRejectModal = (refund: any) => {
+    if (refund.status === 'Rejected') {
+      toast({
+        title: '該訂單已被拒絕',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    setRejectRefundId(refund._id);
+    setIsRejectModalOpen(true);
   };
 
   const handleImageClick = (images: string[]) => {
@@ -188,103 +225,117 @@ const RefundReview = () => {
             </Button>
           </Flex>
         </Flex>
-        <List spacing='2rem'>
-          {dataToDisplay?.map((refund: any) => (
-            <ListItem
-              key={refund._id}
-              p='1.5rem'
-              bg='white'
-              borderRadius='10px'
-              boxShadow='sm'
-              border='1px solid #e0e0e0'
-            >
-              <Flex
-                justify='space-between'
-                align='center'
-                mb='1rem'
-                pb='0.5rem'
-                borderBottom='2px solid #f0f0f0'
+        {dataToDisplay.length > 0 ? (
+          <List spacing='2rem'>
+            {dataToDisplay?.map((refund: any) => (
+              <ListItem
+                key={refund._id}
+                p='1.5rem'
+                bg='white'
+                borderRadius='10px'
+                boxShadow='sm'
+                border='1px solid #e0e0e0'
               >
-                <Text fontWeight='700' color='blue.600'>
-                  {refund._id}
-                </Text>
-                <Text color='gray.500' fontWeight='500'>
-                  {new Date(refund.createdAt).toLocaleDateString()}
-                </Text>
-              </Flex>
-              <VStack align='start' spacing='0.5rem' mb='1rem'>
-                <Text>
-                  <strong>客戶：</strong>
-                  {refund.userId.username}
-                </Text>
-                <Text>
-                  <strong>訂單：</strong>
-                  {refund.orderId.paymentResult.ecpayData.MerchantTradeNo}
-                </Text>
-                {refund.orderId.products.map((product: any) => (
-                  <Text key={product._id}>
-                    <strong>商品：</strong>
-                    {product.name} x {product.quantity} - NT$
-                    {product.priceAtPurchase}
+                <Flex
+                  justify='space-between'
+                  align='center'
+                  mb='1rem'
+                  pb='0.5rem'
+                  borderBottom='2px solid #f0f0f0'
+                >
+                  <Text fontWeight='700' color='blue.600'>
+                    {refund._id}
                   </Text>
-                ))}
-                <Text>
-                  <strong>金額：</strong>NT$ {refund.orderId.totalPrice}
-                </Text>
-              </VStack>
-              <Box
-                bg='gray.50'
-                p='1rem'
-                borderRadius='6px'
-                mb='1rem'
-                fontStyle='italic'
-                borderLeft='3px solid blue.600'
-              >
-                {reasonMapping[refund.reason]}
-              </Box>
-              <Box
-                bg='gray.50'
-                p='1rem'
-                borderRadius='6px'
-                mb='1rem'
-                fontStyle='italic'
-                borderLeft='3px solid blue.600'
-              >
-                {refund.description || ''}
-              </Box>
-              <Box>
-                <Button
-                  colorScheme='blue'
-                  onClick={() =>
-                    handleImageClick(
-                      refund.images.map((image: any) => image.imageUrl),
-                    )
-                  }
+                  <Text color='gray.500' fontWeight='500'>
+                    {new Date(refund.createdAt).toLocaleDateString()}
+                  </Text>
+                </Flex>
+                <VStack align='start' spacing='0.5rem' mb='1rem'>
+                  <Text>
+                    <strong>客戶：</strong>
+                    {refund.userId.username}
+                  </Text>
+                  <Text>
+                    <strong>訂單：</strong>
+                    {refund.orderId.paymentResult.ecpayData.MerchantTradeNo}
+                  </Text>
+                  {refund.orderId.products.map((product: any) => (
+                    <Text key={product._id}>
+                      <strong>商品：</strong>
+                      {product.name} x {product.quantity} - NT$
+                      {product.priceAtPurchase}
+                    </Text>
+                  ))}
+                  <Text>
+                    <strong>金額：</strong>NT$ {refund.orderId.totalPrice}
+                  </Text>
+                  <Box display='flex'>
+                    <strong>審核狀態：</strong>
+                    <Text color={getReviewsStatusColors(refund.status)}>
+                      {reviewStatusMapping[refund.status]}
+                    </Text>
+                  </Box>
+                </VStack>
+                <Box
+                  bg='gray.50'
+                  p='1rem'
+                  borderRadius='6px'
+                  mb='1rem'
+                  fontStyle='italic'
+                  borderLeft='3px solid blue.600'
                 >
-                  查看證據
-                </Button>
-              </Box>
-              <Flex justify='space-between' gap='1rem' mt='1rem'>
-                <Button
-                  colorScheme='green'
-                  flex='1'
-                  borderRadius='25px'
-                  onClick={() => handleApprove(refund._id)}
+                  {reasonMapping[refund.reason]}
+                </Box>
+                <Box
+                  bg='gray.50'
+                  p='1rem'
+                  borderRadius='6px'
+                  mb='1rem'
+                  fontStyle='italic'
+                  borderLeft='3px solid blue.600'
                 >
-                  <i className='fas fa-check'></i> 批准
-                </Button>
-                <Button
-                  colorScheme='red'
-                  flex='1'
-                  borderRadius='25px'
-                  onClick={() => handleReject(refund._id)}
-                >
-                  <i className='fas fa-times'></i> 拒絕
-                </Button>
-              </Flex>
-            </ListItem>
-          ))}
-        </List>
+                  {refund.description || ''}
+                </Box>
+                <Box>
+                  <Button
+                    colorScheme='blue'
+                    onClick={() =>
+                      handleImageClick(
+                        refund.images.map((image: any) => image.imageUrl),
+                      )
+                    }
+                  >
+                    查看證據
+                  </Button>
+                </Box>
+                <Flex justify='space-between' gap='1rem' mt='1rem'>
+                  <Button
+                    colorScheme='green'
+                    flex='1'
+                    borderRadius='25px'
+                    onClick={() => handleApprove(refund._id)}
+                  >
+                    <i className='fas fa-check'></i> 批准
+                  </Button>
+                  <Button
+                    colorScheme='red'
+                    flex='1'
+                    borderRadius='25px'
+                    onClick={() => openRejectModal(refund)}
+                    isDisabled={refund.status === 'Rejected'}
+                  >
+                    <i className='fas fa-times'></i> 拒絕
+                  </Button>
+                </Flex>
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          <Box textAlign='center' mt='4rem' fontSize='1.5rem' color='gray.500'>
+            無此商品
+          </Box>
+        )}
+        {metadata && <Pagination metadata={metadata} />}
         <Modal isOpen={isOpen} onClose={onClose} size='full'>
           <ModalOverlay />
           <ModalContent
@@ -324,6 +375,35 @@ const RefundReview = () => {
                 下一張
               </Button>
             </ModalBody>
+          </ModalContent>
+        </Modal>
+        <Modal
+          isOpen={isRejectModalOpen}
+          onClose={() => setIsRejectModalOpen(false)}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>拒絕退貨請求</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <VStack spacing='1rem'>
+                <Input
+                  placeholder='Email 主題'
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                />
+                <Textarea
+                  placeholder='Email 內容'
+                  value={emailBody}
+                  onChange={(e) => setEmailBody(e.target.value)}
+                />
+              </VStack>
+            </ModalBody>
+            <Flex justify='flex-end' p='1rem'>
+              <Button colorScheme='red' onClick={handleReject}>
+                拒絕
+              </Button>
+            </Flex>
           </ModalContent>
         </Modal>
       </Box>

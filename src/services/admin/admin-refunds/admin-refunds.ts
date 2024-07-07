@@ -25,11 +25,16 @@ export const apiAdminApproveReturnRequest = async (refundId: string) => {
 
 /** 商家拒絕退貨請求 */
 
-export const apiAdminRejectReturnRequest = async (refundId: string) => {
-  return postRequest<ApiResult<refundsResponse>>(
-    '/refunds/reject-return',
+export const apiAdminRejectReturnRequest = async (
+  refundId: string,
+  emailSubject: string,
+  emailBody: string,
+) => {
+  return postRequest<ApiResult<refundsResponse>>('/refunds/reject-return', {
     refundId,
-  );
+    emailSubject,
+    emailBody,
+  });
 };
 
 /** 搜索退貨申請 */

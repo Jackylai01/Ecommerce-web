@@ -60,10 +60,33 @@ export const getStatusShipmentColorScheme = (status: any) => {
   }
 };
 
+export const getReviewsStatusColors = (status: string) => {
+  switch (status) {
+    case 'Pending':
+      return 'yellow';
+    case 'Approved':
+      return 'green';
+    case 'Rejected':
+      return 'red';
+    case 'In Progress':
+      return 'gray';
+    default:
+      return 'blue';
+  }
+};
+
 export const shipmentStatusMap = {
   Pending: '未出貨',
   Paid: '已出貨',
   Created: '等待處理',
+};
+
+export const reviewStatusMapping: any = {
+  Pending: '待處理',
+  Approved: '已批准',
+  Rejected: '已拒絕',
+  'In Progress': '進行中',
+  Completed: '已完成',
 };
 
 export type ShipmentStatus = keyof typeof shipmentStatusMap;
