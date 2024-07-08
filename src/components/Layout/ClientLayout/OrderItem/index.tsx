@@ -1,4 +1,5 @@
-import { Badge, Box, Heading } from '@chakra-ui/react';
+import { Badge, Box, Button, Heading, useDisclosure } from '@chakra-ui/react';
+import ReturnStatusModal from '@components/Modal/ReturnStatusModal';
 import { getStatusColorScheme, statusMap } from '@fixtures/statusMaps';
 import { Transaction } from '@models/responses/transactions.res';
 
@@ -7,13 +8,19 @@ interface OrderItemProps {
   date: string;
   status: Transaction['status'];
   amount: string | number;
+  refunds?: any[];
 }
+
 export const OrderItem: React.FC<OrderItemProps> = ({
   orderId,
   date,
   status,
   amount,
+  refunds,
 }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  console.log(refunds);
   return (
     <Box
       w='100%'
@@ -35,6 +42,12 @@ export const OrderItem: React.FC<OrderItemProps> = ({
         </Badge>
       </Box>
       <Box>總額: NT${amount}</Box>
+      {refunds && refunds.length > 0 && (
+        <Button colorScheme='teal' mt='10px' onClick={onOpen}>
+          查看退換貨狀態
+        </Button>
+      )}
+      <ReturnStatusModal isOpen={isOpen} onClose={onClose} refunds={refunds} />
     </Box>
   );
 };

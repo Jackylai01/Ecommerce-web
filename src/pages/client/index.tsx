@@ -125,6 +125,7 @@ const ClientDashboard = () => {
                       date={new Date(order.createdAt).toLocaleDateString()}
                       status={order.status}
                       amount={order.totalPrice}
+                      refunds={order.refunds}
                     />
                   ))}
                 </VStack>

@@ -17,10 +17,9 @@ export const apiGetPendingRefundRequests = async (query: PagingQuery) =>
 
 /** 商家批准退貨請求 */
 export const apiAdminApproveReturnRequest = async (refundId: string) => {
-  return postRequest<ApiResult<refundsResponse>>(
-    '/refunds/approve-return',
+  return postRequest<ApiResult<refundsResponse>>('/refunds/approve-return', {
     refundId,
-  );
+  });
 };
 
 /** 商家拒絕退貨請求 */

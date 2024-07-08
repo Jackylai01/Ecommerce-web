@@ -63,7 +63,7 @@ export const getStatusShipmentColorScheme = (status: any) => {
 export const getReviewsStatusColors = (status: string) => {
   switch (status) {
     case 'Pending':
-      return 'yellow';
+      return 'gray.700';
     case 'Approved':
       return 'green';
     case 'Rejected':

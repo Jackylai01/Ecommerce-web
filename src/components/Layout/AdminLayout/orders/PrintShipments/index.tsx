@@ -26,7 +26,6 @@ import {
 } from '@fixtures/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { resetShipmentState } from '@reducers/admin/shipments';
 import {
   printTradeShipmentsAsync,
   queryLogisticsAsync,
@@ -84,10 +83,6 @@ const PrintShipments = () => {
       }
     }
   }, [printTradeShipments]);
-
-  useEffect(() => {
-    dispatch(resetShipmentState());
-  }, [printTradeSuccess]);
 
   return (
     <LoadingLayout isLoading={false}>
