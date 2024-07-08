@@ -13,6 +13,7 @@ import adminShipment from './admin/shipments';
 import adminUpload from './admin/upload';
 import clientAuth from './client/auth';
 import clientCart from './client/cart';
+import clientOrders from './client/orders';
 import clientRefunds from './client/refunds';
 import crudLayout from './crud-layout';
 import fileSelect from './file-select';
@@ -50,6 +51,7 @@ const appReducer = {
   adminPayments,
   clientRefunds,
   adminRefunds,
+  clientOrders,
 };
 
 export default appReducer;

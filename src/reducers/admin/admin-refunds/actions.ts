@@ -5,6 +5,7 @@ import {
   apiAdminApproveReturnRequest,
   apiAdminRejectReturnRequest,
   apiAdminSearchPendingRefund,
+  apiArchiveReturnRequest,
   apiGetPendingRefundRequests,
 } from '@services/admin/admin-refunds/admin-refunds';
 
@@ -13,6 +14,7 @@ export enum adminRefundAction {
   approveReturnRequest = 'approveReturnRequest',
   rejectReturnRequest = 'rejectReturnRequest',
   getSearchTerm = 'getSearchTerm',
+  archiveReturn = 'archiveReturn',
 }
 
 export const getPendingRefundRequestsAsync = createAsyncThunk(
@@ -55,7 +57,14 @@ export const searchPendingRefundAsync = createAsyncThunk(
   `${ReducerName.ADMIN_REQUESTRETURN}/${adminRefundAction.getSearchTerm}`,
   async (searchTerm: string) => {
     const response = await apiAdminSearchPendingRefund(searchTerm);
-    console.log(response);
     return response.result;
+  },
+);
+
+export const archiveReturnRequestAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_REQUESTRETURN}/${adminRefundAction.archiveReturn}`,
+  async (refundId: string) => {
+    const response = await apiArchiveReturnRequest(refundId);
+    return response.result.data;
   },
 );

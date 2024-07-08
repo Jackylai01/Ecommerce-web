@@ -6,6 +6,7 @@ export enum AdminEcPayOrdersAction {
   getEcPayOrders = 'getEcPayOrders',
 }
 
+/** 向綠界獲取金流訂單狀態進行對帳-並且不用串接，整合物流列表 */
 export const getAdminEcPayQueryAsync = createAsyncThunk(
   `${ReducerName.ADMIN_PAYMENTS}/${AdminEcPayOrdersAction.getEcPayOrders}`,
   async (MerchantTradeNo: string) => {

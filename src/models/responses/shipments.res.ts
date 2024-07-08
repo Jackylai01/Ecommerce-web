@@ -28,4 +28,5 @@ export interface ShipmentResponse {
   shipmentDate?: string;
   receiverStoreID?: string;
   uniqueId?: string;
+  ecPayStatus?: any;
 }

@@ -17,7 +17,6 @@ import { tradeStatusMap } from '@fixtures/statusMaps';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { ShipmentResponse } from '@models/responses/shipments.res';
-import { getAdminEcPayQueryAsync } from '@reducers/admin/payments/actions';
 import {
   createShipmentsAsync,
   getFormalShipmentsAsync,
@@ -48,20 +47,6 @@ const ShipmentsTab = () => {
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
-
-  useEffect(() => {
-    if (pendingShipments) {
-      pendingShipments.forEach((shipment: ShipmentResponse) => {
-        if (shipment.orderId.paymentResult?.ecpayData.MerchantTradeNo) {
-          dispatch(
-            getAdminEcPayQueryAsync(
-              shipment.orderId.paymentResult.ecpayData.MerchantTradeNo,
-            ),
-          );
-        }
-      });
-    }
-  }, [dispatch, pendingShipments]);
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -210,9 +195,9 @@ const ShipmentsTab = () => {
                       bg={bgColor}
                       color={textColor}
                     >
-                      {ecPayOrders?.TradeStatus ? (
+                      {shipment.ecPayStatus ? (
                         <Badge colorScheme='blue'>
-                          {tradeStatusMap[ecPayOrders?.TradeStatus]}
+                          {tradeStatusMap[shipment.ecPayStatus.TradeStatus]}
                         </Badge>
                       ) : (
                         <Badge colorScheme='gray'>無狀態</Badge>

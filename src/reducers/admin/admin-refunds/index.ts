@@ -8,6 +8,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   adminRefundAction,
   approveReturnRequestAsync,
+  archiveReturnRequestAsync,
   getPendingRefundRequestsAsync,
   rejectReturnRequestAsync,
   searchPendingRefundAsync,
@@ -18,6 +19,7 @@ type adminQuestReturnState = ApiState<adminRefundAction> & {
   refunds: any;
   metadata: Metadata | null;
   getSearchTerm: any;
+  archiveReturn: any;
 };
 
 const initialState: adminQuestReturnState = {
@@ -25,6 +27,7 @@ const initialState: adminQuestReturnState = {
   refunds: null,
   metadata: null,
   getSearchTerm: null,
+  archiveReturn: null,
   ...newApiState<adminQuestReturnState>(adminRefundAction),
 };
 
@@ -50,6 +53,9 @@ const adminQuestReturnStateSlice = createSlice({
     });
     builder.addCase(searchPendingRefundAsync.fulfilled, (state, action) => {
       state.refunds = action.payload.data;
+    });
+    builder.addCase(archiveReturnRequestAsync.fulfilled, (state, action) => {
+      state.archiveReturn = action.payload;
     });
     asyncMatcher(builder, ReducerName.ADMIN_REQUESTRETURN);
   },

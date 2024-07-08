@@ -23,6 +23,7 @@ import LoadingLayout from '@components/Layout/LoadingLayout';
 import Pagination from '@components/Pagination';
 import {
   getReviewsStatusColors,
+  reasonMapping,
   reviewStatusMapping,
 } from '@fixtures/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
@@ -30,11 +31,11 @@ import useAppSelector from '@hooks/useAppSelector';
 import { refundsResponse } from '@models/responses/refunds';
 import {
   approveReturnRequestAsync,
+  archiveReturnRequestAsync,
   getPendingRefundRequestsAsync,
   rejectReturnRequestAsync,
   searchPendingRefundAsync,
 } from '@reducers/admin/admin-refunds/actions';
-
 import { useEffect, useState } from 'react';
 
 const RefundReview = () => {
@@ -51,8 +52,15 @@ const RefundReview = () => {
       rejectReturnRequestSuccess,
       rejectReturnRequestFailed,
       rejectReturnRequestLoading,
+      archiveReturnFailed,
+      archiveReturnLoading,
+      archiveReturnSuccess,
     },
-    error: { approveReturnRequestError, rejectReturnRequestError },
+    error: {
+      approveReturnRequestError,
+      rejectReturnRequestError,
+      archiveReturnError,
+    },
   } = useAppSelector((state) => state.adminRefunds);
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -81,6 +89,10 @@ const RefundReview = () => {
       setEmailSubject('');
       setEmailBody('');
     }
+  };
+
+  const handleArchive = (id: string) => {
+    dispatch(archiveReturnRequestAsync(id));
   };
 
   const openRejectModal = (refund: any) => {
@@ -175,13 +187,24 @@ const RefundReview = () => {
     approveReturnRequestError,
   ]);
 
-  const reasonMapping: any = {
-    'quality-issue': '商品質量問題',
-    'wrong-item': '收到錯誤商品',
-    damaged: '商品損壞',
-    'not-as-described': '商品與描述不符',
-    other: '其他原因',
-  };
+  useEffect(() => {
+    if (archiveReturnSuccess) {
+      toast({
+        title: `退貨請求已封存`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } else if (archiveReturnFailed) {
+      toast({
+        title: '封存退貨請求失敗',
+        description: archiveReturnError,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [toast, archiveReturnFailed, archiveReturnLoading, archiveReturnSuccess]);
 
   const dataToDisplay: refundsResponse[] = Array.isArray(
     searchTerm.trim() ? refunds : reviewData,
@@ -193,7 +216,11 @@ const RefundReview = () => {
 
   return (
     <LoadingLayout
-      isLoading={approveReturnRequestLoading || rejectReturnRequestLoading}
+      isLoading={
+        approveReturnRequestLoading ||
+        rejectReturnRequestLoading ||
+        archiveReturnLoading
+      }
     >
       <Box w='100%'>
         <Flex
@@ -257,15 +284,16 @@ const RefundReview = () => {
                   </Text>
                   <Text>
                     <strong>訂單：</strong>
-                    {refund.orderId.paymentResult.ecpayData.MerchantTradeNo}
+                    {refund?.orderId?.paymentResult?.ecpayData?.MerchantTradeNo}
                   </Text>
-                  {refund.orderId.products.map((product: any) => (
-                    <Text key={product._id}>
-                      <strong>商品：</strong>
-                      {product.name} x {product.quantity} - NT$
-                      {product.priceAtPurchase}
-                    </Text>
-                  ))}
+                  {refund?.orderId?.products &&
+                    refund.orderId.products.map((product: any) => (
+                      <Text key={product._id}>
+                        <strong>商品：</strong>
+                        {product.name} x {product.quantity} - NT$
+                        {product.priceAtPurchase}
+                      </Text>
+                    ))}
                   <Text>
                     <strong>金額：</strong>NT$ {refund.orderId.totalPrice}
                   </Text>
@@ -325,6 +353,14 @@ const RefundReview = () => {
                     isDisabled={refund.status === 'Rejected'}
                   >
                     <i className='fas fa-times'></i> 拒絕
+                  </Button>
+                  <Button
+                    colorScheme='gray'
+                    flex='1'
+                    borderRadius='25px'
+                    onClick={() => handleArchive(refund._id)}
+                  >
+                    <i className='fas fa-archive'></i> 封存
                   </Button>
                 </Flex>
               </ListItem>

@@ -1,20 +1,19 @@
 import { Badge, Box, Heading } from '@chakra-ui/react';
+import { getStatusColorScheme, statusMap } from '@fixtures/statusMaps';
+import { Transaction } from '@models/responses/transactions.res';
 
 interface OrderItemProps {
   orderId: string | number;
   date: string;
-  status: string;
+  status: Transaction['status'];
   amount: string | number;
 }
-
 export const OrderItem: React.FC<OrderItemProps> = ({
   orderId,
   date,
   status,
   amount,
 }) => {
-  const badgeColor = status === '已發貨' ? 'green' : 'yellow';
-
   return (
     <Box
       w='100%'
@@ -30,9 +29,9 @@ export const OrderItem: React.FC<OrderItemProps> = ({
       </Heading>
       <Box>下單日期: {date}</Box>
       <Box>
-        狀態:{' '}
-        <Badge colorScheme={status === '已發貨' ? 'green' : 'yellow'}>
-          {status}
+        狀態:
+        <Badge colorScheme={getStatusColorScheme(status)}>
+          {statusMap[status]}
         </Badge>
       </Box>
       <Box>總額: NT${amount}</Box>

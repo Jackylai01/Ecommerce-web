@@ -44,3 +44,11 @@ export const apiAdminSearchPendingRefund = async (searchTerm: string) => {
     `/refunds/search/${searchTerm}`,
   );
 };
+
+/** 封存退貨申請訂單 */
+
+export const apiArchiveReturnRequest = async (refundId: string) => {
+  return postRequest<ApiResult<refundsResponse>>('/refunds/archive', {
+    refundId,
+  });
+};
