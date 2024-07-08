@@ -11,14 +11,12 @@ import {
   archiveReturnRequestAsync,
   getPendingRefundRequestsAsync,
   rejectReturnRequestAsync,
-  searchPendingRefundAsync,
 } from './actions';
 
 type adminQuestReturnState = ApiState<adminRefundAction> & {
   reviewData: refundsResponse[] | null;
   refunds: any;
   metadata: Metadata | null;
-  getSearchTerm: any;
   archiveReturn: any;
 };
 
@@ -26,7 +24,6 @@ const initialState: adminQuestReturnState = {
   reviewData: null,
   refunds: null,
   metadata: null,
-  getSearchTerm: null,
   archiveReturn: null,
   ...newApiState<adminQuestReturnState>(adminRefundAction),
 };
@@ -51,9 +48,7 @@ const adminQuestReturnStateSlice = createSlice({
     builder.addCase(rejectReturnRequestAsync.fulfilled, (state, action) => {
       state.refunds = action.payload;
     });
-    builder.addCase(searchPendingRefundAsync.fulfilled, (state, action) => {
-      state.refunds = action.payload.data;
-    });
+
     builder.addCase(archiveReturnRequestAsync.fulfilled, (state, action) => {
       state.archiveReturn = action.payload;
     });

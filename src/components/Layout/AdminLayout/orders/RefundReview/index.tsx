@@ -28,13 +28,11 @@ import {
 } from '@fixtures/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { refundsResponse } from '@models/responses/refunds';
 import {
   approveReturnRequestAsync,
   archiveReturnRequestAsync,
   getPendingRefundRequestsAsync,
   rejectReturnRequestAsync,
-  searchPendingRefundAsync,
 } from '@reducers/admin/admin-refunds/actions';
 import { useEffect, useState } from 'react';
 
@@ -43,7 +41,6 @@ const RefundReview = () => {
   const toast = useToast();
   const {
     reviewData,
-    refunds,
     metadata,
     status: {
       approveReturnRequestLoading,
@@ -128,11 +125,13 @@ const RefundReview = () => {
   };
 
   const handleSearch = () => {
-    if (searchTerm.trim()) {
-      dispatch(searchPendingRefundAsync(searchTerm));
-    } else {
-      dispatch(getPendingRefundRequestsAsync({ page: 1, limit: 10 }));
-    }
+    dispatch(
+      getPendingRefundRequestsAsync({
+        page: 1,
+        limit: 10,
+        keyword: searchTerm,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -206,14 +205,6 @@ const RefundReview = () => {
     }
   }, [toast, archiveReturnFailed, archiveReturnLoading, archiveReturnSuccess]);
 
-  const dataToDisplay: refundsResponse[] = Array.isArray(
-    searchTerm.trim() ? refunds : reviewData,
-  )
-    ? searchTerm.trim()
-      ? refunds
-      : reviewData
-    : [];
-
   return (
     <LoadingLayout
       isLoading={
@@ -252,9 +243,9 @@ const RefundReview = () => {
             </Button>
           </Flex>
         </Flex>
-        {dataToDisplay.length > 0 ? (
+        {reviewData && reviewData.length > 0 ? (
           <List spacing='2rem'>
-            {dataToDisplay?.map((refund: any) => (
+            {reviewData?.map((refund: any) => (
               <ListItem
                 key={refund._id}
                 p='1.5rem'

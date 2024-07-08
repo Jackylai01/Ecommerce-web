@@ -4,7 +4,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiAdminApproveReturnRequest,
   apiAdminRejectReturnRequest,
-  apiAdminSearchPendingRefund,
   apiArchiveReturnRequest,
   apiGetPendingRefundRequests,
 } from '@services/admin/admin-refunds/admin-refunds';
@@ -50,14 +49,6 @@ export const rejectReturnRequestAsync = createAsyncThunk(
       emailBody,
     );
     return response.result.data;
-  },
-);
-
-export const searchPendingRefundAsync = createAsyncThunk(
-  `${ReducerName.ADMIN_REQUESTRETURN}/${adminRefundAction.getSearchTerm}`,
-  async (searchTerm: string) => {
-    const response = await apiAdminSearchPendingRefund(searchTerm);
-    return response.result;
   },
 );
 
