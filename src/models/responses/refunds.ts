@@ -1,4 +1,5 @@
 export class refundsResponse {
+  _id!: string;
   userId!: string;
   orderId!: string;
   reason!: string;

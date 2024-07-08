@@ -33,6 +33,9 @@ const adminQuestReturnStateSlice = createSlice({
   initialState,
   reducers: {
     resetAdminQuestReturnState: () => initialState,
+    setReviewData: (state, action) => {
+      state.reviewData = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -51,11 +54,16 @@ const adminQuestReturnStateSlice = createSlice({
 
     builder.addCase(archiveReturnRequestAsync.fulfilled, (state, action) => {
       state.archiveReturn = action.payload;
+      if (state.reviewData) {
+        state.reviewData = state.reviewData.filter(
+          (item) => item._id !== action.payload._id,
+        );
+      }
     });
     asyncMatcher(builder, ReducerName.ADMIN_REQUESTRETURN);
   },
 });
 
-export const { resetAdminQuestReturnState } =
+export const { resetAdminQuestReturnState, setReviewData } =
   adminQuestReturnStateSlice.actions;
 export default adminQuestReturnStateSlice.reducer;

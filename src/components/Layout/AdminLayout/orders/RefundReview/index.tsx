@@ -13,6 +13,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Select,
   Text,
   Textarea,
   VStack,
@@ -28,6 +29,7 @@ import {
 } from '@fixtures/shipment';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { setReviewData } from '@reducers/admin/admin-refunds';
 import {
   approveReturnRequestAsync,
   archiveReturnRequestAsync,
@@ -42,6 +44,7 @@ const RefundReview = () => {
   const {
     reviewData,
     metadata,
+    archiveReturn,
     status: {
       approveReturnRequestLoading,
       approveReturnRequestSuccess,
@@ -68,6 +71,7 @@ const RefundReview = () => {
   const [rejectRefundId, setRejectRefundId] = useState<string | null>(null);
   const [emailSubject, setEmailSubject] = useState('');
   const [emailBody, setEmailBody] = useState('');
+  const [filters, setFilters] = useState({});
 
   const handleApprove = (id: string) => {
     dispatch(approveReturnRequestAsync(id));
@@ -106,6 +110,22 @@ const RefundReview = () => {
     setIsRejectModalOpen(true);
   };
 
+  const handleSearch = () => {
+    dispatch(
+      getPendingRefundRequestsAsync({
+        page: 1,
+        limit: 10,
+        keyword: searchTerm,
+        ...filters,
+      }),
+    );
+  };
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+  };
+
   const handleImageClick = (images: string[]) => {
     setSelectedImages(images);
     setCurrentImageIndex(0);
@@ -121,16 +141,6 @@ const RefundReview = () => {
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === 0 ? selectedImages.length - 1 : prevIndex - 1,
-    );
-  };
-
-  const handleSearch = () => {
-    dispatch(
-      getPendingRefundRequestsAsync({
-        page: 1,
-        limit: 10,
-        keyword: searchTerm,
-      }),
     );
   };
 
@@ -180,6 +190,7 @@ const RefundReview = () => {
       });
     }
   }, [
+    dispatch,
     toast,
     approveReturnRequestSuccess,
     approveReturnRequestFailed,
@@ -194,6 +205,11 @@ const RefundReview = () => {
         duration: 3000,
         isClosable: true,
       });
+      dispatch(
+        setReviewData(
+          reviewData?.filter((item) => item._id !== archiveReturn._id),
+        ),
+      );
     } else if (archiveReturnFailed) {
       toast({
         title: '封存退貨請求失敗',
@@ -234,6 +250,22 @@ const RefundReview = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            <Select
+              name='sortBy'
+              placeholder='排序依據'
+              onChange={handleFilterChange}
+            >
+              <option value='createdAt'>創建日期</option>
+              <option value='modifiedAt'>編輯日期</option>
+            </Select>
+            <Select
+              name='isArchived'
+              placeholder='是否封存'
+              onChange={handleFilterChange}
+            >
+              <option value='false'>未封存</option>
+              <option value='true'>已封存</option>
+            </Select>
             <Button
               colorScheme='blue'
               borderRadius='25px'
@@ -363,77 +395,73 @@ const RefundReview = () => {
           </Box>
         )}
         {metadata && <Pagination metadata={metadata} />}
-        <Modal isOpen={isOpen} onClose={onClose} size='full'>
-          <ModalOverlay />
-          <ModalContent
-            bg='rgba(0, 0, 0, 0.8)'
-            display='flex'
-            justifyContent='center'
-            alignItems='center'
-          >
-            <ModalCloseButton color='white' />
-            <ModalBody
-              display='flex'
-              justifyContent='center'
-              alignItems='center'
-            >
-              <Button
-                onClick={handlePrevImage}
-                colorScheme='teal'
-                size='sm'
-                variant='outline'
-                position='absolute'
-                left='10px'
-              >
-                上一張
-              </Button>
-              <Image
-                src={selectedImages[currentImageIndex]}
-                style={{ maxHeight: '80%', maxWidth: '80%' }}
-              />
-              <Button
-                onClick={handleNextImage}
-                colorScheme='teal'
-                size='sm'
-                variant='outline'
-                position='absolute'
-                right='10px'
-              >
-                下一張
-              </Button>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-        <Modal
-          isOpen={isRejectModalOpen}
-          onClose={() => setIsRejectModalOpen(false)}
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>拒絕退貨請求</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <VStack spacing='1rem'>
-                <Input
-                  placeholder='Email 主題'
-                  value={emailSubject}
-                  onChange={(e) => setEmailSubject(e.target.value)}
-                />
-                <Textarea
-                  placeholder='Email 內容'
-                  value={emailBody}
-                  onChange={(e) => setEmailBody(e.target.value)}
-                />
-              </VStack>
-            </ModalBody>
-            <Flex justify='flex-end' p='1rem'>
-              <Button colorScheme='red' onClick={handleReject}>
-                拒絕
-              </Button>
-            </Flex>
-          </ModalContent>
-        </Modal>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose} size='full'>
+        <ModalOverlay />
+        <ModalContent
+          bg='rgba(0, 0, 0, 0.8)'
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+        >
+          <ModalCloseButton color='white' />
+          <ModalBody display='flex' justifyContent='center' alignItems='center'>
+            <Button
+              onClick={handlePrevImage}
+              colorScheme='teal'
+              size='sm'
+              variant='outline'
+              position='absolute'
+              left='10px'
+            >
+              上一張
+            </Button>
+            <Image
+              src={selectedImages[currentImageIndex]}
+              style={{ maxHeight: '80%', maxWidth: '80%' }}
+            />
+            <Button
+              onClick={handleNextImage}
+              colorScheme='teal'
+              size='sm'
+              variant='outline'
+              position='absolute'
+              right='10px'
+            >
+              下一張
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal
+        isOpen={isRejectModalOpen}
+        onClose={() => setIsRejectModalOpen(false)}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>拒絕退貨請求</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack spacing='1rem'>
+              <Input
+                placeholder='Email 主題'
+                value={emailSubject}
+                onChange={(e) => setEmailSubject(e.target.value)}
+              />
+              <Textarea
+                placeholder='Email 內容'
+                value={emailBody}
+                onChange={(e) => setEmailBody(e.target.value)}
+              />
+            </VStack>
+          </ModalBody>
+          <Flex justify='flex-end' p='1rem'>
+            <Button colorScheme='red' onClick={handleReject}>
+              拒絕
+            </Button>
+          </Flex>
+        </ModalContent>
+      </Modal>
     </LoadingLayout>
   );
 };
