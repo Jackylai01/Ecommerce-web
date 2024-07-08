@@ -9,18 +9,21 @@ import {
   AdminOrdersAction,
   getAdminAllOrdersAsync,
   getAdminOrdersDetailAsync,
+  updateOrderStatusAsync,
 } from './actions';
 
 type adminOrdersState = ApiState<AdminOrdersAction> & {
   list: ordersResponse[] | null;
   detail: OrderDetail | null;
   metadata: Metadata | null;
+  updatedOrder: any;
 };
 
 const initialState: adminOrdersState = {
   list: null,
   detail: null,
   metadata: null,
+  updatedOrder: null,
   ...newApiState<adminOrdersState>(AdminOrdersAction),
 };
 
@@ -37,6 +40,9 @@ export const adminOrdersSlice = createSlice({
     });
     builder.addCase(getAdminOrdersDetailAsync.fulfilled, (state, action) => {
       state.detail = action.payload;
+    });
+    builder.addCase(updateOrderStatusAsync.fulfilled, (state, action) => {
+      state.updatedOrder = action.payload;
     });
     asyncMatcher(builder, ReducerName.ADMIN_ORDERS);
   },

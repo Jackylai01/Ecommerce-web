@@ -66,3 +66,9 @@ export const apiPrintTradeShipments = async (
     '/zigong/shipment/printTradeDocument',
     { LogisticsID, LogisticsSubType },
   );
+
+/**
+ * 更新物流狀態至已出貨
+ */
+export const apiUpdateShipmentStatus = async (shipmentId: string) =>
+  postRequest<ApiResult<any>>(`/zigong/shipment/update-status`, { shipmentId });

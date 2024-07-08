@@ -16,6 +16,7 @@ import {
   Thead,
   Tr,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import Pagination from '@components/Pagination';
 import { statusColors, statusMap } from '@fixtures/statusMaps';
@@ -25,6 +26,7 @@ import { Transaction } from '@models/responses/transactions.res';
 import {
   getAdminAllOrdersAsync,
   getAdminOrdersDetailAsync,
+  updateOrderStatusAsync,
 } from '@reducers/admin/orders/actions';
 import { useEffect, useRef, useState } from 'react';
 import { FaFilter, FaPlus } from 'react-icons/fa';
@@ -35,7 +37,12 @@ const OrdersTab = () => {
   const {
     list,
     metadata,
-    status: { getOrdersDetailsLoading },
+    status: {
+      getOrdersDetailsLoading,
+      changeOrderStatusSuccess,
+      changeOrderStatusFailed,
+    },
+    error: { changeOrderStatusError },
   } = useAppSelector((state) => state.adminOrders);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,6 +57,7 @@ const OrdersTab = () => {
   });
   const tableRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useAppDispatch();
+  const toast = useToast();
 
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
@@ -118,6 +126,36 @@ const OrdersTab = () => {
     setSelectedOrderId(orderId);
     onOpen();
   };
+
+  const handleStatusChange = async (orderId: string, newStatus: string) => {
+    dispatch(updateOrderStatusAsync({ orderId, status: newStatus }));
+  };
+
+  useEffect(() => {
+    if (changeOrderStatusSuccess) {
+      toast({
+        title: '訂單狀態更新成功',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      dispatch(getAdminAllOrdersAsync({ page: 1, limit: 10 }));
+    } else if (changeOrderStatusFailed) {
+      toast({
+        title: '訂單狀態更新失敗',
+        description: changeOrderStatusError,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [
+    toast,
+    dispatch,
+    changeOrderStatusError,
+    changeOrderStatusFailed,
+    changeOrderStatusSuccess,
+  ]);
 
   return (
     <Box borderRadius='16px' boxShadow='md' overflow='hidden' minH='450px'>
@@ -291,10 +329,17 @@ const OrdersTab = () => {
               >
                 操作
               </Th>
+              <Th
+                className='tables-container__header-cell'
+                bg={bgColor}
+                color={textColor}
+              >
+                狀態更新
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
-            {list &&
+            {list && list.length > 0 ? (
               list.map((order) => (
                 <Tr key={order._id} color={textColor}>
                   <Td
@@ -336,8 +381,29 @@ const OrdersTab = () => {
                       查看詳情
                     </Button>
                   </Td>
+                  <Td className='tables-container__body-cell'>
+                    <Select
+                      value={order.status}
+                      onChange={(e) =>
+                        handleStatusChange(order._id, e.target.value)
+                      }
+                    >
+                      <option value='Pending'>待處理</option>
+                      <option value='Paid'>已支付</option>
+                      <option value='Shipped'>已出貨</option>
+                      <option value='Completed'>完成</option>
+                      <option value='Cancelled'>取消</option>
+                    </Select>
+                  </Td>
                 </Tr>
-              ))}
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan={10} textAlign='center'>
+                  尚無訂單
+                </Td>
+              </Tr>
+            )}
           </Tbody>
         </Table>
         {isOverflowing && (

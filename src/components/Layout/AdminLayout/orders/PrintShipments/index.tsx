@@ -16,6 +16,7 @@ import {
   Thead,
   Tr,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import Pagination from '@components/Pagination';
@@ -27,19 +28,29 @@ import {
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import {
+  getPendingShipmentsAsync,
   printTradeShipmentsAsync,
   queryLogisticsAsync,
+  updateShipmentStatusAsync,
 } from '@reducers/admin/shipments/actions';
 import { useEffect, useRef, useState } from 'react';
+import { FaCheckCircle } from 'react-icons/fa';
 
 const PrintShipments = () => {
+  const toast = useToast();
   const dispatch = useAppDispatch();
   const {
     formalList,
     FormalMetadata,
     printTradeShipments,
     queryLogistics,
-    status: { printTradeSuccess },
+    status: {
+      printTradeSuccess,
+      updateShipmentStatusSuccess,
+      updateShipmentStatusFailed,
+      updateShipmentStatusLoading,
+    },
+    error: { updateShipmentStatusError },
   } = useAppSelector((state) => state.adminShipment);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -71,6 +82,10 @@ const PrintShipments = () => {
     onOpen();
   };
 
+  const handleUpdateShipmentStatus = (shipmentId: string) => {
+    dispatch(updateShipmentStatusAsync(shipmentId));
+  };
+
   useEffect(() => {
     if (printTradeShipments) {
       const printWindow = window.open('', '_blank', 'width=800,height=600');
@@ -84,8 +99,34 @@ const PrintShipments = () => {
     }
   }, [printTradeShipments]);
 
+  useEffect(() => {
+    if (updateShipmentStatusSuccess) {
+      toast({
+        title: '物流狀態更新成功',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      dispatch(getPendingShipmentsAsync({ page: 1, limit: 10 }));
+    } else if (updateShipmentStatusFailed) {
+      toast({
+        title: '物流狀態更新失敗',
+        description: updateShipmentStatusError,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [
+    toast,
+    dispatch,
+    updateShipmentStatusError,
+    updateShipmentStatusSuccess,
+    updateShipmentStatusFailed,
+  ]);
+
   return (
-    <LoadingLayout isLoading={false}>
+    <LoadingLayout isLoading={updateShipmentStatusLoading}>
       <Box
         bg='white'
         borderRadius='16px'
@@ -145,7 +186,16 @@ const PrintShipments = () => {
                         列印
                       </Button>
                       <Button
+                        leftIcon={<FaCheckCircle />}
                         colorScheme='teal'
+                        size='sm'
+                        m={1}
+                        onClick={() => handleUpdateShipmentStatus(shipment._id)}
+                      >
+                        標記為已出貨
+                      </Button>
+                      <Button
+                        colorScheme='red'
                         size='sm'
                         m={1}
                         onClick={() =>

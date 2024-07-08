@@ -21,6 +21,7 @@ import {
   createShipmentsAsync,
   getFormalShipmentsAsync,
   getPendingShipmentsAsync,
+  updateShipmentStatusAsync,
 } from '@reducers/admin/shipments/actions';
 import { useEffect, useRef, useState } from 'react';
 import { FaTruck } from 'react-icons/fa';
@@ -37,16 +38,18 @@ const ShipmentsTab = () => {
     },
     error: { createShipmentsError },
   } = useAppSelector((state) => state.adminShipment);
-  const { ecPayOrders } = useAppSelector((state) => state.adminPayments);
 
   const dispatch = useAppDispatch();
   const [isOverflowing, setIsOverflowing] = useState(false);
   const tableRef = useRef<HTMLDivElement | null>(null);
   const toast = useToast();
-
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
+
+  const handleUpdateShipmentStatus = (orderId: string) => {
+    dispatch(updateShipmentStatusAsync(orderId));
+  };
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -85,7 +88,7 @@ const ShipmentsTab = () => {
         isClosable: true,
         position: 'top-right',
       });
-    } else if (createShipmentsError) {
+    } else if (createShipmentsFailed) {
       toast({
         title: '建立失敗',
         description: `正式物流訂單建立失敗。${createShipmentsError}`,
@@ -95,7 +98,13 @@ const ShipmentsTab = () => {
         position: 'top-right',
       });
     }
-  }, [dispatch, createShipmentsSuccess, toast]);
+  }, [
+    dispatch,
+    createShipmentsSuccess,
+    toast,
+    createShipmentsFailed,
+    createShipmentsError,
+  ]);
 
   return (
     <LoadingLayout isLoading={createShipmentsLoading}>
@@ -210,7 +219,7 @@ const ShipmentsTab = () => {
                     >
                       <Button
                         leftIcon={<FaTruck />}
-                        colorScheme='green'
+                        colorScheme='blue'
                         size='sm'
                         m={1}
                         onClick={() => handleCreateShipment(shipment)}

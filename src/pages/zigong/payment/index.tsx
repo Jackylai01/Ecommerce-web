@@ -35,7 +35,7 @@ const FinanceManagement: NextPage = () => {
 
   return (
     <Box minH='100vh' py='8' mt='1rem'>
-      <Box maxW='90%' mx='auto' px='4'>
+      <Box w='100%' mx='auto' px='4'>
         <Tabs>
           <TabList color={bgColor}>
             <Tab>所有訂單</Tab>

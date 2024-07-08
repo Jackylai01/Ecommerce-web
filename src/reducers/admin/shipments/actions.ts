@@ -7,6 +7,7 @@ import {
   apiGetPendingShipments,
   apiPrintTradeShipments,
   apiQueryLogistics,
+  apiUpdateShipmentStatus,
   apiUpdateTempTrade,
 } from '@services/admin/admin-shipments/admin-shipments';
 
@@ -17,6 +18,7 @@ export enum AdminShipmentActions {
   queryLogistics = 'queryLogistics',
   getFormalShipments = 'getFormalShipments',
   printTrade = 'printTrade',
+  updateShipmentStatus = 'updateShipmentStatus',
 }
 
 export const updateTempTradeAsync = createAsyncThunk(
@@ -96,5 +98,13 @@ export const printTradeShipmentsAsync = createAsyncThunk(
     );
 
     return response.result;
+  },
+);
+
+export const updateShipmentStatusAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_SHIPMENTS}/${AdminShipmentActions.updateShipmentStatus}`,
+  async (shipmentId: string) => {
+    const response = await apiUpdateShipmentStatus(shipmentId);
+    return response.result.data;
   },
 );

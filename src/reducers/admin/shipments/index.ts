@@ -12,6 +12,7 @@ import {
   getPendingShipmentsAsync,
   printTradeShipmentsAsync,
   queryLogisticsAsync,
+  updateShipmentStatusAsync,
   updateTempTradeAsync,
 } from './actions';
 
@@ -64,6 +65,20 @@ export const adminShipmentSlice = createSlice({
     });
     builder.addCase(printTradeShipmentsAsync.fulfilled, (state, action) => {
       state.printTradeShipments = action.payload;
+    });
+    builder.addCase(updateShipmentStatusAsync.fulfilled, (state, action) => {
+      const updatedShipment = action.payload;
+      // 查找并更新formalList中的项目
+      const index = state.formalList?.findIndex(
+        (shipment) => shipment._id === updatedShipment._id,
+      );
+      if (index !== undefined && index >= 0 && state.formalList) {
+        state.formalList[index] = updatedShipment;
+      } else {
+        state.formalList?.push(updatedShipment);
+      }
+      // 更新成功后重新获取formalList
+      state.formalList = [...(state.formalList || [])];
     });
     asyncMatcher(builder, ReducerName.ADMIN_SHIPMENTS);
   },

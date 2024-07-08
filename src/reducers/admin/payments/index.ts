@@ -11,6 +11,7 @@ type adminPaymentsState = ApiState<AdminEcPayOrdersAction> & {
 
 const initialState: adminPaymentsState = {
   ecPayOrders: null,
+
   ...newApiState<adminPaymentsState>(AdminEcPayOrdersAction),
 };
 
