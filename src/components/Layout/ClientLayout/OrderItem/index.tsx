@@ -1,7 +1,24 @@
 import { Badge, Box, Button, Heading, useDisclosure } from '@chakra-ui/react';
 import ReturnStatusModal from '@components/Modal/ReturnStatusModal';
+import {
+  getStatusShipmentColorScheme,
+  logisticsSubTypeMap,
+  shipmentStatusMap,
+} from '@fixtures/shipment';
 import { getStatusColorScheme, statusMap } from '@fixtures/statusMaps';
 import { Transaction } from '@models/responses/transactions.res';
+
+interface Shipment {
+  shipmentStatus:
+    | 'Pending'
+    | 'Processing'
+    | 'Shipped'
+    | 'Delivered'
+    | 'Returned';
+  logisticsSubType: string;
+  LogisticsID: string;
+  ReceiverStoreName: string;
+}
 
 interface OrderItemProps {
   orderId: string | number;
@@ -9,6 +26,8 @@ interface OrderItemProps {
   status: Transaction['status'];
   amount: string | number;
   refunds?: any[];
+  shipments: Shipment[];
+  paymentResult: any;
 }
 
 export const OrderItem: React.FC<OrderItemProps> = ({
@@ -17,10 +36,11 @@ export const OrderItem: React.FC<OrderItemProps> = ({
   status,
   amount,
   refunds,
+  shipments,
+  paymentResult,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  console.log(refunds);
   return (
     <Box
       w='100%'
@@ -32,16 +52,43 @@ export const OrderItem: React.FC<OrderItemProps> = ({
       _hover={{ transform: 'translateX(5px)' }}
     >
       <Heading as='h3' fontSize='20px'>
-        訂單 #{orderId}
+        訂單 {orderId}
       </Heading>
       <Box>下單日期: {date}</Box>
       <Box>
-        狀態:
+        付款狀態:
         <Badge colorScheme={getStatusColorScheme(status)}>
           {statusMap[status]}
         </Badge>
       </Box>
-      <Box>總額: NT${amount}</Box>
+      <Box>
+        訂單編號:
+        <Badge>{paymentResult.ecpayData.MerchantTradeNo}</Badge>
+      </Box>
+      <Box mt='10px'>
+        {shipments?.map((shipment, index) => (
+          <Box key={index}>
+            物流狀態:
+            <Badge
+              colorScheme={getStatusShipmentColorScheme(
+                shipment.shipmentStatus,
+              )}
+            >
+              {shipmentStatusMap[shipment.shipmentStatus]}
+            </Badge>
+            <Box>
+              物流公司: {logisticsSubTypeMap[shipment.logisticsSubType]}
+            </Box>
+            {shipment.ReceiverStoreName && (
+              <Box>送達地址: {shipment.ReceiverStoreName}</Box>
+            )}
+            {shipment.LogisticsID && (
+              <Box>物流訂單編號: {shipment.LogisticsID}</Box>
+            )}
+          </Box>
+        ))}
+      </Box>
+      <Box mt='10px'>總額: NT${amount}</Box>
       {refunds && refunds.length > 0 && (
         <Button colorScheme='teal' mt='10px' onClick={onOpen}>
           查看退換貨狀態

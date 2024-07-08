@@ -26,7 +26,7 @@ export const calculateLogisticsFee = (shipment: any, totalPrice: number) => {
   return logisticsFee;
 };
 
-export const logisticsSubTypeMap = {
+export const logisticsSubTypeMap: any = {
   FAMI: '全家物流(B2C)',
   UNIMART: '7-ELEVEN超商物流(B2C)',
   UNIMARTFREEZE: '7-ELEVEN冷凍店取(B2C)',
@@ -47,19 +47,6 @@ export const reasonMapping: any = {
   other: '其他原因',
 };
 
-export const getStatusShipmentColorScheme = (status: any) => {
-  switch (status) {
-    case 'Pending':
-      return 'yellow';
-    case 'Paid':
-      return 'blue';
-    case 'Created':
-      return 'green';
-    default:
-      return 'gray';
-  }
-};
-
 export const getReviewsStatusColors = (status: string) => {
   switch (status) {
     case 'Pending':
@@ -75,10 +62,27 @@ export const getReviewsStatusColors = (status: string) => {
   }
 };
 
+export const getStatusShipmentColorScheme = (status: any) => {
+  switch (status) {
+    case 'Pending':
+      return 'red';
+    case 'Processing':
+      return 'blue';
+    case 'Shipped':
+      return 'green';
+    case 'blue':
+      return 'green';
+    default:
+      return 'gray';
+  }
+};
+
 export const shipmentStatusMap = {
-  Pending: '未出貨',
-  Paid: '已出貨',
-  Created: '等待處理',
+  Pending: '待處理',
+  Processing: '處理中',
+  Shipped: '已出貨',
+  Delivered: '已送達',
+  Returned: '已退貨',
 };
 
 export const reviewStatusMapping: any = {

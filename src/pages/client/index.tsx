@@ -15,6 +15,7 @@ import Profiles from '@components/Layout/ClientLayout/Profiles';
 import RefundForm from '@components/Layout/ClientLayout/RefundForm';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import { Navbar } from '@components/Navbar/NavBar';
+import Pagination from '@components/Pagination';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { getClientOrdersAsync } from '@reducers/client/orders/actions';
@@ -25,6 +26,7 @@ const ClientDashboard = () => {
   const { userInfo } = useAppSelector((state) => state.clientAuth);
   const {
     list: orderList,
+    metadata,
     status: { getClientOrdersLoading },
   } = useAppSelector((state) => state.clientOrders);
 
@@ -126,8 +128,11 @@ const ClientDashboard = () => {
                       status={order.status}
                       amount={order.totalPrice}
                       refunds={order.refunds}
+                      shipments={order.shipments}
+                      paymentResult={order.paymentResult}
                     />
                   ))}
+                  {metadata && <Pagination metadata={metadata} />}
                 </VStack>
               </TabPanel>
               <TabPanel>

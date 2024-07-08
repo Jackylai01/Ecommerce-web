@@ -87,7 +87,7 @@ const RefundForm = () => {
           <Input
             type='text'
             {...register('orderId', { required: true })}
-            placeholder='請輸入訂單號碼'
+            placeholder='請輸入訂單號碼，如:668ba4fe13ead5a901d3144f'
           />
         </FormControl>
         <FormControl mb='24px'>
