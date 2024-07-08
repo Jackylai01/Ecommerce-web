@@ -63,7 +63,9 @@ export const OrderItem: React.FC<OrderItemProps> = ({
       </Box>
       <Box>
         訂單編號:
-        <Badge>{paymentResult.ecpayData.MerchantTradeNo}</Badge>
+        <Badge colorScheme={getStatusColorScheme(status)}>
+          {paymentResult.ecpayData.MerchantTradeNo}
+        </Badge>
       </Box>
       <Box mt='10px'>
         {shipments?.map((shipment, index) => (

@@ -7,11 +7,12 @@ export interface ordersResponse {
   };
   totalPrice: number;
   status: 'Pending' | 'Paid' | 'Shipped' | 'Completed' | 'Cancelled';
-  paymentResult?: {
-    commonData?: any;
-    ecpayData?: any;
+  paymentResult: {
+    ecpayData: {
+      MerchantTradeNo: string;
+    };
   };
-  shippingAddress?: {
+  shippingAddress: {
     address: string;
     city: string;
     postalCode: string;
@@ -22,10 +23,29 @@ export interface ordersResponse {
   products: {
     name: string;
   }[];
+  refunds: any;
+  shipments: any;
   receiverName: string;
   receiverCellPhone: string;
   receiverEmail: string;
   createdAt: string;
+}
+
+export interface Order {
+  _id: string;
+  paymentResult: {
+    ecpayData: {
+      MerchantTradeNo: string;
+    };
+  };
+  totalPrice: number;
+  status: 'Pending' | 'Paid' | 'Shipped' | 'Completed' | 'Cancelled';
+  shippingAddress: {
+    address: string;
+  };
+  receiverName: string;
+  receiverCellPhone: string;
+  receiverEmail: string;
 }
 
 export interface OrderDetail {

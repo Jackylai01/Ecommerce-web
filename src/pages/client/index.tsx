@@ -9,7 +9,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import ClientLayout from '@components/Layout/ClientLayout';
-import { HistoryItem } from '@components/Layout/ClientLayout/HistoryItem';
+import HistoryItem from '@components/Layout/ClientLayout/HistoryItem';
+
 import { OrderItem } from '@components/Layout/ClientLayout/OrderItem';
 import Profiles from '@components/Layout/ClientLayout/Profiles';
 import RefundForm from '@components/Layout/ClientLayout/RefundForm';
@@ -18,7 +19,10 @@ import { Navbar } from '@components/Navbar/NavBar';
 import Pagination from '@components/Pagination';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { getClientOrdersAsync } from '@reducers/client/orders/actions';
+import {
+  getClientOrderHistoryAsync,
+  getClientOrdersAsync,
+} from '@reducers/client/orders/actions';
 import { useEffect } from 'react';
 
 const ClientDashboard = () => {
@@ -26,6 +30,7 @@ const ClientDashboard = () => {
   const { userInfo } = useAppSelector((state) => state.clientAuth);
   const {
     list: orderList,
+    historyList: orderHistoryList,
     metadata,
     status: { getClientOrdersLoading },
   } = useAppSelector((state) => state.clientOrders);
@@ -34,6 +39,12 @@ const ClientDashboard = () => {
     if (!userInfo) return;
     dispatch(
       getClientOrdersAsync({
+        userId: userInfo._id,
+        query: { limit: 10, page: 1 },
+      }),
+    );
+    dispatch(
+      getClientOrderHistoryAsync({
         userId: userInfo._id,
         query: { limit: 10, page: 1 },
       }),
@@ -120,37 +131,38 @@ const ClientDashboard = () => {
                   訂單狀況
                 </Heading>
                 <VStack spacing='20px'>
-                  {orderList?.map((order: any) => (
-                    <OrderItem
-                      key={order._id}
-                      orderId={order._id}
-                      date={new Date(order.createdAt).toLocaleDateString()}
-                      status={order.status}
-                      amount={order.totalPrice}
-                      refunds={order.refunds}
-                      shipments={order.shipments}
-                      paymentResult={order.paymentResult}
-                    />
-                  ))}
-                  {metadata && <Pagination metadata={metadata} />}
+                  {orderList && orderList.length > 0 ? (
+                    <VStack spacing='20px'>
+                      {orderList.map((order) => (
+                        <OrderItem
+                          key={order._id}
+                          orderId={order._id}
+                          date={new Date(order.createdAt).toLocaleDateString()}
+                          status={order.status}
+                          amount={order.totalPrice}
+                          refunds={order.refunds}
+                          shipments={order.shipments}
+                          paymentResult={order.paymentResult}
+                        />
+                      ))}
+                      {metadata && <Pagination metadata={metadata} />}
+                    </VStack>
+                  ) : (
+                    <Box>尚無訂單。</Box>
+                  )}
                 </VStack>
               </TabPanel>
               <TabPanel>
                 <Heading as='h2' fontSize='24px' mb='20px'>
                   購物歷史
                 </Heading>
-                <VStack spacing='20px'>
-                  <HistoryItem
-                    name='精品手錶 Model X'
-                    date='2024-05-20'
-                    price='50000'
-                  />
-                  <HistoryItem
-                    name='高級皮夾 Brand Y'
-                    date='2024-05-15'
-                    price='7500'
-                  />
-                </VStack>
+                {orderHistoryList && orderHistoryList.length > 0 ? (
+                  <VStack spacing='20px'>
+                    <HistoryItem orderHistoryList={orderHistoryList} />
+                  </VStack>
+                ) : (
+                  <Box>尚無購物歷史。</Box>
+                )}
               </TabPanel>
               <TabPanel>
                 <Heading as='h2' fontSize='24px' mb='20px'>
