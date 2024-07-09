@@ -1,7 +1,12 @@
 import { formatQueryString } from '@helpers/query';
 import { PagingQuery } from '@models/entities/shared/pagination';
 import { ordersResponse } from '@models/responses/orders.res';
-import { ApiPaginationResult, getRequest } from '../../shared/api';
+import {
+  ApiPaginationResult,
+  ApiResult,
+  getRequest,
+  postRequest,
+} from '../../shared/api';
 
 /**
  * 獲取全部訂單
@@ -21,3 +26,10 @@ export const apiClientGetOrderHistory = async (
   getRequest<ApiPaginationResult<ordersResponse>>(
     formatQueryString(`/orders/history/${userId}`, query),
   );
+
+/**
+ * 用戶申請取消訂單
+ */
+
+export const apiClientCancelOrder = async (orderId: string) =>
+  postRequest<ApiResult<ordersResponse>>(`/orders/client/cancel`, { orderId });

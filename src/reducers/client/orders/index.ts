@@ -6,6 +6,7 @@ import { Metadata } from '@models/entities/shared/pagination';
 import { ordersResponse } from '@models/responses/orders.res';
 import { createSlice } from '@reduxjs/toolkit';
 import {
+  cancelClientOrderAsync,
   clientOrdersAction,
   getClientOrderHistoryAsync,
   getClientOrdersAsync,
@@ -16,6 +17,7 @@ type clientOrdersState = ApiState<clientOrdersAction> & {
   metadata: Metadata | null;
   historyList: ordersResponse[] | null;
   historyMetadata: Metadata | null;
+  cancelOrder: any;
 };
 
 const initialState: clientOrdersState = {
@@ -23,6 +25,7 @@ const initialState: clientOrdersState = {
   metadata: null,
   historyList: null,
   historyMetadata: null,
+  cancelOrder: null,
   ...newApiState<clientOrdersState>(clientOrdersAction),
 };
 
@@ -31,6 +34,11 @@ export const clientOrdersSlice = createSlice({
   initialState,
   reducers: {
     resetClientOrdersState: () => initialState,
+    resetCancelOrderState: (state) => {
+      state.status.cancelOrderSuccess = false;
+      state.status.cancelOrderFailed = false;
+      state.status.cancelOrderFailed = false;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getClientOrdersAsync.fulfilled, (state, action) => {
@@ -41,9 +49,13 @@ export const clientOrdersSlice = createSlice({
       state.historyList = action.payload.data;
       state.historyMetadata = action.payload.metadata;
     });
+    builder.addCase(cancelClientOrderAsync.fulfilled, (state, action) => {
+      state.cancelOrder = action.payload;
+    });
     asyncMatcher(builder, ReducerName.CLIENT_ORDERS);
   },
 });
 
-export const { resetClientOrdersState } = clientOrdersSlice.actions;
+export const { resetClientOrdersState, resetCancelOrderState } =
+  clientOrdersSlice.actions;
 export default clientOrdersSlice.reducer;
