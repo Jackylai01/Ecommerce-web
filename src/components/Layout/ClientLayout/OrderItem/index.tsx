@@ -1,14 +1,15 @@
 import { Badge, Box, Button, Heading, useDisclosure } from '@chakra-ui/react';
 import ReturnStatusModal from '@components/Modal/ReturnStatusModal';
+import { paymentStatusMap } from '@fixtures/payments';
 import {
   getStatusShipmentColorScheme,
   logisticsSubTypeMap,
   shipmentStatusMap,
 } from '@fixtures/shipment';
-import { getStatusColorScheme, statusMap } from '@fixtures/statusMaps';
-import { Transaction } from '@models/responses/transactions.res';
+import { getPaymentStatusColorScheme } from '@fixtures/statusMaps';
 
 interface Shipment {
+  _id: string;
   shipmentStatus:
     | 'Pending'
     | 'Processing'
@@ -23,21 +24,21 @@ interface Shipment {
 interface OrderItemProps {
   orderId: string | number;
   date: string;
-  status: Transaction['status'];
   amount: string | number;
   refunds?: any[];
   shipments: Shipment[];
   paymentResult: any;
+  payments: any[];
 }
 
 export const OrderItem: React.FC<OrderItemProps> = ({
   orderId,
   date,
-  status,
   amount,
   refunds,
   shipments,
   paymentResult,
+  payments,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -56,20 +57,24 @@ export const OrderItem: React.FC<OrderItemProps> = ({
       </Heading>
       <Box>下單日期: {date}</Box>
       <Box>
-        付款狀態:
-        <Badge colorScheme={getStatusColorScheme(status)}>
-          {statusMap[status]}
-        </Badge>
+        {payments?.map((payment: any) => (
+          <Box key={payment._id}>
+            付款狀態:
+            <Badge
+              colorScheme={getPaymentStatusColorScheme(payment.PaymentStatus)}
+            >
+              {paymentStatusMap[payment.PaymentStatus]}
+            </Badge>
+          </Box>
+        ))}
       </Box>
       <Box>
         訂單編號:
-        <Badge colorScheme={getStatusColorScheme(status)}>
-          {paymentResult.ecpayData.MerchantTradeNo}
-        </Badge>
+        <Badge>{paymentResult.ecpayData.MerchantTradeNo}</Badge>
       </Box>
       <Box mt='10px'>
-        {shipments?.map((shipment, index) => (
-          <Box key={index}>
+        {shipments?.map((shipment) => (
+          <Box key={shipment._id}>
             物流狀態:
             <Badge
               colorScheme={getStatusShipmentColorScheme(

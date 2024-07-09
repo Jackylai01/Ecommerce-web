@@ -138,11 +138,11 @@ const ClientDashboard = () => {
                           key={order._id}
                           orderId={order._id}
                           date={new Date(order.createdAt).toLocaleDateString()}
-                          status={order.status}
                           amount={order.totalPrice}
                           refunds={order.refunds}
                           shipments={order.shipments}
                           paymentResult={order.paymentResult}
+                          payments={order.payments}
                         />
                       ))}
                       {metadata && <Pagination metadata={metadata} />}

@@ -32,7 +32,7 @@ export const paymentTypeMap = {
   BNPL_URICH: '裕富數位無卡分期',
 };
 
-export const paymentStatusMap = {
+export const paymentStatusMap: any = {
   Pending: '未付款',
   Paid: '已付款',
   failed: '付款失败',

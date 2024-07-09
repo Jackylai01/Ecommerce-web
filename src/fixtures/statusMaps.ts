@@ -22,6 +22,20 @@ export const getStatusColorScheme = (status: any) => {
   }
 };
 
+// 金流用
+export const getPaymentStatusColorScheme = (status: any) => {
+  switch (status) {
+    case 'Pending':
+      return 'gray';
+    case 'Paid':
+      return 'green';
+    case 'failed':
+      return 'red';
+    default:
+      return 'gray';
+  }
+};
+
 // 訂單用
 export const statusMap: { [key in Transaction['status']]: string } = {
   Pending: '待處理',
