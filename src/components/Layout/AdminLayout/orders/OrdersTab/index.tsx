@@ -19,7 +19,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import Pagination from '@components/Pagination';
-import { statusColors, statusMap } from '@fixtures/statusMaps';
+import { getOrderStatusColor, getOrderStatusInChinese } from '@fixtures/orders';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { Transaction } from '@models/responses/transactions.res';
@@ -354,10 +354,9 @@ const OrdersTab = () => {
                   <Td className='tables-container__body-cell'>
                     {order.totalPrice.toLocaleString()}
                   </Td>
-
                   <Td className='tables-container__body-cell'>
-                    <Badge colorScheme={statusColors[order.status]}>
-                      {statusMap[order.status]}
+                    <Badge colorScheme={getOrderStatusColor(order)}>
+                      {getOrderStatusInChinese(order)}
                     </Badge>
                   </Td>
                   <Td className='tables-container__body-cell'>

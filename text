@@ -1,0 +1,16 @@
+Pending: 訂單已建立但尚未處理。
+Processing: 訂單正在處理中（例如，正在準備發貨）。
+Shipped: 訂單已出貨。
+Completed: 訂單已完成，已送達顧客手中。
+Cancelled: 訂單已取消。
+Returned: 訂單已退貨。
+
+
+可以根據物流和金流狀態來決定訂單的綜合狀態：
+
+當金流狀態為 Pending 且物流狀態為 Pending 時，綜合訂單狀態顯示為 Pending。
+當金流狀態為 Paid 且物流狀態為 Pending 時，綜合訂單狀態顯示為 Processing。
+當金流狀態為 Paid 且物流狀態為 Shipped 或 In Transit 時，綜合訂單狀態顯示為 Shipped。
+當金流狀態為 Paid 且物流狀態為 Delivered 時，綜合訂單狀態顯示為 Completed。
+當金流狀態為 Refunded 或物流狀態為 Returned 時，綜合訂單狀態顯示為 Returned。
+當金流狀態為 Failed 或訂單被取消時，綜合訂單狀態顯示為 Cancelled。
