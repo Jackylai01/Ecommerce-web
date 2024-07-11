@@ -362,6 +362,8 @@ const CheckoutPage: NextPage = () => {
     onClose();
   }, [onClose]);
 
+  const checkoutProductIds = checkout.map((item) => item._id);
+
   if (!checkout.length && !shipmentDataFromState) {
     return (
       <Flex justify='center' align='center' h='100vh'>
@@ -414,6 +416,7 @@ const CheckoutPage: NextPage = () => {
             handleDiscountSelection={handleDiscountSelection}
             handleExclusiveDiscountSelection={handleExclusiveDiscountSelection}
             uniqueId={uniqueId}
+            checkoutProducts={checkoutProductIds}
           />
         </Box>
         <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>

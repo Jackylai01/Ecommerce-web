@@ -23,14 +23,12 @@ import {
 import Card from '@components/Card/Card';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import ConfirmationModal from '@components/Modal/ConfirmationModal';
-import MessageModal from '@components/Modal/MessageModal';
 import Pagination from '@components/Pagination';
 import { TablesTableRow } from '@components/Tables/TablesTableRow';
 import { dateTime } from '@helpers/date';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import {
-  resetDiscountId,
   setDiscountList,
   setEditingDiscountId,
 } from '@reducers/admin/discount';
@@ -69,13 +67,7 @@ const DiscountTableContainer = () => {
     (state) => state.adminDiscount,
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isMessageModalOpen,
-    onOpen: onMessageModalOpen,
-    onClose: onMessageModalClose,
-  } = useDisclosure();
   const toast = useToast();
-
   const [sort, setSort] = useState('-createdAt');
 
   const {
@@ -153,7 +145,7 @@ const DiscountTableContainer = () => {
       <FormControl>
         <Input
           type='number'
-          value={localPriority[row._id]}
+          value={localPriority[row._id] || 0}
           onChange={(e) =>
             setLocalPriority({
               ...localPriority,
@@ -282,13 +274,6 @@ const DiscountTableContainer = () => {
   }, [DiscountList]);
 
   useEffect(() => {
-    if (deleteDiscountError) {
-      onMessageModalOpen();
-      dispatch(resetDiscountId());
-    }
-  }, [deleteDiscountError, onMessageModalOpen, dispatch]);
-
-  useEffect(() => {
     const fetchData = async () => {
       const page = parseInt(router.query.page as string, 10) || 1;
       const limit = 10;
@@ -394,16 +379,7 @@ const DiscountTableContainer = () => {
           >
             {modalContent}
           </ConfirmationModal>
-          <MessageModal
-            title='刪除折扣'
-            isActive={isMessageModalOpen}
-            error={deleteDiscountError}
-            onClose={onMessageModalClose}
-          >
-            {deleteDiscountError && (
-              <Box color='red.500'>{deleteDiscountError}</Box>
-            )}
-          </MessageModal>
+
           {metadata && DiscountList?.length !== 0 && (
             <Pagination metadata={metadata} />
           )}

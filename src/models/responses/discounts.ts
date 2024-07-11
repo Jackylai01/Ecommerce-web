@@ -17,7 +17,7 @@ export interface IDiscount {
   usageLimit?: number;
   usedCount?: number;
   isActive?: boolean;
-  productId?: string;
+  productId?: string[];
   combinableWithOtherDiscounts?: boolean;
   priority: number;
   usageHistory: {

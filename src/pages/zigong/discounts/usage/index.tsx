@@ -49,7 +49,7 @@ const DiscountUsageTable = () => {
               </Thead>
               <Tbody>
                 {discountUsageList && discountUsageList.length > 0 ? (
-                  discountUsageList.map((discountUsage) => {
+                  discountUsageList.map((discountUsage: any) => {
                     const usageLimit =
                       discountUsage.usageLimit !== undefined
                         ? discountUsage.usageLimit

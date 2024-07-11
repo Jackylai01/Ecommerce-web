@@ -13,6 +13,7 @@ interface DiscountsSectionProps {
     discount: IDiscount,
   ) => void;
   uniqueId: any;
+  checkoutProducts: string[];
 }
 
 const DiscountsSection: React.FC<DiscountsSectionProps> = ({
@@ -20,6 +21,7 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
   handleDiscountSelection,
   handleExclusiveDiscountSelection,
   uniqueId,
+  checkoutProducts,
 }) => {
   const { list: publicDiscountList } = useAppSelector(
     (state) => state.publicDiscounts,
@@ -28,6 +30,17 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
   if (uniqueId) {
     return null;
   }
+
+  const filteredDiscountList = publicDiscountList?.filter(
+    (discount: IDiscount) => {
+      if (discount.productId && discount.productId.length > 0) {
+        return discount.productId.some((id) =>
+          checkoutProducts.includes(id.toString()),
+        );
+      }
+      return true;
+    },
+  );
 
   return (
     <Box>
@@ -38,7 +51,7 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
         <Heading size='sm' mb='2'>
           Combinable Discounts
         </Heading>
-        {publicDiscountList
+        {filteredDiscountList
           ?.filter((d: IDiscount) => d.combinableWithOtherDiscounts)
           .sort((a: any, b: any) => a.priority - b.priority)
           .map((discount: IDiscount) => (
@@ -48,7 +61,7 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
               isChecked={selectedDiscounts.includes(discount._id)}
               isDisabled={selectedDiscounts.some(
                 (id) =>
-                  !publicDiscountList.find((d: IDiscount) => d._id === id)
+                  !filteredDiscountList.find((d: IDiscount) => d._id === id)
                     .combinableWithOtherDiscounts,
               )}
               onChange={(e) => handleDiscountSelection(e, discount)}
@@ -62,7 +75,7 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
         <Heading size='sm' mb='2'>
           Exclusive Discounts
         </Heading>
-        {publicDiscountList
+        {filteredDiscountList
           ?.filter((d: IDiscount) => !d.combinableWithOtherDiscounts)
           .map((discount: IDiscount) => (
             <Checkbox

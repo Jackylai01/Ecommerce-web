@@ -1,6 +1,8 @@
 import { ICategory, IProduct } from '@models/requests/products';
 
 export interface ProductsResponse extends Omit<IProduct, 'category'> {
+  // 產品_id
+  _id: string;
   // 商品類別或標籤
   category: ICategory;
   // 商品封面照片
