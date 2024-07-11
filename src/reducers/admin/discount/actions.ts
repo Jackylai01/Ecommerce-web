@@ -13,6 +13,7 @@ import {
   apiGetDiscountUsageByCode,
   apiGetDiscounts,
   apiUpdateDiscount,
+  apiUpdateDiscountPriority,
   apiUpdateDiscountStatus,
 } from '@services/admin/admin-discount/admin-discount';
 
@@ -28,6 +29,7 @@ export enum DiscountAction {
   getDiscountUsageByCode = 'getDiscountUsageByCode',
   getAllDiscountsUsage = 'getAllDiscountsUsage',
   generateMultipleDiscountCodes = 'generateMultipleDiscountCodes',
+  updateDiscountPriority = 'updateDiscountPriority',
 }
 
 export const getAllDiscountsAsync = createAsyncThunk(
@@ -124,6 +126,17 @@ export const generateMultipleDiscountCodesAsync = createAsyncThunk(
     const response = await apiGenerateMultipleDiscountCodes({
       discountId,
       count,
+    });
+    return response.result.data;
+  },
+);
+
+export const updateDiscountPriorityAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_DISCOUNT}/${DiscountAction.updateDiscountPriority}`,
+  async ({ id, priority }: { id: string; priority: number }) => {
+    const response = await apiUpdateDiscountPriority({
+      id,
+      priority,
     });
     return response.result.data;
   },

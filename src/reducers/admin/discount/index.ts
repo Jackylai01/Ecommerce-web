@@ -4,7 +4,7 @@ import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
 import { Discount } from '@models/entities/shared/discount';
 import { Metadata } from '@models/entities/shared/pagination';
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import {
   DiscountAction,
   addDiscountAsync,
@@ -16,6 +16,7 @@ import {
   getDiscountByIdAsync,
   getDiscountUsageByCodeAsync,
   updateDiscountAsync,
+  updateDiscountPriorityAsync,
   updateDiscountStatusAsync,
 } from './actions';
 
@@ -25,6 +26,7 @@ type DiscountState = ApiState<DiscountAction> & {
   discountDetails: Discount | null;
   editingDiscountId: string | null;
   discountUsage: any[] | null;
+  updateDiscountPriority: any;
 };
 
 const initialState: DiscountState = {
@@ -33,6 +35,7 @@ const initialState: DiscountState = {
   discountDetails: null,
   editingDiscountId: null,
   discountUsage: null,
+  updateDiscountPriority: null,
   ...newApiState<DiscountState>(DiscountAction),
 };
 
@@ -49,6 +52,9 @@ export const discountSlice = createSlice({
     },
     resetDiscountId: (state) => {
       state.editingDiscountId = null;
+    },
+    setDiscountList: (state, action: PayloadAction<Discount[]>) => {
+      state.list = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -109,6 +115,16 @@ export const discountSlice = createSlice({
         }
       },
     );
+    builder.addCase(updateDiscountPriorityAsync.fulfilled, (state, action) => {
+      state.updateDiscountPriority = action.payload;
+      if (state.list) {
+        state.list = state.list.map((discount) =>
+          discount._id === action.payload._id
+            ? { ...discount, priority: action.payload.priority }
+            : discount,
+        );
+      }
+    });
     asyncMatcher(builder, ReducerName.ADMIN_DISCOUNT);
   },
 });
@@ -118,5 +134,6 @@ export const {
   resetDiscountDetailState,
   setEditingDiscountId,
   resetDiscountId,
+  setDiscountList,
 } = discountSlice.actions;
 export default discountSlice.reducer;

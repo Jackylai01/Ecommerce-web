@@ -1,6 +1,7 @@
 import { BaseEntity } from './base-entity';
 
 export interface Discount extends BaseEntity {
+  _id: string;
   name: string;
   type:
     | 'orderDiscount'
@@ -20,4 +21,5 @@ export interface Discount extends BaseEntity {
   usedCount?: number;
   isActive?: boolean;
   usageHistory?: any;
+  priority?: number;
 }

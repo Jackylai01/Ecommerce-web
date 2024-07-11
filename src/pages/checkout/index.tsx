@@ -98,14 +98,30 @@ const CheckoutPage: NextPage = () => {
   ) => {
     const { checked } = e.target;
     if (checked) {
-      setSelectedDiscounts((prev) => [
-        ...prev.filter((id) =>
-          publicDiscountList.find(
-            (d: any) => d._id === id && d.combinableWithOtherDiscounts,
-          ),
-        ),
+      const sortedDiscounts = [
+        ...selectedDiscounts,
         discount._id.toString(),
-      ]);
+      ].sort((a, b) => {
+        const discountA = publicDiscountList.find(
+          (d: any) => d._id.toString() === a,
+        );
+        const discountB = publicDiscountList.find(
+          (d: any) => d._id.toString() === b,
+        );
+        return (discountA?.priority ?? 0) - (discountB?.priority ?? 0);
+      });
+
+      if (sortedDiscounts.length > 2) {
+        toast({
+          title: '選擇的折扣超過上限',
+          description: '您最多只能選擇兩個折扣',
+          status: 'warning',
+          isClosable: true,
+        });
+        return;
+      }
+
+      setSelectedDiscounts(sortedDiscounts);
     } else {
       setSelectedDiscounts((prev) =>
         prev.filter((id) => id !== discount._id.toString()),

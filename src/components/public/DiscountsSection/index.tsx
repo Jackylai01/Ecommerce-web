@@ -40,6 +40,7 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
         </Heading>
         {publicDiscountList
           ?.filter((d: IDiscount) => d.combinableWithOtherDiscounts)
+          .sort((a: any, b: any) => a.priority - b.priority)
           .map((discount: IDiscount) => (
             <Checkbox
               key={discount._id}

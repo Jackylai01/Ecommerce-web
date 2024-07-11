@@ -5,6 +5,7 @@ import {
   FormControl,
   FormLabel,
   IconButton,
+  Input,
   Menu,
   MenuButton,
   MenuItem,
@@ -30,11 +31,13 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import {
   resetDiscountId,
+  setDiscountList,
   setEditingDiscountId,
 } from '@reducers/admin/discount';
 import {
   deleteDiscountAsync,
   getAllDiscountsAsync,
+  updateDiscountPriorityAsync,
   updateDiscountStatusAsync,
 } from '@reducers/admin/discount/actions';
 import { useRouter } from 'next/router';
@@ -52,6 +55,7 @@ interface DiscountRowData {
   endDate: string;
   minimumAmount?: number;
   isActive: boolean;
+  priority: number;
 }
 
 const DiscountTableContainer = () => {
@@ -61,7 +65,9 @@ const DiscountTableContainer = () => {
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
   const bgColor = colorMode === 'light' ? 'white' : 'gray.700';
   const borderColor = colorMode === 'light' ? 'black' : 'white';
-  const { editingDiscountId } = useAppSelector((state) => state.adminDiscount);
+  const { editingDiscountId, list } = useAppSelector(
+    (state) => state.adminDiscount,
+  );
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isMessageModalOpen,
@@ -79,9 +85,19 @@ const DiscountTableContainer = () => {
       getAllDiscountsLoading,
       deleteDiscountLoading,
       updateDiscountLoading,
+      updateDiscountPrioritySuccess,
+      updateDiscountPriorityFailed,
     },
-    error: { deleteDiscountError, updateDiscountError },
+    error: {
+      deleteDiscountError,
+      updateDiscountError,
+      updateDiscountPriorityError,
+    },
   } = useAppSelector((state) => state.adminDiscount);
+
+  const [localPriority, setLocalPriority] = useState<{ [key: string]: number }>(
+    {},
+  );
 
   const captions = [
     '名稱',
@@ -92,6 +108,7 @@ const DiscountTableContainer = () => {
     '結束日期',
     '最低金額',
     '狀態',
+    '優先順序',
     '操作',
   ];
 
@@ -118,9 +135,11 @@ const DiscountTableContainer = () => {
   const renderCell = [
     (row: DiscountRowData) => <Box>{row.name}</Box>,
     (row: DiscountRowData) => <Box>{discountTypeTranslation(row.type)}</Box>,
-    (row: DiscountRowData) => <Box>{row.value}</Box>,
+    (row: DiscountRowData) => <Box>{row.value || 0}</Box>,
     (row: DiscountRowData) => (
-      <Box>{calculationMethodTranslation(row.calculationMethod)}</Box>
+      <Box>
+        {calculationMethodTranslation(row.calculationMethod) || '固定金額'}
+      </Box>
     ),
     (row: DiscountRowData) => <Box>{dateTime(row.startDate)}</Box>,
     (row: DiscountRowData) => <Box>{dateTime(row.endDate)}</Box>,
@@ -129,6 +148,22 @@ const DiscountTableContainer = () => {
       <Badge bg='none' color={row.isActive ? 'green.300' : 'red.300'}>
         {row.isActive ? '啟用' : '停用'}
       </Badge>
+    ),
+    (row: DiscountRowData) => (
+      <FormControl>
+        <Input
+          type='number'
+          value={localPriority[row._id]}
+          onChange={(e) =>
+            setLocalPriority({
+              ...localPriority,
+              [row._id]: parseInt(e.target.value),
+            })
+          }
+          onBlur={() => handlePriorityChange(row._id, localPriority[row._id])}
+          width='60px'
+        />
+      </FormControl>
     ),
     (row: DiscountRowData) => (
       <Box display='flex' gap={2}>
@@ -173,6 +208,18 @@ const DiscountTableContainer = () => {
     ),
   ];
 
+  const handlePriorityChange = (id: string, priority: number) => {
+    dispatch(updateDiscountPriorityAsync({ id, priority })).then(() => {
+      const updatedList = list?.map((discount) =>
+        discount._id === id ? { ...discount, priority } : discount,
+      );
+
+      if (updatedList) {
+        dispatch(setDiscountList(updatedList));
+      }
+    });
+  };
+
   const handleStatusChange = async (id: string, isChecked: boolean) => {
     const newStatus = isChecked;
     dispatch(updateDiscountStatusAsync({ id, isActive: newStatus }));
@@ -197,6 +244,42 @@ const DiscountTableContainer = () => {
   const handleSortChange = (sortOption: string) => {
     setSort(sortOption);
   };
+
+  useEffect(() => {
+    if (updateDiscountPrioritySuccess) {
+      toast({
+        title: '建立順序更新',
+        description: '更新成功',
+        status: 'success',
+        isClosable: true,
+      });
+    }
+    if (updateDiscountPriorityFailed) {
+      toast({
+        title: '建立訂單失敗',
+        description: updateDiscountPriorityError,
+        status: 'error',
+        isClosable: true,
+      });
+    }
+  }, [
+    updateDiscountPrioritySuccess,
+    updateDiscountPriorityFailed,
+    updateDiscountPriorityError,
+    toast,
+  ]);
+
+  useEffect(() => {
+    if (DiscountList) {
+      const initialPriorities = DiscountList.reduce((acc, discount) => {
+        if (discount.priority !== undefined) {
+          acc[discount._id] = discount.priority;
+        }
+        return acc;
+      }, {} as { [key: string]: number });
+      setLocalPriority(initialPriorities);
+    }
+  }, [DiscountList]);
 
   useEffect(() => {
     if (deleteDiscountError) {
