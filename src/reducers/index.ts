@@ -20,6 +20,7 @@ import fileSelect from './file-select';
 import iconSelect from './icon-select';
 import layout from './layout';
 import publicCategory from './public/categories';
+import publicDiscounts from './public/discounts';
 import publicFavorites from './public/favorite';
 import publicPayments from './public/payments';
 import publicProducts from './public/products';
@@ -52,6 +53,7 @@ const appReducer = {
   clientRefunds,
   adminRefunds,
   clientOrders,
+  publicDiscounts,
 };
 
 export default appReducer;

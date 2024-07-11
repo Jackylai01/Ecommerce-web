@@ -7,6 +7,7 @@ import {
   apiApplyDiscountToOrder,
   apiDeleteDiscount,
   apiGenerateDiscountCode,
+  apiGenerateMultipleDiscountCodes,
   apiGetAllDiscountsUsage,
   apiGetDiscountById,
   apiGetDiscountUsageByCode,
@@ -26,6 +27,7 @@ export enum DiscountAction {
   applyDiscountToOrder = 'applyDiscountToOrder',
   getDiscountUsageByCode = 'getDiscountUsageByCode',
   getAllDiscountsUsage = 'getAllDiscountsUsage',
+  generateMultipleDiscountCodes = 'generateMultipleDiscountCodes',
 }
 
 export const getAllDiscountsAsync = createAsyncThunk(
@@ -113,5 +115,16 @@ export const getAllDiscountsUsageAsync = createAsyncThunk(
     const query: PagingQuery = { page, limit };
     const response = await apiGetAllDiscountsUsage(query);
     return response.result;
+  },
+);
+
+export const generateMultipleDiscountCodesAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_DISCOUNT}/${DiscountAction.generateMultipleDiscountCodes}`,
+  async ({ discountId, count }: { discountId: string; count: number }) => {
+    const response = await apiGenerateMultipleDiscountCodes({
+      discountId,
+      count,
+    });
+    return response.result.data;
   },
 );

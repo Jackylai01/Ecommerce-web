@@ -5,12 +5,14 @@ import {
   apiClientCancelOrder,
   apiClientGetOrderHistory,
   apiClientGetOrders,
+  apiGetClientOrderByOrderId,
 } from '@services/client/client-orders/client-orders';
 
 export enum clientOrdersAction {
   getClientOrders = 'getClientOrders',
   getClientOrderHistory = 'getClientOrderHistory',
   cancelOrder = 'cancelOrder',
+  getClientOrder = 'getClientOrder',
 }
 
 export const getClientOrdersAsync = createAsyncThunk(
@@ -33,6 +35,17 @@ export const cancelClientOrderAsync = createAsyncThunk(
   `${ReducerName.CLIENT_ORDERS}/${clientOrdersAction.cancelOrder}`,
   async (orderId: string) => {
     const response = await apiClientCancelOrder(orderId);
+    return response.result.data;
+  },
+);
+
+/**
+ * 根據orderId獲得當前的訂單(未付款錢的顯示)
+ */
+export const getOrderByOrderIdAsync = createAsyncThunk(
+  `${ReducerName.CLIENT_ORDERS}/${clientOrdersAction.getClientOrder}`,
+  async (orderId: string) => {
+    const response = await apiGetClientOrderByOrderId(orderId);
     return response.result.data;
   },
 );

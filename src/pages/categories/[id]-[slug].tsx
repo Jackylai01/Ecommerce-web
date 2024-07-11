@@ -27,9 +27,6 @@ const CategoryPage = () => {
   useEffect(() => {
     if (typeof query === 'string') {
       const [id, slug] = query.split('-');
-      console.log('Parsed id:', id);
-      console.log('Parsed slug:', slug);
-
       if (id && slug) {
         dispatch(getCategoryByIdAsync({ id, slug }));
       }

@@ -32,6 +32,19 @@ export const paymentTypeMap = {
   BNPL_URICH: '裕富數位無卡分期',
 };
 
+export const getPaymentStatusColors = (status: PaymentStatus): string => {
+  switch (status) {
+    case 'Pending':
+      return 'gray.700';
+    case 'Paid':
+      return 'green';
+    case 'Failed':
+      return 'red';
+    default:
+      return 'gray.700';
+  }
+};
+
 export const paymentStatusMap: any = {
   Pending: '未付款',
   Paid: '已付款',

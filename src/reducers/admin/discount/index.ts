@@ -10,6 +10,7 @@ import {
   addDiscountAsync,
   deleteDiscountAsync,
   generateDiscountCodeAsync,
+  generateMultipleDiscountCodesAsync,
   getAllDiscountsAsync,
   getAllDiscountsUsageAsync,
   getDiscountByIdAsync,
@@ -97,7 +98,17 @@ export const discountSlice = createSlice({
       state.list = action.payload.data;
       state.metadata = action.payload.metadata;
     });
-
+    builder.addCase(
+      generateMultipleDiscountCodesAsync.fulfilled,
+      (state, action) => {
+        const discountIndex = state.list?.findIndex(
+          (discount) => discount._id === action.payload._id,
+        );
+        if (discountIndex !== undefined && discountIndex !== -1 && state.list) {
+          state.list[discountIndex] = action.payload;
+        }
+      },
+    );
     asyncMatcher(builder, ReducerName.ADMIN_DISCOUNT);
   },
 });

@@ -10,6 +10,7 @@ import {
   clientOrdersAction,
   getClientOrderHistoryAsync,
   getClientOrdersAsync,
+  getOrderByOrderIdAsync,
 } from './actions';
 
 type clientOrdersState = ApiState<clientOrdersAction> & {
@@ -18,6 +19,7 @@ type clientOrdersState = ApiState<clientOrdersAction> & {
   historyList: ordersResponse[] | null;
   historyMetadata: Metadata | null;
   cancelOrder: any;
+  getClientOrder: any;
 };
 
 const initialState: clientOrdersState = {
@@ -26,6 +28,7 @@ const initialState: clientOrdersState = {
   historyList: null,
   historyMetadata: null,
   cancelOrder: null,
+  getClientOrder: null,
   ...newApiState<clientOrdersState>(clientOrdersAction),
 };
 
@@ -51,6 +54,9 @@ export const clientOrdersSlice = createSlice({
     });
     builder.addCase(cancelClientOrderAsync.fulfilled, (state, action) => {
       state.cancelOrder = action.payload;
+    });
+    builder.addCase(getOrderByOrderIdAsync.fulfilled, (state, action) => {
+      state.getClientOrder = action.payload;
     });
     asyncMatcher(builder, ReducerName.CLIENT_ORDERS);
   },

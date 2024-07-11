@@ -103,3 +103,20 @@ export const apiGetAllDiscountsUsage = async (query: PagingQuery) =>
   getRequest<ApiPaginationResult<any>>(
     formatQueryString('/zigong/discounts/usage', query),
   );
+
+/**
+ * 獲取全部折扣使用情形
+ */
+
+export const apiGenerateMultipleDiscountCodes = async ({
+  discountId,
+  count,
+}: {
+  discountId: string;
+  count: number;
+}) => {
+  return postRequest<ApiResult<Discount>>('/zigong/discounts/code', {
+    discountId,
+    count,
+  });
+};

@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react';
 import Pagination from '@components/Pagination';
 import { getOrderStatusColor, getOrderStatusInChinese } from '@fixtures/orders';
+import { getPaymentStatusColors, paymentStatusMap } from '@fixtures/payments';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { Transaction } from '@models/responses/transactions.res';
@@ -299,6 +300,13 @@ const OrdersTab = () => {
                 bg={bgColor}
                 color={textColor}
               >
+                金流狀態
+              </Th>
+              <Th
+                className='tables-container__header-cell'
+                bg={bgColor}
+                color={textColor}
+              >
                 收件地址
               </Th>
               <Th
@@ -357,6 +365,16 @@ const OrdersTab = () => {
                   <Td className='tables-container__body-cell'>
                     <Badge colorScheme={getOrderStatusColor(order)}>
                       {getOrderStatusInChinese(order)}
+                    </Badge>
+                  </Td>
+                  <Td className='tables-container__body-cell'>
+                    <Badge
+                      color={getPaymentStatusColors(
+                        order.payments[0]?.PaymentStatus,
+                      )}
+                    >
+                      {paymentStatusMap[order.payments[0]?.PaymentStatus] ||
+                        'N/A'}
                     </Badge>
                   </Td>
                   <Td className='tables-container__body-cell'>

@@ -1,5 +1,5 @@
-import DiscountForm from '@components/Form/FormCRUD/DiscountForm';
-import AddButton from '@components/Icons/AddFormIcon';
+import { AddIcon } from '@chakra-ui/icons';
+import { IconButton, useBreakpointValue } from '@chakra-ui/react';
 
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import TabsLayout from '@components/Layout/TabsLayout';
@@ -7,10 +7,9 @@ import MessageModal from '@components/Modal/MessageModal';
 import { tabsConfig } from '@fixtures/Tabs-configs';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { Discount } from '@models/entities/shared/discount';
 import { resetDiscountState } from '@reducers/admin/discount';
-import { addDiscountAsync } from '@reducers/admin/discount/actions';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const DiscountTableContainer = dynamic(
@@ -26,14 +25,11 @@ const NewDiscount = () => {
     status: { addDiscountLoading, addDiscountSuccess, addDiscountFailed },
     error: { addDiscountError },
   } = useAppSelector((state) => state.adminDiscount);
-
+  const topPosition = useBreakpointValue({ base: '80px', md: '10%' });
+  const marginRight = useBreakpointValue({ base: '8px', md: '20px' });
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');
   const [modalTitle, setModalTitle] = useState<string>('新增折扣');
-
-  const handleSubmit = (data: Discount) => {
-    dispatch(addDiscountAsync(data));
-  };
 
   useEffect(() => {
     if (addDiscountSuccess) {
@@ -60,11 +56,18 @@ const NewDiscount = () => {
 
   return (
     <LoadingLayout isLoading={addDiscountLoading}>
-      <AddButton
-        formTitle='Add Discount'
-        formContent={<DiscountForm />}
-        onSubmit={handleSubmit}
-      />
+      <Link href='/zigong/discounts/create'>
+        <IconButton
+          icon={<AddIcon />}
+          isRound
+          colorScheme='teal'
+          aria-label='Add product button'
+          position='absolute'
+          right={marginRight}
+          top={topPosition}
+          zIndex={1}
+        />
+      </Link>
       <TabsLayout tabsConfig={tabsConfig}>
         <DiscountTableContainer />
       </TabsLayout>

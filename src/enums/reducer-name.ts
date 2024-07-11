@@ -33,4 +33,5 @@ export enum ReducerName {
   CLIENT_REQUESTRETURN = 'clientQequestReturn',
   ADMIN_REQUESTRETURN = 'adminQequestReturn',
   CLIENT_ORDERS = 'clientOrders',
+  PUBLIC_DISCOUNTS = 'publicDiscounts',
 }

@@ -33,3 +33,9 @@ export const apiClientGetOrderHistory = async (
 
 export const apiClientCancelOrder = async (orderId: string) =>
   postRequest<ApiResult<ordersResponse>>(`/orders/client/cancel`, { orderId });
+
+/**
+ * 根據uniqueId獲得當前的訂單(未付款錢的顯示)
+ */
+export const apiGetClientOrderByOrderId = async (orderId: string) =>
+  getRequest<ApiResult<any>>(`/orders/client/${orderId}`);
