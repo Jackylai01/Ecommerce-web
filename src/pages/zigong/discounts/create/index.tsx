@@ -172,6 +172,7 @@ const DiscountModule: NextPage = () => {
       isClosable: true,
     });
   };
+
   const handleBack = () => {
     router.push('/zigong/discounts');
   };
@@ -418,10 +419,13 @@ const DiscountModule: NextPage = () => {
                     </Box>
                     <Checkbox
                       name='selectedProducts'
-                      value={product._id}
+                      value={String(product._id)}
                       onChange={handleInputChange}
                       size='lg'
                       borderColor='gray.700'
+                      isChecked={formValues.selectedProducts.includes(
+                        String(product._id),
+                      )}
                     >
                       套用折扣
                     </Checkbox>

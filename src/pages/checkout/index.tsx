@@ -98,7 +98,7 @@ const CheckoutPage: NextPage = () => {
   const handleDiscountCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDiscountCode(e.target.value);
   };
-  console.log(publicDiscountList);
+
   const handleApplyDiscountCode = () => {
     const appliedDiscount = publicDiscountList.find(
       (discount: any) =>
@@ -151,6 +151,26 @@ const CheckoutPage: NextPage = () => {
         isClosable: true,
       });
       return;
+    }
+
+    // 檢查購物車中的商品是否包含在折扣碼適用的商品中
+    if (appliedDiscount.productId && appliedDiscount.productId.length > 0) {
+      const eligibleProductIds = new Set(
+        appliedDiscount.productId.map((id: any) => id.toString()),
+      );
+      const hasEligibleProduct = checkout.some((item) =>
+        eligibleProductIds.has(item._id.toString()),
+      );
+
+      if (!hasEligibleProduct) {
+        toast({
+          title: '折扣碼不適用',
+          description: '該折扣碼不適用於您購物車中的商品。',
+          status: 'error',
+          isClosable: true,
+        });
+        return;
+      }
     }
 
     setDiscount(appliedDiscount);
@@ -244,6 +264,13 @@ const CheckoutPage: NextPage = () => {
       return;
     }
     setIsOrderButtonDisabled(true);
+
+    // 合併 savedDiscountCode 和 selectedDiscounts
+    const discountCodes = [...selectedDiscounts];
+    if (savedDiscountCode) {
+      discountCodes.push(savedDiscountCode);
+    }
+
     const orderData = {
       userId: userInfo._id,
       products: checkout.map((item) => ({
@@ -256,8 +283,9 @@ const CheckoutPage: NextPage = () => {
         subTotal - appliedDiscount + (freeShipping ? 0 : logisticsFee),
       discountsFee: appliedDiscount,
       shippingAddress: { ...formData },
-      discountCodes: savedDiscountCode ? [savedDiscountCode] : [], // 將折扣碼作為陣列傳遞
+      discountCodes,
     };
+
     await dispatch(createOrderAsync(orderData));
   };
 
@@ -274,7 +302,7 @@ const CheckoutPage: NextPage = () => {
         ItemName: order.products.map((item: any) => item.name).join('#'),
         ChoosePayment: 'ALL',
         TotalAmount: total,
-        discountCode: orderDiscountCode,
+        discountCodes: orderDiscountCode,
       };
       await dispatch(createPaymentAsync(paymentData));
     }
@@ -549,6 +577,7 @@ const CheckoutPage: NextPage = () => {
             handleExclusiveDiscountSelection={handleExclusiveDiscountSelection}
             uniqueId={uniqueId}
             checkoutProducts={checkoutProductIds}
+            subTotal={subTotal}
           />
         </Box>
         <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>

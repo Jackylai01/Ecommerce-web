@@ -14,6 +14,7 @@ interface DiscountsSectionProps {
   ) => void;
   uniqueId: any;
   checkoutProducts: string[];
+  subTotal: number; // 新增 subTotal 作為 props
 }
 
 const DiscountsSection: React.FC<DiscountsSectionProps> = ({
@@ -22,6 +23,7 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
   handleExclusiveDiscountSelection,
   uniqueId,
   checkoutProducts,
+  subTotal, // 接收 subTotal 作為 props
 }) => {
   const { list: publicDiscountList } = useAppSelector(
     (state) => state.publicDiscounts,
@@ -36,6 +38,12 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
       if (
         discount.type === 'productCodeDiscount' ||
         discount.type === 'orderCodeDiscount'
+      ) {
+        return false;
+      }
+      if (
+        discount.minimumAmount !== undefined &&
+        subTotal < discount.minimumAmount
       ) {
         return false;
       }
