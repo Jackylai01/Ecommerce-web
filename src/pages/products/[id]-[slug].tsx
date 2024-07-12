@@ -14,20 +14,20 @@ import {
 import { AddToWishlistButton } from '@components/AddToWishlistButton';
 import { AddToCartButton } from '@components/Cart/AddToCartButton';
 import { CustomBreadcrumb } from '@components/CustomBreadcrumb';
+
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import { Quantity } from '@components/Quantity/Quantity';
+
 import { getSubstring } from '@helpers/products';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { IBreadcrumbItem } from '@models/requests/products';
-import { AppState } from '@models/store';
+
 import { addItem, isAdded, resetItems } from '@reducers/client/cart';
 import { publicProductsDetailAsync } from '@reducers/public/products/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 
-const items: IBreadcrumbItem[] = [
+const items = [
   {
     name: 'Products',
     link: '/products',
@@ -40,6 +40,7 @@ const items: IBreadcrumbItem[] = [
 
 const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -60,9 +61,15 @@ const ProductDetails = () => {
     status: { productsDetailLoading },
   } = useAppSelector((state) => state.publicProducts);
 
-  const productIsAddedToCart = useSelector((state: AppState) =>
+  const productIsAddedToCart = useAppSelector((state) =>
     product ? isAdded(state, 'cart', product._id) : false,
   );
+
+  useEffect(() => {
+    if (product && product.price) {
+      setTotalPrice(product.price * quantity);
+    }
+  }, [quantity, product]);
 
   const handleBuyNow = () => {
     dispatch(resetItems('checkout'));
@@ -134,7 +141,7 @@ const ProductDetails = () => {
           <Heading>{product.name}</Heading>
           <Text my='1rem'>{product.description}</Text>
           <Text fontWeight='bold' fontSize='2rem'>
-            ${product.price}
+            ${totalPrice.toFixed(2)}
           </Text>
           <Divider my='1rem' />
           <Quantity

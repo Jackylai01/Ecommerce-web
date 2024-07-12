@@ -33,6 +33,12 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
 
   const filteredDiscountList = publicDiscountList?.filter(
     (discount: IDiscount) => {
+      if (
+        discount.type === 'productCodeDiscount' ||
+        discount.type === 'orderCodeDiscount'
+      ) {
+        return false;
+      }
       if (discount.productId && discount.productId.length > 0) {
         return discount.productId.some((id) =>
           checkoutProducts.includes(id.toString()),
@@ -47,7 +53,7 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
       <Heading size='md' my='1rem'>
         Available Discounts
       </Heading>
-      <Stack>
+      <Stack spacing={3}>
         <Heading size='sm' mb='2'>
           Combinable Discounts
         </Heading>

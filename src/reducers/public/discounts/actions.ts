@@ -10,6 +10,6 @@ export const getPublicDiscountsListAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_DISCOUNTS}/${publicDiscountsAsyncAction.publicDiscounts}`,
   async () => {
     const response = await apiGetPublicDiscounts();
-    return response.result;
+    return response.result.data;
   },
 );

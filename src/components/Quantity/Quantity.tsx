@@ -30,14 +30,14 @@ export const Quantity = ({
 
   const inc = getIncrementButtonProps();
   const dec = getDecrementButtonProps();
-  const input = getInputProps();
+  const input = getInputProps({ readOnly: false });
 
   return (
     <HStack maxW='140px' my='0.5rem'>
       <Button {...dec} disabled={disabled}>
         -
       </Button>
-      <Input {...input} readOnly={true} minW='52px' />
+      <Input {...input} minW='52px' disabled={disabled} />
       <Button {...inc} disabled={disabled}>
         +
       </Button>

@@ -109,15 +109,15 @@ export const apiGetAllDiscountsUsage = async (query: PagingQuery) =>
  */
 
 export const apiGenerateMultipleDiscountCodes = async ({
-  discountId,
   count,
+  usageLimit,
 }: {
-  discountId: string;
   count: number;
+  usageLimit: number;
 }) => {
-  return postRequest<ApiResult<Discount>>('/zigong/discounts/code', {
-    discountId,
+  return postRequest<ApiResult<string[]>>('/zigong/discounts/code', {
     count,
+    usageLimit,
   });
 };
 

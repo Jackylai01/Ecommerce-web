@@ -1,8 +1,26 @@
-import { VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  HStack,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  SimpleGrid,
+  Switch,
+  Text,
+  VStack,
+  useDisclosure,
+} from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { IProduct } from '@models/requests/products';
 import { getAllDiscountsAsync } from '@reducers/admin/discount/actions';
 import { getAllProductsCategoryAsync } from '@reducers/admin/product-category/actions';
+
 import { getAllProductsTagsAsync } from '@reducers/admin/product-tags/actions';
 import {
   deleteProductImageAsync,
@@ -16,13 +34,97 @@ import CustomSelect from './Field/CustomSelect';
 import ImageUpload from './Field/ImageUpload';
 import DynamicSpecifications from './Field/Specifications';
 import { TagsMultiSelect } from './Field/TagsSelect';
-
 import TextInput from './Field/TextInput';
-
 import ToggleSwitch from './Field/ToggleSwitch';
 import ProductCustomBlocks from './ProductCustomBlocks';
 
-export const ProductFormContent = () => {
+interface UpsellProduct {
+  productId: string;
+  upsellPrice: string;
+  upsellLimit: string;
+  upsellStock: string;
+  upsellScope: 'global' | 'specific';
+}
+
+interface UpsellProductModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedUpsellProducts: UpsellProduct[];
+  setSelectedUpsellProducts: React.Dispatch<
+    React.SetStateAction<UpsellProduct[]>
+  >;
+}
+
+const UpsellProductModal: React.FC<UpsellProductModalProps> = ({
+  isOpen,
+  onClose,
+  selectedUpsellProducts,
+  setSelectedUpsellProducts,
+}) => {
+  const { list: products } = useAppSelector((state) => state.adminProducts);
+
+  const handleProductSelect = (product: IProduct) => {
+    setSelectedUpsellProducts((prev) => {
+      const isSelected = prev.some((item) => item.productId === product._id);
+      if (isSelected) {
+        return prev.filter((item) => item.productId !== product._id);
+      } else {
+        return [
+          ...prev,
+          {
+            productId: product._id,
+            upsellPrice: '',
+            upsellLimit: '',
+            upsellStock: '',
+            upsellScope: 'global',
+          },
+        ];
+      }
+    });
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} size='6xl'>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>選擇加購產品</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <SimpleGrid columns={[1, 2, 3]} spacing={4}>
+            {products?.map((product: any) => (
+              <Box
+                key={product._id}
+                p={4}
+                borderWidth={1}
+                borderRadius='md'
+                boxShadow='md'
+                cursor='pointer'
+                onClick={() => handleProductSelect(product)}
+                bg={
+                  selectedUpsellProducts.some(
+                    (item) => item.productId === product._id,
+                  )
+                    ? 'teal.100'
+                    : 'white'
+                }
+              >
+                <Text fontWeight='bold'>{product.name}</Text>
+                <Text fontSize='sm'>{product.description}</Text>
+              </Box>
+            ))}
+          </SimpleGrid>
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme='blue' mr={3} onClick={onClose}>
+            完成
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export const ProductFormContent: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { setValue } = useFormContext();
@@ -41,6 +143,11 @@ export const ProductFormContent = () => {
 
   const [coverImagePreview, setCoverImagePreview] = useState<any>(null);
   const [productImagesPreviews, setProductImagesPreviews] = useState<any>([]);
+  const [isUpsellEnabled, setIsUpsellEnabled] = useState(false);
+  const [selectedUpsellProducts, setSelectedUpsellProducts] = useState<any[]>(
+    [],
+  );
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode } = useAdminColorMode();
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
@@ -98,6 +205,7 @@ export const ProductFormContent = () => {
       setValue('cost', productDetails.cost);
       setValue('tags', productDetails.tags);
       setValue('discount', productDetails.discount);
+      setValue('upsellProducts', productDetails.upsellProducts);
 
       if (productDetails.specifications) {
         setValue(
@@ -162,6 +270,16 @@ export const ProductFormContent = () => {
       setValue('detailDescription', imageBlocks);
     }
   }, [uploadedImages, productId, setValue]);
+
+  const handleUpsellSettingsChange = (
+    index: number,
+    field: keyof UpsellProduct,
+    value: string,
+  ) => {
+    setSelectedUpsellProducts((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)),
+    );
+  };
 
   return (
     <VStack spacing={4} align='flex-start' color={textColor}>
@@ -242,6 +360,64 @@ export const ProductFormContent = () => {
         deleteLoading={deleteProductImageLoading}
       />
       <ProductCustomBlocks name='detailDescription' label='詳細商品內容' />
+
+      <HStack spacing={4} alignItems='center'>
+        <Text>是否啟用加購</Text>
+        <Switch
+          isChecked={isUpsellEnabled}
+          onChange={(e) => setIsUpsellEnabled(e.target.checked)}
+        />
+      </HStack>
+      {isUpsellEnabled && (
+        <>
+          <Button onClick={onOpen} colorScheme='blue'>
+            選擇加購產品
+          </Button>
+          {selectedUpsellProducts.map((product, index) => (
+            <Box
+              key={product.productId}
+              p={4}
+              borderWidth={1}
+              borderRadius='md'
+              boxShadow='md'
+            >
+              <HStack spacing={4}>
+                <Text fontWeight='bold'>加購產品ID: {product.productId}</Text>
+                <TextInput
+                  name={`upsellProducts[${index}].upsellPrice`}
+                  label='加購價格'
+                  placeholder='輸入加購價格'
+                />
+                <TextInput
+                  name={`upsellProducts[${index}].upsellLimit`}
+                  label='加購上限'
+                  placeholder='輸入加購上限'
+                />
+                <TextInput
+                  name={`upsellProducts[${index}].upsellStock`}
+                  label='加購庫存數量'
+                  placeholder='輸入加購庫存數量'
+                />
+                <CustomSelect
+                  name={`upsellProducts[${index}].upsellScope`}
+                  label='加購範圍'
+                  options={[
+                    { value: 'global', label: '全館加購' },
+                    { value: 'specific', label: '指定商品加購' },
+                  ]}
+                  isRequired
+                />
+              </HStack>
+            </Box>
+          ))}
+          <UpsellProductModal
+            isOpen={isOpen}
+            onClose={onClose}
+            selectedUpsellProducts={selectedUpsellProducts}
+            setSelectedUpsellProducts={setSelectedUpsellProducts}
+          />
+        </>
+      )}
     </VStack>
   );
 };

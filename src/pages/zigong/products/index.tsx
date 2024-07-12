@@ -22,6 +22,7 @@ const ProductsPages: NextPage = () => {
   const dispatch = useAppDispatch();
 
   const {
+    list,
     status: { addProductSuccess, addProductFailed, addProductLoading },
     error: { addProductError },
   } = useAppSelector((state) => state.adminProducts);

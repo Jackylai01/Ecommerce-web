@@ -48,6 +48,8 @@ const CheckoutPage: NextPage = () => {
   const [appliedDiscount, setAppliedDiscount] = useState<number>(0);
   const [selectedDiscounts, setSelectedDiscounts] = useState<string[]>([]);
   const [freeShipping, setFreeShipping] = useState<boolean>(false);
+  const [discountCode, setDiscountCode] = useState<string>('');
+  const [discount, setDiscount] = useState<IDiscount | null>(null);
   const [formData, setFormData] = useState({
     fullName: '',
     address: '',
@@ -83,6 +85,7 @@ const CheckoutPage: NextPage = () => {
       createPaymentLoading,
       redirectToLogisticsSelectionLoading,
     },
+    error: { createOrderError },
   } = useAppSelector((state) => state.publicPayments);
   const { userInfo } = useAppSelector((state) => state.clientAuth);
   const { getClientOrder } = useAppSelector((state) => state.clientOrders);
@@ -90,6 +93,83 @@ const CheckoutPage: NextPage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleDiscountCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDiscountCode(e.target.value);
+  };
+  console.log(publicDiscountList);
+  const handleApplyDiscountCode = () => {
+    const appliedDiscount = publicDiscountList.find(
+      (discount: any) =>
+        discount.discountCodes &&
+        discount.discountCodes.some((dc: any) => dc.code === discountCode),
+    );
+
+    if (!appliedDiscount) {
+      toast({
+        title: '無效的折扣碼',
+        description: '找不到該折扣碼，請確認後再試。',
+        status: 'error',
+        isClosable: true,
+      });
+      return;
+    }
+
+    const discountCodeObject = appliedDiscount.discountCodes.find(
+      (dc: any) => dc.code === discountCode,
+    );
+
+    if (!discountCodeObject) {
+      toast({
+        title: '無效的折扣碼',
+        description: '找不到該折扣碼，請確認後再試。',
+        status: 'error',
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (discountCodeObject.usageLimit <= discountCodeObject.usedCount) {
+      toast({
+        title: '折扣碼已達使用次數上限',
+        description: '該折扣碼已達使用次數上限，無法再使用。',
+        status: 'error',
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (
+      appliedDiscount.minimumAmount !== undefined &&
+      subTotal < appliedDiscount.minimumAmount
+    ) {
+      toast({
+        title: '未達最低消費金額',
+        description: `該折扣碼的最低消費金額為 ${appliedDiscount.minimumAmount} 元，請增加購買金額後再試。`,
+        status: 'error',
+        isClosable: true,
+      });
+      return;
+    }
+
+    setDiscount(appliedDiscount);
+    let discountAmount = 0;
+    if (appliedDiscount.calculationMethod === 'percentage') {
+      discountAmount = (subTotal * appliedDiscount.value) / 100;
+    } else {
+      discountAmount = appliedDiscount.value;
+    }
+    setAppliedDiscount(discountAmount);
+    setTotal(subTotal - discountAmount + (freeShipping ? 0 : logisticsFee));
+    localStorage.setItem('discountCode', discountCode);
+    localStorage.setItem('appliedDiscount', discountAmount.toString());
+    toast({
+      title: '折扣碼已應用',
+      description: `折扣名稱: ${appliedDiscount.name}, 折扣金額: ${discountAmount}`,
+      status: 'success',
+      isClosable: true,
+    });
   };
 
   const handleDiscountSelection = (
@@ -152,6 +232,8 @@ const CheckoutPage: NextPage = () => {
 
   const handleOrderSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const savedDiscountCode = localStorage.getItem('discountCode') || '';
+
     if (!userInfo) {
       toast({
         title: '請先登錄',
@@ -174,23 +256,57 @@ const CheckoutPage: NextPage = () => {
         subTotal - appliedDiscount + (freeShipping ? 0 : logisticsFee),
       discountsFee: appliedDiscount,
       shippingAddress: { ...formData },
-      discountCodes: selectedDiscounts,
+      discountCodes: savedDiscountCode ? [savedDiscountCode] : [], // 將折扣碼作為陣列傳遞
     };
     await dispatch(createOrderAsync(orderData));
   };
 
   const handlePaymentSubmit = async () => {
     if (order) {
+      const orderDiscountCode =
+        order.discountCodes && order.discountCodes.length > 0
+          ? order.discountCodes[0]
+          : '';
+
       const paymentData = {
         orderId: order._id,
         TradeDesc: `購買於 我的商店 - 訂單編號 ${order._id}`,
         ItemName: order.products.map((item: any) => item.name).join('#'),
         ChoosePayment: 'ALL',
         TotalAmount: total,
+        discountCode: orderDiscountCode,
       };
       await dispatch(createPaymentAsync(paymentData));
     }
   };
+
+  const clearLocalStorageDiscounts = () => {
+    localStorage.removeItem('discountCode');
+    localStorage.removeItem('appliedDiscount');
+  };
+
+  useEffect(() => {
+    clearLocalStorageDiscounts();
+    return () => {
+      clearLocalStorageDiscounts();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (createPaymentSuccess && payment) {
+      localStorage.setItem('paymentForm', payment);
+      clearLocalStorageDiscounts();
+      router.push('/payment');
+    } else if (createPaymentFailed) {
+      clearLocalStorageDiscounts();
+      toast({
+        title: '建立付款失敗',
+        description: '請重試',
+        status: 'error',
+        isClosable: true,
+      });
+    }
+  }, [createPaymentSuccess, createPaymentFailed, payment, router, toast]);
 
   useEffect(() => {
     if (order) {
@@ -233,6 +349,18 @@ const CheckoutPage: NextPage = () => {
     }
   }, [checkout, orderId, getClientOrder]);
 
+  useEffect(() => {
+    const savedDiscountCode = localStorage.getItem('discountCode');
+    const savedAppliedDiscount = localStorage.getItem('appliedDiscount');
+    if (savedDiscountCode) {
+      setDiscountCode(savedDiscountCode);
+    }
+    if (savedAppliedDiscount) {
+      const discountAmount = parseFloat(savedAppliedDiscount);
+      setAppliedDiscount(discountAmount);
+      setTotal(subTotal - discountAmount + (freeShipping ? 0 : logisticsFee));
+    }
+  }, [subTotal, freeShipping, logisticsFee]);
   useEffect(() => {
     if (shipmentDataFromState && order) {
       const logisticsFee = calculateLogisticsFee(
@@ -350,7 +478,7 @@ const CheckoutPage: NextPage = () => {
     if (createOrderFailed) {
       toast({
         title: '建立訂單失敗',
-        description: '請重試',
+        description: createOrderError,
         status: 'error',
         isClosable: true,
       });
@@ -410,6 +538,10 @@ const CheckoutPage: NextPage = () => {
             isOrderButtonDisabled={isOrderButtonDisabled}
             uniqueId={uniqueId}
             freeShipping={freeShipping}
+            discountCode={discountCode}
+            handleDiscountCodeChange={handleDiscountCodeChange}
+            handleApplyDiscountCode={handleApplyDiscountCode}
+            discount={discount}
           />
           <DiscountsSection
             selectedDiscounts={selectedDiscounts}

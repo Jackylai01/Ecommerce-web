@@ -9,6 +9,7 @@ import {
   Input,
   Select,
   SimpleGrid,
+  Textarea,
   VStack,
   useToast,
 } from '@chakra-ui/react';
@@ -17,7 +18,6 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import {
   addDiscountAsync,
-  generateMultipleDiscountCodesAsync,
   getAllDiscountsAsync,
 } from '@reducers/admin/discount/actions';
 import { getAllProductsCategoryAsync } from '@reducers/admin/product-category/actions';
@@ -37,13 +37,14 @@ interface FormValues {
   startDate: string;
   endDate: string;
   selectedProducts: string[];
-  usageLimit: number | string;
+  usageLimit: number;
   unlimitedUse: boolean;
   combinableWithOtherDiscounts: boolean;
   generateCodesCount: number;
   priority: number;
   calculationMethod: 'percentage' | 'fixedAmount';
   minimumAmount: string;
+  discountCodeInputMethod: 'manual' | 'generate';
 }
 
 const DiscountModule: NextPage = () => {
@@ -51,6 +52,7 @@ const DiscountModule: NextPage = () => {
   const router = useRouter();
   const { list: productsList } = useAppSelector((state) => state.adminProducts);
   const {
+    discounts,
     status: { addDiscountLoading, addDiscountFailed, addDiscountSuccess },
     error: { addDiscountError },
   } = useAppSelector((state) => state.adminDiscount);
@@ -66,13 +68,14 @@ const DiscountModule: NextPage = () => {
     startDate: '',
     endDate: '',
     selectedProducts: [],
-    usageLimit: '',
+    usageLimit: 0,
     unlimitedUse: false,
     combinableWithOtherDiscounts: false,
     generateCodesCount: 1,
     priority: 0,
     calculationMethod: 'fixedAmount',
     minimumAmount: '',
+    discountCodeInputMethod: 'manual',
   });
 
   const toast = useToast();
@@ -84,7 +87,9 @@ const DiscountModule: NextPage = () => {
   }, [dispatch]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => {
     const { name, value, type } = e.target;
     if (type === 'checkbox') {
@@ -125,21 +130,41 @@ const DiscountModule: NextPage = () => {
         ? parseFloat(formValues.minimumAmount)
         : undefined,
       productId: formValues.selectedProducts,
+      customCodes:
+        formValues.discountCodeInputMethod === 'manual'
+          ? formValues.discountCode.split(',').map((code) => code.trim())
+          : [],
+      generateCodesCount:
+        formValues.discountCodeInputMethod === 'generate'
+          ? formValues.generateCodesCount
+          : undefined,
+      usageLimit: formValues.usageLimit,
     };
-
-    console.log(payload); // 用於調試
 
     dispatch(addDiscountAsync(payload));
   };
 
-  const handleGenerateCodes = async () => {
-    const { discountCode, generateCodesCount } = formValues;
-    await dispatch(
-      generateMultipleDiscountCodesAsync({
-        discountId: discountCode,
-        count: generateCodesCount,
-      }),
-    );
+  const generateRandomCode = () => {
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let code = '';
+    for (let i = 0; i < 8; i++) {
+      code += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return code;
+  };
+
+  const handleGenerateCodes = () => {
+    const { generateCodesCount, usageLimit } = formValues;
+    const generatedCodes = Array.from({ length: generateCodesCount }, () => ({
+      code: generateRandomCode(),
+      usageLimit,
+      usedCount: 0,
+    }));
+    setFormValues((prev) => ({
+      ...prev,
+      discountCode: generatedCodes.map((codeObj) => codeObj.code).join(', '),
+    }));
     toast({
       title: '折扣碼已生成！',
       status: 'success',
@@ -147,7 +172,6 @@ const DiscountModule: NextPage = () => {
       isClosable: true,
     });
   };
-
   const handleBack = () => {
     router.push('/zigong/discounts');
   };
@@ -227,24 +251,11 @@ const DiscountModule: NextPage = () => {
             </Select>
           </FormControl>
 
-          {/* 全館通用設置 */}
+          {/* 針對折扣類型的特定設置 */}
           {(formValues.type === 'orderDiscount' ||
-            formValues.type === 'orderFreeShipping') && (
-            <FormControl id='store-wide' mb='4'>
-              <Checkbox
-                name='isStoreWide'
-                onChange={handleInputChange}
-                size='lg'
-                borderColor='gray.700'
-                isChecked={formValues.isStoreWide}
-              >
-                全館通用
-              </Checkbox>
-            </FormControl>
-          )}
-
-          {/* 針對商品折扣碼的設置 */}
-          {formValues.type === 'productCodeDiscount' && (
+            formValues.type === 'productDiscount' ||
+            formValues.type === 'productCodeDiscount' ||
+            formValues.type === 'orderCodeDiscount') && (
             <React.Fragment>
               <FormControl id='value' mb='4'>
                 <FormLabel>折扣值：</FormLabel>
@@ -255,32 +266,67 @@ const DiscountModule: NextPage = () => {
                   onChange={handleValueChange}
                 />
               </FormControl>
-              <FormControl id='discountCode' mb='4'>
-                <FormLabel>折扣碼：</FormLabel>
+              <FormControl id='minimumAmount' mb='4'>
+                <FormLabel>滿足折扣的最低金額：</FormLabel>
                 <Input
                   type='text'
-                  name='discountCode'
-                  placeholder='輸入折扣碼'
+                  name='minimumAmount'
+                  placeholder='例如：1000元'
                   onChange={handleInputChange}
                 />
               </FormControl>
-              <FormControl id='generateCodesCount' mb='4'>
-                <FormLabel>生成多組代碼數量：</FormLabel>
-                <Input
-                  type='number'
-                  name='generateCodesCount'
-                  placeholder='生成多組代碼'
+            </React.Fragment>
+          )}
+
+          {/* 針對折扣碼的設置 */}
+          {(formValues.type === 'productCodeDiscount' ||
+            formValues.type === 'orderCodeDiscount') && (
+            <React.Fragment>
+              <FormControl id='discountCodeInputMethod' mb='4'>
+                <FormLabel>折扣碼輸入方式：</FormLabel>
+                <Select
+                  name='discountCodeInputMethod'
                   onChange={handleInputChange}
-                  value={formValues.generateCodesCount}
-                />
-                <Button
-                  colorScheme='teal'
-                  onClick={handleGenerateCodes}
-                  mt='1rem'
+                  value={formValues.discountCodeInputMethod}
+                  placeholder='選擇輸入方式'
                 >
-                  生成折扣碼
-                </Button>
+                  <option value='manual'>自訂折扣碼</option>
+                  <option value='generate'>生成折扣碼</option>
+                </Select>
               </FormControl>
+              {formValues.discountCodeInputMethod === 'manual' && (
+                <FormControl id='discountCode' mb='4'>
+                  <FormLabel>折扣碼：</FormLabel>
+                  <Textarea
+                    name='discountCode'
+                    placeholder='輸入折扣碼（使用逗號分隔多個代碼）'
+                    onChange={handleInputChange}
+                  />
+                </FormControl>
+              )}
+              {formValues.discountCodeInputMethod === 'generate' && (
+                <FormControl id='generateCodesCount' mb='4'>
+                  <FormLabel>生成多組代碼數量：</FormLabel>
+                  <Input
+                    type='number'
+                    name='generateCodesCount'
+                    placeholder='生成多組代碼'
+                    onChange={handleInputChange}
+                    value={formValues.generateCodesCount}
+                  />
+                  <Button
+                    colorScheme='teal'
+                    onClick={handleGenerateCodes}
+                    mt='1rem'
+                  >
+                    生成折扣碼
+                  </Button>
+                  <Box mt='4'>
+                    <FormLabel>生成的折扣碼：</FormLabel>
+                    <Textarea value={formValues.discountCode || ''} readOnly />
+                  </Box>
+                </FormControl>
+              )}
               <FormControl id='usageLimit' mb='4'>
                 <FormLabel>使用次數限制：</FormLabel>
                 <Input
@@ -301,81 +347,21 @@ const DiscountModule: NextPage = () => {
                   無限制
                 </Checkbox>
               </FormControl>
-              <FormControl id='priority' mb='4'>
-                <FormLabel>優先順序：</FormLabel>
-                <Input
-                  type='number'
-                  name='priority'
-                  placeholder='例如：1'
-                  onChange={handleInputChange}
-                  value={formValues.priority}
-                />
-              </FormControl>
             </React.Fragment>
           )}
 
-          {/* 針對訂單折扣和免運費的設置 */}
-          {(formValues.type === 'orderDiscount' ||
-            formValues.type === 'orderFreeShipping') && (
-            <React.Fragment>
-              <FormControl id='value' mb='4'>
-                <FormLabel>折扣值：</FormLabel>
-                <Input
-                  type='text'
-                  name='value'
-                  placeholder='例如：20% 或 100元'
-                  onChange={handleValueChange}
-                />
-              </FormControl>
-              <FormControl id='minimumAmount' mb='4'>
-                <FormLabel>滿足折扣的最低金額：</FormLabel>
-                <Input
-                  type='text'
-                  name='minimumAmount'
-                  placeholder='例如：1000元'
-                  onChange={handleInputChange}
-                />
-              </FormControl>
-            </React.Fragment>
-          )}
-
-          {/* 針對商品折扣的設置 */}
-          {formValues.type === 'productDiscount' && (
-            <React.Fragment>
-              <FormControl id='value' mb='4'>
-                <FormLabel>折扣值：</FormLabel>
-                <Input
-                  type='text'
-                  name='value'
-                  placeholder='例如：20% 或 100元'
-                  onChange={handleValueChange}
-                />
-              </FormControl>
-              <FormControl id='minimumAmount' mb='4'>
-                <FormLabel>滿足折扣的最低金額：</FormLabel>
-                <Input
-                  type='text'
-                  name='minimumAmount'
-                  placeholder='例如：1000元'
-                  onChange={handleInputChange}
-                />
-              </FormControl>
-            </React.Fragment>
-          )}
-
-          {/* 針對商品免運費的設置 */}
-          {formValues.type === 'productFreeShipping' && (
-            <React.Fragment>
-              <FormControl id='minimumAmount' mb='4'>
-                <FormLabel>免運費設置：</FormLabel>
-                <Input
-                  type='text'
-                  name='minimumAmount'
-                  placeholder='例如：滿1000元免運費'
-                  onChange={handleInputChange}
-                />
-              </FormControl>
-            </React.Fragment>
+          {/* 針對免運費的設置 */}
+          {(formValues.type === 'orderFreeShipping' ||
+            formValues.type === 'productFreeShipping') && (
+            <FormControl id='minimumAmount' mb='4'>
+              <FormLabel>免運費設置：</FormLabel>
+              <Input
+                type='text'
+                name='minimumAmount'
+                placeholder='例如：滿1000元免運費'
+                onChange={handleInputChange}
+              />
+            </FormControl>
           )}
 
           {/* 通用的設置 */}
@@ -400,49 +386,50 @@ const DiscountModule: NextPage = () => {
             </Checkbox>
           </FormControl>
 
-          {formValues.type !== 'orderFreeShipping' &&
-            formValues.type !== 'orderDiscount' && (
-              <Box w='100%'>
-                <Heading as='h2' size='md' color='purple.500' mb='4'>
-                  選擇適用產品
-                </Heading>
-                <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing='8'>
-                  {productsList?.map((product) => (
-                    <Box
-                      key={product._id}
-                      bg='white'
-                      borderRadius='lg'
-                      p='4'
-                      boxShadow='md'
-                      textAlign='center'
-                    >
-                      <Image
-                        src={product.coverImage.imageUrl}
-                        alt={product.name}
-                        w='100%'
-                        minH='150px'
-                        objectFit='cover'
-                      />
-                      <Heading as='h3' size='md' mb='2'>
-                        {product.name}
-                      </Heading>
-                      <Box color='teal.500' fontWeight='bold' mb='4'>
-                        NT$ {product.price}
-                      </Box>
-                      <Checkbox
-                        name='selectedProducts'
-                        value={product._id}
-                        onChange={handleInputChange}
-                        size='lg'
-                        borderColor='gray.700'
-                      >
-                        套用折扣
-                      </Checkbox>
+          {/* 選擇適用產品 */}
+          {(formValues.type === 'productDiscount' ||
+            formValues.type === 'productCodeDiscount') && (
+            <Box w='100%'>
+              <Heading as='h2' size='md' color='purple.500' mb='4'>
+                選擇適用產品
+              </Heading>
+              <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing='8'>
+                {productsList?.map((product) => (
+                  <Box
+                    key={product._id}
+                    bg='white'
+                    borderRadius='lg'
+                    p='4'
+                    boxShadow='md'
+                    textAlign='center'
+                  >
+                    <Image
+                      src={product.coverImage.imageUrl}
+                      alt={product.name}
+                      w='100%'
+                      minH='150px'
+                      objectFit='cover'
+                    />
+                    <Heading as='h3' size='md' mb='2'>
+                      {product.name}
+                    </Heading>
+                    <Box color='teal.500' fontWeight='bold' mb='4'>
+                      NT$ {product.price}
                     </Box>
-                  ))}
-                </SimpleGrid>
-              </Box>
-            )}
+                    <Checkbox
+                      name='selectedProducts'
+                      value={product._id}
+                      onChange={handleInputChange}
+                      size='lg'
+                      borderColor='gray.700'
+                    >
+                      套用折扣
+                    </Checkbox>
+                  </Box>
+                ))}
+              </SimpleGrid>
+            </Box>
+          )}
 
           {/* 隱藏的 calculationMethod 輸入框 */}
           <Input

@@ -46,6 +46,8 @@ export interface Product extends BaseEntity {
   tags?: string[];
   // 自訂模組，可以根據您的實際需求添加額外的類型定義
   blocks: any[];
+  // 加購區
+  upsellProducts?: any;
 }
 
 export interface Category {

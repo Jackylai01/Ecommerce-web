@@ -122,10 +122,10 @@ export const getAllDiscountsUsageAsync = createAsyncThunk(
 
 export const generateMultipleDiscountCodesAsync = createAsyncThunk(
   `${ReducerName.ADMIN_DISCOUNT}/${DiscountAction.generateMultipleDiscountCodes}`,
-  async ({ discountId, count }: { discountId: string; count: number }) => {
+  async ({ count, usageLimit }: { count: number; usageLimit: number }) => {
     const response = await apiGenerateMultipleDiscountCodes({
-      discountId,
       count,
+      usageLimit,
     });
     return response.result.data;
   },

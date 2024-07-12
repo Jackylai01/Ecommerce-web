@@ -27,6 +27,7 @@ type DiscountState = ApiState<DiscountAction> & {
   editingDiscountId: string | null;
   discountUsage: any[] | null;
   updateDiscountPriority: any;
+  discounts: any;
 };
 
 const initialState: DiscountState = {
@@ -36,6 +37,7 @@ const initialState: DiscountState = {
   editingDiscountId: null,
   discountUsage: null,
   updateDiscountPriority: null,
+  discounts: null,
   ...newApiState<DiscountState>(DiscountAction),
 };
 
@@ -107,12 +109,7 @@ export const discountSlice = createSlice({
     builder.addCase(
       generateMultipleDiscountCodesAsync.fulfilled,
       (state, action) => {
-        const discountIndex = state.list?.findIndex(
-          (discount) => discount._id === action.payload._id,
-        );
-        if (discountIndex !== undefined && discountIndex !== -1 && state.list) {
-          state.list[discountIndex] = action.payload;
-        }
+        state.discounts = action.payload;
       },
     );
     builder.addCase(updateDiscountPriorityAsync.fulfilled, (state, action) => {

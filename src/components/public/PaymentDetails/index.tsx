@@ -7,10 +7,12 @@ import {
   Divider,
   Flex,
   Heading,
+  Input,
   Stack,
   Text,
 } from '@chakra-ui/react';
 import { formatPrice } from '@helpers/products';
+import { IDiscount } from '@models/responses/discounts';
 
 interface PaymentDetailsProps {
   total: number;
@@ -22,6 +24,10 @@ interface PaymentDetailsProps {
   isOrderButtonDisabled: boolean;
   uniqueId: string | string[] | undefined;
   freeShipping: boolean;
+  discountCode: string;
+  handleDiscountCodeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleApplyDiscountCode: () => void;
+  discount: IDiscount | null;
 }
 
 const PaymentDetails: React.FC<PaymentDetailsProps> = ({
@@ -34,6 +40,10 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   isOrderButtonDisabled,
   uniqueId,
   freeShipping,
+  discountCode,
+  handleDiscountCodeChange,
+  handleApplyDiscountCode,
+  discount,
 }) => {
   return (
     <Box w='100%'>
@@ -48,12 +58,37 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         <CardHeader>
           <Heading size='md'>Payment Details</Heading>
         </CardHeader>
+
         <CardBody>
           <Stack spacing='2rem'>
+            {!uniqueId && (
+              <>
+                <Flex justify='space-between' align='center'>
+                  <Text fontWeight='bold'>Discount Code</Text>
+                  <Input
+                    value={discountCode}
+                    onChange={handleDiscountCodeChange}
+                    placeholder='輸入折扣碼'
+                    w='65%'
+                  />
+                </Flex>
+                <Button onClick={handleApplyDiscountCode}>應用</Button>
+              </>
+            )}
+
             <Flex justify='space-between' align='center'>
               <Text fontWeight='bold'>Sub Total</Text>
               <Text fontWeight='bold'>${formatPrice(subTotal)}</Text>
             </Flex>
+
+            {discount && (
+              <Flex justify='space-between' align='center'>
+                <Text fontWeight='bold'>Applied Discount</Text>
+                <Text fontWeight='bold'>
+                  {discount.name} - ${formatPrice(discount.value)}
+                </Text>
+              </Flex>
+            )}
 
             {appliedDiscount > 0 && (
               <Flex justify='space-between' align='center'>
