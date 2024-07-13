@@ -389,6 +389,7 @@ const DiscountModule: NextPage = () => {
 
           {/* 選擇適用產品 */}
           {(formValues.type === 'productDiscount' ||
+            formValues.type === 'productFreeShipping' ||
             formValues.type === 'productCodeDiscount') && (
             <Box w='100%'>
               <Heading as='h2' size='md' color='purple.500' mb='4'>

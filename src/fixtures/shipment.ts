@@ -1,5 +1,9 @@
 export const calculateLogisticsFee = (shipment: any, totalPrice: number) => {
   let logisticsFee = 0;
+  if (!shipment) {
+    return logisticsFee; // 如果 shipment 為 null 或 undefined，直接返回 0
+  }
+
   switch (shipment.logisticsSubType) {
     case 'UNIMART':
       logisticsFee = 55; // 基本物流費用
