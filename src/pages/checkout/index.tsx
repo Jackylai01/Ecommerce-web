@@ -87,6 +87,7 @@ const CheckoutPage: NextPage = () => {
     },
     error: { createOrderError },
   } = useAppSelector((state) => state.publicPayments);
+
   const { userInfo } = useAppSelector((state) => state.clientAuth);
   const { getClientOrder } = useAppSelector((state) => state.clientOrders);
 
@@ -411,7 +412,9 @@ const CheckoutPage: NextPage = () => {
     publicDiscountList?.forEach((discount: IDiscount) => {
       if (
         discount.isActive &&
-        selectedDiscounts.includes(discount._id.toString())
+        (selectedDiscounts.includes(discount._id.toString()) ||
+          discount.type === 'orderFreeShipping' ||
+          discount.type === 'productFreeShipping')
       ) {
         switch (discount.type) {
           case 'orderFreeShipping':
@@ -419,12 +422,6 @@ const CheckoutPage: NextPage = () => {
             if (subTotal >= (discount.minimumAmount ?? 0)) {
               freeShippingDiscount = true;
             } else {
-              toast({
-                title: '免運費條件不符',
-                description: `需消費滿 ${discount.minimumAmount} 元才可享受免運費`,
-                status: 'warning',
-                isClosable: true,
-              });
               setSelectedDiscounts((prev) =>
                 prev.filter((id) => id !== discount._id.toString()),
               );
@@ -463,8 +460,14 @@ const CheckoutPage: NextPage = () => {
 
     setAppliedDiscount(totalDiscount);
     setFreeShipping(freeShippingDiscount);
+    console.log('Selected Discounts:', selectedDiscounts);
+    console.log('Public Discount List:', publicDiscountList);
+    console.log('Subtotal:', subTotal);
+    console.log('Free Shipping Discount:', freeShippingDiscount);
   }, [selectedDiscounts, publicDiscountList, subTotal, toast]);
 
+  console.log(appliedDiscount);
+  console.log(freeShipping);
   useEffect(() => {
     const newTotal =
       subTotal - appliedDiscount + (freeShipping ? 0 : logisticsFee);
