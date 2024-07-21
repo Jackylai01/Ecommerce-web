@@ -5,7 +5,6 @@ import {
   FormControl,
   FormLabel,
   IconButton,
-  Input,
   Menu,
   MenuButton,
   MenuItem,
@@ -28,14 +27,10 @@ import { TablesTableRow } from '@components/Tables/TablesTableRow';
 import { dateTime } from '@helpers/date';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import {
-  setDiscountList,
-  setEditingDiscountId,
-} from '@reducers/admin/discount';
+import { setEditingDiscountId } from '@reducers/admin/discount';
 import {
   deleteDiscountAsync,
   getAllDiscountsAsync,
-  updateDiscountPriorityAsync,
   updateDiscountStatusAsync,
 } from '@reducers/admin/discount/actions';
 import { useRouter } from 'next/router';
@@ -87,10 +82,6 @@ const DiscountTableContainer = () => {
     },
   } = useAppSelector((state) => state.adminDiscount);
 
-  const [localPriority, setLocalPriority] = useState<{ [key: string]: number }>(
-    {},
-  );
-
   const captions = [
     '名稱',
     '類型',
@@ -141,22 +132,7 @@ const DiscountTableContainer = () => {
         {row.isActive ? '啟用' : '停用'}
       </Badge>
     ),
-    (row: DiscountRowData) => (
-      <FormControl>
-        <Input
-          type='number'
-          value={localPriority[row._id] || 0}
-          onChange={(e) =>
-            setLocalPriority({
-              ...localPriority,
-              [row._id]: parseInt(e.target.value),
-            })
-          }
-          onBlur={() => handlePriorityChange(row._id, localPriority[row._id])}
-          width='60px'
-        />
-      </FormControl>
-    ),
+
     (row: DiscountRowData) => (
       <Box display='flex' gap={2}>
         <Button
@@ -199,18 +175,6 @@ const DiscountTableContainer = () => {
       </FormControl>
     ),
   ];
-
-  const handlePriorityChange = (id: string, priority: number) => {
-    dispatch(updateDiscountPriorityAsync({ id, priority })).then(() => {
-      const updatedList = list?.map((discount) =>
-        discount._id === id ? { ...discount, priority } : discount,
-      );
-
-      if (updatedList) {
-        dispatch(setDiscountList(updatedList));
-      }
-    });
-  };
 
   const handleStatusChange = async (id: string, isChecked: boolean) => {
     const newStatus = isChecked;
@@ -260,18 +224,6 @@ const DiscountTableContainer = () => {
     updateDiscountPriorityError,
     toast,
   ]);
-
-  useEffect(() => {
-    if (DiscountList) {
-      const initialPriorities = DiscountList.reduce((acc, discount) => {
-        if (discount.priority !== undefined) {
-          acc[discount._id] = discount.priority;
-        }
-        return acc;
-      }, {} as { [key: string]: number });
-      setLocalPriority(initialPriorities);
-    }
-  }, [DiscountList]);
 
   useEffect(() => {
     const fetchData = async () => {

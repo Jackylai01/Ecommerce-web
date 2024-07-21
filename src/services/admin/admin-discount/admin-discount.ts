@@ -120,19 +120,3 @@ export const apiGenerateMultipleDiscountCodes = async ({
     usageLimit,
   });
 };
-
-/**
- * 更新折扣的順序
- */
-
-export const apiUpdateDiscountPriority = async ({
-  id,
-  priority,
-}: {
-  id: string;
-  priority: number;
-}) => {
-  return putRequest<ApiResult<Discount>>(`/zigong/discounts/${id}/priority`, {
-    priority,
-  });
-};

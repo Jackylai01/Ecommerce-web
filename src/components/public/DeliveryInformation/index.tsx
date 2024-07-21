@@ -6,6 +6,8 @@ import {
   FormLabel,
   Heading,
   Input,
+  Radio,
+  RadioGroup,
   Stack,
   Table,
   Tbody,
@@ -30,13 +32,16 @@ interface DeliveryInformationProps {
     carrierNum: string;
     taxId: string;
     donateCode: string;
+    paymentMethod: string;
   };
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handlePaymentMethodChange: (value: string) => void;
 }
 
 const DeliveryInformation = ({
   formData,
   handleChange,
+  handlePaymentMethodChange,
 }: DeliveryInformationProps) => {
   const { shipmentData: shipmentDataFromState } = useAppSelector(
     (state) => state.publicPayments,
@@ -93,6 +98,19 @@ const DeliveryInformation = ({
           </Table>
         ) : (
           <Stack spacing='2rem' color='black'>
+            <Box>
+              <FormLabel>Payment Method</FormLabel>
+              <RadioGroup
+                onChange={handlePaymentMethodChange}
+                value={formData.paymentMethod}
+              >
+                <Stack direction='row'>
+                  <Radio value='EcPay'>綠界金流</Radio>
+                  <Radio value='LinePay'>LinePay</Radio>
+                  <Radio value='COD'>貨到付款</Radio>
+                </Stack>
+              </RadioGroup>
+            </Box>
             <Box>
               <FormLabel>Full Name</FormLabel>
               <Input

@@ -15,10 +15,13 @@ export const apiPublicCreateOrder = async (data: ordersRequest) =>
  * 前台-選擇物流選擇頁
  */
 
-export const apiPublicRedirectToLogisticsSelection = async (orderId: string) =>
+export const apiPublicRedirectToLogisticsSelection = async (
+  orderId: string,
+  isCollection: string,
+) =>
   postRequest<ApiResult<any>>(
     `/public/shipment/redirect-to-logistics-selection`,
-    { orderId },
+    { orderId, isCollection },
   );
 
 /**

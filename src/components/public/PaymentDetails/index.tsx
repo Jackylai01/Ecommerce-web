@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { formatPrice } from '@helpers/products';
 import { IDiscount } from '@models/responses/discounts';
+import { useRouter } from 'next/router';
 
 interface PaymentDetailsProps {
   total: number;
@@ -28,6 +29,7 @@ interface PaymentDetailsProps {
   handleDiscountCodeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleApplyDiscountCode: () => void;
   discount: IDiscount | null;
+  paymentMethod: string; // 新增付款方式
 }
 
 const PaymentDetails: React.FC<PaymentDetailsProps> = ({
@@ -44,7 +46,14 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   handleDiscountCodeChange,
   handleApplyDiscountCode,
   discount,
+  paymentMethod,
 }) => {
+  const router = useRouter();
+
+  const handleViewOrder = () => {
+    router.push('/client');
+  };
+
   return (
     <Box w='100%'>
       <Card
@@ -111,6 +120,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             </Flex>
           </Stack>
           <Divider mt='1rem' mb='1rem' />
+
           {!uniqueId ? (
             <Button
               bgColor='brand.primary'
@@ -124,6 +134,20 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               disabled={isOrderButtonDisabled}
             >
               Create Order
+            </Button>
+          ) : paymentMethod === 'COD' ? (
+            <Button
+              bgColor='brand.primary'
+              color='white'
+              w='100%'
+              rounded='full'
+              _hover={{ bgColor: 'blue.200' }}
+              _active={{ bgColor: 'blue.500' }}
+              bg='blue.300'
+              onClick={handleViewOrder}
+              mt='1rem'
+            >
+              查看訂單
             </Button>
           ) : (
             <Button

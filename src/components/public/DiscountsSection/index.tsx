@@ -1,4 +1,11 @@
-import { Box, Checkbox, Divider, Heading, Stack } from '@chakra-ui/react';
+import {
+  Box,
+  Checkbox,
+  Divider,
+  Heading,
+  Stack,
+  useToast,
+} from '@chakra-ui/react';
 import useAppSelector from '@hooks/useAppSelector';
 import { IDiscount } from '@models/responses/discounts';
 
@@ -14,7 +21,7 @@ interface DiscountsSectionProps {
   ) => void;
   uniqueId: any;
   checkoutProducts: string[];
-  subTotal: number; // 新增 subTotal 作為 props
+  subTotal: number;
 }
 
 const DiscountsSection: React.FC<DiscountsSectionProps> = ({
@@ -23,8 +30,9 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
   handleExclusiveDiscountSelection,
   uniqueId,
   checkoutProducts,
-  subTotal, // 接收 subTotal 作為 props
+  subTotal,
 }) => {
+  const toast = useToast();
   const { list: publicDiscountList } = useAppSelector(
     (state) => state.publicDiscounts,
   );
@@ -56,6 +64,33 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
     },
   );
 
+  const handleSelection = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    discount: IDiscount,
+    isCombinable: boolean,
+  ) => {
+    const { checked } = e.target;
+    const currentSelectedDiscounts = checked
+      ? [...selectedDiscounts, discount._id.toString()]
+      : selectedDiscounts.filter((id) => id !== discount._id.toString());
+
+    if (currentSelectedDiscounts.length > 2) {
+      toast({
+        title: '選擇的折扣超過上限',
+        description: '您最多只能選擇兩個折扣',
+        status: 'warning',
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (checked) {
+      handleDiscountSelection(e, discount);
+    } else {
+      handleExclusiveDiscountSelection(e, discount);
+    }
+  };
+
   return (
     <Box>
       <Heading size='md' my='1rem'>
@@ -67,21 +102,26 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
         </Heading>
         {filteredDiscountList
           ?.filter((d: IDiscount) => d.combinableWithOtherDiscounts)
-          .sort((a: any, b: any) => a.priority - b.priority)
           .map((discount: IDiscount) => (
             <Checkbox
               key={discount._id}
               borderColor='black'
-              isChecked={selectedDiscounts.includes(discount._id)}
+              isChecked={selectedDiscounts.includes(discount._id.toString())}
               isDisabled={selectedDiscounts.some(
                 (id) =>
-                  !filteredDiscountList.find((d: IDiscount) => d._id === id)
-                    .combinableWithOtherDiscounts,
+                  !filteredDiscountList.find(
+                    (d: IDiscount) => d._id.toString() === id,
+                  )?.combinableWithOtherDiscounts,
               )}
-              onChange={(e) => handleDiscountSelection(e, discount)}
+              onChange={(e) => handleSelection(e, discount, true)}
             >
-              {`${discount.name} - ${discount.value}${
-                discount.calculationMethod === 'percentage' ? '%' : 'NTD'
+              {`${discount.name} ${
+                discount.type === 'orderFreeShipping' ||
+                discount.type === 'productFreeShipping'
+                  ? '免運費'
+                  : discount.calculationMethod === 'percentage'
+                  ? `${discount.value}%`
+                  : `${discount.value} NTD`
               }`}
             </Checkbox>
           ))}
@@ -95,11 +135,16 @@ const DiscountsSection: React.FC<DiscountsSectionProps> = ({
             <Checkbox
               key={discount._id}
               borderColor='black'
-              isChecked={selectedDiscounts.includes(discount._id)}
-              onChange={(e) => handleExclusiveDiscountSelection(e, discount)}
+              isChecked={selectedDiscounts.includes(discount._id.toString())}
+              onChange={(e) => handleSelection(e, discount, false)}
             >
               {`${discount.name} ${
-                discount.calculationMethod === 'percentage' ? '%' : 'NTD'
+                discount.type === 'orderFreeShipping' ||
+                discount.type === 'productFreeShipping'
+                  ? '免運費'
+                  : discount.calculationMethod === 'percentage'
+                  ? `${discount.value}%`
+                  : `${discount.value} NTD`
               }`}
             </Checkbox>
           ))}

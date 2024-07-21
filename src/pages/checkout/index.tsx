@@ -34,7 +34,7 @@ import {
 } from '@reducers/public/payments/actions';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 const CheckoutPage: NextPage = () => {
   const dispatch = useAppDispatch();
@@ -62,8 +62,8 @@ const CheckoutPage: NextPage = () => {
     carrierNum: '',
     taxId: '',
     donateCode: '',
+    paymentMethod: 'EcPay', // 新增付款方式
   });
-
   const [isOrderButtonDisabled, setIsOrderButtonDisabled] = useState(false);
   const { checkout } = useAppSelector((state) => state.clientCart);
   const { list: publicDiscountList } = useAppSelector(
@@ -94,6 +94,10 @@ const CheckoutPage: NextPage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handlePaymentMethodChange = (value: string) => {
+    setFormData({ ...formData, paymentMethod: value });
   };
 
   const handleDiscountCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -199,30 +203,7 @@ const CheckoutPage: NextPage = () => {
   ) => {
     const { checked } = e.target;
     if (checked) {
-      const sortedDiscounts = [
-        ...selectedDiscounts,
-        discount._id.toString(),
-      ].sort((a, b) => {
-        const discountA = publicDiscountList.find(
-          (d: any) => d._id.toString() === a,
-        );
-        const discountB = publicDiscountList.find(
-          (d: any) => d._id.toString() === b,
-        );
-        return (discountA?.priority ?? 0) - (discountB?.priority ?? 0);
-      });
-
-      if (sortedDiscounts.length > 2) {
-        toast({
-          title: '選擇的折扣超過上限',
-          description: '您最多只能選擇兩個折扣',
-          status: 'warning',
-          isClosable: true,
-        });
-        return;
-      }
-
-      setSelectedDiscounts(sortedDiscounts);
+      setSelectedDiscounts((prev) => [...prev, discount._id.toString()]);
     } else {
       setSelectedDiscounts((prev) =>
         prev.filter((id) => id !== discount._id.toString()),
@@ -285,6 +266,7 @@ const CheckoutPage: NextPage = () => {
       discountsFee: appliedDiscount,
       shippingAddress: { ...formData },
       discountCodes,
+      paymentMethod: formData.paymentMethod, // 添加付款方式
     };
 
     await dispatch(createOrderAsync(orderData));
@@ -304,22 +286,23 @@ const CheckoutPage: NextPage = () => {
         ChoosePayment: 'ALL',
         TotalAmount: total,
         discountCodes: orderDiscountCode,
+        freeShipping: freeShipping,
       };
       await dispatch(createPaymentAsync(paymentData));
     }
   };
 
-  const clearLocalStorageDiscounts = () => {
+  const clearLocalStorageDiscounts = useCallback(() => {
     localStorage.removeItem('discountCode');
     localStorage.removeItem('appliedDiscount');
-  };
+  }, []);
 
   useEffect(() => {
     clearLocalStorageDiscounts();
     return () => {
       clearLocalStorageDiscounts();
     };
-  }, []);
+  }, [clearLocalStorageDiscounts]);
 
   useEffect(() => {
     if (createPaymentSuccess && payment) {
@@ -335,7 +318,14 @@ const CheckoutPage: NextPage = () => {
         isClosable: true,
       });
     }
-  }, [createPaymentSuccess, createPaymentFailed, payment, router, toast]);
+  }, [
+    createPaymentSuccess,
+    createPaymentFailed,
+    payment,
+    router,
+    toast,
+    clearLocalStorageDiscounts,
+  ]);
 
   useEffect(() => {
     if (order) {
@@ -390,6 +380,7 @@ const CheckoutPage: NextPage = () => {
       setTotal(subTotal - discountAmount + (freeShipping ? 0 : logisticsFee));
     }
   }, [subTotal, freeShipping, logisticsFee]);
+
   useEffect(() => {
     if (shipmentDataFromState && order) {
       const logisticsFee = calculateLogisticsFee(
@@ -404,7 +395,7 @@ const CheckoutPage: NextPage = () => {
     dispatch(getPublicDiscountsListAsync());
   }, [dispatch]);
 
-  useEffect(() => {
+  const updateDiscountsAndShipping = useCallback(() => {
     let totalDiscount = 0;
     let combinableDiscounts: IDiscount[] = [];
     let freeShippingDiscount = false;
@@ -412,9 +403,7 @@ const CheckoutPage: NextPage = () => {
     publicDiscountList?.forEach((discount: IDiscount) => {
       if (
         discount.isActive &&
-        (selectedDiscounts.includes(discount._id.toString()) ||
-          discount.type === 'orderFreeShipping' ||
-          discount.type === 'productFreeShipping')
+        selectedDiscounts.includes(discount._id.toString())
       ) {
         switch (discount.type) {
           case 'orderFreeShipping':
@@ -460,14 +449,17 @@ const CheckoutPage: NextPage = () => {
 
     setAppliedDiscount(totalDiscount);
     setFreeShipping(freeShippingDiscount);
-    console.log('Selected Discounts:', selectedDiscounts);
-    console.log('Public Discount List:', publicDiscountList);
-    console.log('Subtotal:', subTotal);
-    console.log('Free Shipping Discount:', freeShippingDiscount);
-  }, [selectedDiscounts, publicDiscountList, subTotal, toast]);
+  }, [publicDiscountList, selectedDiscounts, subTotal]);
 
-  console.log(appliedDiscount);
-  console.log(freeShipping);
+  useEffect(() => {
+    updateDiscountsAndShipping();
+  }, [
+    selectedDiscounts,
+    publicDiscountList,
+    subTotal,
+    updateDiscountsAndShipping,
+  ]);
+
   useEffect(() => {
     const newTotal =
       subTotal - appliedDiscount + (freeShipping ? 0 : logisticsFee);
@@ -498,7 +490,13 @@ const CheckoutPage: NextPage = () => {
 
   const handleLogisticsSelection = async () => {
     if (order) {
-      dispatch(redirectToLogisticsSelectionAsync(order._id));
+      const isCollection = formData.paymentMethod === 'COD' ? 'Y' : 'N';
+      const response = await dispatch(
+        redirectToLogisticsSelectionAsync({ orderId: order._id, isCollection }),
+      );
+      if (response?.payload?.data) {
+        window.location.href = response.payload.data;
+      }
     }
   };
 
@@ -556,6 +554,7 @@ const CheckoutPage: NextPage = () => {
           <DeliveryInformation
             formData={formData}
             handleChange={handleChange}
+            handlePaymentMethodChange={handlePaymentMethodChange}
           />
         </Stack>
         <Box w={{ base: '100%', lg: '40%' }}>
@@ -573,6 +572,7 @@ const CheckoutPage: NextPage = () => {
             handleDiscountCodeChange={handleDiscountCodeChange}
             handleApplyDiscountCode={handleApplyDiscountCode}
             discount={discount}
+            paymentMethod={getClientOrder?.paymentMethod}
           />
           <DiscountsSection
             selectedDiscounts={selectedDiscounts}

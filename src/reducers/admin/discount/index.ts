@@ -16,7 +16,6 @@ import {
   getDiscountByIdAsync,
   getDiscountUsageByCodeAsync,
   updateDiscountAsync,
-  updateDiscountPriorityAsync,
   updateDiscountStatusAsync,
 } from './actions';
 
@@ -26,7 +25,6 @@ type DiscountState = ApiState<DiscountAction> & {
   discountDetails: Discount | null;
   editingDiscountId: string | null;
   discountUsage: any[] | null;
-  updateDiscountPriority: any;
   discounts: any;
 };
 
@@ -36,7 +34,7 @@ const initialState: DiscountState = {
   discountDetails: null,
   editingDiscountId: null,
   discountUsage: null,
-  updateDiscountPriority: null,
+
   discounts: null,
   ...newApiState<DiscountState>(DiscountAction),
 };
@@ -112,16 +110,7 @@ export const discountSlice = createSlice({
         state.discounts = action.payload;
       },
     );
-    builder.addCase(updateDiscountPriorityAsync.fulfilled, (state, action) => {
-      state.updateDiscountPriority = action.payload;
-      if (state.list) {
-        state.list = state.list.map((discount) =>
-          discount._id === action.payload._id
-            ? { ...discount, priority: action.payload.priority }
-            : discount,
-        );
-      }
-    });
+
     asyncMatcher(builder, ReducerName.ADMIN_DISCOUNT);
   },
 });

@@ -29,12 +29,20 @@ export const createOrderAsync = createAsyncThunk(
 
 export const redirectToLogisticsSelectionAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.redirectToLogisticsSelection}`,
-  async (orderId: string) => {
-    const response = await apiPublicRedirectToLogisticsSelection(orderId);
+  async ({
+    orderId,
+    isCollection,
+  }: {
+    orderId: string;
+    isCollection: string;
+  }) => {
+    const response = await apiPublicRedirectToLogisticsSelection(
+      orderId,
+      isCollection,
+    );
     return response.result.data;
   },
 );
-
 export const handleClientReplyAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.handleClientReply}`,
   async ({ orderId, ResultData }: { orderId: string; ResultData: any }) => {
