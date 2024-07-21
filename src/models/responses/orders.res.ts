@@ -25,6 +25,7 @@ export interface ordersResponse {
   }[];
   refunds: any;
   shipments: any;
+  invoice: any;
   payments: any;
   receiverName: string;
   receiverCellPhone: string;

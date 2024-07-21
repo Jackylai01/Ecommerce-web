@@ -143,6 +143,7 @@ const ClientDashboard = () => {
                           shipments={order.shipments}
                           paymentResult={order.paymentResult}
                           payments={order.payments}
+                          invoice={order.invoice}
                         />
                       ))}
                       {metadata && <Pagination metadata={metadata} />}

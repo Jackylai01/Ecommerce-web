@@ -49,6 +49,7 @@ interface OrderItemProps {
   shipments: Shipment[];
   paymentResult: any;
   payments: any[];
+  invoice: any; // 添加這一行
 }
 
 export const OrderItem: React.FC<OrderItemProps> = ({
@@ -59,6 +60,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({
   shipments,
   paymentResult,
   payments,
+  invoice,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -137,6 +139,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({
           訂單編號:
           <Badge>{paymentResult.ecpayData.MerchantTradeNo}</Badge>
         </Box>
+        <Box>發票號碼: {invoice?.invoiceNumber || '尚未開立'}</Box>
         <Box mt='10px'>
           {shipments?.map((shipment) => (
             <Box key={shipment._id}>
