@@ -105,9 +105,36 @@ const DeliveryInformation = ({
                 value={formData.paymentMethod}
               >
                 <Stack direction='row'>
-                  <Radio value='EcPay'>綠界金流</Radio>
-                  <Radio value='LinePay'>LinePay</Radio>
-                  <Radio value='COD'>貨到付款</Radio>
+                  <Box
+                    border='1px solid'
+                    borderColor='blue.500'
+                    borderRadius='md'
+                    p={2}
+                  >
+                    <Radio value='EcPay' borderColor='gray.600'>
+                      綠界金流
+                    </Radio>
+                  </Box>
+                  <Box
+                    border='1px solid'
+                    borderColor='blue.500'
+                    borderRadius='md'
+                    p={2}
+                  >
+                    <Radio value='LinePay' borderColor='gray.600'>
+                      LinePay
+                    </Radio>
+                  </Box>
+                  <Box
+                    border='1px solid'
+                    borderColor='blue.500'
+                    borderRadius='md'
+                    p={2}
+                  >
+                    <Radio value='COD' borderColor='gray.600'>
+                      貨到付款
+                    </Radio>
+                  </Box>
                 </Stack>
               </RadioGroup>
             </Box>

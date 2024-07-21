@@ -30,6 +30,8 @@ export const getOrderStatusInChinese = (order: any) => {
     latestShipmentStatus === 'Pending'
   ) {
     return '待處理';
+  } else if (order.paymentMethod === 'COD' && order.status === 'COD_Pending') {
+    return '貨到付款待處理';
   } else {
     return '待處理';
   }
@@ -67,6 +69,8 @@ export const getOrderStatusColor = (order: any) => {
     latestShipmentStatus === 'Pending'
   ) {
     return 'gray';
+  } else if (order.paymentMethod === 'COD' && order.status === 'COD_Pending') {
+    return 'purple';
   } else {
     return 'gray';
   }

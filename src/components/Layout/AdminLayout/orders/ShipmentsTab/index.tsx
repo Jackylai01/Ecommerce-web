@@ -205,9 +205,13 @@ const ShipmentsTab = () => {
                       color={textColor}
                     >
                       {shipment.ecPayStatus ? (
-                        <Badge colorScheme='blue'>
-                          {tradeStatusMap[shipment.ecPayStatus.TradeStatus]}
-                        </Badge>
+                        shipment.ecPayStatus === 'COD' ? (
+                          <Badge colorScheme='purple'>貨到付款</Badge>
+                        ) : (
+                          <Badge colorScheme='blue'>
+                            {tradeStatusMap[shipment.ecPayStatus.TradeStatus]}
+                          </Badge>
+                        )
                       ) : (
                         <Badge colorScheme='gray'>無狀態</Badge>
                       )}
