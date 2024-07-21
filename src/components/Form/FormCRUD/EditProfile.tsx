@@ -2,7 +2,7 @@ import { VStack, useToast } from '@chakra-ui/react';
 import useAppSelector from '@hooks/useAppSelector';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { TextInput } from './Field/TextInput';
+import TextInput from './Field/TextInput';
 
 export const EditProfileForm = () => {
   const toast = useToast();

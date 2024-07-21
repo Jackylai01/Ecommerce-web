@@ -144,6 +144,7 @@ const ClientDashboard = () => {
                           paymentResult={order.paymentResult}
                           payments={order.payments}
                           invoice={order.invoice}
+                          paymentMethod={order.paymentMethod}
                         />
                       ))}
                       {metadata && <Pagination metadata={metadata} />}

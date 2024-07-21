@@ -22,4 +22,11 @@ export interface Discount extends BaseEntity {
   isActive?: boolean;
   usageHistory?: any;
   priority?: number;
+  isStoreWide?: boolean;
+  combinableWithOtherDiscounts?: boolean;
+  selectedCategories?: string[];
+  selectedProducts?: string[];
+  generateCodesCount?: number;
+  discountCodeInputMethod?: 'manual' | 'generate';
+  unlimitedUse?: boolean;
 }

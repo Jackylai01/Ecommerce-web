@@ -49,8 +49,15 @@ interface OrderItemProps {
   shipments: Shipment[];
   paymentResult: any;
   payments: any[];
-  invoice: any; // 添加這一行
+  invoice: any;
+  paymentMethod: 'EcPay' | 'LinePay' | 'COD';
 }
+
+const paymentMethodMap = {
+  EcPay: '綠界金流',
+  LinePay: 'LinePay',
+  COD: '貨到付款',
+};
 
 export const OrderItem: React.FC<OrderItemProps> = ({
   orderId,
@@ -61,6 +68,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({
   paymentResult,
   payments,
   invoice,
+  paymentMethod,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -140,6 +148,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({
           <Badge>{paymentResult.ecpayData.MerchantTradeNo}</Badge>
         </Box>
         <Box>發票號碼: {invoice?.invoiceNumber || '尚未開立'}</Box>
+        <Box>付款方式: {paymentMethodMap[paymentMethod] || '未知'}</Box>
         <Box mt='10px'>
           {shipments?.map((shipment) => (
             <Box key={shipment._id}>
@@ -169,13 +178,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({
             查看退換貨狀態
           </Button>
         )}
-        <Box
-          mt='10px'
-          onClick={handleCancelOrder}
-          cursor='pointer'
-          display='flex'
-          justifyContent='flex-end'
-        >
+        <Box mt='10px' onClick={handleCancelOrder} cursor='pointer' w='20%'>
           取消訂單
         </Box>
         <ReturnStatusModal

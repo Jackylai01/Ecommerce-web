@@ -31,6 +31,7 @@ export interface ordersResponse {
   receiverCellPhone: string;
   receiverEmail: string;
   createdAt: string;
+  paymentMethod: 'EcPay' | 'LinePay' | 'COD';
 }
 
 export interface Order {
