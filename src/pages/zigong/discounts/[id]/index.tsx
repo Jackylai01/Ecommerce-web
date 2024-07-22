@@ -109,24 +109,26 @@ const DiscountModule: NextPage = () => {
         value: discountDetails.value.toString(),
         isStoreWide: discountDetails.isStoreWide || false,
         selectedCategories: discountDetails.selectedCategories || [],
-        discountCode: discountDetails.discountCode?.join(', ') || '',
+        discountCode:
+          discountDetails.discountCodes
+            ?.map((code: any) => code.code)
+            .join(', ') || '',
         startDate: !isNaN(startDate.getTime())
           ? startDate.toISOString().split('T')[0]
           : '',
         endDate: !isNaN(endDate.getTime())
           ? endDate.toISOString().split('T')[0]
           : '',
-        selectedProducts: discountDetails.selectedProducts || [],
-        usageLimit: discountDetails.usageLimit || 0,
-        unlimitedUse: discountDetails.unlimitedUse || false,
+        selectedProducts: discountDetails.productId || [],
+        usageLimit: discountDetails.usageLimit ?? 0,
+        unlimitedUse: discountDetails.usageLimit === -1,
         combinableWithOtherDiscounts:
           discountDetails.combinableWithOtherDiscounts || false,
         generateCodesCount: discountDetails.generateCodesCount || 1,
         priority: discountDetails.priority || 0,
         calculationMethod: discountDetails.calculationMethod,
         minimumAmount: discountDetails.minimumAmount?.toString() || '',
-        discountCodeInputMethod:
-          discountDetails.discountCodeInputMethod || 'manual',
+        discountCodeInputMethod: 'manual', // 這裡預設為手動輸入
       });
     }
   }, [discountDetails]);
@@ -183,7 +185,8 @@ const DiscountModule: NextPage = () => {
         formValues.discountCodeInputMethod === 'generate'
           ? formValues.generateCodesCount
           : undefined,
-      usageLimit: formValues.usageLimit,
+      usageLimit: formValues.unlimitedUse ? -1 : formValues.usageLimit, // 根據unlimitedUse設置usageLimit
+      unlimitedUse: formValues.unlimitedUse,
     };
 
     if (id) {
@@ -204,10 +207,10 @@ const DiscountModule: NextPage = () => {
   };
 
   const handleGenerateCodes = () => {
-    const { generateCodesCount, usageLimit } = formValues;
+    const { generateCodesCount, usageLimit, unlimitedUse } = formValues;
     const generatedCodes = Array.from({ length: generateCodesCount }, () => ({
       code: generateRandomCode(),
-      usageLimit,
+      usageLimit: unlimitedUse ? -1 : usageLimit, // 根據unlimitedUse設置usageLimit
       usedCount: 0,
     }));
     setFormValues((prev) => ({

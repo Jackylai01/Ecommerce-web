@@ -114,7 +114,7 @@ const CheckoutPage: NextPage = () => {
     if (!appliedDiscount) {
       toast({
         title: '無效的折扣碼',
-        description: '找不到該折扣碼，請確認後再試1。',
+        description: '找不到該折扣碼，請確認後再試。',
         status: 'error',
         isClosable: true,
       });
@@ -135,7 +135,10 @@ const CheckoutPage: NextPage = () => {
       return;
     }
 
-    if (discountCodeObject.usageLimit <= discountCodeObject.usedCount) {
+    if (
+      discountCodeObject.usageLimit !== -1 &&
+      discountCodeObject.usageLimit <= discountCodeObject.usedCount
+    ) {
       toast({
         title: '折扣碼已達使用次數上限',
         description: '該折扣碼已達使用次數上限，無法再使用。',
@@ -158,7 +161,6 @@ const CheckoutPage: NextPage = () => {
       return;
     }
 
-    // 檢查購物車中的商品是否包含在折扣碼適用的商品中
     if (appliedDiscount.productId && appliedDiscount.productId.length > 0) {
       const eligibleProductIds = new Set(
         appliedDiscount.productId.map((id: any) => id.toString()),

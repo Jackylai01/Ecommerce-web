@@ -59,7 +59,6 @@ interface DiscountUsage {
 }
 
 const DiscountList: React.FC = () => {
-  const { isOpen, onToggle } = useDisclosure();
   const {
     isOpen: isDrawerOpen,
     onOpen: onDrawerOpen,
@@ -68,6 +67,7 @@ const DiscountList: React.FC = () => {
   const [selectedCode, setSelectedCode] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
+  const [openItemId, setOpenItemId] = useState<string | null>(null); // State for managing which item is open
   const dispatch = useAppDispatch();
   const router = useRouter();
   const {
@@ -91,6 +91,10 @@ const DiscountList: React.FC = () => {
     setSelectedCode(code);
     dispatch(getDiscountUsageByCodeAsync({ code, page, searchTerm }));
     onDrawerOpen();
+  };
+
+  const handleToggle = (id: string) => {
+    setOpenItemId((prev) => (prev === id ? null : id));
   };
 
   const handleSearch = () => {
@@ -126,12 +130,12 @@ const DiscountList: React.FC = () => {
                   color='white'
                   p={4}
                   cursor='pointer'
-                  onClick={onToggle}
+                  onClick={() => handleToggle(discount._id)}
                   _hover={{ bg: 'blue.600' }}
                 >
                   <HStack justify='space-between'>
                     <Box>
-                      <Heading as='h1' size='md'>
+                      <Heading as='h1' size='md' color='white'>
                         {discount.name}
                       </Heading>
                       <Text fontSize='sm' mt={1} opacity={0.8}>
@@ -139,14 +143,18 @@ const DiscountList: React.FC = () => {
                       </Text>
                     </Box>
                     <Box
-                      transform={isOpen ? 'rotate(180deg)' : 'rotate(0deg)'}
+                      transform={
+                        openItemId === discount._id
+                          ? 'rotate(180deg)'
+                          : 'rotate(0deg)'
+                      }
                       transition='transform 0.3s'
                     >
                       ▼
                     </Box>
                   </HStack>
                 </Box>
-                <Collapse in={isOpen} animateOpacity>
+                <Collapse in={openItemId === discount._id} animateOpacity>
                   <Box p={4}>
                     <VStack spacing={4}>
                       {discount.discountCodes.map((code: any) => (
@@ -161,7 +169,8 @@ const DiscountList: React.FC = () => {
                           expiry={new Date(
                             discount.endDate,
                           ).toLocaleDateString()}
-                          usage={`已用 ${code.usedCount} 次 / 限用 ${code.usageLimit} 次`}
+                          usageLimit={code.usageLimit}
+                          usedCount={code.usedCount}
                           condition={`${
                             discountTypeMap[discount.type]
                           }，最低消費 ${discount.minimumAmount || 0}`}

@@ -138,7 +138,8 @@ const DiscountModule: NextPage = () => {
         formValues.discountCodeInputMethod === 'generate'
           ? formValues.generateCodesCount
           : undefined,
-      usageLimit: formValues.usageLimit,
+      usageLimit: formValues.unlimitedUse ? -1 : formValues.usageLimit, // 根據unlimitedUse設置usageLimit
+      unlimitedUse: formValues.unlimitedUse,
     };
 
     dispatch(addDiscountAsync(payload));
@@ -155,10 +156,10 @@ const DiscountModule: NextPage = () => {
   };
 
   const handleGenerateCodes = () => {
-    const { generateCodesCount, usageLimit } = formValues;
+    const { generateCodesCount, usageLimit, unlimitedUse } = formValues;
     const generatedCodes = Array.from({ length: generateCodesCount }, () => ({
       code: generateRandomCode(),
-      usageLimit,
+      usageLimit: unlimitedUse ? -1 : usageLimit, // 根據unlimitedUse設置usageLimit
       usedCount: 0,
     }));
     setFormValues((prev) => ({

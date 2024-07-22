@@ -4,7 +4,8 @@ interface DiscountItemProps {
   code: string;
   amount: string;
   expiry: string;
-  usage: string;
+  usageLimit: number;
+  usedCount: number;
   condition: string;
   onClick: () => void;
 }
@@ -13,7 +14,8 @@ const DiscountItem: React.FC<DiscountItemProps> = ({
   code,
   amount,
   expiry,
-  usage,
+  usageLimit,
+  usedCount,
   condition,
   onClick,
 }) => {
@@ -30,6 +32,11 @@ const DiscountItem: React.FC<DiscountItemProps> = ({
       });
     });
   };
+
+  const usageText =
+    usageLimit === -1
+      ? `已用 ${usedCount} 次 / 無限制`
+      : `已用 ${usedCount} 次 / 限用 ${usageLimit} 次`;
 
   return (
     <Box
@@ -68,7 +75,7 @@ const DiscountItem: React.FC<DiscountItemProps> = ({
           <span role='img' aria-label='repeat'>
             🔄
           </span>{' '}
-          {usage}
+          {usageText}
         </Text>
       </HStack>
       <Text fontSize='sm' color='gray.600' mt={2}>
