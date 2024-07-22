@@ -29,4 +29,5 @@ export interface Discount extends BaseEntity {
   generateCodesCount?: number;
   discountCodeInputMethod?: 'manual' | 'generate';
   unlimitedUse?: boolean;
+  discountCodes?: any;
 }

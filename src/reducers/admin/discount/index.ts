@@ -4,6 +4,7 @@ import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
 import { Discount } from '@models/entities/shared/discount';
 import { Metadata } from '@models/entities/shared/pagination';
+import { DiscountUsage } from '@models/responses/discounts';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import {
   DiscountAction,
@@ -24,7 +25,7 @@ type DiscountState = ApiState<DiscountAction> & {
   metadata: Metadata | null;
   discountDetails: Discount | null;
   editingDiscountId: string | null;
-  discountUsage: any[] | null;
+  discountUsage: DiscountUsage | null;
   discounts: any;
 };
 
@@ -34,7 +35,6 @@ const initialState: DiscountState = {
   discountDetails: null,
   editingDiscountId: null,
   discountUsage: null,
-
   discounts: null,
   ...newApiState<DiscountState>(DiscountAction),
 };

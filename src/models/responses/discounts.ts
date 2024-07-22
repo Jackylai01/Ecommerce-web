@@ -13,7 +13,12 @@ export interface IDiscount {
   startDate: Date;
   endDate: Date;
   minimumAmount?: number;
-  discountCode?: string[];
+  discountCodes: {
+    code: string;
+    usageLimit: number;
+    usedCount: number;
+    _id: string;
+  }[];
   usageLimit?: number;
   usedCount?: number;
   isActive?: boolean;
@@ -23,5 +28,22 @@ export interface IDiscount {
   usageHistory: {
     userId: string;
     usedAt: Date;
+  }[];
+  remainingUses: number | string;
+}
+
+export interface DiscountUsage {
+  discountCodes: any[];
+  usageHistory: {
+    user: {
+      username: string;
+      email: string;
+    };
+    usedAt: Date;
+    products: {
+      name: string;
+      quantity: number;
+      priceAtPurchase: number;
+    }[];
   }[];
 }
