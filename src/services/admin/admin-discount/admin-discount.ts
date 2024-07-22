@@ -92,10 +92,16 @@ export const apiApplyDiscountToOrder = async ({
 /**
  * 查詢折扣碼使用歷史
  */
-export const apiGetDiscountUsageByCode = async (code: string) => {
-  return getRequest<ApiResult<any>>(`/zigong/discounts/usage/${code}`);
+export const apiGetDiscountUsageByCode = async (
+  code: string,
+  page: number,
+  searchTerm?: string,
+) => {
+  const searchQuery = searchTerm ? `&search=${searchTerm}` : '';
+  return getRequest<ApiPaginationResult<any>>(
+    `/zigong/discounts/usage/${code}?page=${page}${searchQuery}`,
+  );
 };
-
 /**
  * 獲取全部折扣使用情形
  */

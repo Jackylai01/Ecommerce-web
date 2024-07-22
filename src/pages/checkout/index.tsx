@@ -114,7 +114,7 @@ const CheckoutPage: NextPage = () => {
     if (!appliedDiscount) {
       toast({
         title: '無效的折扣碼',
-        description: '找不到該折扣碼，請確認後再試。',
+        description: '找不到該折扣碼，請確認後再試1。',
         status: 'error',
         isClosable: true,
       });

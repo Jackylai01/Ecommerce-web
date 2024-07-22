@@ -104,9 +104,17 @@ export const applyDiscountToOrderAsync = createAsyncThunk(
 
 export const getDiscountUsageByCodeAsync = createAsyncThunk(
   `${ReducerName.ADMIN_DISCOUNT}/${DiscountAction.getDiscountUsageByCode}`,
-  async (code: string) => {
-    const response = await apiGetDiscountUsageByCode(code);
-    return response.result.data;
+  async ({
+    code,
+    page,
+    searchTerm,
+  }: {
+    code: string;
+    page: number;
+    searchTerm?: string;
+  }) => {
+    const response = await apiGetDiscountUsageByCode(code, page, searchTerm);
+    return response.result;
   },
 );
 

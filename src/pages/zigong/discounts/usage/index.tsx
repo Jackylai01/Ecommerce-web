@@ -1,5 +1,7 @@
+import { SearchIcon } from '@chakra-ui/icons';
 import {
   Box,
+  Button,
   Collapse,
   Drawer,
   DrawerBody,
@@ -9,6 +11,10 @@ import {
   DrawerOverlay,
   Heading,
   HStack,
+  Image,
+  Input,
+  InputGroup,
+  InputRightElement,
   Text,
   useDisclosure,
   VStack,
@@ -21,13 +27,36 @@ import { discountTypeMap } from '@fixtures/discountCodes';
 import { tabsConfig } from '@fixtures/Tabs-configs';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { DiscountUsage } from '@models/responses/discounts';
 import {
   getAllDiscountsUsageAsync,
   getDiscountUsageByCodeAsync,
 } from '@reducers/admin/discount/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+
+interface DiscountUsage {
+  discountCodes: any[];
+  usageHistory: {
+    user: {
+      username: string;
+      email: string;
+    };
+    usedAt: Date;
+    products: {
+      name: string;
+      quantity: number;
+      priceAtPurchase: number;
+      product: {
+        coverImage: {
+          imageUrl: string;
+        };
+        description: string;
+        category: string[];
+        status: string;
+      };
+    }[];
+  }[];
+}
 
 const DiscountList: React.FC = () => {
   const { isOpen, onToggle } = useDisclosure();
@@ -37,18 +66,21 @@ const DiscountList: React.FC = () => {
     onClose: onDrawerClose,
   } = useDisclosure();
   const [selectedCode, setSelectedCode] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const {
     list: discountUsageList,
     metadata,
+    discountsMetadata,
     status: { getAllDiscountsLoading },
     discountUsage,
   } = useAppSelector((state) => state.adminDiscount);
 
   useEffect(() => {
     const fetchData = async () => {
-      const page = parseInt(router.query.page as string, 10) || 1;
+      const page = parseInt(router.query.page as string) || 1;
       const limit = 10;
       dispatch(getAllDiscountsUsageAsync({ page, limit }));
     };
@@ -57,8 +89,20 @@ const DiscountList: React.FC = () => {
 
   const handleDiscountItemClick = (code: string) => {
     setSelectedCode(code);
-    dispatch(getDiscountUsageByCodeAsync(code));
+    dispatch(getDiscountUsageByCodeAsync({ code, page, searchTerm }));
     onDrawerOpen();
+  };
+
+  const handleSearch = () => {
+    if (!selectedCode) {
+      console.error('請選擇一個折扣碼進行搜索');
+      return;
+    }
+    const page = 1;
+    setPage(page);
+    dispatch(
+      getDiscountUsageByCodeAsync({ code: selectedCode, page, searchTerm }),
+    );
   };
 
   return (
@@ -133,50 +177,83 @@ const DiscountList: React.FC = () => {
         ))}
         {metadata && <Pagination metadata={metadata} />}
       </TabsLayout>
-      <Drawer isOpen={isDrawerOpen} placement='right' onClose={onDrawerClose}>
+      <Drawer
+        isOpen={isDrawerOpen}
+        placement='right'
+        onClose={onDrawerClose}
+        size='lg'
+      >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>折扣碼詳細使用記錄</DrawerHeader>
           <DrawerBody>
-            {discountUsage && (discountUsage as DiscountUsage).usageHistory ? (
+            <InputGroup size='md' mb={4}>
+              <Input
+                pr='4.5rem'
+                placeholder='搜索email、username、折扣碼'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <InputRightElement width='4.5rem'>
+                <Button h='1.75rem' size='sm' onClick={handleSearch}>
+                  <SearchIcon />
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+            {discountUsage && discountUsage.length > 0 ? (
               <VStack spacing={4}>
-                {(discountUsage as DiscountUsage).usageHistory.map(
-                  (history, index: number) => (
-                    <Box
-                      key={index}
-                      bg='gray.100'
-                      p={4}
-                      borderRadius='md'
-                      boxShadow='md'
-                      w='100%'
-                    >
-                      <Text>
-                        使用者: {history.user.username} ({history.user.email})
-                      </Text>
-                      <Text>
-                        使用日期:{' '}
-                        {new Date(history.usedAt).toLocaleDateString()}
-                      </Text>
-                      <Text>購買商品:</Text>
-                      <VStack spacing={2} align='start'>
-                        {history.products.map((product, i: number) => (
-                          <Box
-                            key={i}
-                            p={2}
-                            bg='white'
-                            borderRadius='md'
-                            boxShadow='sm'
-                            w='100%'
-                          >
-                            <Text>商品名稱: {product.name}</Text>
-                            <Text>購買數量: {product.quantity}</Text>
-                            <Text>購買價格: NT${product.priceAtPurchase}</Text>
-                          </Box>
-                        ))}
-                      </VStack>
-                    </Box>
-                  ),
+                {discountUsage.map((history: any, index: number) => (
+                  <Box
+                    key={index}
+                    bg='gray.100'
+                    p={4}
+                    borderRadius='md'
+                    boxShadow='md'
+                    w='100%'
+                  >
+                    <Text>
+                      使用者: {history.user.username} ({history.user.email})
+                    </Text>
+                    <Text>
+                      使用日期: {new Date(history.usedAt).toLocaleDateString()}
+                    </Text>
+                    <Text>購買商品:</Text>
+                    <VStack spacing={2} align='start'>
+                      {history.products.map((product: any, i: number) => (
+                        <Box
+                          key={i}
+                          p={2}
+                          bg='white'
+                          borderRadius='md'
+                          boxShadow='sm'
+                          w='100%'
+                        >
+                          <HStack>
+                            <Image
+                              boxSize='50px'
+                              objectFit='cover'
+                              src={product.product.coverImage.imageUrl}
+                              alt={product.product.name}
+                            />
+                            <Box>
+                              <Text>商品名稱: {product.product.name}</Text>
+                              <Text>購買數量: {product.quantity}</Text>
+                              <Text>
+                                購買價格: NT${product.priceAtPurchase}
+                              </Text>
+                              <Text>
+                                產品描述: {product.product.description}
+                              </Text>
+                            </Box>
+                          </HStack>
+                        </Box>
+                      ))}
+                    </VStack>
+                  </Box>
+                ))}
+                {discountsMetadata && (
+                  <Pagination metadata={discountsMetadata} />
                 )}
               </VStack>
             ) : (

@@ -4,7 +4,6 @@ import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
 import { Discount } from '@models/entities/shared/discount';
 import { Metadata } from '@models/entities/shared/pagination';
-import { DiscountUsage } from '@models/responses/discounts';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import {
   DiscountAction,
@@ -23,10 +22,12 @@ import {
 type DiscountState = ApiState<DiscountAction> & {
   list: Discount[] | null;
   metadata: Metadata | null;
+  discountsMetadata: Metadata | null;
   discountDetails: Discount | null;
   editingDiscountId: string | null;
-  discountUsage: DiscountUsage | null;
+  discountUsage: any;
   discounts: any;
+  usageHistory: any;
 };
 
 const initialState: DiscountState = {
@@ -36,6 +37,8 @@ const initialState: DiscountState = {
   editingDiscountId: null,
   discountUsage: null,
   discounts: null,
+  discountsMetadata: null,
+  usageHistory: null,
   ...newApiState<DiscountState>(DiscountAction),
 };
 
@@ -98,7 +101,8 @@ export const discountSlice = createSlice({
       }
     });
     builder.addCase(getDiscountUsageByCodeAsync.fulfilled, (state, action) => {
-      state.discountUsage = action.payload;
+      state.discountUsage = action.payload.data;
+      state.discountsMetadata = action.payload.metadata;
     });
     builder.addCase(getAllDiscountsUsageAsync.fulfilled, (state, action) => {
       state.list = action.payload.data;
