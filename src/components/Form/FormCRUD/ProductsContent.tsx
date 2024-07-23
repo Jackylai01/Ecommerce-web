@@ -18,7 +18,6 @@ import {
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { IProduct } from '@models/requests/products';
-import { getAllDiscountsAsync } from '@reducers/admin/discount/actions';
 import { getAllProductsCategoryAsync } from '@reducers/admin/product-category/actions';
 
 import { getAllProductsTagsAsync } from '@reducers/admin/product-tags/actions';
@@ -40,10 +39,10 @@ import ProductCustomBlocks from './ProductCustomBlocks';
 
 interface UpsellProduct {
   productId: string;
+  productName: string;
   upsellPrice: string;
   upsellLimit: string;
   upsellStock: string;
-  upsellScope: 'global' | 'specific';
 }
 
 interface UpsellProductModalProps {
@@ -73,16 +72,15 @@ const UpsellProductModal: React.FC<UpsellProductModalProps> = ({
           ...prev,
           {
             productId: product._id,
+            productName: product.name,
             upsellPrice: '',
             upsellLimit: '',
             upsellStock: '',
-            upsellScope: 'global',
           },
         ];
       }
     });
   };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size='6xl'>
       <ModalOverlay />
@@ -110,6 +108,7 @@ const UpsellProductModal: React.FC<UpsellProductModalProps> = ({
               >
                 <Text fontWeight='bold'>{product.name}</Text>
                 <Text fontSize='sm'>{product.description}</Text>
+                <Text fontSize='sm'>售價: {product.price}</Text>
               </Box>
             ))}
           </SimpleGrid>
@@ -127,14 +126,13 @@ const UpsellProductModal: React.FC<UpsellProductModalProps> = ({
 export const ProductFormContent: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { setValue } = useFormContext();
-
+  const { setValue, watch, register } = useFormContext();
+  const statusValue = watch('status');
   const { uploadedImages } = useAppSelector((state) => state.adminUpload);
   const { list: categories } = useAppSelector(
     (state) => state.adminProductsCategory,
   );
   const { list: tags } = useAppSelector((state) => state.adminProductsTags);
-  const { list: discounts } = useAppSelector((state) => state.adminDiscount);
   const { id: productId } = router.query as any;
   const {
     productDetails,
@@ -176,16 +174,10 @@ export const ProductFormContent: React.FC = () => {
       label: tag.name ?? '',
     })) || [];
 
-  const discountOptions =
-    discounts?.map((discount) => ({
-      value: discount._id ?? '',
-      label: discount.name ?? '',
-    })) || [];
-
   useEffect(() => {
     dispatch(getAllProductsCategoryAsync({ page: 1, limit: 100 }));
     dispatch(getAllProductsTagsAsync({ page: 1, limit: 100 }));
-    dispatch(getAllDiscountsAsync({ page: 1, limit: 100 }));
+
     if (productId) {
       dispatch(getProductByIdAsync(productId));
     }
@@ -271,15 +263,12 @@ export const ProductFormContent: React.FC = () => {
     }
   }, [uploadedImages, productId, setValue]);
 
-  const handleUpsellSettingsChange = (
-    index: number,
-    field: keyof UpsellProduct,
-    value: string,
-  ) => {
-    setSelectedUpsellProducts((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)),
-    );
-  };
+  // 设置初始值
+  useEffect(() => {
+    selectedUpsellProducts.forEach((product, index) => {
+      setValue(`upsellProducts[${index}].productId`, product.productId);
+    });
+  }, [selectedUpsellProducts, setValue]);
 
   return (
     <VStack spacing={4} align='flex-start' color={textColor}>
@@ -326,12 +315,7 @@ export const ProductFormContent: React.FC = () => {
         isRequired
       />
       <TagsMultiSelect name='tags' label='產品標籤' options={tagsOptions} />
-      <CustomSelect
-        name='discount'
-        label='折扣方案'
-        options={discountOptions}
-        isRequired={false}
-      />
+
       <ToggleSwitch
         name='status'
         label='產品狀態'
@@ -339,6 +323,8 @@ export const ProductFormContent: React.FC = () => {
         offValue='offShelf'
         onLabel='上架'
         offLabel='下架'
+        value={statusValue}
+        onChange={(value) => setValue('status', value)}
       />
       <DynamicSpecifications />
       <ImageUpload
@@ -381,35 +367,40 @@ export const ProductFormContent: React.FC = () => {
               borderRadius='md'
               boxShadow='md'
             >
-              <HStack spacing={4}>
-                <Text fontWeight='bold'>加購產品ID: {product.productId}</Text>
+              <HStack spacing={4} display='flex' flexDirection='column'>
+                <TextInput
+                  name={`upsellProducts[${index}].productId`}
+                  label='加購產品ID'
+                  placeholder='加購產品ID'
+                  isRequired
+                  value={product.productId}
+                  style={{ display: 'none' }}
+                />
+                <Text fontWeight='bold'>
+                  加購產品名稱: {product.productName}
+                </Text>
                 <TextInput
                   name={`upsellProducts[${index}].upsellPrice`}
                   label='加購價格'
                   placeholder='輸入加購價格'
+                  isRequired
                 />
                 <TextInput
                   name={`upsellProducts[${index}].upsellLimit`}
                   label='加購上限'
                   placeholder='輸入加購上限'
+                  isRequired
                 />
                 <TextInput
                   name={`upsellProducts[${index}].upsellStock`}
                   label='加購庫存數量'
                   placeholder='輸入加購庫存數量'
-                />
-                <CustomSelect
-                  name={`upsellProducts[${index}].upsellScope`}
-                  label='加購範圍'
-                  options={[
-                    { value: 'global', label: '全館加購' },
-                    { value: 'specific', label: '指定商品加購' },
-                  ]}
                   isRequired
                 />
               </HStack>
             </Box>
           ))}
+
           <UpsellProductModal
             isOpen={isOpen}
             onClose={onClose}

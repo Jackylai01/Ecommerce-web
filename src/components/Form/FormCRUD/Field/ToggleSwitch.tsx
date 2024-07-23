@@ -39,14 +39,6 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
             onChange(e.target.checked ? onValue : offValue);
           }
         }}
-        sx={{
-          '.chakra-switch__track': {
-            boxShadow: '0 0 0 1px #afafaf',
-          },
-          '.chakra-switch__thumb': {
-            bg: isChecked ? 'white' : 'gray.300',
-          },
-        }}
       />
       <Text ml={2}>{isChecked ? onLabel : offLabel}</Text>
     </FormControl>

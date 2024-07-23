@@ -19,6 +19,8 @@ interface TextInputType {
   min?: number;
   max?: number;
   isReadOnly?: boolean;
+  value?: any;
+  style?: React.CSSProperties;
 }
 
 const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
@@ -34,6 +36,8 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
       min,
       max,
       isReadOnly = false,
+      value,
+      style,
     },
     ref,
   ) => {
@@ -52,10 +56,12 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
       register(name, { required: isRequired });
     }, [register, name, isRequired]);
 
-    const value = watch(name);
+    useEffect(() => {
+      setValue(name, value);
+    }, [value, setValue, name]);
 
     return (
-      <FormControl isInvalid={isInvalid} isRequired={isRequired}>
+      <FormControl isInvalid={isInvalid} isRequired={isRequired} style={style}>
         <FormLabel htmlFor={name}>{label}</FormLabel>
         <Input
           as={as || 'input'}
@@ -84,8 +90,8 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
               WebkitBoxShadow: '0 0 0 30px white inset',
             },
           }}
-          value={value || ''}
           ref={ref}
+          value={value}
           onChange={(e) => setValue(name, e.target.value)}
         />
         <FormErrorMessage>{errors[name]?.message}</FormErrorMessage>

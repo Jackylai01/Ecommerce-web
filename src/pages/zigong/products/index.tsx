@@ -83,6 +83,7 @@ const ProductsPages: NextPage = () => {
           'specifications',
           'tags',
           'discount',
+          'upsellProducts',
         ].includes(key)
       ) {
         formData.append(key, data[key]);
@@ -110,6 +111,10 @@ const ProductsPages: NextPage = () => {
 
     if (data.specifications) {
       formData.append('specifications', JSON.stringify(data.specifications));
+    }
+
+    if (data.upsellProducts) {
+      formData.append('upsellProducts', JSON.stringify(data.upsellProducts));
     }
 
     dispatch(addProductAsync(formData));
