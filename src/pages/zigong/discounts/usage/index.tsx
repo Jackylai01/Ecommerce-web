@@ -200,7 +200,7 @@ const DiscountList: React.FC = () => {
             <InputGroup size='md' mb={4}>
               <Input
                 pr='4.5rem'
-                placeholder='搜索email、username、折扣碼'
+                placeholder='搜索email、username'
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
