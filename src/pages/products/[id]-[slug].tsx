@@ -14,14 +14,12 @@ import {
 import { AddToWishlistButton } from '@components/AddToWishlistButton';
 import { AddToCartButton } from '@components/Cart/AddToCartButton';
 import { CustomBreadcrumb } from '@components/CustomBreadcrumb';
-
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import { Quantity } from '@components/Quantity/Quantity';
-
+import UpsellProductsCarousel from '@components/UpsellProductsCarousel';
 import { getSubstring } from '@helpers/products';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-
 import { addItem, isAdded, resetItems } from '@reducers/client/cart';
 import { publicProductsDetailAsync } from '@reducers/public/products/actions';
 import { useRouter } from 'next/router';
@@ -41,6 +39,9 @@ const items = [
 const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [selectedUpsellProducts, setSelectedUpsellProducts] = useState<any[]>(
+    [],
+  );
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -74,6 +75,20 @@ const ProductDetails = () => {
   const handleBuyNow = () => {
     dispatch(resetItems('checkout'));
     dispatch(addItem({ key: 'checkout', product, count: quantity }));
+
+    selectedUpsellProducts.forEach((upsellProduct) => {
+      dispatch(
+        addItem({
+          key: 'checkout',
+          product: {
+            ...upsellProduct.productId,
+            price: upsellProduct.upsellPrice,
+          },
+          count: 1,
+        }),
+      );
+    });
+
     router.push('/checkout');
   };
 
@@ -175,6 +190,14 @@ const ProductDetails = () => {
               </Text>
             </Box>
           </Stack>
+
+          {product.upsellProducts && product.upsellProducts.length > 0 && (
+            <UpsellProductsCarousel
+              upsellProducts={product.upsellProducts}
+              selectedUpsellProducts={selectedUpsellProducts}
+              setSelectedUpsellProducts={setSelectedUpsellProducts}
+            />
+          )}
         </GridItem>
       </Grid>
       <Box mt='4'>
