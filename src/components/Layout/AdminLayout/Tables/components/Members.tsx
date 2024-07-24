@@ -47,6 +47,7 @@ interface IClientUser {
   email: string;
   city: string;
   roles: string[];
+  birthday: Date;
 }
 
 const Members = ({ title, captions }: AuthorsProps) => {

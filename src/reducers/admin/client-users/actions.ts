@@ -28,8 +28,8 @@ export const adminGetClientUserAsync = createAsyncThunk(
 
 export const adminGetAllClientUsersAsync = createAsyncThunk(
   `${ReducerName.ADMIN_CLIENT_USERS}/${AdminClientUsersAsyncAction.getAllClientUsers}`,
-  async ({ page, limit }: QueryParams) => {
-    const query: PagingQuery = { page, limit };
+  async ({ page, limit, search }: QueryParams) => {
+    const query: PagingQuery = { page, limit, search };
     const response = await apiClientListClientUsers(query);
     return response.result;
   },

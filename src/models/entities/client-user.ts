@@ -35,4 +35,7 @@ export class ClientUser extends BaseUserEntity {
 
   /** 最後登入時間 */
   lastLoginAt?: Date;
+
+  /** 生日 */
+  birthday?: Date;
 }

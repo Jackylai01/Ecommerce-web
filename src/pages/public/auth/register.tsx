@@ -175,6 +175,17 @@ const Register: NextPage = () => {
               </Stack>
             </RadioGroup>
           </FormControl>
+          <FormControl id='birthday' mb={4} isInvalid={!!errors.birthday}>
+            <FormLabel>生日</FormLabel>
+            <Input
+              type='date'
+              placeholder='請輸入您的生日'
+              {...register('birthday', { required: '請填入生日' })}
+            />
+            {errors.birthday && (
+              <FormErrorMessage>{errors.birthday.message}</FormErrorMessage>
+            )}
+          </FormControl>
           <Button type='submit' colorScheme='blue' width='full' mb={4}>
             註冊
           </Button>

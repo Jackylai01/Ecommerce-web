@@ -12,6 +12,7 @@ import DiscountTableContainer from '@components/Layout/AdminLayout/Discount';
 import Profile from '@components/Layout/AdminLayout/Profile';
 import Tables from '@components/Layout/AdminLayout/Tables';
 import { ADMIN_ROUTE } from '@fixtures/constants';
+import ShoppingCreditsManagement from '@pages/zigong/shopping-credits';
 
 var dashRoutes = [
   {
@@ -55,6 +56,13 @@ var dashRoutes = [
     name: 'Discounts',
     icon: CartIcon,
     component: DiscountTableContainer,
+    layout: `/${ADMIN_ROUTE}`,
+  },
+  {
+    path: '/shopping-credits',
+    name: 'ShoppingCredits',
+    icon: CartIcon,
+    component: ShoppingCreditsManagement,
     layout: `/${ADMIN_ROUTE}`,
   },
   {

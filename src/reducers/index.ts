@@ -10,11 +10,13 @@ import adminProductsCategory from './admin/product-category';
 import adminProductsTags from './admin/product-tags';
 import adminProducts from './admin/products';
 import adminShipment from './admin/shipments';
+import adminShoppingCredits from './admin/shoppingCredits';
 import adminUpload from './admin/upload';
 import clientAuth from './client/auth';
 import clientCart from './client/cart';
 import clientOrders from './client/orders';
 import clientRefunds from './client/refunds';
+import clientShoppingCredits from './client/shopping-credits';
 import crudLayout from './crud-layout';
 import fileSelect from './file-select';
 import iconSelect from './icon-select';
@@ -25,7 +27,6 @@ import publicFavorites from './public/favorite';
 import publicPayments from './public/payments';
 import publicProducts from './public/products';
 import publicShipment from './public/shipment';
-
 const appReducer = {
   layout,
   crudLayout,
@@ -54,6 +55,8 @@ const appReducer = {
   adminRefunds,
   clientOrders,
   publicDiscounts,
+  adminShoppingCredits,
+  clientShoppingCredits,
 };
 
 export default appReducer;

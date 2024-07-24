@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react';
 import ClientLayout from '@components/Layout/ClientLayout';
 import HistoryItem from '@components/Layout/ClientLayout/HistoryItem';
-
 import { OrderItem } from '@components/Layout/ClientLayout/OrderItem';
 import Profiles from '@components/Layout/ClientLayout/Profiles';
 import RefundForm from '@components/Layout/ClientLayout/RefundForm';
@@ -23,6 +22,8 @@ import {
   getClientOrderHistoryAsync,
   getClientOrdersAsync,
 } from '@reducers/client/orders/actions';
+import { clientUserShoppingCreditsAsync } from '@reducers/client/shopping-credits/actions';
+
 import { useEffect } from 'react';
 
 const ClientDashboard = () => {
@@ -34,6 +35,10 @@ const ClientDashboard = () => {
     metadata,
     status: { getClientOrdersLoading },
   } = useAppSelector((state) => state.clientOrders);
+  const {
+    list,
+    status: { userShoppingCreditsLoading },
+  } = useAppSelector((state) => state.clientShoppingCredits);
 
   useEffect(() => {
     if (!userInfo) return;
@@ -49,12 +54,15 @@ const ClientDashboard = () => {
         query: { limit: 10, page: 1 },
       }),
     );
+    dispatch(clientUserShoppingCreditsAsync(userInfo._id));
   }, [dispatch, userInfo]);
 
   return (
     <ClientLayout>
       <Navbar />
-      <LoadingLayout isLoading={getClientOrdersLoading}>
+      <LoadingLayout
+        isLoading={userShoppingCreditsLoading || getClientOrdersLoading}
+      >
         <Box
           w='80%'
           mx='auto'
@@ -110,7 +118,7 @@ const ClientDashboard = () => {
                 _selected={{ bg: '#c0a080', color: 'white' }}
                 _hover={{ bg: 'rgba(192, 160, 128, 0.1)' }}
               >
-                會員積分
+                購物金
               </Tab>
               <Tab
                 _selected={{ bg: '#c0a080', color: 'white' }}
@@ -168,29 +176,47 @@ const ClientDashboard = () => {
               </TabPanel>
               <TabPanel>
                 <Heading as='h2' fontSize='24px' mb='20px'>
-                  會員積分
+                  購物金
                 </Heading>
-                <Box
-                  bg='white'
-                  p='30px'
-                  borderRadius='12px'
-                  boxShadow='0 10px 20px rgba(0, 0, 0, 0.05)'
-                >
-                  <Box fontSize='20px'>您的當前積分：</Box>
-                  <Box
-                    fontSize='64px'
-                    fontWeight='600'
-                    color='#c0a080'
-                    textAlign='center'
-                    mt='20px'
-                    textShadow='2px 2px 4px rgba(0,0,0,0.1)'
-                  >
-                    10,000 點
-                  </Box>
-                  <Box textAlign='center' mt='10px'>
-                    可兌換價值 NT$1,000 的商品
-                  </Box>
-                </Box>
+                {list && list.length > 0 ? (
+                  list.map((credit: any) => (
+                    <Box
+                      key={credit._id}
+                      w='100%'
+                      p='20px'
+                      borderWidth='1px'
+                      borderRadius='lg'
+                      overflow='hidden'
+                    >
+                      <Box fontSize='20px'>您的當前購物金：</Box>
+                      <Box
+                        fontSize='64px'
+                        fontWeight='600'
+                        color='#c0a080'
+                        textAlign='center'
+                        mt='20px'
+                        textShadow='2px 2px 4px rgba(0,0,0,0.1)'
+                      >
+                        {credit.amount} 點
+                      </Box>
+                      <Box fontSize='14px' color='gray.600' textAlign='center'>
+                        <Box textAlign='center' mt='10px'>
+                          可兌換價值 NT$ {credit.amount} 的商品
+                        </Box>
+                        類型: {credit.type}
+                      </Box>
+                      <Box fontSize='14px' color='gray.600' textAlign='center'>
+                        狀態: {credit.status === 'unused' ? '未使用' : '已使用'}
+                      </Box>
+                      <Box fontSize='14px' color='gray.600' textAlign='center'>
+                        創建日期:{' '}
+                        {new Date(credit.createdAt).toLocaleDateString()}
+                      </Box>
+                    </Box>
+                  ))
+                ) : (
+                  <Box>尚無購物金。</Box>
+                )}
               </TabPanel>
               <TabPanel>
                 <Heading as='h2' fontSize='24px' mb='20px'>

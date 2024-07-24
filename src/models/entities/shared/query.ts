@@ -9,6 +9,7 @@ export interface QueryParams {
   minPrice?: number;
   maxPrice?: number;
   status?: string;
+  search?: string;
 }
 
 export const routeToChinese: Enum = {
