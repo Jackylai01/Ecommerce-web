@@ -26,33 +26,48 @@ const AddShoppingCreditTab = () => {
   const dispatch = useAppDispatch();
   const toast = useToast();
 
-  const { list: users, status } = useAppSelector(
-    (state) => state.adminClientUsers,
-  );
+  const {
+    list: users,
+    status: {
+      adminDetailClientUserProfileSuccess,
+      adminDetailClientUserProfileLoading,
+      adminDetailClientUserProfileFailed,
+    },
+    error: { adminDetailClientUserProfileError },
+  } = useAppSelector((state) => state.adminClientUsers);
 
   useEffect(() => {
     dispatch(adminGetAllClientUsersAsync({ page: 1, limit: 100 }));
   }, [dispatch]);
 
   const onSubmit = async (data: any) => {
-    try {
-      await dispatch(addShoppingCreditAsync(data));
+    await dispatch(addShoppingCreditAsync(data));
+  };
+
+  useEffect(() => {
+    if (adminDetailClientUserProfileSuccess) {
       toast({
-        title: '購物金添加成功',
+        title: '購物金狀態更新成功',
         status: 'success',
         duration: 3000,
         isClosable: true,
       });
-      reset();
-    } catch (error) {
+    } else if (adminDetailClientUserProfileFailed) {
       toast({
-        title: '購物金添加失敗',
+        title: '購物金狀態更新失敗',
+        description: adminDetailClientUserProfileError,
         status: 'error',
         duration: 3000,
         isClosable: true,
       });
     }
-  };
+  }, [
+    toast,
+    dispatch,
+    adminDetailClientUserProfileError,
+    adminDetailClientUserProfileFailed,
+    adminDetailClientUserProfileSuccess,
+  ]);
 
   return (
     <Box p={4} borderWidth={1} borderRadius='lg' boxShadow='lg'>
@@ -62,7 +77,7 @@ const AddShoppingCreditTab = () => {
           <Select
             {...register('userId')}
             placeholder='選擇用戶'
-            isDisabled={status.getAllClientUsersLoading}
+            isDisabled={adminDetailClientUserProfileLoading}
           >
             {users?.map((user) => (
               <option key={user._id} value={user._id}>

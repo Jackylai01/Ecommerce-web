@@ -36,8 +36,17 @@ const BatchAddBirthdayCreditsTab = () => {
   const {
     list: users,
     metadata,
-    status,
+    status: { getAllClientUsersLoading },
   } = useAppSelector((state) => state.adminClientUsers);
+
+  const {
+    status: {
+      addBirthdayShoppingCreditsFailed,
+      addBirthdayShoppingCreditsLoading,
+      addBirthdayShoppingCreditsSuccess,
+    },
+    error: { addBirthdayShoppingCreditsError },
+  } = useAppSelector((state) => state.adminShoppingCredits);
 
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [search, setSearch] = useState('');
@@ -46,30 +55,13 @@ const BatchAddBirthdayCreditsTab = () => {
     dispatch(adminGetAllClientUsersAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
-  const onSubmit = async (data: { amount: number }) => {
-    try {
-      await dispatch(
-        addBirthdayShoppingCreditsAsync({
-          userIds: selectedUsers,
-          amount: data.amount,
-        }),
-      );
-      toast({
-        title: '批量發放生日購物金成功',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-      reset();
-      setSelectedUsers([]);
-    } catch (error) {
-      toast({
-        title: '批量發放生日購物金失敗',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-    }
+  const onSubmit = (data: { amount: number }) => {
+    dispatch(
+      addBirthdayShoppingCreditsAsync({
+        userIds: selectedUsers,
+        amount: data.amount,
+      }),
+    );
   };
 
   const handleSelectUser = (userId: string) => {
@@ -95,6 +87,31 @@ const BatchAddBirthdayCreditsTab = () => {
   const handleSearch = () => {
     dispatch(adminGetAllClientUsersAsync({ page: 1, limit: 10, search }));
   };
+
+  useEffect(() => {
+    if (addBirthdayShoppingCreditsSuccess) {
+      toast({
+        title: '批量發放生日購物金成功',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } else if (addBirthdayShoppingCreditsFailed) {
+      toast({
+        title: '批量發放生日購物金失敗',
+        description: addBirthdayShoppingCreditsError,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [
+    toast,
+    dispatch,
+    addBirthdayShoppingCreditsError,
+    addBirthdayShoppingCreditsFailed,
+    addBirthdayShoppingCreditsSuccess,
+  ]);
 
   return (
     <Box p={4} borderWidth={1} borderRadius='lg' boxShadow='lg'>
@@ -146,7 +163,7 @@ const BatchAddBirthdayCreditsTab = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {status.getAllClientUsersLoading ? (
+            {getAllClientUsersLoading ? (
               <Tr>
                 <Td colSpan={5} textAlign='center'>
                   <Spinner />

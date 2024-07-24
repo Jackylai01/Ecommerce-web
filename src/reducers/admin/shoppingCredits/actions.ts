@@ -23,8 +23,8 @@ export enum ShoppingCreditsAction {
 
 export const getAllShoppingCreditsAsync = createAsyncThunk(
   `${ReducerName.ADMIN_SHOPPING_CREDITS}/${ShoppingCreditsAction.getAllShoppingCredits}`,
-  async ({ page, limit }: QueryParams) => {
-    const query: PagingQuery = { page, limit };
+  async ({ page, limit, search }: QueryParams) => {
+    const query: PagingQuery = { page, limit, search };
     const response = await apiGetAllShoppingCredits(query);
     return response.result;
   },
