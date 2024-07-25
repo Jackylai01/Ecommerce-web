@@ -43,10 +43,12 @@ export const apiAddShoppingCredit = async (body: ShoppingCredit) => {
 export const apiAddBirthdayShoppingCredits = async (
   amount: number,
   userIds: string[],
+  expiryDate: Date,
 ) => {
   return postRequest<ApiResult<any>>('/zigong/shoppingCredits/batch/birthday', {
     amount,
     userIds,
+    expiryDate,
   });
 };
 
@@ -70,4 +72,11 @@ export const apiDeleteShoppingCredit = async (id: string) => {
   return deleteRequest<ApiResult<ShoppingCredit>>(
     `/zigong/shoppingCredits/${id}`,
   );
+};
+
+/**
+ * 刪除過期的購物金
+ */
+export const apiDeleteExpiredShoppingCredits = async () => {
+  return deleteRequest<ApiResult<ShoppingCredit>>('/zigong/shoppingCredits');
 };

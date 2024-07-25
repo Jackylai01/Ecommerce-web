@@ -1,11 +1,11 @@
 import { ReducerName } from '@enums/reducer-name';
 import { PagingQuery } from '@models/entities/shared/pagination';
-import { QueryParams } from '@models/entities/shared/query';
 import { ShoppingCredit } from '@models/responses/shoppingCredit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiAddBirthdayShoppingCredits,
   apiAddShoppingCredit,
+  apiDeleteExpiredShoppingCredits,
   apiDeleteShoppingCredit,
   apiGetAllShoppingCredits,
   apiGetUserShoppingCredits,
@@ -19,12 +19,23 @@ export enum ShoppingCreditsAction {
   addBirthdayShoppingCredits = 'addBirthdayShoppingCredits',
   updateShoppingCreditStatus = 'updateShoppingCreditStatus',
   deleteShoppingCredit = 'deleteShoppingCredit',
+  deleteExpiredShoppingCredits = 'deleteExpiredShoppingCredits',
 }
 
 export const getAllShoppingCreditsAsync = createAsyncThunk(
   `${ReducerName.ADMIN_SHOPPING_CREDITS}/${ShoppingCreditsAction.getAllShoppingCredits}`,
-  async ({ page, limit, search }: QueryParams) => {
-    const query: PagingQuery = { page, limit, search };
+  async ({
+    page,
+    limit,
+    search,
+    status,
+  }: {
+    page: number;
+    limit: number;
+    search?: string;
+    status?: string;
+  }) => {
+    const query: PagingQuery = { page, limit, search, status };
     const response = await apiGetAllShoppingCredits(query);
     return response.result;
   },
@@ -48,8 +59,20 @@ export const addShoppingCreditAsync = createAsyncThunk(
 
 export const addBirthdayShoppingCreditsAsync = createAsyncThunk(
   `${ReducerName.ADMIN_SHOPPING_CREDITS}/${ShoppingCreditsAction.addBirthdayShoppingCredits}`,
-  async ({ userIds, amount }: { userIds: string[]; amount: number }) => {
-    const response = await apiAddBirthdayShoppingCredits(amount, userIds);
+  async ({
+    userIds,
+    amount,
+    expiryDate,
+  }: {
+    userIds: string[];
+    amount: number;
+    expiryDate: Date;
+  }) => {
+    const response = await apiAddBirthdayShoppingCredits(
+      amount,
+      userIds,
+      expiryDate,
+    );
     return response.result;
   },
 );
@@ -67,5 +90,13 @@ export const deleteShoppingCreditAsync = createAsyncThunk(
   async (id: string) => {
     await apiDeleteShoppingCredit(id);
     return id;
+  },
+);
+
+export const deleteExpiredShoppingCreditsAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_SHOPPING_CREDITS}/${ShoppingCreditsAction.deleteExpiredShoppingCredits}`,
+  async () => {
+    const response = await apiDeleteExpiredShoppingCredits();
+    return response.result;
   },
 );

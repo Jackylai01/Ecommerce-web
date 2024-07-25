@@ -178,6 +178,8 @@ const ClientDashboard = () => {
                 <Heading as='h2' fontSize='24px' mb='20px'>
                   購物金
                 </Heading>
+
+                <Box fontSize='20px'>您的當前購物金：</Box>
                 {list && list.length > 0 ? (
                   list.map((credit: any) => (
                     <Box
@@ -188,7 +190,6 @@ const ClientDashboard = () => {
                       borderRadius='lg'
                       overflow='hidden'
                     >
-                      <Box fontSize='20px'>您的當前購物金：</Box>
                       <Box
                         fontSize='64px'
                         fontWeight='600'
@@ -206,11 +207,14 @@ const ClientDashboard = () => {
                         類型: {credit.type}
                       </Box>
                       <Box fontSize='14px' color='gray.600' textAlign='center'>
-                        狀態: {credit.status === 'unused' ? '未使用' : '已使用'}
-                      </Box>
-                      <Box fontSize='14px' color='gray.600' textAlign='center'>
                         創建日期:{' '}
                         {new Date(credit.createdAt).toLocaleDateString()}
+                      </Box>
+                      <Box fontSize='14px' color='gray.600' textAlign='center'>
+                        到期日:{' '}
+                        {credit.expiryDate
+                          ? new Date(credit.expiryDate).toLocaleDateString()
+                          : '無'}
                       </Box>
                     </Box>
                   ))

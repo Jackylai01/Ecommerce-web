@@ -26,9 +26,14 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaSearch } from 'react-icons/fa';
 
+interface FormData {
+  amount: number;
+  expiryDate: string; // 這裡仍然保持字符串格式
+}
+
 const BatchAddBirthdayCreditsTab = () => {
-  const { register, handleSubmit, reset } = useForm({
-    defaultValues: { amount: 0 },
+  const { register, handleSubmit, reset } = useForm<FormData>({
+    defaultValues: { amount: 0, expiryDate: '' }, // 添加到期日的默認值
   });
   const dispatch = useAppDispatch();
   const toast = useToast();
@@ -55,11 +60,15 @@ const BatchAddBirthdayCreditsTab = () => {
     dispatch(adminGetAllClientUsersAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
-  const onSubmit = (data: { amount: number }) => {
+  const onSubmit = (data: FormData) => {
+    const { amount, expiryDate } = data;
+    const convertedExpiryDate = new Date(expiryDate);
+
     dispatch(
       addBirthdayShoppingCreditsAsync({
         userIds: selectedUsers,
-        amount: data.amount,
+        amount,
+        expiryDate: convertedExpiryDate,
       }),
     );
   };
@@ -123,6 +132,10 @@ const BatchAddBirthdayCreditsTab = () => {
               type='number'
               {...register('amount', { valueAsNumber: true })}
             />
+          </FormControl>
+          <FormControl id='expiryDate' mb='4'>
+            <FormLabel>到期日</FormLabel>
+            <Input type='date' {...register('expiryDate')} />
           </FormControl>
           <Button type='submit' colorScheme='teal' w='full'>
             批量發放生日購物金

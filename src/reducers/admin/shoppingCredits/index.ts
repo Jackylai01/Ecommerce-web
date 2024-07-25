@@ -8,6 +8,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   ShoppingCreditsAction,
   addShoppingCreditAsync,
+  deleteExpiredShoppingCreditsAsync,
   deleteShoppingCreditAsync,
   getAllShoppingCreditsAsync,
   getUserShoppingCreditsAsync,
@@ -69,6 +70,14 @@ const shoppingCreditsSlice = createSlice({
       if (state.userCredits) {
         state.userCredits = state.userCredits.filter(
           (credit) => credit._id !== action.payload,
+        );
+      }
+    });
+    builder.addCase(deleteExpiredShoppingCreditsAsync.fulfilled, (state) => {
+      if (state.allCredits) {
+        state.allCredits = state.allCredits.filter(
+          (credit) =>
+            !credit.expiryDate || new Date(credit.expiryDate) >= new Date(),
         );
       }
     });
