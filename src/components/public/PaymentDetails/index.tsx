@@ -4,6 +4,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Checkbox,
   Divider,
   Flex,
   Heading,
@@ -13,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { formatPrice } from '@helpers/products';
 import { IDiscount } from '@models/responses/discounts';
+import { ShoppingCredit } from '@models/responses/shoppingCredit';
 import { useRouter } from 'next/router';
 
 interface PaymentDetailsProps {
@@ -30,6 +32,9 @@ interface PaymentDetailsProps {
   handleApplyDiscountCode: () => void;
   discount: IDiscount | null;
   paymentMethod: string; // 新增付款方式
+  shoppingCredits: ShoppingCredit[]; // 傳遞購物金
+  useShoppingCredit: boolean; // 傳遞購物金使用狀態
+  handleCreditChange: () => void; // 傳遞購物金勾選函數
 }
 
 const PaymentDetails: React.FC<PaymentDetailsProps> = ({
@@ -47,12 +52,20 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   handleApplyDiscountCode,
   discount,
   paymentMethod,
+  shoppingCredits,
+  useShoppingCredit,
+  handleCreditChange,
 }) => {
   const router = useRouter();
 
   const handleViewOrder = () => {
     router.push('/client');
   };
+
+  const availableCredit = shoppingCredits.reduce(
+    (acc, credit) => acc + credit.amount,
+    0,
+  );
 
   return (
     <Box w='100%'>
@@ -110,6 +123,21 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
               <Flex justify='space-between' align='center'>
                 <Text fontWeight='bold'>Shipping Cost</Text>
                 <Text fontWeight='bold'>${formatPrice(logisticsFee)}</Text>
+              </Flex>
+            )}
+
+            {shoppingCredits.length > 0 && !uniqueId && (
+              <Flex justify='space-between' align='center'>
+                <Text fontWeight='bold'>Available Shopping Credit</Text>
+                <Text fontWeight='bold'>${formatPrice(availableCredit)}</Text>
+                <Checkbox
+                  isChecked={useShoppingCredit}
+                  onChange={handleCreditChange}
+                  ml='4'
+                  borderColor='gray.400'
+                >
+                  使用購物金
+                </Checkbox>
               </Flex>
             )}
 

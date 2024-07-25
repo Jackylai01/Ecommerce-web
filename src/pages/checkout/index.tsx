@@ -24,6 +24,8 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { IDiscount } from '@models/responses/discounts';
 import { getOrderByOrderIdAsync } from '@reducers/client/orders/actions';
+import { clientUserShoppingCreditsAsync } from '@reducers/client/shopping-credits/actions';
+
 import { getPublicDiscountsListAsync } from '@reducers/public/discounts/actions';
 import { setOrder } from '@reducers/public/payments';
 import {
@@ -50,6 +52,7 @@ const CheckoutPage: NextPage = () => {
   const [freeShipping, setFreeShipping] = useState<boolean>(false);
   const [discountCode, setDiscountCode] = useState<string>('');
   const [discount, setDiscount] = useState<IDiscount | null>(null);
+  const [useShoppingCredit, setUseShoppingCredit] = useState<boolean>(false); // 新增購物金勾選狀態
   const [formData, setFormData] = useState({
     fullName: '',
     address: '',
@@ -90,6 +93,11 @@ const CheckoutPage: NextPage = () => {
 
   const { userInfo } = useAppSelector((state) => state.clientAuth);
   const { getClientOrder } = useAppSelector((state) => state.clientOrders);
+
+  const {
+    list: shoppingCredits,
+    status: { userShoppingCreditsLoading },
+  } = useAppSelector((state) => state.clientShoppingCredits);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -255,6 +263,11 @@ const CheckoutPage: NextPage = () => {
       discountCodes.push(savedDiscountCode);
     }
 
+    const availableCredit =
+      useShoppingCredit && shoppingCredits
+        ? shoppingCredits.reduce((acc, credit) => acc + credit.amount, 0)
+        : 0;
+
     const orderData = {
       userId: userInfo._id,
       products: checkout.map((item) => ({
@@ -264,11 +277,15 @@ const CheckoutPage: NextPage = () => {
         name: item.name,
       })),
       totalPrice:
-        subTotal - appliedDiscount + (freeShipping ? 0 : logisticsFee),
+        subTotal -
+        appliedDiscount +
+        (freeShipping ? 0 : logisticsFee) -
+        availableCredit, // 扣除購物金
       discountsFee: appliedDiscount,
       shippingAddress: { ...formData },
       discountCodes,
       paymentMethod: formData.paymentMethod, // 添加付款方式
+      usedShoppingCredit: availableCredit, // 添加購物金
     };
 
     await dispatch(createOrderAsync(orderData));
@@ -292,6 +309,10 @@ const CheckoutPage: NextPage = () => {
       };
       await dispatch(createPaymentAsync(paymentData));
     }
+  };
+
+  const handleCreditChange = () => {
+    setUseShoppingCredit(!useShoppingCredit);
   };
 
   const clearLocalStorageDiscounts = useCallback(() => {
@@ -397,6 +418,12 @@ const CheckoutPage: NextPage = () => {
     dispatch(getPublicDiscountsListAsync());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(clientUserShoppingCreditsAsync(userInfo._id)); // 獲取用戶購物金狀態
+    }
+  }, [dispatch, userInfo]);
+
   const updateDiscountsAndShipping = useCallback(() => {
     let totalDiscount = 0;
     let combinableDiscounts: IDiscount[] = [];
@@ -463,11 +490,25 @@ const CheckoutPage: NextPage = () => {
   ]);
 
   useEffect(() => {
+    const availableCredit =
+      useShoppingCredit && shoppingCredits
+        ? shoppingCredits.reduce((acc, credit) => acc + credit.amount, 0)
+        : 0;
     const newTotal =
-      subTotal - appliedDiscount + (freeShipping ? 0 : logisticsFee);
+      subTotal -
+      appliedDiscount +
+      (freeShipping ? 0 : logisticsFee) -
+      availableCredit;
 
     setTotal(newTotal);
-  }, [subTotal, appliedDiscount, logisticsFee, freeShipping]);
+  }, [
+    subTotal,
+    appliedDiscount,
+    logisticsFee,
+    freeShipping,
+    useShoppingCredit,
+    shoppingCredits,
+  ]);
 
   useEffect(() => {
     if (createPaymentSuccess && payment) {
@@ -540,7 +581,8 @@ const CheckoutPage: NextPage = () => {
         getShipmentDataLoading ||
         redirectToLogisticsSelectionLoading ||
         createPaymentLoading ||
-        getPaymentNotifyLoading
+        getPaymentNotifyLoading ||
+        userShoppingCreditsLoading // 添加購物金狀態的加載
       }
       loadingText='處理中...請稍後'
     >
@@ -575,6 +617,9 @@ const CheckoutPage: NextPage = () => {
             handleApplyDiscountCode={handleApplyDiscountCode}
             discount={discount}
             paymentMethod={getClientOrder?.paymentMethod}
+            shoppingCredits={shoppingCredits || []}
+            useShoppingCredit={useShoppingCredit}
+            handleCreditChange={handleCreditChange}
           />
           <DiscountsSection
             selectedDiscounts={selectedDiscounts}

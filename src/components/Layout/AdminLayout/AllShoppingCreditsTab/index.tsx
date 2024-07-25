@@ -224,89 +224,103 @@ const AllShoppingCreditsTab = () => {
               </Select>
             </FormControl>
           </HStack>
-          <Table variant='simple'>
-            <Thead bg={bgColor}>
-              <Tr>
-                <Th bg={bgColor} color={textColor}>
-                  用戶
-                </Th>
-                <Th bg={bgColor} color={textColor}>
-                  金額
-                </Th>
-                <Th bg={bgColor} color={textColor}>
-                  類型
-                </Th>
-                <Th bg={bgColor} color={textColor}>
-                  狀態
-                </Th>
-                <Th bg={bgColor} color={textColor}>
-                  有效期
-                </Th>
-                <Th bg={bgColor} color={textColor}>
-                  操作
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {allCredits && allCredits.length > 0 ? (
-                allCredits?.map((credit: ShoppingCredit) => (
-                  <Tr key={credit?._id} color={textColor}>
-                    <Td>
-                      {credit?.user && credit.user.username
-                        ? credit.user.username
-                        : '未知用戶'}
-                    </Td>
-                    <Td>{credit?.amount}</Td>
-                    <Td>{credit?.type}</Td>
-                    <Td>
-                      <Badge
-                        colorScheme={
-                          credit?.status === 'unused' ? 'green' : 'red'
-                        }
-                      >
-                        {credit?.status === 'unused' ? '未使用' : '已使用'}
-                      </Badge>
-                    </Td>
-                    <Td>
-                      {credit?.expiryDate
-                        ? new Date(credit.expiryDate).toLocaleDateString()
-                        : '無'}
-                    </Td>
-                    <Td>
-                      <Flex gap={2}>
-                        <Select
-                          value={credit?.status}
-                          onChange={(e) =>
-                            handleStatusChange(credit._id, e.target.value)
+          <Box className='tables-container'>
+            <Table className='tables-container__table' variant='simple'>
+              <Thead bg={bgColor}>
+                <Tr>
+                  <Th
+                    bg={bgColor}
+                    color={textColor}
+                    className='tables-container__header-cell tables-container__sticky-column'
+                  >
+                    用戶
+                  </Th>
+                  <Th bg={bgColor} color={textColor}>
+                    電子郵件
+                  </Th>
+                  <Th bg={bgColor} color={textColor}>
+                    金額
+                  </Th>
+                  <Th bg={bgColor} color={textColor}>
+                    類型
+                  </Th>
+                  <Th bg={bgColor} color={textColor}>
+                    狀態
+                  </Th>
+                  <Th bg={bgColor} color={textColor}>
+                    有效期
+                  </Th>
+                  <Th bg={bgColor} color={textColor}>
+                    操作
+                  </Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {allCredits && allCredits.length > 0 ? (
+                  allCredits.map((credit: ShoppingCredit) => (
+                    <Tr key={credit?._id} color={textColor}>
+                      <Td className='tables-container__header-cell tables-container__sticky-column'>
+                        {credit?.user?.username || '未知用戶'}
+                      </Td>
+                      <Td className='tables-container__body-cell'>
+                        {credit?.user?.email || '無電子郵件'}
+                      </Td>
+                      <Td className='tables-container__body-cell'>
+                        {credit?.amount}
+                      </Td>
+                      <Td className='tables-container__body-cell'>
+                        {credit?.type}
+                      </Td>
+                      <Td className='tables-container__body-cell'>
+                        <Badge
+                          colorScheme={
+                            credit?.status === 'unused' ? 'green' : 'red'
                           }
-                          width='auto'
-                          mr={2}
                         >
-                          <option value='unused'>未使用</option>
-                          <option value='used'>已使用</option>
-                        </Select>
-                        <Button
-                          onClick={() =>
-                            dispatch(deleteShoppingCreditAsync(credit?._id))
-                          }
-                          colorScheme='red'
-                          variant='outline'
-                        >
-                          刪除
-                        </Button>
-                      </Flex>
+                          {credit?.status === 'unused' ? '未使用' : '已使用'}
+                        </Badge>
+                      </Td>
+                      <Td className='tables-container__body-cell'>
+                        {credit?.expiryDate
+                          ? new Date(credit.expiryDate).toLocaleDateString()
+                          : '無'}
+                      </Td>
+                      <Td className='tables-container__body-cell'>
+                        <Flex gap={2}>
+                          <Select
+                            value={credit?.status}
+                            onChange={(e) =>
+                              handleStatusChange(credit._id, e.target.value)
+                            }
+                            width='auto'
+                            mr={2}
+                          >
+                            <option value='unused'>未使用</option>
+                            <option value='used'>已使用</option>
+                          </Select>
+                          <Button
+                            onClick={() =>
+                              dispatch(deleteShoppingCreditAsync(credit?._id))
+                            }
+                            colorScheme='red'
+                            variant='outline'
+                          >
+                            刪除
+                          </Button>
+                        </Flex>
+                      </Td>
+                    </Tr>
+                  ))
+                ) : (
+                  <Tr>
+                    <Td colSpan={7} textAlign='center'>
+                      尚無購物金
                     </Td>
                   </Tr>
-                ))
-              ) : (
-                <Tr>
-                  <Td colSpan={6} textAlign='center'>
-                    尚無購物金
-                  </Td>
-                </Tr>
-              )}
-            </Tbody>
-          </Table>
+                )}
+              </Tbody>
+            </Table>
+          </Box>
         </Box>
         {allCreditsMetadata && <Pagination metadata={allCreditsMetadata} />}
       </Box>
