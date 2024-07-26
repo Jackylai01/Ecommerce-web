@@ -1,3 +1,7 @@
+import adminERPInventory from './admin/admin-erp/inventory';
+import adminERPPurchaseOrder from './admin/admin-erp/purchaseOrder';
+import adminERPReports from './admin/admin-erp/reports';
+import adminERPSalesOrder from './admin/admin-erp/salesOrder';
 import adminRefunds from './admin/admin-refunds';
 import adminAuth from './admin/auth';
 import adminClientUsers from './admin/client-users';
@@ -27,6 +31,7 @@ import publicFavorites from './public/favorite';
 import publicPayments from './public/payments';
 import publicProducts from './public/products';
 import publicShipment from './public/shipment';
+
 const appReducer = {
   layout,
   crudLayout,
@@ -57,6 +62,10 @@ const appReducer = {
   publicDiscounts,
   adminShoppingCredits,
   clientShoppingCredits,
+  adminERPInventory,
+  adminERPPurchaseOrder,
+  adminERPReports,
+  adminERPSalesOrder,
 };
 
 export default appReducer;
