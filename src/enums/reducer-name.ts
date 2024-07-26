@@ -36,4 +36,8 @@ export enum ReducerName {
   PUBLIC_DISCOUNTS = 'publicDiscounts',
   ADMIN_SHOPPING_CREDITS = 'admin_shopping_credits',
   CLIENT_SHOPPING_CREDITS = 'client_shopping_credits',
+  ADMIN_ERP_INVENTORY = 'AdminERPInventory',
+  ADMIN_ERP_PURCHASEORDER = 'AdminERPPurchaseOrder',
+  ADMIN_ERP_REPORT = 'AdminERPReport',
+  ADMIN_ERP_SALESORDER = 'AdminERPSalesorder',
 }
