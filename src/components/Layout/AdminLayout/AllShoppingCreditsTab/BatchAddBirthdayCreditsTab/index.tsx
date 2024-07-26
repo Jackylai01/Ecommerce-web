@@ -159,51 +159,57 @@ const BatchAddBirthdayCreditsTab = () => {
             />
           </InputRightElement>
         </InputGroup>
-        <Table variant='simple' size='md'>
-          <Thead>
-            <Tr>
-              <Th>
-                <Checkbox
-                  isChecked={selectedUsers.length === users?.length}
-                  onChange={handleSelectAll}
-                  borderColor='teal.500'
-                />
-              </Th>
-
-              <Th>用戶名</Th>
-              <Th>電子郵件</Th>
-              <Th>生日</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {getAllClientUsersLoading ? (
+        <Box w='100%' className='tables-container'>
+          <Table variant='simple' size='md' className='tables-container__table'>
+            <Thead>
               <Tr>
-                <Td colSpan={5} textAlign='center'>
-                  <Spinner />
-                </Td>
+                <Th className='tables-container__header-cell tables-container__sticky-column'>
+                  <Checkbox
+                    isChecked={selectedUsers.length === users?.length}
+                    onChange={handleSelectAll}
+                    borderColor='teal.500'
+                  />
+                </Th>
+
+                <Th>用戶名</Th>
+                <Th>電子郵件</Th>
+                <Th>生日</Th>
               </Tr>
-            ) : (
-              users?.map((user) => (
-                <Tr key={user._id}>
-                  <Td>
-                    <Checkbox
-                      isChecked={selectedUsers.includes(user._id!)}
-                      onChange={() => handleSelectUser(user._id!)}
-                      borderColor='teal.500'
-                    />
-                  </Td>
-                  <Td>{user.username}</Td>
-                  <Td>{user.email}</Td>
-                  <Td>
-                    {user.birthday
-                      ? new Date(user.birthday).toLocaleDateString()
-                      : '無'}
+            </Thead>
+            <Tbody>
+              {getAllClientUsersLoading ? (
+                <Tr>
+                  <Td colSpan={5} textAlign='center'>
+                    <Spinner />
                   </Td>
                 </Tr>
-              ))
-            )}
-          </Tbody>
-        </Table>
+              ) : (
+                users?.map((user) => (
+                  <Tr key={user._id}>
+                    <Td className='tables-container__header-cell tables-container__sticky-column'>
+                      <Checkbox
+                        isChecked={selectedUsers.includes(user._id!)}
+                        onChange={() => handleSelectUser(user._id!)}
+                        borderColor='teal.500'
+                      />
+                    </Td>
+                    <Td className='tables-container__body-cell'>
+                      {user.username}
+                    </Td>
+                    <Td className='tables-container__body-cell'>
+                      {user.email}
+                    </Td>
+                    <Td className='tables-container__body-cell'>
+                      {user.birthday
+                        ? new Date(user.birthday).toLocaleDateString()
+                        : '無'}
+                    </Td>
+                  </Tr>
+                ))
+              )}
+            </Tbody>
+          </Table>
+        </Box>
       </VStack>
     </Box>
   );

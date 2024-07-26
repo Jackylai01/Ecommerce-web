@@ -2,11 +2,11 @@
   max-width: 100%;
   overflow-x: auto;
   position: relative;
-
+  border-radius: 10px 20px 20px 10px;
   &__table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: auto; // Ensure that the table layout is responsive
+    table-layout: auto;
   }
 
   &__header-cell,
