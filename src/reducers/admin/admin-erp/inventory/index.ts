@@ -10,12 +10,14 @@ import {
   createInventoryAsync,
   getInventoryAsync,
   getInventoryByProductIdAsync,
+  updateInventoryAsync,
 } from './actions';
 
 type InventoryState = ApiState<adminERPInventoryAction> & {
   list: InventoryResponse[] | null;
   detail: InventoryResponse | null;
   inventory: InventoryResponse | null;
+  updateInventory: InventoryResponse | null;
   metadata: Metadata | null;
 };
 
@@ -23,6 +25,7 @@ const initialState: InventoryState = {
   list: null,
   detail: null,
   inventory: null,
+  updateInventory: null,
   metadata: null,
   ...newApiState<InventoryState>(adminERPInventoryAction),
 };
@@ -43,6 +46,9 @@ const inventorySlice = createSlice({
     });
     builder.addCase(createInventoryAsync.fulfilled, (state, action) => {
       state.inventory = action.payload;
+    });
+    builder.addCase(updateInventoryAsync.fulfilled, (state, action) => {
+      state.updateInventory = action.payload;
     });
     asyncMatcher(builder, ReducerName.ADMIN_ERP_INVENTORY);
   },

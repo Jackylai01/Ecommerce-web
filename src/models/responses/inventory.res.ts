@@ -1,8 +1,6 @@
 export interface InventoryResponse {
-  /** */
+  /** 產品_id*/
   _id: string;
-  /** 產品ID */
-  productId: string;
   /** 產品類型 */
   type: string;
   /** 產品名稱 */
@@ -21,12 +19,9 @@ export interface InventoryResponse {
   updatedAt: Date;
   /** 創建日期 */
   createdAt: Date;
-  /** 產品 */
-  product: {
-    _id: string;
-    name: string;
-  };
   supplier: string;
+  /** 庫存_id */
+  movementId?: string;
 }
 
 export interface Inventory {
@@ -36,4 +31,5 @@ export interface Inventory {
   stock: number;
   reorderLevel: number;
   reorderAmount: number;
+  movementId?: string;
 }

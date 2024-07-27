@@ -46,7 +46,7 @@ export const updateInventoryAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ERP_INVENTORY}/${adminERPInventoryAction.updateInventory}`,
   async ({ productId, data }: { productId: string; data: Inventory }) => {
     const response = await apiUpdateInventory(productId, data);
-    return response.result;
+    return response.result.data;
   },
 );
 
