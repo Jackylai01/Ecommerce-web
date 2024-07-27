@@ -18,7 +18,7 @@ export const apiGetInventory = async (query: PagingQuery) =>
 
 // 創建庫存記錄
 export const apiCreateInventory = async (data: Inventory) =>
-  postRequest<ApiResult<Inventory>>('/erp/inventory', data);
+  postRequest<ApiResult<InventoryResponse>>('/erp/inventory', data);
 
 // 獲取特定產品的庫存詳情
 export const apiGetInventoryByProductId = async (productId: string) =>
@@ -26,7 +26,7 @@ export const apiGetInventoryByProductId = async (productId: string) =>
 
 // 更新庫存信息
 export const apiUpdateInventory = async (productId: string, data: Inventory) =>
-  putRequest<ApiResult<Inventory>>(`/erp/inventory/${productId}`, data);
+  putRequest<ApiResult<InventoryResponse>>(`/erp/inventory/${productId}`, data);
 
 // 刪除庫存記錄
 export const apiDeleteInventory = async (productId: string) =>

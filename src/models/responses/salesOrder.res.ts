@@ -1,4 +1,6 @@
 export interface SalesOrderResponse {
+  /** id */
+  _id: string;
   /** 訂單ID */
   orderId: string;
   /** 客戶名稱 */
@@ -9,6 +11,10 @@ export interface SalesOrderResponse {
   orderDate: Date;
   /** 訂單狀態 */
   status: 'Pending' | 'Shipped' | 'Completed' | 'Cancelled';
+  /** 更新日期 */
+  updatedAt: Date;
+  /** 創建日期 */
+  createdAt: Date;
   /** 訂單產品詳情 */
   products: {
     /** 產品ID */

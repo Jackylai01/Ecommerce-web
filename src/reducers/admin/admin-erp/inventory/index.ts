@@ -7,6 +7,7 @@ import { InventoryResponse } from '@models/responses/inventory.res';
 import { createSlice } from '@reduxjs/toolkit';
 import {
   adminERPInventoryAction,
+  createInventoryAsync,
   getInventoryAsync,
   getInventoryByProductIdAsync,
 } from './actions';
@@ -14,12 +15,14 @@ import {
 type InventoryState = ApiState<adminERPInventoryAction> & {
   list: InventoryResponse[] | null;
   detail: InventoryResponse | null;
+  inventory: InventoryResponse | null;
   metadata: Metadata | null;
 };
 
 const initialState: InventoryState = {
   list: null,
   detail: null,
+  inventory: null,
   metadata: null,
   ...newApiState<InventoryState>(adminERPInventoryAction),
 };
@@ -37,6 +40,9 @@ const inventorySlice = createSlice({
     });
     builder.addCase(getInventoryByProductIdAsync.fulfilled, (state, action) => {
       state.detail = action.payload;
+    });
+    builder.addCase(createInventoryAsync.fulfilled, (state, action) => {
+      state.inventory = action.payload;
     });
     asyncMatcher(builder, ReducerName.ADMIN_ERP_INVENTORY);
   },

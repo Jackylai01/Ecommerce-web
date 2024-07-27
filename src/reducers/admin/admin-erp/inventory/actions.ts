@@ -26,11 +26,11 @@ export const getInventoryAsync = createAsyncThunk(
   },
 );
 
-export const createInventoryAsyncAsync = createAsyncThunk(
+export const createInventoryAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ERP_INVENTORY}/${adminERPInventoryAction.createInventory}`,
   async (data: Inventory) => {
     const response = await apiCreateInventory(data);
-    return response.result;
+    return response.result.data;
   },
 );
 

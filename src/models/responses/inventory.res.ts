@@ -1,22 +1,39 @@
 export interface InventoryResponse {
+  /** */
+  _id: string;
   /** 產品ID */
   productId: string;
+  /** 產品類型 */
+  type: string;
   /** 產品名稱 */
-  productName: string;
+  name: string;
   /** 產品描述 */
   productDescription: string;
   /** 庫存量 */
   stock: number;
+
+  /** 數量 */
+  quantity: number;
   /** 庫存警戒線 */
   reorderLevel: number;
   /** 補貨量 */
   reorderAmount: number;
   /** 更新日期 */
   updatedAt: Date;
+  /** 創建日期 */
+  createdAt: Date;
+  /** 產品 */
+  product: {
+    _id: string;
+    name: string;
+  };
+  supplier: string;
 }
 
 export interface Inventory {
   productId: string;
+  productName: string;
+  productDescription: string;
   stock: number;
   reorderLevel: number;
   reorderAmount: number;

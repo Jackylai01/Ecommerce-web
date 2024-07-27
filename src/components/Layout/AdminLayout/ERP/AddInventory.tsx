@@ -1,27 +1,49 @@
 import {
   Box,
   Button,
+  FormControl,
+  FormLabel,
   Heading,
   Input,
+  Select,
   VStack,
   useToast,
 } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
-import { createInventoryAsyncAsync } from '@reducers/admin/admin-erp/inventory/actions';
-import { useState } from 'react';
+import useAppSelector from '@hooks/useAppSelector';
+import { createInventoryAsync } from '@reducers/admin/admin-erp/inventory/actions';
+import { getAllProductsAsync } from '@reducers/admin/products/actions';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+
+interface InventoryForm {
+  productId: string;
+  productDescription: string;
+  quantity: number;
+  reorderLevel: number;
+  reorderAmount: number;
+  stock: number;
+}
 
 const AddInventory = () => {
+  const { control, handleSubmit, reset } = useForm<InventoryForm>();
   const dispatch = useAppDispatch();
   const toast = useToast();
-  const [productName, setProductName] = useState('');
-  const [quantity, setQuantity] = useState(0);
-  const [reorderLevel, setReorderLevel] = useState(0);
+  const { list: products } = useAppSelector((state) => state.adminProducts);
 
-  const handleAddInventory = async () => {
-    if (!productName || quantity <= 0 || reorderLevel <= 0) {
+  useEffect(() => {
+    dispatch(getAllProductsAsync({ page: 1, limit: 100 }));
+  }, [dispatch]);
+
+  const onSubmit = async (data: InventoryForm) => {
+    const selectedProduct = products?.find(
+      (product) => product._id === data.productId,
+    );
+
+    if (!selectedProduct) {
       toast({
-        title: 'Invalid input',
-        description: 'Please fill all fields correctly.',
+        title: 'Product not found',
+        description: 'The selected product does not exist.',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -30,27 +52,21 @@ const AddInventory = () => {
     }
 
     const newInventory = {
-      productId: '',
-      productName,
-      productDescription: '',
-      stock: quantity,
-      reorderLevel,
-      reorderAmount: 0,
-      updatedAt: new Date(),
+      ...data,
+      productName: selectedProduct.name,
+      stock: data.quantity, // 添加 stock 值
     };
 
-    dispatch(createInventoryAsyncAsync(newInventory));
+    dispatch(createInventoryAsync(newInventory));
     toast({
       title: 'Inventory added',
-      description: `${productName} has been added to inventory.`,
+      description: `${selectedProduct.name} has been added to inventory.`,
       status: 'success',
       duration: 3000,
       isClosable: true,
     });
 
-    setProductName('');
-    setQuantity(0);
-    setReorderLevel(0);
+    reset();
   };
 
   return (
@@ -65,26 +81,84 @@ const AddInventory = () => {
       >
         新增庫存
       </Heading>
-      <VStack spacing='15px'>
-        <Input
-          type='text'
-          placeholder='產品名稱'
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-        />
-        <Input
-          type='number'
-          placeholder='數量'
-          value={quantity}
-          onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
-        />
-        <Input
-          type='number'
-          placeholder='補貨點'
-          value={reorderLevel}
-          onChange={(e) => setReorderLevel(parseInt(e.target.value, 10))}
-        />
-        <Button type='button' onClick={handleAddInventory} colorScheme='blue'>
+      <VStack as='form' onSubmit={handleSubmit(onSubmit)} spacing='15px'>
+        <FormControl>
+          <FormLabel>選擇產品</FormLabel>
+          <Controller
+            name='productId'
+            control={control}
+            defaultValue=''
+            render={({ field }) => (
+              <Select placeholder='選擇產品' {...field}>
+                {products?.map((product) => (
+                  <option key={product._id} value={product._id}>
+                    {product.name}
+                  </option>
+                ))}
+              </Select>
+            )}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel>產品描述</FormLabel>
+          <Controller
+            name='productDescription'
+            control={control}
+            defaultValue=''
+            render={({ field }) => (
+              <Input type='text' placeholder='產品描述' {...field} />
+            )}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel>數量</FormLabel>
+          <Controller
+            name='quantity'
+            control={control}
+            defaultValue={0}
+            render={({ field }) => (
+              <Input
+                type='number'
+                placeholder='數量'
+                {...field}
+                onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
+              />
+            )}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel>補貨點</FormLabel>
+          <Controller
+            name='reorderLevel'
+            control={control}
+            defaultValue={0}
+            render={({ field }) => (
+              <Input
+                type='number'
+                placeholder='補貨點'
+                {...field}
+                onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
+              />
+            )}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel>補貨量</FormLabel>
+          <Controller
+            name='reorderAmount'
+            control={control}
+            defaultValue={0}
+            render={({ field }) => (
+              <Input
+                type='number'
+                placeholder='補貨量'
+                {...field}
+                onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
+              />
+            )}
+          />
+        </FormControl>
+        <Button type='submit' colorScheme='blue'>
           新增
         </Button>
       </VStack>
