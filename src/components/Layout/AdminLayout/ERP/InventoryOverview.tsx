@@ -174,7 +174,9 @@ const InventoryOverview = () => {
                 <Td>
                   <Editable
                     textAlign='center'
-                    defaultValue={getProductStock(item._id)?.toString()}
+                    defaultValue={
+                      getProductStock(item._id)?.toString() || '尚未設定'
+                    }
                     fontSize='md'
                     isPreviewFocusable={false}
                     onSubmit={(nextValue) => {
