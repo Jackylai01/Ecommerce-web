@@ -20,6 +20,7 @@ const InventoryOverview = () => {
   const { list: inventoryList } = useAppSelector(
     (state) => state.adminERPInventory,
   );
+  const { list: products } = useAppSelector((state) => state.adminProducts);
   const { list: salesList } = useAppSelector(
     (state) => state.adminERPSalesOrder,
   );
@@ -44,6 +45,11 @@ const InventoryOverview = () => {
     const limit = 10;
     dispatch(getInventoryAsync({ page, limit }));
   }, [dispatch]);
+
+  const getProductStock = (productId: string) => {
+    const product = products?.find((product) => product._id === productId);
+    return product ? product.stock : '尚未設定';
+  };
 
   return (
     <Box bg='white' p='25px' borderRadius='10px' boxShadow='md'>
@@ -80,7 +86,7 @@ const InventoryOverview = () => {
                 _hover={{ bg: 'gray.100', transform: 'scale(1.02)' }}
               >
                 <Td>{item?.name}</Td>
-                <Td>{item?.stock}</Td>
+                <Td>{getProductStock(item._id)}</Td>
                 <Td>{item?.reorderLevel || '尚未設定'}</Td>
               </Tr>
             ))}

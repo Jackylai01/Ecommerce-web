@@ -8,10 +8,9 @@ export interface InventoryResponse {
   /** 產品名稱 */
   name: string;
   /** 產品描述 */
-  productDescription: string;
+  reason: string;
   /** 庫存量 */
   stock: number;
-
   /** 數量 */
   quantity: number;
   /** 庫存警戒線 */
@@ -33,7 +32,7 @@ export interface InventoryResponse {
 export interface Inventory {
   productId: string;
   productName: string;
-  productDescription: string;
+  reason: string;
   stock: number;
   reorderLevel: number;
   reorderAmount: number;
