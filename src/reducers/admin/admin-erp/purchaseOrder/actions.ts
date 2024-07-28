@@ -3,6 +3,7 @@ import { PagingQuery } from '@models/entities/shared/pagination';
 import { PurchaseOrder } from '@models/responses/purchaseOrder.res';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
+  apiCreatePurchaseOrder,
   apiDeletePurchaseOrder,
   apiGetPurchaseOrderById,
   apiGetPurchaseOrders,
@@ -28,7 +29,7 @@ export const getPurchaseOrdersAsync = createAsyncThunk(
 export const createPurchaseOrderAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ERP_PURCHASEORDER}/${adminERPPurchaseOrderAction.createPurchaseOrder}`,
   async (data: PurchaseOrder) => {
-    const response = await apiGetPurchaseOrders(data);
+    const response = await apiCreatePurchaseOrder(data);
     return response.result;
   },
 );
@@ -43,9 +44,9 @@ export const getPurchaseOrderByIdAsync = createAsyncThunk(
 
 export const updatePurchaseOrderAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ERP_PURCHASEORDER}/${adminERPPurchaseOrderAction.updatePurchaseOrder}`,
-  async ({ orderId, data }: { orderId: string; data: PurchaseOrder }) => {
+  async ({ orderId, data }: { orderId: string; data: any }) => {
     const response = await apiUpdatePurchaseOrder(orderId, data);
-    return response.result;
+    return response.result.data;
   },
 );
 

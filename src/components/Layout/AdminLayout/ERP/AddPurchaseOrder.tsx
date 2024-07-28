@@ -27,6 +27,7 @@ interface FormValues {
   quantity: number;
   unitPrice: number;
   orderDate: string;
+  expectedDeliveryDate: string;
 }
 
 interface SupplierFormValues {
@@ -87,6 +88,7 @@ const AddPurchaseOrder = () => {
       ],
       totalAmount: data.quantity * data.unitPrice,
       orderDate: new Date(data.orderDate),
+      expectedDeliveryDate: new Date(data.expectedDeliveryDate),
       status: 'Pending',
     };
     dispatch(createPurchaseOrderAsync(purchaseOrder));
@@ -221,7 +223,7 @@ const AddPurchaseOrder = () => {
                 isInvalid={Boolean(supplierErrors.contactInfo)}
               >
                 <FormLabel>
-                  聯繫信息{' '}
+                  聯繫信息
                   <Text as='span' color='red.500'>
                     *
                   </Text>
@@ -244,7 +246,7 @@ const AddPurchaseOrder = () => {
                 isInvalid={Boolean(supplierErrors.address)}
               >
                 <FormLabel>
-                  地址{' '}
+                  地址
                   <Text as='span' color='red.500'>
                     *
                   </Text>
@@ -265,7 +267,7 @@ const AddPurchaseOrder = () => {
                 isInvalid={Boolean(supplierErrors.principal)}
               >
                 <FormLabel>
-                  負責人{' '}
+                  負責人
                   <Text as='span' color='red.500'>
                     *
                   </Text>
@@ -360,6 +362,23 @@ const AddPurchaseOrder = () => {
             />
             {errors.orderDate && (
               <span style={{ color: 'red' }}>{errors.orderDate.message}</span>
+            )}
+          </FormControl>
+          <FormControl
+            mb='15px'
+            isInvalid={Boolean(errors.expectedDeliveryDate)}
+          >
+            <FormLabel>預計到貨日期</FormLabel>
+            <Input
+              type='date'
+              {...register('expectedDeliveryDate', {
+                required: '預計到貨日期為必填項',
+              })}
+            />
+            {errors.expectedDeliveryDate && (
+              <span style={{ color: 'red' }}>
+                {errors.expectedDeliveryDate.message}
+              </span>
             )}
           </FormControl>
           <Button type='submit' colorScheme='blue' w='full'>

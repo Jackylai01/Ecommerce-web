@@ -31,10 +31,7 @@ export const apiGetPurchaseOrderById = async (orderId: string) =>
   );
 
 // 更新進貨訂單
-export const apiUpdatePurchaseOrder = async (
-  orderId: string,
-  data: PurchaseOrder,
-) =>
+export const apiUpdatePurchaseOrder = async (orderId: string, data: any) =>
   putRequest<ApiResult<PurchaseOrder>>(`/erp/purchase-orders/${orderId}`, data);
 
 // 刪除進貨訂單

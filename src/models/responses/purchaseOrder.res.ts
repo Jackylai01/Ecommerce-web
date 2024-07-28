@@ -1,4 +1,6 @@
 export interface PurchaseOrderResponse {
+  /** _id */
+  _id: string;
   /** 訂單ID */
   orderId: string;
   /** 供應商名稱 */
@@ -20,8 +22,15 @@ export interface PurchaseOrderResponse {
     /** 單價 */
     price: number;
   }[];
+  expectedDeliveryDate: Date;
+  supplier: {
+    _id: string;
+    name: string;
+    contactInfo: string;
+    address: string;
+    principal: string;
+  };
 }
-
 export interface PurchaseOrder {
   supplier: string;
   products: {
@@ -32,4 +41,5 @@ export interface PurchaseOrder {
   totalAmount: number;
   orderDate: Date;
   status: 'Pending' | 'Completed' | 'Cancelled';
+  expectedDeliveryDate: Date;
 }
