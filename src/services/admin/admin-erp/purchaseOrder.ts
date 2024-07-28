@@ -15,9 +15,9 @@ import {
 } from '@models/responses/purchaseOrder.res';
 
 // 獲取全部進貨訂單
-export const apiGetPurchaseOrders = async (query: PagingQuery) =>
+export const apiGetPurchaseOrders = async (data: PagingQuery) =>
   getRequest<ApiPaginationResult<PurchaseOrderResponse>>(
-    formatQueryString('/erp/purchase-orders', query),
+    formatQueryString('/erp/purchase-orders', data),
   );
 
 // 創建進貨訂單

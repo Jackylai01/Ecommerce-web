@@ -27,8 +27,8 @@ export const getPurchaseOrdersAsync = createAsyncThunk(
 
 export const createPurchaseOrderAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ERP_PURCHASEORDER}/${adminERPPurchaseOrderAction.createPurchaseOrder}`,
-  async (query: PagingQuery) => {
-    const response = await apiGetPurchaseOrders(query);
+  async (data: PurchaseOrder) => {
+    const response = await apiGetPurchaseOrders(data);
     return response.result;
   },
 );

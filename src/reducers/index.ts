@@ -2,6 +2,7 @@ import adminERPInventory from './admin/admin-erp/inventory';
 import adminERPPurchaseOrder from './admin/admin-erp/purchaseOrder';
 import adminERPReports from './admin/admin-erp/reports';
 import adminERPSalesOrder from './admin/admin-erp/salesOrder';
+import adminERPSuppliers from './admin/admin-erp/supplier';
 import adminRefunds from './admin/admin-refunds';
 import adminAuth from './admin/auth';
 import adminClientUsers from './admin/client-users';
@@ -66,6 +67,7 @@ const appReducer = {
   adminERPPurchaseOrder,
   adminERPReports,
   adminERPSalesOrder,
+  adminERPSuppliers,
 };
 
 export default appReducer;

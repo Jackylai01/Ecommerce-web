@@ -40,4 +40,5 @@ export enum ReducerName {
   ADMIN_ERP_PURCHASEORDER = 'AdminERPPurchaseOrder',
   ADMIN_ERP_REPORT = 'AdminERPReport',
   ADMIN_ERP_SALESORDER = 'AdminERPSalesorder',
+  ADMIN_ERP_SUPPLIER = 'AdminERPSupplier',
 }
