@@ -7,6 +7,7 @@ import {
   StatHelpText,
   StatLabel,
   StatNumber,
+  useMediaQuery,
 } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
@@ -18,6 +19,7 @@ const InventoryStatistics = () => {
   const { inventoryTurnoverRate, safetyStock, reorderPoints } = useAppSelector(
     (state) => state.adminERPInventory,
   );
+  const [isLargerThan600] = useMediaQuery('(min-width: 600px)');
 
   useEffect(() => {
     dispatch(getInventoryStatisticsAsync());
@@ -53,19 +55,32 @@ const InventoryStatistics = () => {
           <StatHelpText>建議量</StatHelpText>
         </Stat>
       </StatGroup>
-
-      <Flex flexDirection='row'>
-        {reorderPoints &&
-          reorderPoints.map((item) => (
-            <Stat key={item.productId}>
-              <StatLabel>產品 {item.productName}</StatLabel>
-              <StatNumber>
-                補貨點 {item.reorderPoint !== null ? item.reorderPoint : 'N/A'}
-              </StatNumber>
-              <StatHelpText>建議補貨點</StatHelpText>
-            </Stat>
-          ))}
-      </Flex>
+      <Box mt='1rem'>
+        <Box>建議補貨點:</Box>
+        <Flex
+          flexDirection={isLargerThan600 ? 'row' : 'column'}
+          mt='1rem'
+          wrap='wrap'
+        >
+          {reorderPoints &&
+            reorderPoints.map((item) => (
+              <Stat
+                key={item.productId}
+                p='10px'
+                m='5px'
+                border='1px'
+                borderColor='gray.200'
+                borderRadius='10px'
+                width={isLargerThan600 ? 'calc(33.3333% - 10px)' : '100%'}
+              >
+                <StatLabel>產品 {item.productName}</StatLabel>
+                <StatNumber>
+                  {item.reorderPoint !== null ? item.reorderPoint : 'N/A'}
+                </StatNumber>
+              </Stat>
+            ))}
+        </Flex>
+      </Box>
     </Box>
   );
 };

@@ -15,6 +15,7 @@ import {
   Thead,
   Tr,
   useEditableControls,
+  useMediaQuery,
   useToast,
 } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
@@ -30,6 +31,7 @@ const InventoryOverview = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const toast = useToast();
+  const [isLargerThan600] = useMediaQuery('(min-width: 600px)');
 
   const {
     list: inventoryList,
