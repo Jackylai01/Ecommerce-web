@@ -10,6 +10,7 @@ import {
   createInventoryAsync,
   getInventoryAsync,
   getInventoryByProductIdAsync,
+  getInventoryStatisticsAsync,
   updateInventoryAsync,
 } from './actions';
 
@@ -19,6 +20,11 @@ type InventoryState = ApiState<adminERPInventoryAction> & {
   inventory: InventoryResponse | null;
   updateInventory: InventoryResponse | null;
   metadata: Metadata | null;
+  inventoryTurnoverRate: number | null;
+  safetyStock: number | null;
+  reorderPoints:
+    | { productId: string; reorderPoint: number; productName: string }[]
+    | null;
 };
 
 const initialState: InventoryState = {
@@ -27,6 +33,9 @@ const initialState: InventoryState = {
   inventory: null,
   updateInventory: null,
   metadata: null,
+  inventoryTurnoverRate: null,
+  safetyStock: null,
+  reorderPoints: null,
   ...newApiState<InventoryState>(adminERPInventoryAction),
 };
 
@@ -49,6 +58,11 @@ const inventorySlice = createSlice({
     });
     builder.addCase(updateInventoryAsync.fulfilled, (state, action) => {
       state.updateInventory = action.payload;
+    });
+    builder.addCase(getInventoryStatisticsAsync.fulfilled, (state, action) => {
+      state.inventoryTurnoverRate = action.payload.inventoryTurnoverRate;
+      state.safetyStock = action.payload.safetyStock;
+      state.reorderPoints = action.payload.reorderPoints;
     });
     asyncMatcher(builder, ReducerName.ADMIN_ERP_INVENTORY);
   },

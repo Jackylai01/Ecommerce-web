@@ -7,6 +7,7 @@ import {
   apiDeleteInventory,
   apiGetInventory,
   apiGetInventoryByProductId,
+  apiGetInventoryStatistics,
   apiUpdateInventory,
 } from '@services/admin/admin-erp/inventory';
 
@@ -16,6 +17,7 @@ export enum adminERPInventoryAction {
   getInventoryByProductId = 'getInventoryByProductId',
   updateInventory = 'updateInventory',
   deleteInventory = 'deleteInventory',
+  getInventoryStatistics = 'getInventoryStatistics',
 }
 
 export const getInventoryAsync = createAsyncThunk(
@@ -55,5 +57,13 @@ export const deleteInventoryAsync = createAsyncThunk(
   async (productId: string) => {
     const response = await apiDeleteInventory(productId);
     return response.result;
+  },
+);
+
+export const getInventoryStatisticsAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_ERP_INVENTORY}/${adminERPInventoryAction.getInventoryStatistics}`,
+  async () => {
+    const response = await apiGetInventoryStatistics();
+    return response.result.data;
   },
 );

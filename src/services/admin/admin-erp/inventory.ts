@@ -31,3 +31,7 @@ export const apiUpdateInventory = async (productId: string, data: Inventory) =>
 // 刪除庫存記錄
 export const apiDeleteInventory = async (productId: string) =>
   deleteRequest<ApiResult<null>>(`/erp/inventory/${productId}`);
+
+// 獲取庫存統計數據
+export const apiGetInventoryStatistics = async () =>
+  getRequest<ApiResult<any>>('/erp/inventory/statistics');

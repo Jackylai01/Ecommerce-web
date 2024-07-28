@@ -96,7 +96,6 @@ const InventoryOverview = () => {
 
   const getProductStock = (productId: string) => {
     const product = products?.find((product) => product._id === productId);
-    console.log('Product:', product); // 調試信息
     return product && product.stock !== undefined ? product.stock : '尚未設定';
   };
 
@@ -174,9 +173,7 @@ const InventoryOverview = () => {
                 <Td>
                   <Editable
                     textAlign='center'
-                    defaultValue={
-                      getProductStock(item._id)?.toString() || '尚未設定'
-                    }
+                    defaultValue={getProductStock(item._id)?.toString()}
                     fontSize='md'
                     isPreviewFocusable={false}
                     onSubmit={(nextValue) => {
