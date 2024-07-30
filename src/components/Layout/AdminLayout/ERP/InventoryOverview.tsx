@@ -313,53 +313,6 @@ const InventoryOverview = () => {
             ))}
         </Tbody>
       </Table>
-
-      <Heading
-        fontSize='20px'
-        mt='40px'
-        mb='20px'
-        color='blue.400'
-        borderBottom='2px'
-        borderColor='blue.400'
-        pb='10px'
-      >
-        最近銷售
-      </Heading>
-      <Table width='100%'>
-        <Thead>
-          <Tr>
-            <Th bg='blue.400' color='white' fontWeight='600'>
-              日期
-            </Th>
-            <Th bg='blue.400' color='white' fontWeight='600'>
-              產品
-            </Th>
-            <Th bg='blue.400' color='white' fontWeight='600'>
-              數量
-            </Th>
-            <Th bg='blue.400' color='white' fontWeight='600'>
-              客戶
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {recentOutbound &&
-            recentOutbound.map((item) =>
-              item.products.map((product) => (
-                <Tr
-                  key={`${item._id}-${product.product}`}
-                  bg='gray.50'
-                  _hover={{ bg: 'gray.100', transform: 'scale(1.02)' }}
-                >
-                  <Td>{new Date(item.createdAt).toLocaleDateString()}</Td>
-                  <Td>{product.productName}</Td>
-                  <Td>{product.quantity}</Td>
-                  <Td>{item.user}</Td>
-                </Tr>
-              )),
-            )}
-        </Tbody>
-      </Table>
     </Box>
   );
 };
