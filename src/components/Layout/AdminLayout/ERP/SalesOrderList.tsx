@@ -2,6 +2,7 @@ import {
   Badge,
   Box,
   Heading,
+  Input,
   Table,
   Tbody,
   Td,
@@ -9,20 +10,25 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import Pagination from '@components/Pagination';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { getSalesOrdersAsync } from '@reducers/admin/admin-erp/salesOrder/actions';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const SalesOrderList = () => {
+  const [search, setSearch] = useState('');
   const dispatch = useAppDispatch();
-  const { list: salesOrdersList } = useAppSelector(
+  const { list: salesOrdersList, metadata } = useAppSelector(
     (state) => state.adminERPSalesOrder,
   );
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
   useEffect(() => {
-    dispatch(getSalesOrdersAsync({ page: 1, limit: 10 }));
-  }, [dispatch]);
+    dispatch(getSalesOrdersAsync({ page: 1, limit: 10, search }));
+  }, [dispatch, search]);
 
   return (
     <Box
@@ -46,8 +52,14 @@ const SalesOrderList = () => {
       >
         銷售訂單列表
       </Heading>
-      <Box overflowX='auto'>
-        <Table variant='simple'>
+      <Input
+        placeholder='搜尋訂單編號或客戶姓名'
+        value={search}
+        onChange={handleSearchChange}
+        mb='20px'
+      />
+      <Box overflowX='auto' className='tables-container'>
+        <Table variant='simple' className='tables-container__table'>
           <Thead bg='#4facfe'>
             <Tr>
               <Th color='white'>訂單編號</Th>
@@ -64,11 +76,17 @@ const SalesOrderList = () => {
                 bg='#f8f9fa'
                 _hover={{ bg: '#e9ecef', transform: 'scale(1.02)' }}
               >
-                <Td>{order._id}</Td>
-                <Td>{order.user}</Td>
-                <Td>${order.totalAmount}</Td>
-                <Td>{new Date(order.orderDate).toLocaleDateString()}</Td>
-                <Td>
+                <Td className='tables-container__header-cell tables-container__sticky-column'>
+                  {order._id}
+                </Td>
+                <Td className='tables-container__body-cell'>{order.user}</Td>
+                <Td className='tables-container__body-cell'>
+                  ${order.totalAmount}
+                </Td>
+                <Td className='tables-container__body-cell'>
+                  {new Date(order.orderDate).toLocaleDateString()}
+                </Td>
+                <Td className='tables-container__body-cell'>
                   <Badge
                     variant='solid'
                     colorScheme={
@@ -91,6 +109,7 @@ const SalesOrderList = () => {
           </Tbody>
         </Table>
       </Box>
+      {metadata && <Pagination metadata={metadata} />}
     </Box>
   );
 };

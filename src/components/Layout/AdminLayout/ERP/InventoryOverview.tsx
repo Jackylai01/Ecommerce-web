@@ -347,14 +347,14 @@ const InventoryOverview = () => {
             recentOutbound.map((item) =>
               item.products.map((product) => (
                 <Tr
-                  key={`${item._id}-${product.productId}`}
+                  key={`${item._id}-${product.product}`}
                   bg='gray.50'
                   _hover={{ bg: 'gray.100', transform: 'scale(1.02)' }}
                 >
                   <Td>{new Date(item.createdAt).toLocaleDateString()}</Td>
                   <Td>{product.productName}</Td>
                   <Td>{product.quantity}</Td>
-                  <Td>{item.customerName}</Td>
+                  <Td>{item.user}</Td>
                 </Tr>
               )),
             )}
