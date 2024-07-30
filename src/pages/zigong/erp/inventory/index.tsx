@@ -11,11 +11,9 @@ import {
 } from '@chakra-ui/react';
 import AddInventory from '@components/Layout/AdminLayout/ERP/AddInventory';
 import AddPurchaseOrder from '@components/Layout/AdminLayout/ERP/AddPurchaseOrder';
-import AddSalesOrder from '@components/Layout/AdminLayout/ERP/AddSalesOrder';
 import InventoryOverview from '@components/Layout/AdminLayout/ERP/InventoryOverview';
 import InventoryStatistics from '@components/Layout/AdminLayout/ERP/InventoryStatistics';
 import PurchaseOrderList from '@components/Layout/AdminLayout/ERP/PurchaseOrderList';
-import SalesOrderList from '@components/Layout/AdminLayout/ERP/SalesOrderList';
 import SalesReport from '@components/Layout/AdminLayout/ERP/salesReport';
 
 const InventorySystem: React.FC = () => {
@@ -45,7 +43,6 @@ const InventorySystem: React.FC = () => {
         <TabList mb='30px'>
           <Tab>庫存管理</Tab>
           <Tab>進貨管理</Tab>
-          <Tab>銷售管理</Tab>
           <Tab>庫存報告</Tab>
         </TabList>
         <TabPanels>
@@ -66,15 +63,6 @@ const InventorySystem: React.FC = () => {
             >
               <AddPurchaseOrder />
               <PurchaseOrderList />
-            </Grid>
-          </TabPanel>
-          <TabPanel>
-            <Grid
-              templateColumns='repeat(auto-fit, minmax(300px, 1fr))'
-              gap='30px'
-            >
-              <AddSalesOrder />
-              <SalesOrderList />
             </Grid>
           </TabPanel>
           <TabPanel>

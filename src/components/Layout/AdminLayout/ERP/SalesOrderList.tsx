@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 const SalesOrderList = () => {
   const [search, setSearch] = useState('');
   const dispatch = useAppDispatch();
+
   const { list: salesOrdersList, metadata } = useAppSelector(
     (state) => state.adminERPSalesOrder,
   );
@@ -26,9 +27,14 @@ const SalesOrderList = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
+
   useEffect(() => {
     dispatch(getSalesOrdersAsync({ page: 1, limit: 10, search }));
   }, [dispatch, search]);
+
+  useEffect(() => {
+    console.log('Sales Orders List:', salesOrdersList);
+  }, [salesOrdersList]);
 
   return (
     <Box
@@ -70,42 +76,47 @@ const SalesOrderList = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {salesOrdersList?.map((order) => (
-              <Tr
-                key={order._id}
-                bg='#f8f9fa'
-                _hover={{ bg: '#e9ecef', transform: 'scale(1.02)' }}
-              >
-                <Td className='tables-container__header-cell tables-container__sticky-column'>
-                  {order._id}
-                </Td>
-                <Td className='tables-container__body-cell'>{order.user}</Td>
-                <Td className='tables-container__body-cell'>
-                  ${order.totalAmount}
-                </Td>
-                <Td className='tables-container__body-cell'>
-                  {new Date(order.orderDate).toLocaleDateString()}
-                </Td>
-                <Td className='tables-container__body-cell'>
-                  <Badge
-                    variant='solid'
-                    colorScheme={
-                      order.status === 'Completed'
-                        ? 'green'
+            {Array.isArray(salesOrdersList) &&
+              salesOrdersList.map((order) => (
+                <Tr
+                  key={order._id}
+                  bg='#f8f9fa'
+                  _hover={{ bg: '#e9ecef', transform: 'scale(1.02)' }}
+                >
+                  <Td className='tables-container__header-cell tables-container__sticky-column'>
+                    {order._id}
+                  </Td>
+                  <Td className='tables-container__body-cell'>
+                    {order.user && order.user.username
+                      ? order.user.username
+                      : 'N/A'}
+                  </Td>
+                  <Td className='tables-container__body-cell'>
+                    ${order.totalAmount}
+                  </Td>
+                  <Td className='tables-container__body-cell'>
+                    {new Date(order.orderDate).toLocaleDateString()}
+                  </Td>
+                  <Td className='tables-container__body-cell'>
+                    <Badge
+                      variant='solid'
+                      colorScheme={
+                        order.status === 'Completed'
+                          ? 'green'
+                          : order.status === 'Pending'
+                          ? 'yellow'
+                          : 'red'
+                      }
+                    >
+                      {order.status === 'Completed'
+                        ? '已完成'
                         : order.status === 'Pending'
-                        ? 'yellow'
-                        : 'red'
-                    }
-                  >
-                    {order.status === 'Completed'
-                      ? '已完成'
-                      : order.status === 'Pending'
-                      ? '處理中'
-                      : '已取消'}
-                  </Badge>
-                </Td>
-              </Tr>
-            ))}
+                        ? '處理中'
+                        : '已取消'}
+                    </Badge>
+                  </Td>
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       </Box>
