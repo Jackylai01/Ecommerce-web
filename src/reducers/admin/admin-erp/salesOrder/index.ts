@@ -38,6 +38,7 @@ const salesOrderSlice = createSlice({
     builder.addCase(getSalesOrderByIdAsync.fulfilled, (state, action) => {
       state.detail = action.payload;
     });
+
     asyncMatcher(builder, ReducerName.ADMIN_ERP_SALESORDER);
   },
 });

@@ -4,7 +4,7 @@ export interface SalesOrderResponse {
   /** 訂單ID */
   orderId: string;
   /** 客戶名稱 */
-  customerName: string;
+  user: string;
   /** 總金額 */
   totalAmount: number;
   /** 訂單日期 */
@@ -18,7 +18,7 @@ export interface SalesOrderResponse {
   /** 訂單產品詳情 */
   products: {
     /** 產品ID */
-    productId: string;
+    product: string;
     /** 產品名稱 */
     productName: string;
     /** 數量 */
@@ -31,7 +31,7 @@ export interface SalesOrderResponse {
 export interface SalesOrder {
   user: string;
   products: {
-    productId: string;
+    product: string;
     quantity: number;
     price: number;
   }[];

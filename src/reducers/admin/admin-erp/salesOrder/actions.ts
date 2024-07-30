@@ -1,6 +1,5 @@
 import { ReducerName } from '@enums/reducer-name';
 import { PagingQuery } from '@models/entities/shared/pagination';
-import { SalesOrder } from '@models/responses/salesOrder.res';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiCreateSalesOrder,
@@ -22,13 +21,13 @@ export const getSalesOrdersAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ERP_SALESORDER}/${adminERPSalesOrderAction.getSalesOrders}`,
   async (query: PagingQuery) => {
     const response = await apiGetSalesOrders(query);
-    return response.result;
+    return response.res.data;
   },
 );
 
-export const createPurchaseOrderAsync = createAsyncThunk(
+export const createSalesOrderAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ERP_SALESORDER}/${adminERPSalesOrderAction.createSalesOrder}`,
-  async (data: SalesOrder) => {
+  async (data: any) => {
     const response = await apiCreateSalesOrder(data);
     return response.result;
   },
@@ -44,7 +43,7 @@ export const getSalesOrderByIdAsync = createAsyncThunk(
 
 export const updateSalesOrderAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ERP_SALESORDER}/${adminERPSalesOrderAction.updateSalesOrder}`,
-  async ({ orderId, data }: { orderId: string; data: SalesOrder }) => {
+  async ({ orderId, data }: { orderId: string; data: any }) => {
     const response = await apiUpdateSalesOrder(orderId, data);
     return response.result;
   },

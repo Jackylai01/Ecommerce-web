@@ -43,7 +43,7 @@ const AddShoppingCreditTab = () => {
   } = useAppSelector((state) => state.adminClientUsers);
 
   useEffect(() => {
-    dispatch(adminGetAllClientUsersAsync({ page: 1, limit: 100 }));
+    dispatch(adminGetAllClientUsersAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
   const onSubmit = async (data: any) => {

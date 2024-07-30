@@ -46,7 +46,7 @@ const AddInventory = () => {
   } = useAppSelector((state) => state.adminERPInventory);
 
   useEffect(() => {
-    dispatch(getAllProductsAsync({ page: 1, limit: 100 }));
+    dispatch(getAllProductsAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
   const onSubmit = async (data: InventoryForm) => {
@@ -84,7 +84,7 @@ const AddInventory = () => {
         duration: 3000,
         isClosable: true,
       });
-      dispatch(getAllProductsAsync({ page: 1, limit: 100 }));
+      dispatch(getAllProductsAsync({ page: 1, limit: 10 }));
       dispatch(getInventoryAsync({ page, limit }));
     }
 

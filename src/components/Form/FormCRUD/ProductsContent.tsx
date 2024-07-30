@@ -175,8 +175,8 @@ export const ProductFormContent: React.FC = () => {
     })) || [];
 
   useEffect(() => {
-    dispatch(getAllProductsCategoryAsync({ page: 1, limit: 100 }));
-    dispatch(getAllProductsTagsAsync({ page: 1, limit: 100 }));
+    dispatch(getAllProductsCategoryAsync({ page: 1, limit: 10 }));
+    dispatch(getAllProductsTagsAsync({ page: 1, limit: 10 }));
 
     if (productId) {
       dispatch(getProductByIdAsync(productId));

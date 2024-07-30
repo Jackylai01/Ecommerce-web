@@ -9,8 +9,21 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { getSalesOrdersAsync } from '@reducers/admin/admin-erp/salesOrder/actions';
+import { useEffect } from 'react';
 
 const SalesOrderList = () => {
+  const dispatch = useAppDispatch();
+  const { list: salesOrdersList } = useAppSelector(
+    (state) => state.adminERPSalesOrder,
+  );
+
+  useEffect(() => {
+    dispatch(getSalesOrdersAsync({ page: 1, limit: 10 }));
+  }, [dispatch]);
+
   return (
     <Box
       bg='white'
@@ -45,48 +58,36 @@ const SalesOrderList = () => {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr
-              bg='#f8f9fa'
-              _hover={{ bg: '#e9ecef', transform: 'scale(1.02)' }}
-            >
-              <Td>SO-001</Td>
-              <Td>客戶A</Td>
-              <Td>$3,500</Td>
-              <Td>2024-07-25</Td>
-              <Td>
-                <Badge variant='solid' colorScheme='green'>
-                  已完成
-                </Badge>
-              </Td>
-            </Tr>
-            <Tr
-              bg='#f8f9fa'
-              _hover={{ bg: '#e9ecef', transform: 'scale(1.02)' }}
-            >
-              <Td>SO-002</Td>
-              <Td>客戶B</Td>
-              <Td>$2,800</Td>
-              <Td>2024-07-26</Td>
-              <Td>
-                <Badge variant='solid' colorScheme='yellow'>
-                  處理中
-                </Badge>
-              </Td>
-            </Tr>
-            <Tr
-              bg='#f8f9fa'
-              _hover={{ bg: '#e9ecef', transform: 'scale(1.02)' }}
-            >
-              <Td>SO-003</Td>
-              <Td>客戶C</Td>
-              <Td>$1,500</Td>
-              <Td>2024-07-26</Td>
-              <Td>
-                <Badge variant='solid' colorScheme='red'>
-                  已取消
-                </Badge>
-              </Td>
-            </Tr>
+            {salesOrdersList?.map((order) => (
+              <Tr
+                key={order._id}
+                bg='#f8f9fa'
+                _hover={{ bg: '#e9ecef', transform: 'scale(1.02)' }}
+              >
+                <Td>{order._id}</Td>
+                <Td>{order.user}</Td>
+                <Td>${order.totalAmount}</Td>
+                <Td>{new Date(order.orderDate).toLocaleDateString()}</Td>
+                <Td>
+                  <Badge
+                    variant='solid'
+                    colorScheme={
+                      order.status === 'Completed'
+                        ? 'green'
+                        : order.status === 'Pending'
+                        ? 'yellow'
+                        : 'red'
+                    }
+                  >
+                    {order.status === 'Completed'
+                      ? '已完成'
+                      : order.status === 'Pending'
+                      ? '處理中'
+                      : '已取消'}
+                  </Badge>
+                </Td>
+              </Tr>
+            ))}
           </Tbody>
         </Table>
       </Box>

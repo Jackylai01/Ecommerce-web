@@ -149,7 +149,7 @@ const AddPurchaseOrder = () => {
   ]);
 
   useEffect(() => {
-    dispatch(getSuppliersAsync({ page: 1, limit: 100 }));
+    dispatch(getSuppliersAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
   return (
