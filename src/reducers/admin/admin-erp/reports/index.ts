@@ -4,27 +4,36 @@ import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
 import {
   InventoryReport,
-  PurchaseOrderReport,
+  IStockMovement,
   SalesOrderReport,
 } from '@models/responses/report.res';
 import { createSlice } from '@reduxjs/toolkit';
 import {
   adminERPReportAction,
-  getInventoryLevelsReportAsync,
-  getPurchaseOrdersReportAsync,
-  getSalesOrdersReportAsync,
+  getInventoryAlertsReportAsync,
+  getInventoryDetailsReportAsync,
+  getInventoryForecastReportAsync,
+  getInventoryMovementsReportAsync,
+  getInventoryOverviewReportAsync,
+  getInventoryTrendsReportAsync,
 } from './actions';
 
 type ReportState = ApiState<adminERPReportAction> & {
-  inventoryLevels: InventoryReport[] | null;
-  purchaseOrders: PurchaseOrderReport[] | null;
-  salesOrders: SalesOrderReport[] | null;
+  inventoryOverview: InventoryReport | null;
+  inventoryMovements: IStockMovement[] | null;
+  inventoryForecast: SalesOrderReport[] | null;
+  inventoryAlerts: SalesOrderReport[] | null;
+  inventoryDetails: SalesOrderReport[] | null;
+  inventoryTrends: SalesOrderReport[] | null;
 };
 
 const initialState: ReportState = {
-  inventoryLevels: null,
-  purchaseOrders: null,
-  salesOrders: null,
+  inventoryOverview: null,
+  inventoryMovements: null,
+  inventoryForecast: null,
+  inventoryAlerts: null,
+  inventoryDetails: null,
+  inventoryTrends: null,
   ...newApiState<ReportState>(adminERPReportAction),
 };
 
@@ -36,17 +45,42 @@ const reportSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(
-      getInventoryLevelsReportAsync.fulfilled,
+      getInventoryOverviewReportAsync.fulfilled,
       (state, action) => {
-        state.inventoryLevels = action.payload;
+        state.inventoryOverview = action.payload;
       },
     );
-    builder.addCase(getPurchaseOrdersReportAsync.fulfilled, (state, action) => {
-      state.purchaseOrders = action.payload;
-    });
-    builder.addCase(getSalesOrdersReportAsync.fulfilled, (state, action) => {
-      state.salesOrders = action.payload;
-    });
+    builder.addCase(
+      getInventoryMovementsReportAsync.fulfilled,
+      (state, action) => {
+        state.inventoryMovements = action.payload;
+      },
+    );
+    builder.addCase(
+      getInventoryForecastReportAsync.fulfilled,
+      (state, action) => {
+        state.inventoryForecast = action.payload;
+      },
+    );
+    builder.addCase(
+      getInventoryAlertsReportAsync.fulfilled,
+      (state, action) => {
+        state.inventoryAlerts = action.payload;
+      },
+    );
+    builder.addCase(
+      getInventoryDetailsReportAsync.fulfilled,
+      (state, action) => {
+        state.inventoryDetails = action.payload;
+      },
+    );
+    builder.addCase(
+      getInventoryTrendsReportAsync.fulfilled,
+      (state, action) => {
+        state.inventoryTrends = action.payload;
+      },
+    );
+
     asyncMatcher(builder, ReducerName.ADMIN_ERP_REPORT);
   },
 });

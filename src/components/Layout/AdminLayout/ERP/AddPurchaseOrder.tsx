@@ -13,7 +13,10 @@ import LoadingLayout from '@components/Layout/LoadingLayout';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { PurchaseOrder } from '@models/responses/purchaseOrder.res';
-import { createPurchaseOrderAsync } from '@reducers/admin/admin-erp/purchaseOrder/actions';
+import {
+  createPurchaseOrderAsync,
+  getPurchaseOrdersAsync,
+} from '@reducers/admin/admin-erp/purchaseOrder/actions';
 import {
   createSuppliersAsync,
   getSuppliersAsync,
@@ -108,6 +111,7 @@ const AddPurchaseOrder = () => {
         duration: 3000,
         isClosable: true,
       });
+      dispatch(getPurchaseOrdersAsync({ page: 1, limit: 10 }));
     } else if (createPurchaseOrderFailed) {
       toast({
         title: '進貨訂單建立失敗',
