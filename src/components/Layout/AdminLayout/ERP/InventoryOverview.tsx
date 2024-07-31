@@ -8,6 +8,7 @@ import {
   Flex,
   Heading,
   IconButton,
+  Spinner,
   Table,
   Tbody,
   Td,
@@ -41,7 +42,11 @@ const InventoryOverview = () => {
     error: { updateInventoryError },
   } = useAppSelector((state) => state.adminERPInventory);
 
-  const { list: products } = useAppSelector((state) => state.adminProducts);
+  const {
+    list: products,
+    status: { getAllProductsLoading },
+  } = useAppSelector((state) => state.adminProducts);
+
   const { list: purchaseOrderList } = useAppSelector(
     (state) => state.adminERPPurchaseOrder,
   );
@@ -123,6 +128,19 @@ const InventoryOverview = () => {
       </Flex>
     );
   };
+
+  if (getAllProductsLoading) {
+    return (
+      <Box
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        height='100%'
+      >
+        <Spinner size='xl' />
+      </Box>
+    );
+  }
 
   return (
     <Box bg='white' p='25px' borderRadius='10px' boxShadow='md'>
