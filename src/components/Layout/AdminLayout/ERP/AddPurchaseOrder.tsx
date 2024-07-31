@@ -326,7 +326,7 @@ const AddPurchaseOrder = () => {
                 <Select placeholder='選擇產品' {...field} required>
                   {productLists?.map((product) => (
                     <option key={product._id} value={product._id}>
-                      {product.name}
+                      {product.name} - {product.price}
                     </option>
                   ))}
                 </Select>
