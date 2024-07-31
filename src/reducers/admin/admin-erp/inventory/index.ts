@@ -8,9 +8,11 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   adminERPInventoryAction,
   createInventoryAsync,
+  createSystemSafetyStockAsync,
   getInventoryAsync,
   getInventoryByProductIdAsync,
   getInventoryStatisticsAsync,
+  getSystemSafetyStockAsync,
   updateInventoryAsync,
 } from './actions';
 
@@ -25,6 +27,8 @@ type InventoryState = ApiState<adminERPInventoryAction> & {
   reorderPoints:
     | { productId: string; reorderPoint: number; productName: string }[]
     | null;
+  systemSafetyStock: any;
+  createSafetyStock: any;
 };
 
 const initialState: InventoryState = {
@@ -36,6 +40,8 @@ const initialState: InventoryState = {
   inventoryTurnoverRate: null,
   safetyStock: null,
   reorderPoints: null,
+  systemSafetyStock: null,
+  createSafetyStock: null,
   ...newApiState<InventoryState>(adminERPInventoryAction),
 };
 
@@ -63,6 +69,12 @@ const inventorySlice = createSlice({
       state.inventoryTurnoverRate = action.payload.inventoryTurnoverRate;
       state.safetyStock = action.payload.safetyStock;
       state.reorderPoints = action.payload.reorderPoints;
+    });
+    builder.addCase(getSystemSafetyStockAsync.fulfilled, (state, action) => {
+      state.systemSafetyStock = action.payload;
+    });
+    builder.addCase(createSystemSafetyStockAsync.fulfilled, (state, action) => {
+      state.createSafetyStock = action.payload;
     });
     asyncMatcher(builder, ReducerName.ADMIN_ERP_INVENTORY);
   },

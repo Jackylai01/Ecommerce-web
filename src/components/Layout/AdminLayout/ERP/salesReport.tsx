@@ -13,6 +13,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import { onlyDate } from '@helpers/date';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import {
@@ -58,16 +59,22 @@ const InventoryDashboard = () => {
     dispatch(getInventoryTrendsReportAsync());
   }, [dispatch]);
 
+  const translateType = (type: string) => {
+    switch (type) {
+      case 'inbound':
+        return '入庫';
+      case 'outbound':
+        return '出庫';
+      default:
+        return type;
+    }
+  };
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
   return (
-    <Box p={6} bgGradient='linear(to-br, gray.100, gray.200)' minH='100vh'>
-      <Heading as='h1' size='xl' mb={8} textAlign='center' color='gray.800'>
-        庫存管理儀表板
-      </Heading>
-
+    <Box bgGradient='linear(to-br, gray.100, gray.200)' minH='100vh'>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6} mb={8}>
-        <Card>
+        <Card borderRadius='20px'>
           <CardHeader bg='blue.500' />
           <CardBody>
             <Box
@@ -81,7 +88,9 @@ const InventoryDashboard = () => {
                   總庫存價值
                 </Text>
                 <Heading size='lg' color='blue.600'>
-                  ${inventoryOverview?.totalInventoryValue.toLocaleString()}
+                  $
+                  {inventoryOverview?.totalInventoryValue?.toLocaleString() ||
+                    '0'}
                 </Heading>
               </Box>
             </Box>
@@ -101,7 +110,8 @@ const InventoryDashboard = () => {
                   總庫存數量
                 </Text>
                 <Heading size='lg' color='green.600'>
-                  {inventoryOverview?.totalInventoryCount.toLocaleString()}
+                  {inventoryOverview?.totalInventoryCount?.toLocaleString() ||
+                    '0'}
                 </Heading>
               </Box>
             </Box>
@@ -121,7 +131,7 @@ const InventoryDashboard = () => {
                   低庫存商品
                 </Text>
                 <Heading size='lg' color='yellow.600'>
-                  {inventoryOverview?.lowStockProducts.length}
+                  {inventoryOverview?.lowStockProducts?.length || 0}
                 </Heading>
               </Box>
             </Box>
@@ -141,7 +151,7 @@ const InventoryDashboard = () => {
                   高庫存商品
                 </Text>
                 <Heading size='lg' color='purple.600'>
-                  {inventoryOverview?.highStockProducts.length}
+                  {inventoryOverview?.highStockProducts?.length || 0}
                 </Heading>
               </Box>
             </Box>
@@ -149,7 +159,7 @@ const InventoryDashboard = () => {
         </Card>
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={6} mb={8}>
+      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6} mb={8}>
         <Card>
           <CardHeader bg='indigo.500'>
             <Box display='flex' alignItems='center'>
@@ -165,24 +175,16 @@ const InventoryDashboard = () => {
               series={[
                 {
                   name: '庫存',
-                  data:
-                    inventoryTrends
-                      ?.map((trend) => trend.stock)
-                      .filter((data) => data !== undefined) || [],
+                  data: inventoryTrends?.map((trend) => trend.stock || 0) || [],
                 },
                 {
                   name: '銷售',
-                  data:
-                    inventoryTrends
-                      ?.map((trend) => trend.sales)
-                      .filter((data) => data !== undefined) || [],
+                  data: inventoryTrends?.map((trend) => trend.sales || 0) || [],
                 },
                 {
                   name: '利潤',
                   data:
-                    inventoryTrends
-                      ?.map((trend) => trend.profit)
-                      .filter((data) => data !== undefined) || [],
+                    inventoryTrends?.map((trend) => trend.profit || 0) || [],
                 },
               ]}
               options={{
@@ -191,15 +193,12 @@ const InventoryDashboard = () => {
                 stroke: { curve: 'smooth' },
                 xaxis: {
                   categories:
-                    inventoryTrends
-                      ?.map((trend) => trend.month)
-                      .filter((month) => month !== undefined) || [],
+                    inventoryTrends?.map((trend) => trend.month || '') || [],
                 },
               }}
             />
           </CardBody>
         </Card>
-
         <Card>
           <CardHeader bg='pink.500'>
             <Box display='flex' alignItems='center'>
@@ -213,14 +212,14 @@ const InventoryDashboard = () => {
             <ReactApexChart
               type='pie'
               series={
-                inventoryOverview?.highStockProducts.map(
-                  (product) => product.stock,
+                inventoryOverview?.highStockProducts?.map(
+                  (product) => product.stock || 0,
                 ) || []
               }
               options={{
                 labels:
-                  inventoryOverview?.highStockProducts.map(
-                    (product) => product.name,
+                  inventoryOverview?.highStockProducts?.map(
+                    (product) => product.name || '',
                   ) || [],
                 colors: COLORS,
               }}
@@ -229,7 +228,7 @@ const InventoryDashboard = () => {
         </Card>
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={6} mb={8}>
+      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6} mb={8}>
         <Card>
           <CardHeader bg='orange.500'>
             <Box display='flex' alignItems='center'>
@@ -253,11 +252,11 @@ const InventoryDashboard = () => {
               <Tbody>
                 {inventoryMovements?.map((item, index) => (
                   <Tr key={index}>
-                    <Td>{item.productId}</Td>
-                    <Td>{item.type}</Td>
+                    <Td>{item.product.name}</Td>
+                    <Td>{translateType(item.type)}</Td>
                     <Td>{item.quantity}</Td>
                     <Td>{item.reason}</Td>
-                    <Td>{item.date}</Td>
+                    <Td>{onlyDate(item.date)}</Td>
                   </Tr>
                 ))}
               </Tbody>
@@ -279,15 +278,10 @@ const InventoryDashboard = () => {
               type='bar'
               series={[
                 {
-                  name: '預測銷售量',
+                  name: '庫存',
                   data:
-                    inventoryForecast?.map((forecast) => forecast.quantity) ||
+                    inventoryForecast?.map((forecast) => forecast.stock ?? 0) ||
                     [],
-                },
-                {
-                  name: '預測庫存量',
-                  data:
-                    inventoryForecast?.map((forecast) => forecast.price) || [],
                 },
               ]}
               options={{
@@ -297,8 +291,7 @@ const InventoryDashboard = () => {
                 },
                 xaxis: {
                   categories:
-                    inventoryForecast?.map((forecast) => forecast.productId) ||
-                    [],
+                    inventoryForecast?.map((forecast) => forecast.name) || [],
                 },
               }}
             />
@@ -327,16 +320,13 @@ const InventoryDashboard = () => {
                   borderColor='red.500'
                 >
                   <Heading size='sm' color='red.700'>
-                    {alert.productId}
+                    {alert.name}
                   </Heading>
                   <Text fontSize='sm' color='gray.600'>
-                    當前庫存: {alert.quantity}
+                    當前庫存: {alert.stock}
                   </Text>
                   <Text fontSize='sm' fontWeight='medium' color='red.600'>
-                    {alert.reason}
-                  </Text>
-                  <Text fontSize='sm' fontWeight='bold' mt={2}>
-                    建議: {alert.reason}
+                    警告: 低庫存
                   </Text>
                 </Box>
               ))}

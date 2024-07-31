@@ -1,9 +1,3 @@
-/**
- * InventoryReport
- *
- * Represents the overall inventory report, including total inventory value,
- * total inventory count, and lists of products with low and high stock levels.
- */
 export interface InventoryReport {
   /** 總庫存價值 */
   totalInventoryValue: number;
@@ -15,12 +9,6 @@ export interface InventoryReport {
   highStockProducts: Product[];
 }
 
-/**
- * PurchaseOrderReport
- *
- * Represents a report of purchase orders, detailing product ID, quantity, price,
- * date of purchase, and reason for the purchase.
- */
 export interface IStockMovement {
   /** 產品ID */
   productId: string;
@@ -34,14 +22,9 @@ export interface IStockMovement {
   reason: string;
   /** 類型 (入庫, 出庫) */
   type: 'inbound' | 'outbound';
+  product: any;
 }
 
-/**
- * SalesOrderReport
- *
- * Represents a report of sales orders, detailing product ID, quantity, price,
- * date of sale, and reason for the sale.
- */
 export interface SalesOrderReport {
   /** 產品ID */
   productId: string;
@@ -63,12 +46,6 @@ export interface SalesOrderReport {
   profit?: number;
 }
 
-/**
- * Product
- *
- * Represents a product within the inventory system, including its ID, name,
- * current stock level, and price.
- */
 export interface Product {
   /** 產品ID */
   _id: string;
@@ -78,4 +55,24 @@ export interface Product {
   stock: number;
   /** 產品價格 */
   price: number;
+}
+
+export interface InventoryTrends {
+  name: string;
+  stock: number;
+  sales: number;
+  profit: any;
+  month: any;
+}
+
+export interface InventoryForecast {
+  _id: string;
+  name: string;
+  stock: number;
+}
+
+export interface InventoryAlert {
+  _id: string;
+  name: string;
+  stock: number;
 }

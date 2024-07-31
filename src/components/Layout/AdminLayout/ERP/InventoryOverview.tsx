@@ -15,7 +15,6 @@ import {
   Thead,
   Tr,
   useEditableControls,
-  useMediaQuery,
   useToast,
 } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
@@ -31,7 +30,6 @@ const InventoryOverview = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const toast = useToast();
-  const [isLargerThan600] = useMediaQuery('(min-width: 600px)');
 
   const {
     list: inventoryList,
@@ -44,30 +42,22 @@ const InventoryOverview = () => {
   } = useAppSelector((state) => state.adminERPInventory);
 
   const { list: products } = useAppSelector((state) => state.adminProducts);
-  const { list: salesList } = useAppSelector(
-    (state) => state.adminERPSalesOrder,
+  const { list: purchaseOrderList } = useAppSelector(
+    (state) => state.adminERPPurchaseOrder,
   );
 
-  const recentInbound = inventoryList
-    ?.filter((item) => item.type === 'inbound')
+  const recentInbound = [...(purchaseOrderList || [])]
     .sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     )
-    .slice(0, 5);
-
-  const recentOutbound = salesList
-    ?.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )
-    .slice(0, 5);
+    .slice(0, 8);
 
   useEffect(() => {
     const page = parseInt(router.query.page as string) || 1;
     const limit = 10;
     dispatch(getInventoryAsync({ page, limit }));
-  }, [dispatch]);
+  }, [dispatch, router.query.page]);
 
   useEffect(() => {
     if (updateInventorySuccess) {
@@ -299,18 +289,20 @@ const InventoryOverview = () => {
         </Thead>
         <Tbody>
           {recentInbound &&
-            recentInbound.map((item) => (
-              <Tr
-                key={item._id}
-                bg='gray.50'
-                _hover={{ bg: 'gray.100', transform: 'scale(1.02)' }}
-              >
-                <Td>{new Date(item.createdAt).toLocaleDateString()}</Td>
-                <Td>{item.name}</Td>
-                <Td>{item.quantity}</Td>
-                <Td>{item.supplier}</Td>
-              </Tr>
-            ))}
+            recentInbound.map((item) =>
+              item.products.map((productItem) => (
+                <Tr
+                  key={productItem._id}
+                  bg='gray.50'
+                  _hover={{ bg: 'gray.100', transform: 'scale(1.02)' }}
+                >
+                  <Td>{new Date(item.orderDate).toLocaleDateString()}</Td>
+                  <Td>{productItem.product.name}</Td>
+                  <Td>{productItem.quantity}</Td>
+                  <Td>{item.supplier.name}</Td>
+                </Tr>
+              )),
+            )}
         </Tbody>
       </Table>
     </Box>

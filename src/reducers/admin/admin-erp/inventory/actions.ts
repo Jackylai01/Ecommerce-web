@@ -4,10 +4,12 @@ import { Inventory } from '@models/responses/inventory.res';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiCreateInventory,
+  apiCreateSystemSafetyStock,
   apiDeleteInventory,
   apiGetInventory,
   apiGetInventoryByProductId,
   apiGetInventoryStatistics,
+  apiGetSystemSafetyStock,
   apiUpdateInventory,
 } from '@services/admin/admin-erp/inventory';
 
@@ -18,6 +20,8 @@ export enum adminERPInventoryAction {
   updateInventory = 'updateInventory',
   deleteInventory = 'deleteInventory',
   getInventoryStatistics = 'getInventoryStatistics',
+  createSystemSafetyStock = 'createSystemSafetyStock',
+  getSystemSafetyStock = 'getSystemSafetyStock',
 }
 
 export const getInventoryAsync = createAsyncThunk(
@@ -64,6 +68,22 @@ export const getInventoryStatisticsAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ERP_INVENTORY}/${adminERPInventoryAction.getInventoryStatistics}`,
   async () => {
     const response = await apiGetInventoryStatistics();
+    return response.result.data;
+  },
+);
+
+export const createSystemSafetyStockAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_ERP_INVENTORY}/${adminERPInventoryAction.createSystemSafetyStock}`,
+  async (data: any) => {
+    const response = await apiCreateSystemSafetyStock(data);
+    return response.result.data;
+  },
+);
+
+export const getSystemSafetyStockAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_ERP_INVENTORY}/${adminERPInventoryAction.getSystemSafetyStock}`,
+  async () => {
+    const response = await apiGetSystemSafetyStock();
     return response.result.data;
   },
 );

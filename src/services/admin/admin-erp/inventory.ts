@@ -35,3 +35,11 @@ export const apiDeleteInventory = async (productId: string) =>
 // 獲取庫存統計數據
 export const apiGetInventoryStatistics = async () =>
   getRequest<ApiResult<any>>('/erp/inventory/statistics');
+
+// 設置安全庫存相關設置
+export const apiCreateSystemSafetyStock = async (data: any) =>
+  postRequest<ApiResult<any>>('/erp/system-settings', data);
+
+// 獲取設置
+export const apiGetSystemSafetyStock = async () =>
+  getRequest<ApiResult<any>>('/erp/system-settings');

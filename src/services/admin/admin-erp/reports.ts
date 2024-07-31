@@ -1,5 +1,8 @@
 import {
+  InventoryAlert,
+  InventoryForecast,
   InventoryReport,
+  InventoryTrends,
   IStockMovement,
   SalesOrderReport,
 } from '@models/responses/report.res';
@@ -15,11 +18,11 @@ export const apiGetInventoryMovementsReport = async () =>
 
 // 庫存預測
 export const apiGetInventoryForecastReport = async () =>
-  getRequest<ApiResult<SalesOrderReport[]>>('/erp/forecast');
+  getRequest<ApiResult<InventoryForecast[]>>('/erp/forecast');
 
 // 庫存警報
 export const apiGetInventoryAlertsReport = async () =>
-  getRequest<ApiResult<SalesOrderReport[]>>('/erp/alerts');
+  getRequest<ApiResult<InventoryAlert[]>>('/erp/alerts');
 
 // 庫存詳情
 export const apiGetInventoryDetailsReport = async (productId: string) =>
@@ -27,4 +30,4 @@ export const apiGetInventoryDetailsReport = async (productId: string) =>
 
 // 庫存趨勢分析
 export const apiGetInventoryTrends = async () =>
-  getRequest<ApiResult<SalesOrderReport[]>>(`/erp/trends`);
+  getRequest<ApiResult<InventoryTrends[]>>(`/erp/trends`);

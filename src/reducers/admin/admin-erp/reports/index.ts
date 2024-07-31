@@ -3,7 +3,10 @@ import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
 import {
+  InventoryAlert,
+  InventoryForecast,
   InventoryReport,
+  InventoryTrends,
   IStockMovement,
   SalesOrderReport,
 } from '@models/responses/report.res';
@@ -21,10 +24,10 @@ import {
 type ReportState = ApiState<adminERPReportAction> & {
   inventoryOverview: InventoryReport | null;
   inventoryMovements: IStockMovement[] | null;
-  inventoryForecast: SalesOrderReport[] | null;
-  inventoryAlerts: SalesOrderReport[] | null;
+  inventoryForecast: InventoryForecast[] | null;
+  inventoryAlerts: InventoryAlert[] | null;
   inventoryDetails: SalesOrderReport[] | null;
-  inventoryTrends: SalesOrderReport[] | null;
+  inventoryTrends: InventoryTrends[] | null;
 };
 
 const initialState: ReportState = {

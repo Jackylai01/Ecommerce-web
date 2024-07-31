@@ -13,6 +13,7 @@ export interface PurchaseOrderResponse {
   status: 'Pending' | 'Completed' | 'Cancelled';
   /** 訂單產品詳情 */
   products: {
+    _id: string;
     /** 產品ID */
     productId: string;
     /** 產品名稱 */
@@ -21,6 +22,8 @@ export interface PurchaseOrderResponse {
     quantity: number;
     /** 單價 */
     price: number;
+    /** 產品 */
+    product: any;
   }[];
   expectedDeliveryDate: Date;
   supplier: {
@@ -30,6 +33,7 @@ export interface PurchaseOrderResponse {
     address: string;
     principal: string;
   };
+  createdAt: Date;
 }
 export interface PurchaseOrder {
   supplier: string;
