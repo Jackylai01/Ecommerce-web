@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { ColorModeProvider } from 'src/context/colorMode';
 import AdminAuthLayout from './AdminAuthLayout';
+import AdminEditPageLayout from './AdminEditLayout';
 import AdminLayout from './AdminLayout';
 import ClientLayout from './ClientLayout';
 import ClientPublicLayout from './ClientPublicLayout';
@@ -45,6 +46,9 @@ const Layout = ({ children }: Props) => {
       )}
       {pageLayoutType === PageLayoutType.CLIENT_PUBLIC && (
         <ClientPublicLayout>{children}</ClientPublicLayout>
+      )}
+      {pageLayoutType === PageLayoutType.ADMIN_EDIT && (
+        <AdminEditPageLayout>{children}</AdminEditPageLayout>
       )}
     </>
   );

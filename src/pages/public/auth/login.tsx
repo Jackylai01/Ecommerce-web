@@ -112,8 +112,6 @@ const Login: NextPage = () => {
     }
   };
 
-  console.log('登入 頁面', userInfo);
-
   return (
     <LoadingLayout isLoading={loginLoading}>
       <Flex as='main' h='70vh' alignItems='center' justifyContent='center'>

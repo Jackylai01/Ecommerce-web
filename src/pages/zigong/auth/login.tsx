@@ -52,7 +52,7 @@ const Login = () => {
   } = useAppSelector((state) => state.adminAuth);
 
   useEffect(() => {
-    if (userInfo || loginSuccess) {
+    if (loginSuccess) {
       router.push(`/${ADMIN_ROUTE}`);
     }
   }, [userInfo, loginSuccess, router]);

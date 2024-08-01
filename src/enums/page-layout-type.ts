@@ -3,4 +3,5 @@ export enum PageLayoutType {
   ADMIN = 'ADMIN',
   ADMIN_AUTH = 'ADMIN_AUTH',
   CLIENT_PUBLIC = 'CLIENT_PUBLIC',
+  ADMIN_EDIT = 'ADMIN_EDIT',
 }

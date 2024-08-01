@@ -1,6 +1,7 @@
 import {
   FaBoxOpen,
   FaDollarSign,
+  FaEdit,
   FaFileInvoiceDollar,
   FaHome,
   FaShoppingCart,
@@ -9,12 +10,13 @@ import {
 } from 'react-icons/fa';
 
 import { PayPalIcon } from '@components/Icons/Icons';
+import AdminEditPageLayout from '@components/Layout/AdminEditLayout';
 import Billing from '@components/Layout/AdminLayout/Billing';
 import Dashboard from '@components/Layout/AdminLayout/Dashboard';
 import DiscountTableContainer from '@components/Layout/AdminLayout/Discount';
 import Profile from '@components/Layout/AdminLayout/Profile';
 import Tables from '@components/Layout/AdminLayout/Tables';
-import { ADMIN_ROUTE } from '@fixtures/constants';
+import { ADMIN_EDIT_PAGES_ROUTE, ADMIN_ROUTE } from '@fixtures/constants';
 import InventorySystem from '@pages/zigong/erp/inventory';
 import ShoppingCreditsManagement from '@pages/zigong/shopping-credits';
 
@@ -89,6 +91,13 @@ const dashRoutes = [
         layout: `/${ADMIN_ROUTE}`,
       },
     ],
+  },
+  {
+    path: '/design-store',
+    name: '設計店面',
+    icon: FaEdit,
+    component: AdminEditPageLayout,
+    layout: `/${ADMIN_EDIT_PAGES_ROUTE}`,
   },
 ];
 export default dashRoutes;
