@@ -1,12 +1,26 @@
-import { Box, Button, Flex, Heading, Link, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  IconButton,
+  Link,
+  Text,
+} from '@chakra-ui/react';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 import { loadAdminToken } from '@helpers/token';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import {
+  addBlock,
+  removeBlockItem,
+  setCustomPageActive,
+  setPageBlocks,
+} from '@reducers/admin/admin-edit-pages';
 import { setAdminUserInfo } from '@reducers/admin/auth';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { FaBars, FaChevronRight } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
+import { FaBars, FaChevronRight, FaTrash } from 'react-icons/fa';
 
 type ComponentType = 'navbar' | 'footer' | 'main' | 'card';
 
@@ -83,12 +97,14 @@ interface SidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
   onDragStart: (e: React.DragEvent<HTMLDivElement>, key: string) => void;
+  isEditing: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   isCollapsed,
   onToggle,
   onDragStart,
+  isEditing,
 }) => {
   return (
     <Box
@@ -130,7 +146,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   rounded='md'
                   shadow='sm'
                   cursor='move'
-                  draggable='true'
+                  draggable={isEditing}
                   onDragStart={(e) => onDragStart(e, key)}
                 >
                   {componentLibrary[key].name}
@@ -150,6 +166,8 @@ interface CanvasProps {
   onDragStart: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
   onDragEnd: (e: React.DragEvent<HTMLDivElement>) => void;
   onDragOver: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
+  onRemoveComponent: (index: number) => void;
+  isEditing: boolean;
 }
 
 const Canvas: React.FC<CanvasProps> = ({
@@ -158,6 +176,8 @@ const Canvas: React.FC<CanvasProps> = ({
   onDragStart,
   onDragEnd,
   onDragOver,
+  onRemoveComponent,
+  isEditing,
 }) => {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -183,6 +203,7 @@ const Canvas: React.FC<CanvasProps> = ({
       {components.map((component, index) => (
         <Box
           key={index}
+          position='relative'
           bg='white'
           border='1px'
           borderColor='gray.200'
@@ -190,11 +211,22 @@ const Canvas: React.FC<CanvasProps> = ({
           p={4}
           mb={4}
           shadow='sm'
-          draggable='true'
+          draggable={isEditing}
           onDragStart={(e) => onDragStart(e, index)}
           onDragEnd={onDragEnd}
           onDragOver={(e) => onDragOver(e, index)}
         >
+          {isEditing && (
+            <IconButton
+              icon={<FaTrash />}
+              aria-label='Delete component'
+              size='sm'
+              position='absolute'
+              top={2}
+              right={2}
+              onClick={() => onRemoveComponent(index)}
+            />
+          )}
           {component.type === 'navbar' || component.type === 'footer' ? (
             component.elements?.map((item, idx) => (
               <Link key={idx} href={item.href} mr={4}>
@@ -217,8 +249,11 @@ const AdminEditPageLayout: React.FC = () => {
     userInfo,
     status: { loginLoading },
   } = useAppSelector((state) => state.adminAuth);
+  const { active: isEditing, pageBlocks: components } = useAppSelector(
+    (state) => state.adminEditPages,
+  );
+
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [components, setComponents] = useState<Component[]>([]);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   const [isClient, setIsClient] = useState(false);
@@ -235,8 +270,7 @@ const AdminEditPageLayout: React.FC = () => {
   }, [dispatch, userInfo]);
 
   useEffect(() => {
-    if (!router.isReady || loginLoading) return;
-
+    if (loginLoading || !router.isReady) return;
     if (!userInfo) {
       router.push(`/${ADMIN_ROUTE}/auth/login`);
     }
@@ -258,7 +292,7 @@ const AdminEditPageLayout: React.FC = () => {
   };
 
   const handleDropComponent = (component: Component) => {
-    setComponents((prevComponents) => [...prevComponents, component]);
+    dispatch(addBlock(component));
   };
 
   const handleDragEnd = () => {
@@ -275,33 +309,59 @@ const AdminEditPageLayout: React.FC = () => {
       const [draggedComponent] = newComponents.splice(draggedIndex, 1);
       newComponents.splice(index, 0, draggedComponent);
       setDraggedIndex(index);
-      setComponents(newComponents);
+      dispatch(setPageBlocks(newComponents));
     }
   };
 
+  const handleRemoveComponent = (index: number) => {
+    dispatch(removeBlockItem(index));
+  };
+
   if (!isClient) {
-    return null; // 或者返回一個加載指示器
+    return null;
   }
 
   return (
-    <Flex h='100vh'>
-      <Sidebar
-        isCollapsed={isCollapsed}
-        onToggle={handleToggleSidebar}
-        onDragStart={handleDragStart}
-      />
-      <Box flex='1' p={8} overflowY='auto'>
-        <Heading as='h1' size='lg' mb={8}>
+    <Flex h='100vh' direction='column'>
+      <Flex
+        justify='space-between'
+        p={4}
+        bg='gray.100'
+        borderBottom='1px solid'
+        borderColor='gray.200'
+      >
+        <Heading as='h1' size='lg'>
           網頁編輯器
         </Heading>
-        <Canvas
-          components={components}
-          onDropComponent={handleDropComponent}
+        <Flex>
+          <Button
+            onClick={() => dispatch(setCustomPageActive(!isEditing))}
+            mr={2}
+          >
+            {isEditing ? '結束編輯模式' : '進入編輯模式'}
+          </Button>
+          <Button colorScheme='blue'>發佈到前台</Button>
+        </Flex>
+      </Flex>
+      <Flex flex='1'>
+        <Sidebar
+          isCollapsed={isCollapsed}
+          onToggle={handleToggleSidebar}
           onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          onDragOver={handleDragOver}
+          isEditing={isEditing}
         />
-      </Box>
+        <Box flex='1' p={8} overflowY='auto'>
+          <Canvas
+            components={components}
+            onDropComponent={handleDropComponent}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragOver={handleDragOver}
+            onRemoveComponent={handleRemoveComponent}
+            isEditing={isEditing}
+          />
+        </Box>
+      </Flex>
     </Flex>
   );
 };
