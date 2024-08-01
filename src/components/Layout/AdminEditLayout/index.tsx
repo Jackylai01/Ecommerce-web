@@ -210,7 +210,7 @@ const Canvas: React.FC<CanvasProps> = ({
   );
 };
 
-const Editor: React.FC = () => {
+const AdminEditPageLayout: React.FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const {
@@ -306,4 +306,4 @@ const Editor: React.FC = () => {
   );
 };
 
-export default Editor;
+export default AdminEditPageLayout;
