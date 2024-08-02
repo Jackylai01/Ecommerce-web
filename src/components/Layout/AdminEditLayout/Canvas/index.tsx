@@ -1,7 +1,7 @@
 import { Box, IconButton } from '@chakra-ui/react';
 import { Component, componentLibrary } from '@fixtures/componentLibrary';
 import Link from 'next/link';
-import { FaTrash } from 'react-icons/fa';
+import { FaGripVertical, FaTrash } from 'react-icons/fa';
 
 interface CanvasProps {
   components: Component[];
@@ -55,21 +55,34 @@ const Canvas: React.FC<CanvasProps> = ({
           p={4}
           mb={4}
           shadow='sm'
-          draggable={isEditing}
-          onDragStart={(e) => onDragStart(e, index)}
-          onDragEnd={onDragEnd}
           onDragOver={(e) => onDragOver(e, index)}
         >
           {isEditing && (
-            <IconButton
-              icon={<FaTrash />}
-              aria-label='Delete component'
-              size='sm'
-              position='absolute'
-              top={2}
-              right={2}
-              onClick={() => onRemoveComponent(index)}
-            />
+            <Box position='absolute' top={2} right={2} display='flex'>
+              <IconButton
+                icon={<FaGripVertical />}
+                aria-label='Drag component'
+                size='sm'
+                cursor='move'
+                draggable={true}
+                onDragStart={(e) =>
+                  onDragStart(
+                    e as unknown as React.DragEvent<HTMLDivElement>,
+                    index,
+                  )
+                }
+                onDragEnd={(e) =>
+                  onDragEnd(e as unknown as React.DragEvent<HTMLDivElement>)
+                }
+              />
+              <IconButton
+                icon={<FaTrash />}
+                aria-label='Delete component'
+                size='sm'
+                ml={2}
+                onClick={() => onRemoveComponent(index)}
+              />
+            </Box>
           )}
           {component.type === 'navbar' || component.type === 'footer' ? (
             component.elements?.map((item, idx) => (
