@@ -23,6 +23,7 @@ const Canvas: React.FC<CanvasProps> = ({
   isEditing,
 }) => {
   const handleDrop = (e: React.DragEvent) => {
+    if (!isEditing) return;
     e.preventDefault();
     const componentId = e.dataTransfer.getData('component');
     const component = componentLibrary[componentId];

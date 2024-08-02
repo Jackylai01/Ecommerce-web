@@ -60,6 +60,7 @@ const AdminEditPageLayout: React.FC = () => {
     e: React.DragEvent<HTMLDivElement>,
     key: string | number,
   ) => {
+    if (!isEditing) return;
     if (typeof key === 'number') {
       setDraggedIndex(key);
     } else {
