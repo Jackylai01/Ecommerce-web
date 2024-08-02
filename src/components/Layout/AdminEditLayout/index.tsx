@@ -35,7 +35,7 @@ const AdminEditPageLayout: React.FC = () => {
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-
+  const [currentRoute, setCurrentRoute] = useState<string>('/home');
   const [isClient, setIsClient] = useState(false);
 
   const formMethods = useForm<FormValues>({
@@ -64,6 +64,11 @@ const AdminEditPageLayout: React.FC = () => {
     } else {
       e.dataTransfer.setData('component', key);
     }
+  };
+
+  const handleRouteChange = (route: string) => {
+    setCurrentRoute(route);
+    // 在這裡根據路由變更加載相應頁面的數據
   };
 
   const handleDropComponent = (component: Component) => {
@@ -133,9 +138,7 @@ const AdminEditPageLayout: React.FC = () => {
           borderBottom='1px solid'
           borderColor='gray.200'
         >
-          <Heading as='h1' size='lg'>
-            網頁編輯器
-          </Heading>
+          <Heading as='h1' size='lg'></Heading>
           <Flex>
             <Button
               onClick={() => dispatch(setCustomPageActive(!isEditing))}
@@ -152,6 +155,8 @@ const AdminEditPageLayout: React.FC = () => {
             onToggle={handleToggleSidebar}
             onDragStart={handleDragStart}
             isEditing={isEditing}
+            currentRoute={currentRoute}
+            onRouteChange={handleRouteChange}
           />
           <Box flex='1' p={8} overflowY='auto'>
             <Canvas

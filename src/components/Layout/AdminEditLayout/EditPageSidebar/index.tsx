@@ -1,7 +1,15 @@
-import { Box, Button, Heading } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Icon,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { componentLibrary } from '@fixtures/componentLibrary';
 import React from 'react';
-import { FaBars, FaChevronRight } from 'react-icons/fa';
+import { FaBars, FaChevronRight, FaShoppingCart } from 'react-icons/fa';
 
 const categorizedComponents: any = {
   layout: ['navbar_a', 'navbar_b'],
@@ -15,13 +23,26 @@ interface EditPageSidebarProps {
   onToggle: () => void;
   onDragStart: (e: React.DragEvent<HTMLDivElement>, key: string) => void;
   isEditing: boolean;
+  currentRoute: string;
+  onRouteChange: (route: string) => void;
 }
+
+const routes = [
+  { path: '/home', label: '首頁' },
+  { path: '/products', label: '產品列表頁' },
+  { path: '/product-details', label: '產品詳情頁' },
+  { path: '/cart', label: '購物車頁面' },
+  { path: '/checkout', label: '結帳頁面' },
+  { path: '/profile', label: '個人中心' },
+];
 
 const EditPageSidebar: React.FC<EditPageSidebarProps> = ({
   isCollapsed,
   onToggle,
   onDragStart,
   isEditing,
+  currentRoute,
+  onRouteChange,
 }) => {
   return (
     <Box
@@ -46,6 +67,40 @@ const EditPageSidebar: React.FC<EditPageSidebarProps> = ({
       </Button>
       {!isCollapsed && (
         <>
+          <HStack
+            spacing={3}
+            mb={6}
+            borderBottom='1px solid'
+            borderColor='gray.200'
+            pb={4}
+          >
+            <Icon as={FaShoppingCart} w={8} h={8} color='blue.500' />
+            <Heading size='md' color='blue.500'>
+              ShopCraft
+            </Heading>
+          </HStack>
+          <Box borderBottom='1px solid' borderColor='gray.200' pb={4} mb={4}>
+            <Heading size='sm' mb={4}>
+              路由
+            </Heading>
+            <VStack align='start'>
+              {routes.map((route) => (
+                <Text
+                  key={route.path}
+                  cursor='pointer'
+                  bg={currentRoute === route.path ? 'blue.500' : 'transparent'}
+                  color={currentRoute === route.path ? 'white' : 'black'}
+                  _hover={{ bg: 'blue.500', color: 'white' }}
+                  px={4}
+                  py={2}
+                  borderRadius='md'
+                  onClick={() => onRouteChange(route.path)}
+                >
+                  {route.label}
+                </Text>
+              ))}
+            </VStack>
+          </Box>
           <Heading as='h2' size='md' mb={4}>
             組件庫
           </Heading>
@@ -62,9 +117,9 @@ const EditPageSidebar: React.FC<EditPageSidebarProps> = ({
                   p={2}
                   rounded='md'
                   shadow='sm'
-                  cursor='move'
+                  cursor={isEditing ? 'move' : 'default'}
                   draggable={isEditing}
-                  onDragStart={(e) => onDragStart(e, key)}
+                  onDragStart={(e) => isEditing && onDragStart(e, key)}
                 >
                   {componentLibrary[key].name}
                 </Box>
