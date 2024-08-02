@@ -8,8 +8,14 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { componentLibrary } from '@fixtures/componentLibrary';
+import { useRouter } from 'next/router';
 import React from 'react';
-import { FaBars, FaChevronRight, FaShoppingCart } from 'react-icons/fa';
+import {
+  FaArrowLeft,
+  FaBars,
+  FaChevronRight,
+  FaShoppingCart,
+} from 'react-icons/fa';
 
 const categorizedComponents: any = {
   layout: ['navbar_a', 'navbar_b'],
@@ -44,6 +50,12 @@ const EditPageSidebar: React.FC<EditPageSidebarProps> = ({
   currentRoute,
   onRouteChange,
 }) => {
+  const router = useRouter();
+
+  const handleBackToAdmin = () => {
+    router.push('/zigong');
+  };
+
   return (
     <Box
       w={isCollapsed ? '60px' : '300px'}
@@ -52,81 +64,99 @@ const EditPageSidebar: React.FC<EditPageSidebarProps> = ({
       shadow='md'
       overflowY='auto'
       transition='width 0.3s ease'
+      display='flex'
+      flexDirection='column'
+      justifyContent='space-between'
+      height='100vh'
     >
-      <Button
-        onClick={onToggle}
-        colorScheme='blue'
-        rounded='full'
-        position='fixed'
-        left={isCollapsed ? '20px' : '280px'}
-        top='20px'
-        zIndex={1000}
-        transition='left 0.3s ease'
-      >
-        {isCollapsed ? <FaChevronRight /> : <FaBars />}
-      </Button>
-      {!isCollapsed && (
-        <>
-          <HStack
-            spacing={3}
-            mb={6}
-            borderBottom='1px solid'
-            borderColor='gray.200'
-            pb={4}
-          >
-            <Icon as={FaShoppingCart} w={8} h={8} color='blue.500' />
-            <Heading size='md' color='blue.500'>
-              ShopCraft
-            </Heading>
-          </HStack>
-          <Box borderBottom='1px solid' borderColor='gray.200' pb={4} mb={4}>
-            <Heading size='sm' mb={4}>
-              路由
-            </Heading>
-            <VStack align='start'>
-              {routes.map((route) => (
-                <Text
-                  key={route.path}
-                  cursor='pointer'
-                  bg={currentRoute === route.path ? 'blue.500' : 'transparent'}
-                  color={currentRoute === route.path ? 'white' : 'black'}
-                  _hover={{ bg: 'blue.500', color: 'white' }}
-                  px={4}
-                  py={2}
-                  borderRadius='md'
-                  onClick={() => onRouteChange(route.path)}
-                >
-                  {route.label}
-                </Text>
-              ))}
-            </VStack>
-          </Box>
-          <Heading as='h2' size='md' mb={4}>
-            組件庫
-          </Heading>
-          {Object.keys(categorizedComponents).map((category) => (
-            <Box key={category} mb={6}>
-              <Heading as='h3' size='sm' mb={2}>
-                {category}
+      <Box>
+        <Button
+          onClick={onToggle}
+          colorScheme='blue'
+          rounded='full'
+          position='fixed'
+          left={isCollapsed ? '20px' : '280px'}
+          top='20px'
+          zIndex={1000}
+          transition='left 0.3s ease'
+        >
+          {isCollapsed ? <FaChevronRight /> : <FaBars />}
+        </Button>
+        {!isCollapsed && (
+          <>
+            <HStack
+              spacing={3}
+              mb={6}
+              borderBottom='1px solid'
+              borderColor='gray.200'
+              pb={4}
+            >
+              <Icon as={FaShoppingCart} w={8} h={8} color='blue.500' />
+              <Heading size='md' color='blue.500'>
+                ShopCraft
               </Heading>
-              {categorizedComponents[category].map((key: any) => (
-                <Box
-                  key={key}
-                  mb={2}
-                  bg='gray.50'
-                  p={2}
-                  rounded='md'
-                  shadow='sm'
-                  cursor={isEditing ? 'move' : 'default'}
-                  draggable={isEditing}
-                  onDragStart={(e) => isEditing && onDragStart(e, key)}
-                >
-                  {componentLibrary[key].name}
-                </Box>
-              ))}
+            </HStack>
+            <Box borderBottom='1px solid' borderColor='gray.200' pb={4} mb={4}>
+              <Heading size='sm' mb={4}>
+                路由
+              </Heading>
+              <VStack align='start'>
+                {routes.map((route) => (
+                  <Text
+                    key={route.path}
+                    cursor='pointer'
+                    bg={
+                      currentRoute === route.path ? 'blue.500' : 'transparent'
+                    }
+                    color={currentRoute === route.path ? 'white' : 'black'}
+                    _hover={{ bg: 'blue.500', color: 'white' }}
+                    px={4}
+                    py={2}
+                    borderRadius='md'
+                    onClick={() => onRouteChange(route.path)}
+                  >
+                    {route.label}
+                  </Text>
+                ))}
+              </VStack>
             </Box>
-          ))}
-        </>
+            <Heading as='h2' size='md' mb={4}>
+              組件庫
+            </Heading>
+            {Object.keys(categorizedComponents).map((category) => (
+              <Box key={category} mb={6}>
+                <Heading as='h3' size='sm' mb={2}>
+                  {category}
+                </Heading>
+                {categorizedComponents[category].map((key: any) => (
+                  <Box
+                    key={key}
+                    mb={2}
+                    bg='gray.50'
+                    p={2}
+                    rounded='md'
+                    shadow='sm'
+                    cursor={isEditing ? 'move' : 'default'}
+                    draggable={isEditing}
+                    onDragStart={(e) => isEditing && onDragStart(e, key)}
+                  >
+                    {componentLibrary[key].name}
+                  </Box>
+                ))}
+              </Box>
+            ))}
+          </>
+        )}
+      </Box>
+      {!isCollapsed && (
+        <Button
+          leftIcon={<FaArrowLeft />}
+          colorScheme='teal'
+          mt={4}
+          onClick={handleBackToAdmin}
+        >
+          返回後台
+        </Button>
       )}
     </Box>
   );
