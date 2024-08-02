@@ -13,10 +13,14 @@ import {
 import { setAdminUserInfo } from '@reducers/admin/auth';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
 import Canvas from './Canvas';
 import EditPageSidebar from './EditPageSidebar';
+
+interface FormValues {
+  components: Component[];
+}
 
 const AdminEditPageLayout: React.FC = () => {
   const router = useRouter();
@@ -34,23 +38,17 @@ const AdminEditPageLayout: React.FC = () => {
 
   const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const formMethods = useForm<FormValues>({
+    defaultValues: {
+      components: components,
+    },
+  });
 
-  useEffect(() => {
-    const tokenInfo = loadAdminToken();
-    if (tokenInfo && !userInfo) {
-      dispatch(setAdminUserInfo(tokenInfo));
-    }
-  }, [dispatch, userInfo]);
-
-  useEffect(() => {
-    if (loginLoading || !router.isReady) return;
-    if (!userInfo) {
-      router.push(`/${ADMIN_ROUTE}/auth/login`);
-    }
-  }, [userInfo, router]);
+  const { control, handleSubmit } = formMethods;
+  const { fields, append, remove, swap } = useFieldArray({
+    control,
+    name: 'components',
+  });
 
   const handleToggleSidebar = () => {
     setIsCollapsed((prev) => !prev);
@@ -94,7 +92,27 @@ const AdminEditPageLayout: React.FC = () => {
     dispatch(removeBlockItem(index));
   };
 
-  const formMethods = useForm(); // 使用react-hook-form
+  const onSubmit = (data: FormValues) => {
+    console.log(data);
+  };
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    const tokenInfo = loadAdminToken();
+    if (tokenInfo && !userInfo) {
+      dispatch(setAdminUserInfo(tokenInfo));
+    }
+  }, [dispatch, userInfo]);
+
+  useEffect(() => {
+    if (loginLoading || !router.isReady) return;
+    if (!userInfo) {
+      router.push(`/${ADMIN_ROUTE}/auth/login`);
+    }
+  }, [userInfo, router]);
 
   if (!isClient) {
     return null;
@@ -102,7 +120,12 @@ const AdminEditPageLayout: React.FC = () => {
 
   return (
     <FormProvider {...formMethods}>
-      <Flex h='100vh' direction='column'>
+      <Flex
+        h='100vh'
+        direction='column'
+        as='form'
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <Flex
           justify='space-between'
           p={4}
