@@ -3,8 +3,19 @@ export type ComponentType = 'navbar' | 'footer' | 'main' | 'card';
 export interface Component {
   type: ComponentType;
   name: string;
-  elements?: { tagName: string; context: string; href: string }[];
+  elements?: IDesignPageElement[];
   content?: string;
+}
+
+export interface IDesignPageElement {
+  tagName: string;
+  className?: string;
+  context?: string;
+  alt?: string;
+  src?: string;
+  elements?: IDesignPageElement[];
+  data?: string[][];
+  [key: string]: any;
 }
 
 export const componentLibrary: Record<string, Component> = {
