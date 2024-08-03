@@ -84,7 +84,7 @@ const SearchedProductList = ({ products }: SearchedProductListProps) => {
   return (
     <>
       {products.map((product) => (
-        <Link key={product.id} href={`/products/${product.slug}`}>
+        <Link key={product._id} href={`/products/${product.slug}`}>
           <Box
             borderBottomWidth='1px'
             borderBottomColor='gray.200'

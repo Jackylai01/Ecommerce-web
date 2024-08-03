@@ -1,6 +1,6 @@
 import { Box, IconButton } from '@chakra-ui/react';
+import EditorComponentFactory from '@components/EditorPage/FrontPageUI';
 import { Component, componentLibrary } from '@fixtures/componentLibrary';
-import Link from 'next/link';
 import { FaGripVertical, FaTrash } from 'react-icons/fa';
 
 interface CanvasProps {
@@ -38,11 +38,13 @@ const Canvas: React.FC<CanvasProps> = ({
       border='2px dashed'
       borderColor='blue.500'
       rounded='md'
-      p={8}
       bg='white'
       shadow='md'
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
+      display='flex'
+      flexDirection='column'
+      gap='100px' // 關鍵，添加間距
     >
       {components.map((component, index) => (
         <Box
@@ -52,13 +54,17 @@ const Canvas: React.FC<CanvasProps> = ({
           border='1px'
           borderColor='gray.200'
           rounded='md'
-          p={4}
-          mb={4}
           shadow='sm'
           onDragOver={(e) => onDragOver(e, index)}
         >
           {isEditing && (
-            <Box position='absolute' top={2} right={2} display='flex'>
+            <Box
+              position='absolute'
+              top={2}
+              right={2}
+              display='flex'
+              zIndex={2}
+            >
               <IconButton
                 icon={<FaGripVertical />}
                 aria-label='Drag component'
@@ -84,15 +90,12 @@ const Canvas: React.FC<CanvasProps> = ({
               />
             </Box>
           )}
-          {component.type === 'navbar' || component.type === 'footer' ? (
-            component.elements?.map((item, idx) => (
-              <Link key={idx} href={item.href}>
-                {item.context}
-              </Link>
-            ))
-          ) : (
-            <Box>{component.content}</Box>
-          )}
+          <EditorComponentFactory
+            component={component}
+            index={index}
+            isEdit={isEditing}
+            onBlur={() => {}}
+          />
         </Box>
       ))}
     </Box>
