@@ -1,5 +1,5 @@
+import { Box } from '@chakra-ui/react';
 import AdminEditPageLayout from '@components/Layout/AdminEditLayout';
-import { Box } from 'lucide-react';
 
 const DesignStore = () => {
   return (

@@ -1,9 +1,26 @@
-import { Box, Flex, IconButton, Image, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  IconButton,
+  Image,
+  Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { updateBlock } from '@reducers/admin/admin-edit-pages';
 import React, { useEffect, useState } from 'react';
-import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
+import {
+  FaEdit,
+  FaPlus,
+  FaShoppingCart,
+  FaTrash,
+  FaUser,
+} from 'react-icons/fa';
 
 interface NavbarEditorProps {
   index: number;
@@ -153,6 +170,33 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                 aria-label='新增連結'
               />
             </Flex>
+          )}
+          {!isEdit && (
+            <>
+              <Box className='navbar__item'>
+                <Input placeholder='搜尋...' width='200px' />
+              </Box>
+              <Box className='navbar__item'>
+                <IconButton
+                  icon={<FaShoppingCart />}
+                  aria-label='購物車'
+                  variant='ghost'
+                />
+              </Box>
+              <Box className='navbar__item'>
+                <Menu>
+                  <MenuButton
+                    as={IconButton}
+                    icon={<FaUser />}
+                    variant='ghost'
+                  />
+                  <MenuList>
+                    <MenuItem>會員管理</MenuItem>
+                    <MenuItem>登出</MenuItem>
+                  </MenuList>
+                </Menu>
+              </Box>
+            </>
           )}
         </Flex>
       </Flex>

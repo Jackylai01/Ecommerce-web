@@ -4,17 +4,21 @@ import {
   Heading,
   HStack,
   Icon,
+  Input,
   Text,
   VStack,
 } from '@chakra-ui/react';
 import { componentLibrary } from '@fixtures/componentLibrary';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FaArrowLeft,
   FaBars,
   FaChevronRight,
+  FaEdit,
+  FaPlus,
   FaShoppingCart,
+  FaTrash,
 } from 'react-icons/fa';
 
 const categorizedComponents: any = {
@@ -33,15 +37,6 @@ interface EditPageSidebarProps {
   onRouteChange: (route: string) => void;
 }
 
-const routes = [
-  { path: '/home', label: '首頁' },
-  { path: '/products', label: '產品列表頁' },
-  { path: '/product-details', label: '產品詳情頁' },
-  { path: '/cart', label: '購物車頁面' },
-  { path: '/checkout', label: '結帳頁面' },
-  { path: '/profile', label: '個人中心' },
-];
-
 const EditPageSidebar: React.FC<EditPageSidebarProps> = ({
   isCollapsed,
   onToggle,
@@ -51,9 +46,37 @@ const EditPageSidebar: React.FC<EditPageSidebarProps> = ({
   onRouteChange,
 }) => {
   const router = useRouter();
+  const [routes, setRoutes] = useState([
+    { path: '/home', label: '首頁' },
+    { path: '/products', label: '產品列表頁' },
+    { path: '/product-details', label: '產品詳情頁' },
+    { path: '/cart', label: '購物車頁面' },
+    { path: '/checkout', label: '結帳頁面' },
+    { path: '/profile', label: '個人中心' },
+  ]);
+  const [newRoute, setNewRoute] = useState({ path: '', label: '' });
 
   const handleBackToAdmin = () => {
     router.push('/zigong');
+  };
+
+  const addRoute = () => {
+    if (newRoute.path && newRoute.label) {
+      setRoutes([...routes, newRoute]);
+      setNewRoute({ path: '', label: '' });
+    }
+  };
+
+  const deleteRoute = (path: string) => {
+    setRoutes(routes.filter((route) => route.path !== path));
+  };
+
+  const editRoute = (path: string) => {
+    const route = routes.find((route) => route.path === path);
+    if (route) {
+      setNewRoute(route);
+      setRoutes(routes.filter((route) => route.path !== path));
+    }
   };
 
   return (
@@ -102,22 +125,58 @@ const EditPageSidebar: React.FC<EditPageSidebarProps> = ({
               </Heading>
               <VStack align='start'>
                 {routes.map((route) => (
-                  <Text
-                    key={route.path}
-                    cursor='pointer'
-                    bg={
-                      currentRoute === route.path ? 'blue.500' : 'transparent'
-                    }
-                    color={currentRoute === route.path ? 'white' : 'black'}
-                    _hover={{ bg: 'blue.500', color: 'white' }}
-                    px={4}
-                    py={2}
-                    borderRadius='md'
-                    onClick={() => onRouteChange(route.path)}
-                  >
-                    {route.label}
-                  </Text>
+                  <HStack key={route.path} w='100%' justify='space-between'>
+                    <Text
+                      cursor='pointer'
+                      bg={
+                        currentRoute === route.path ? 'blue.500' : 'transparent'
+                      }
+                      color={currentRoute === route.path ? 'white' : 'black'}
+                      _hover={{ bg: 'blue.500', color: 'white' }}
+                      px={4}
+                      py={2}
+                      borderRadius='md'
+                      onClick={() => onRouteChange(route.path)}
+                    >
+                      {route.label}
+                    </Text>
+                    {isEditing && (
+                      <HStack spacing={1}>
+                        <Icon
+                          as={FaEdit}
+                          cursor='pointer'
+                          onClick={() => editRoute(route.path)}
+                        />
+                        <Icon
+                          as={FaTrash}
+                          cursor='pointer'
+                          onClick={() => deleteRoute(route.path)}
+                        />
+                      </HStack>
+                    )}
+                  </HStack>
                 ))}
+                {isEditing && (
+                  <HStack w='100%'>
+                    <Input
+                      placeholder='路由名稱'
+                      value={newRoute.label}
+                      onChange={(e) =>
+                        setNewRoute({ ...newRoute, label: e.target.value })
+                      }
+                    />
+                    <Input
+                      placeholder='路由網址'
+                      value={newRoute.path}
+                      onChange={(e) =>
+                        setNewRoute({ ...newRoute, path: e.target.value })
+                      }
+                    />
+                    <Button onClick={addRoute} colorScheme='blue'>
+                      <FaPlus />
+                    </Button>
+                  </HStack>
+                )}
               </VStack>
             </Box>
             <Heading as='h2' size='md' mb={4}>

@@ -1,6 +1,7 @@
 import { Component } from '@fixtures/componentLibrary';
 import React from 'react';
-import NavbarEditor from './src/NavbarEditor';
+import NavbarEditor from './src/navbar/NavbarEditor';
+import NavbarEditorSecond from './src/navbar/NavbarEditorSecond';
 
 interface EditorComponentFactoryProps {
   component: Component;
@@ -16,7 +17,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
   onBlur,
 }) => {
   switch (component.type) {
-    case 'navbar':
+    case 'navbar_01':
       return (
         <NavbarEditor
           index={index}
@@ -25,6 +26,8 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           onBlur={onBlur}
         />
       );
+    case 'navbar_02':
+      return <NavbarEditorSecond />;
 
     default:
       return null;

@@ -1,7 +1,5 @@
-export type ComponentType = 'navbar' | 'footer' | 'main' | 'card';
-
 export interface Component {
-  type: ComponentType;
+  type: string;
   name: string;
   elements?: IDesignPageElement[];
   content?: string;
@@ -20,7 +18,7 @@ export interface IDesignPageElement {
 
 export const componentLibrary: Record<string, Component> = {
   navbar_a: {
-    type: 'navbar',
+    type: 'navbar_01',
     name: 'Navbar A',
     elements: [
       { tagName: 'a', context: '首頁', href: '#' },
@@ -29,7 +27,7 @@ export const componentLibrary: Record<string, Component> = {
     ],
   },
   navbar_b: {
-    type: 'navbar',
+    type: 'navbar_02',
     name: 'Navbar B',
     elements: [
       { tagName: 'a', context: '商店', href: '#' },
