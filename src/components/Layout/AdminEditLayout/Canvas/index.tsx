@@ -44,7 +44,7 @@ const Canvas: React.FC<CanvasProps> = ({
       onDrop={handleDrop}
       display='flex'
       flexDirection='column'
-      gap='100px' // 關鍵，添加間距
+      gap='100px'
     >
       {components.map((component, index) => (
         <Box
@@ -60,7 +60,7 @@ const Canvas: React.FC<CanvasProps> = ({
           {isEditing && (
             <Box
               position='absolute'
-              top={2}
+              top={-5}
               right={2}
               display='flex'
               zIndex={2}

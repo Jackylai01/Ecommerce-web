@@ -1,26 +1,29 @@
 import {
   Box,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
   Flex,
   IconButton,
   Image,
-  Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Text,
+  useDisclosure,
 } from '@chakra-ui/react';
+import { Cart } from '@components/Cart/Cart';
+import { Search } from '@components/Search/Search';
 import { Component } from '@fixtures/componentLibrary';
 import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
 import { updateBlock } from '@reducers/admin/admin-edit-pages';
+import { clientLogoutAsync } from '@reducers/client/auth/actions';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import {
-  FaEdit,
-  FaPlus,
-  FaShoppingCart,
-  FaTrash,
-  FaUser,
-} from 'react-icons/fa';
+import { FaBars, FaEdit, FaPlus, FaTrash, FaUser } from 'react-icons/fa';
 
 interface NavbarEditorProps {
   index: number;
@@ -36,10 +39,17 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   onBlur,
 }) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [content, setContent] = useState(element.elements || []);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newItemText, setNewItemText] = useState('');
   const [logo, setLogo] = useState<string | null>(null);
+
+  const {
+    userInfo,
+    status: { logoutLoading, logoutSuccess, logoutFailed },
+  } = useAppSelector((state) => state.clientAuth);
 
   useEffect(() => {
     setContent(element.elements || []);
@@ -88,11 +98,33 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
     }
   };
 
+  const handleLogout = () => {
+    if (!router.pathname.includes('/design')) {
+      dispatch(clientLogoutAsync());
+      onClose();
+    }
+  };
+
+  const handleNavigation = (href: string) => {
+    if (!router.pathname.includes('/design')) {
+      router.push(href);
+      onClose();
+    }
+  };
+
+  const handleLinkClick = (href: string, event: React.MouseEvent) => {
+    if (router.pathname.includes('/design')) {
+      event.preventDefault();
+    } else {
+      router.push(href);
+    }
+  };
+
   return (
     <Box className='navbar-editor' width='100%'>
-      <Flex className={`navbar ${isEdit ? 'navbar--edit' : ''}`} width='100%'>
+      <Flex className={`navbar ${isEdit ? 'navbar--edit' : ''}`}>
         <Box className='navbar__logo'>
-          {logo ? <Image src={logo} alt='Logo' /> : <Text>Logo</Text>}
+          {logo ? <Image src={logo} alt='Logo' /> : <Box>Logo</Box>}
           {isEdit && (
             <input
               type='file'
@@ -102,10 +134,17 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
             />
           )}
         </Box>
+        <Flex className='navbar__search'>
+          <Search />
+        </Flex>
         <Flex className='navbar__items'>
           {content.map((link, linkIndex) => (
-            <Flex key={linkIndex} className='navbar__item'>
-              <a href={link.href} className='navbar__link'>
+            <Flex key={linkIndex} className='navbar__item navbar__link-item'>
+              <a
+                href={link.href}
+                className='navbar__link'
+                onClick={(event) => handleLinkClick(link.href, event)}
+              >
                 {link.context}
               </a>
               {isEdit && (
@@ -173,17 +212,58 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
           )}
           {!isEdit && (
             <>
-              <Box className='navbar__item'>
-                <Input placeholder='搜尋...' width='200px' />
+              <Box className='navbar__item navbar__link-item'>
+                <Cart />
               </Box>
-              <Box className='navbar__item'>
-                <IconButton
-                  icon={<FaShoppingCart />}
-                  aria-label='購物車'
-                  variant='ghost'
-                />
+              {userInfo && (
+                <Box className='navbar__item navbar__link-item'>
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      icon={<FaUser />}
+                      variant='ghost'
+                    />
+                    <MenuList>
+                      <MenuItem onClick={() => handleNavigation('/client')}>
+                        會員管理
+                      </MenuItem>
+                      <MenuItem onClick={handleLogout}>登出</MenuItem>
+                    </MenuList>
+                  </Menu>
+                </Box>
+              )}
+            </>
+          )}
+          <Flex className='navbar__item navbar__hamburger'>
+            <IconButton
+              icon={<FaBars />}
+              aria-label='開啟菜單'
+              onClick={onOpen}
+            />
+          </Flex>
+        </Flex>
+      </Flex>
+      <Drawer placement='left' onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth='1px'>導航欄</DrawerHeader>
+          <DrawerBody>
+            {content.map((link, linkIndex) => (
+              <Box key={linkIndex} className='navbar__drawer-item'>
+                <a
+                  href={link.href}
+                  className='navbar__link'
+                  onClick={(event) => handleLinkClick(link.href, event)}
+                >
+                  {link.context}
+                </a>
               </Box>
-              <Box className='navbar__item'>
+            ))}
+            <Box className='navbar__drawer-item'>
+              <Cart />
+            </Box>
+            {userInfo && (
+              <Box className='navbar__drawer-item'>
                 <Menu>
                   <MenuButton
                     as={IconButton}
@@ -191,15 +271,17 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                     variant='ghost'
                   />
                   <MenuList>
-                    <MenuItem>會員管理</MenuItem>
-                    <MenuItem>登出</MenuItem>
+                    <MenuItem onClick={() => handleNavigation('/client')}>
+                      會員管理
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>登出</MenuItem>
                   </MenuList>
                 </Menu>
               </Box>
-            </>
-          )}
-        </Flex>
-      </Flex>
+            )}
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Box>
   );
 };

@@ -18,6 +18,7 @@ import { addItem, resetItems } from '@reducers/client/cart';
 
 import { calculateItemsTotal } from '@helpers/products';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useRef } from 'react';
 import { BsCart4 } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
@@ -26,6 +27,7 @@ import { CartItem } from './CartItem';
 export const Cart = () => {
   const { cart } = useAppSelector((state) => state.clientCart);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<any>();
@@ -41,11 +43,17 @@ export const Cart = () => {
     onClose();
   };
 
+  const handleOpen = () => {
+    if (!router.pathname.includes('/design')) {
+      onOpen();
+    }
+  };
+
   return (
     <>
       <Button
         ref={btnRef}
-        onClick={onOpen}
+        onClick={handleOpen}
         variant='ghost'
         color='black'
         _hover={{
