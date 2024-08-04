@@ -44,7 +44,6 @@ const Canvas: React.FC<CanvasProps> = ({
       onDrop={handleDrop}
       display='flex'
       flexDirection='column'
-      gap='100px'
     >
       {components.map((component, index) => (
         <Box
