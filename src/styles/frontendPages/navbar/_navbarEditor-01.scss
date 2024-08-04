@@ -3,148 +3,149 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1;
   width: 100%;
+  background-color: var(--navbar-bg-color, #fff);
+}
 
-  &__logo {
-    display: flex;
-    align-items: center;
-    flex: 1;
+.navbar--edit {
+  border: 1px dashed #ccc;
+}
 
-    span {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  flex: 1;
 
-    img {
-      max-height: 50px;
-    }
+  span {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
 
-    .navbar__upload {
-      margin-left: 1rem;
+  img {
+    max-height: 50px;
+  }
+
+  .navbar__upload {
+    margin-left: 1rem;
+    display: none;
+
+    &::file-selector-button {
       display: none;
-
-      &::file-selector-button {
-        display: none;
-      }
-    }
-
-    &:hover .navbar__upload {
-      display: block;
     }
   }
 
-  &__search {
-    width: 100%;
-    flex: 2;
-    display: flex;
-    justify-content: center;
+  &:hover .navbar__upload {
+    display: block;
+  }
+}
+
+.navbar__search {
+  width: 100%;
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.navbar__items {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.navbar__item {
+  margin-right: 1rem;
+  position: relative;
+
+  &:last-child {
+    margin-right: 0;
   }
 
-  &__items {
+  &--add {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    flex: 1;
   }
 
-  &__item {
-    margin-right: 1rem;
-    position: relative;
+  &.navbar__link-item {
+    display: none;
+  }
 
-    &:last-child {
-      margin-right: 0;
-    }
+  &.navbar__hamburger {
+    display: flex;
+  }
 
-    &--add {
-      display: flex;
-      align-items: center;
+  @media (min-width: 768px) {
+    &.navbar__hamburger {
+      display: none;
     }
 
     &.navbar__link-item {
-      display: none;
-    }
-
-    &.navbar__hamburger {
       display: flex;
     }
-
-    @media (min-width: 768px) {
-      &.navbar__hamburger {
-        display: none;
-      }
-
-      &.navbar__link-item {
-        display: flex;
-      }
-    }
   }
+}
 
-  &__link {
-    text-decoration: none;
-    color: #000;
-    font-size: 1rem;
+.navbar__link {
+  text-decoration: none;
+  color: var(--navitem-color, #000);
+  font-size: 1rem;
 
-    &:hover {
-      text-decoration: underline;
-    }
+  &:hover {
+    text-decoration: underline;
   }
+}
 
-  &__link-edit {
-    margin-left: 0.5rem;
-    cursor: pointer;
-    color: #007bff;
+.navbar__link-edit {
+  margin-left: 0.5rem;
+  cursor: pointer;
+  color: #007bff;
 
-    &:hover {
-      color: #0056b3;
-    }
+  &:hover {
+    color: #0056b3;
   }
+}
 
-  &__edit-fields {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 2rem;
-    left: 0;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    z-index: 10;
-    width: 100%;
-    width: 250px;
-    border-radius: 5px;
+.navbar__edit-fields {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  z-index: 10;
+  width: 100%;
+  width: 250px;
+  border-radius: 5px;
+}
+
+.navbar__input {
+  margin-bottom: 0.5rem;
+  padding: 0.25rem;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  &:last-child {
+    margin-bottom: 0;
   }
+}
 
-  &__input {
-    margin-bottom: 0.5rem;
-    padding: 0.25rem;
-    border: 1px solid #ccc;
-    width: 100%;
-    box-sizing: border-box;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+.navbar__delete-button {
+  color: red;
+  margin-top: 0.5rem;
+  width: 100%;
+}
 
-  &__delete-button {
-    color: red;
-    margin-top: 0.5rem;
-    width: 100%;
-  }
+.navbar__drawer-item {
+  padding: 1rem;
+  border-bottom: 1px solid #eaeaea;
+  width: 100%;
+  color: var(--navitem-color, #000);
 
-  &--edit {
-    border: 1px dashed #ccc;
-  }
-
-  &__drawer-item {
-    padding: 1rem;
-    border-bottom: 1px solid #eaeaea;
-    width: 100%;
-
-    &:last-child {
-      border-bottom: none;
-    }
+  &:last-child {
+    border-bottom: none;
   }
 }

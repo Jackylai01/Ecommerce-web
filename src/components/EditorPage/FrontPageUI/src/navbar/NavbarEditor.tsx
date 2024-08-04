@@ -120,8 +120,24 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
     }
   };
 
+  const handleClassNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(
+      updateBlock({ index, block: { ...element, className: e.target.value } }),
+    );
+  };
+
+  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const color = e.target.value;
+    dispatch(
+      updateBlock({
+        index,
+        block: { ...element, className: `navbar ${color}` },
+      }),
+    );
+  };
+
   return (
-    <Box className='navbar-editor' width='100%'>
+    <Box className={`navbar-editor ${element.className}`}>
       <Flex className={`navbar ${isEdit ? 'navbar--edit' : ''}`}>
         <Box className='navbar__logo'>
           {logo ? <Image src={logo} alt='Logo' /> : <Box>Logo</Box>}
@@ -243,6 +259,19 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
           </Flex>
         </Flex>
       </Flex>
+      {isEdit && (
+        <Box mt={4}>
+          <label htmlFor='className'>Class Name: </label>
+          <input
+            type='text'
+            id='className'
+            value={element.className || ''}
+            onChange={handleClassNameChange}
+          />
+          <label htmlFor='navbarColor'>Navbar Color: </label>
+          <input type='color' id='navbarColor' onChange={handleColorChange} />
+        </Box>
+      )}
       <Drawer placement='left' onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>

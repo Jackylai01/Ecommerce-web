@@ -1,4 +1,3 @@
-// src/components/AdminEditPageLayout.tsx
 import { Box, Button, Flex, Heading } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import { ADMIN_ROUTE } from '@fixtures/constants';
