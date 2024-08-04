@@ -8,10 +8,12 @@ import {
   Flex,
   IconButton,
   Image,
+  Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
 import { Cart } from '@components/Cart/Cart';
@@ -23,7 +25,14 @@ import { updateBlock } from '@reducers/admin/admin-edit-pages';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { FaBars, FaEdit, FaPlus, FaTrash, FaUser } from 'react-icons/fa';
+import {
+  FaBars,
+  FaEdit,
+  FaPalette,
+  FaPlus,
+  FaTrash,
+  FaUser,
+} from 'react-icons/fa';
 
 interface NavbarEditorProps {
   index: number;
@@ -45,6 +54,8 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newItemText, setNewItemText] = useState('');
   const [logo, setLogo] = useState<string | null>(null);
+  const [bgColor, setBgColor] = useState<string>('#ffffff');
+  const [colorPickerVisible, setColorPickerVisible] = useState(false);
 
   const {
     userInfo,
@@ -128,17 +139,31 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const color = e.target.value;
+    setBgColor(color);
     dispatch(
       updateBlock({
         index,
-        block: { ...element, className: `navbar ${color}` },
+        block: {
+          ...element,
+          className: `navbar`,
+          style: { backgroundColor: color },
+        },
       }),
     );
   };
 
+  const toggleColorPicker = () => {
+    setColorPickerVisible(!colorPickerVisible);
+  };
+
   return (
-    <Box className={`navbar-editor ${element.className}`}>
-      <Flex className={`navbar ${isEdit ? 'navbar--edit' : ''}`}>
+    <>
+      <Flex
+        className={`navbar ${element.className} ${
+          isEdit ? 'navbar--edit' : ''
+        }`}
+        style={{ backgroundColor: bgColor }}
+      >
         <Box className='navbar__logo'>
           {logo ? <Image src={logo} alt='Logo' /> : <Box>Logo</Box>}
           {isEdit && (
@@ -260,16 +285,33 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
         </Flex>
       </Flex>
       {isEdit && (
-        <Box mt={4}>
-          <label htmlFor='className'>Class Name: </label>
-          <input
+        <Box mt={4} position='fixed' top='15%' right='40px' zIndex='999'>
+          <Input
             type='text'
             id='className'
             value={element.className || ''}
             onChange={handleClassNameChange}
+            display='none'
           />
-          <label htmlFor='navbarColor'>Navbar Color: </label>
-          <input type='color' id='navbarColor' onChange={handleColorChange} />
+          <Tooltip label='編輯背景顏色' aria-label='編輯背景顏色'>
+            <IconButton
+              icon={<FaPalette />}
+              aria-label='選擇背景顏色'
+              onClick={toggleColorPicker}
+              size='xs'
+            />
+          </Tooltip>
+          {colorPickerVisible && (
+            <Input
+              type='color'
+              id='navbarColor'
+              value={bgColor}
+              onChange={handleColorChange}
+              display='block'
+              size='xs'
+              mt={2}
+            />
+          )}
         </Box>
       )}
       <Drawer placement='left' onClose={onClose} isOpen={isOpen}>
@@ -311,7 +353,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-    </Box>
+    </>
   );
 };
 
