@@ -4,6 +4,10 @@ export interface Component {
   className?: string;
   elements?: IDesignPageElement[];
   content?: string;
+  style?: {
+    backgroundColor?: string;
+    navItemColor?: string;
+  };
 }
 
 export interface IDesignPageElement {
@@ -22,6 +26,10 @@ export const componentLibrary: Record<string, Component> = {
     type: 'navbar_01',
     name: 'Navbar A',
     className: 'navbar',
+    style: {
+      backgroundColor: '#ffffff',
+      navItemColor: '#000000',
+    },
     elements: [
       { tagName: 'a', context: '首頁', href: '#' },
       { tagName: 'a', context: '產品', href: '#' },
@@ -32,6 +40,10 @@ export const componentLibrary: Record<string, Component> = {
     type: 'navbar_02',
     name: 'Navbar B',
     className: 'navbar',
+    style: {
+      backgroundColor: '#ffffff',
+      navItemColor: '#000000',
+    },
     elements: [
       { tagName: 'a', context: '商店', href: '#' },
       { tagName: 'a', context: '分類', href: '#' },

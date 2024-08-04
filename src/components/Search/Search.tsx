@@ -31,7 +31,7 @@ export const Search = () => {
   });
 
   return (
-    <Box pos='relative' w={{ base: '100%', lg: '32rem' }} ref={ref}>
+    <Box pos='relative' w={{ base: '100%' }} ref={ref} bg='white'>
       <InputGroup {...inputGroup}>
         <InputLeftElement pointerEvents='none'>
           <SearchIcon color='gray.400' />
@@ -57,7 +57,7 @@ export const Search = () => {
           padding='0.5rem'
           w='100%'
           boxSizing='border-box'
-          maxH='500px'
+          maxH='1000px'
           overflowY='auto'
           color='black'
         >

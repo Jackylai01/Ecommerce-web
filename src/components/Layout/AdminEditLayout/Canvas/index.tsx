@@ -61,9 +61,9 @@ const Canvas: React.FC<CanvasProps> = ({
             <Box
               position='absolute'
               top={-5}
-              right={2}
+              right={5}
               display='flex'
-              zIndex={2}
+              zIndex={10}
             >
               <IconButton
                 icon={<FaGripVertical />}

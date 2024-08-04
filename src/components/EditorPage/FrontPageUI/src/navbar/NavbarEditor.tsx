@@ -3,7 +3,6 @@ import {
   Drawer,
   DrawerBody,
   DrawerContent,
-  DrawerHeader,
   DrawerOverlay,
   Flex,
   IconButton,
@@ -54,7 +53,12 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newItemText, setNewItemText] = useState('');
   const [logo, setLogo] = useState<string | null>(null);
-  const [bgColor, setBgColor] = useState<string>('#ffffff');
+  const [bgColor, setBgColor] = useState<string>(
+    element.style?.backgroundColor || '#ffffff',
+  );
+  const [navItemColor, setNavItemColor] = useState<string>(
+    element.style?.navItemColor || '#000000',
+  );
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
 
   const {
@@ -69,7 +73,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   const handleChange = (linkIndex: number, key: string, value: string) => {
     const updatedContent = content.map((item, idx) => {
       if (idx === linkIndex) {
-        return { ...item, [key]: value };
+        return { ...item, [key]: value, style: { color: navItemColor } };
       }
       return item;
     });
@@ -80,7 +84,12 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   };
 
   const addLink = () => {
-    const newLink = { tagName: 'a', context: '新連結', href: '#' };
+    const newLink = {
+      tagName: 'a',
+      context: '新連結',
+      href: '#',
+      style: { color: navItemColor },
+    };
     const updatedContent = [...content, newLink];
     setContent(updatedContent);
     dispatch(
@@ -137,7 +146,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
     );
   };
 
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBgColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const color = e.target.value;
     setBgColor(color);
     dispatch(
@@ -146,7 +155,27 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
         block: {
           ...element,
           className: `navbar`,
-          style: { backgroundColor: color },
+          style: { ...element.style, backgroundColor: color },
+        },
+      }),
+    );
+  };
+
+  const handleNavItemColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const color = e.target.value;
+    setNavItemColor(color);
+    const updatedContent = content.map((item) => ({
+      ...item,
+      style: { ...item.style, color },
+    }));
+    setContent(updatedContent);
+    dispatch(
+      updateBlock({
+        index,
+        block: {
+          ...element,
+          elements: updatedContent,
+          style: { ...element.style, navItemColor: color },
         },
       }),
     );
@@ -185,6 +214,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                 href={link.href}
                 className='navbar__link'
                 onClick={(event) => handleLinkClick(link.href, event)}
+                style={{ color: navItemColor }}
               >
                 {link.context}
               </a>
@@ -285,7 +315,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
         </Flex>
       </Flex>
       {isEdit && (
-        <Box mt={4} position='fixed' top='15%' right='40px' zIndex='999'>
+        <Box position='absolute' top='50px' right='0' zIndex='20'>
           <Input
             type='text'
             id='className'
@@ -293,7 +323,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
             onChange={handleClassNameChange}
             display='none'
           />
-          <Tooltip label='編輯背景顏色' aria-label='編輯背景顏色'>
+          <Tooltip label='編輯背景顏色與文字顏色' aria-label='編輯背景顏色'>
             <IconButton
               icon={<FaPalette />}
               aria-label='選擇背景顏色'
@@ -302,22 +332,32 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
             />
           </Tooltip>
           {colorPickerVisible && (
-            <Input
-              type='color'
-              id='navbarColor'
-              value={bgColor}
-              onChange={handleColorChange}
-              display='block'
-              size='xs'
-              mt={2}
-            />
+            <>
+              <Input
+                type='color'
+                id='navbarColor'
+                value={bgColor}
+                onChange={handleBgColorChange}
+                display='block'
+                size='xs'
+                mt={2}
+              />
+              <Input
+                type='color'
+                id='navItemColor'
+                value={navItemColor}
+                onChange={handleNavItemColorChange}
+                display='block'
+                size='xs'
+                mt={2}
+              />
+            </>
           )}
         </Box>
       )}
       <Drawer placement='left' onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader borderBottomWidth='1px'>導航欄</DrawerHeader>
           <DrawerBody>
             {content.map((link, linkIndex) => (
               <Box key={linkIndex} className='navbar__drawer-item'>
@@ -325,6 +365,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                   href={link.href}
                   className='navbar__link'
                   onClick={(event) => handleLinkClick(link.href, event)}
+                  style={{ color: navItemColor }}
                 >
                   {link.context}
                 </a>
