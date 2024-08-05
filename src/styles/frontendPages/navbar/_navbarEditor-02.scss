@@ -106,6 +106,14 @@
     border-radius: 5px;
   }
 
+  &__search {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 200px;
+    z-index: 1001;
+  }
+
   &__hamburger {
     display: none;
     margin-left: 1.5rem;

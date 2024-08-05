@@ -49,6 +49,11 @@ const NavbarEditorSecond: React.FC<NavbarEditorSecondProps> = ({
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isSearchOpen,
+    onOpen: onSearchOpen,
+    onClose: onSearchClose,
+  } = useDisclosure();
   const [content, setContent] = useState(element.elements || []);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newItemText, setNewItemText] = useState('');
@@ -284,12 +289,29 @@ const NavbarEditorSecond: React.FC<NavbarEditorSecondProps> = ({
             )}
           </Box>
           <Box className='navbar_second__actions'>
-            <Box className='navbar_second__action-btn'>
-              <Search size={20} strokeWidth={1} />
+            <Box className='navbar_second__action-btn' position='relative'>
+              <Search size={20} strokeWidth={1} onClick={onSearchOpen} />
+              {isSearchOpen && (
+                <Box className='navbar_second__search'>
+                  <Input
+                    placeholder='Search...'
+                    autoFocus
+                    onBlur={onSearchClose}
+                  />
+                </Box>
+              )}
             </Box>
-            <Box className='navbar_second__action-btn'>
-              <User size={20} strokeWidth={1} />
-            </Box>
+            <Menu>
+              <MenuButton as={Box} className='navbar_second__action-btn'>
+                <User size={20} strokeWidth={1} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={() => handleNavigation('/client')}>
+                  會員管理
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>登出</MenuItem>
+              </MenuList>
+            </Menu>
             <Box className='navbar_second__action-btn'>
               <ShoppingBag size={20} strokeWidth={1} />
               <span className='navbar_second__cart-count'>2</span>
@@ -342,16 +364,17 @@ const NavbarEditorSecond: React.FC<NavbarEditorSecondProps> = ({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody>
-            {content.map((link, linkIndex) => (
-              <Box key={linkIndex} className='navbar_second__drawer-item'>
-                <a
+            {content.map((link, index) => (
+              <Box key={index} className='navbar_second__drawer-item'>
+                <Box
+                  as='a'
                   href={link.href}
                   className='navbar_second__link'
-                  onClick={(event) => handleLinkClick(link.href, event)}
+                  onClick={(event: any) => handleLinkClick(link.href, event)}
                   style={{ color: navItemColor }}
                 >
                   {link.context}
-                </a>
+                </Box>
               </Box>
             ))}
             <Box className='navbar_second__drawer-item'>
