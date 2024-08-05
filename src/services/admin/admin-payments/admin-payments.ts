@@ -1,3 +1,4 @@
+import { ecPayOrdersResponse } from '@models/responses/ecpayOrders';
 import { ApiResult, postFormRequest } from '@services/shared/api';
 
 /**

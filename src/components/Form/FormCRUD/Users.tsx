@@ -1,6 +1,7 @@
 import { VStack } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
-import { TextInput } from './Field/TextInput';
+
+import TextInput from './Field/TextInput';
 import ToggleSwitch from './Field/ToggleSwitch';
 
 interface UsersType {}

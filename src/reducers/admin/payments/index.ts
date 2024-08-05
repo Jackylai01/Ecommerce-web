@@ -2,6 +2,7 @@ import { ReducerName } from '@enums/reducer-name';
 import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
+import { ecPayOrdersResponse } from '@models/responses/ecpayOrders';
 import { createSlice } from '@reduxjs/toolkit';
 import { AdminEcPayOrdersAction, getAdminEcPayQueryAsync } from './actions';
 

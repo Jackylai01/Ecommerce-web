@@ -1,4 +1,4 @@
-class ecPayOrdersResponse {
+export class ecPayOrdersResponse {
   MerchantID!: string;
   MerchantTradeNo!: string;
   StoreID!: string;

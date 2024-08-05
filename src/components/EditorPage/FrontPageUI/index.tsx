@@ -27,7 +27,14 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
         />
       );
     case 'navbar_02':
-      return <NavbarEditorSecond />;
+      return (
+        <NavbarEditorSecond
+          index={index}
+          element={component}
+          isEdit={isEdit}
+          onBlur={onBlur}
+        />
+      );
 
     default:
       return null;

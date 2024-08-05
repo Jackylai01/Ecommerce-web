@@ -29,7 +29,7 @@ import {
   getAdminOrdersDetailAsync,
   updateOrderStatusAsync,
 } from '@reducers/admin/orders/actions';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaFilter, FaPlus } from 'react-icons/fa';
 import { useAdminColorMode } from 'src/context/colorMode';
 import OrdersDetail from '../OrdersDetail';
@@ -205,12 +205,9 @@ const OrdersTab = () => {
           </Box>
           <Box position='relative' color={textColor}>
             <InputGroup>
-              <InputLeftAddon
-                children='最低金額'
-                bg={priceColor}
-                color={bgColor}
-                border='10px'
-              />
+              <InputLeftAddon bg={priceColor} color={bgColor} border='10px'>
+                最低金額
+              </InputLeftAddon>
               <Input
                 type='number'
                 name='minPrice'
@@ -222,12 +219,9 @@ const OrdersTab = () => {
           </Box>
           <Box position='relative' color={textColor}>
             <InputGroup>
-              <InputLeftAddon
-                children='最高金額'
-                color={bgColor}
-                bg={priceColor}
-                border='10px'
-              />
+              <InputLeftAddon color={bgColor} bg={priceColor} border='10px'>
+                最高金額
+              </InputLeftAddon>
               <Input
                 type='number'
                 name='maxPrice'

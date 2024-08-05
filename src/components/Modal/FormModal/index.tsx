@@ -20,7 +20,7 @@ import { useAdminColorMode } from 'src/context/colorMode';
 interface FormModalProps<T extends FieldValues> {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: SubmitHandler<T>;
+  onSubmit: any; // Todo
   children: ReactNode;
   title: string;
 }

@@ -1,4 +1,3 @@
-// ResetPasswordForm.jsx 或者可以直接在Configurator内部定义
 import { Button, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import FormModal from '@components/Modal/FormModal';
@@ -7,11 +6,16 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { adminResetPasswordAsync } from '@reducers/admin/auth/actions';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 interface ResetPasswordType {
   isOpen: boolean;
   onClose: () => void;
+}
+
+interface FormData {
+  currentPassword: string;
+  newPassword: string;
 }
 
 export const ResetPasswordForm = ({ isOpen, onClose }: ResetPasswordType) => {
@@ -20,7 +24,7 @@ export const ResetPasswordForm = ({ isOpen, onClose }: ResetPasswordType) => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm<FormData>();
   const dispatch = useAppDispatch();
   const {
     status: { resetPasswordFailed, resetPasswordLoading, resetPasswordSuccess },
@@ -41,11 +45,11 @@ export const ResetPasswordForm = ({ isOpen, onClose }: ResetPasswordType) => {
 
     if (resetPasswordFailed) {
       setIsModalOpen(true);
-      setModalContent('');
+      setModalContent('重設密碼失敗！');
     }
   }, [resetPasswordFailed, resetPasswordSuccess]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit: SubmitHandler<FormData> = (data) => {
     dispatch(adminResetPasswordAsync(data));
     onClose();
   };
@@ -110,7 +114,7 @@ export const ResetPasswordForm = ({ isOpen, onClose }: ResetPasswordType) => {
                   size='sm'
                   onClick={toggleNewPasswordVisibility}
                 >
-                  {showCurrentPassword ? '隱藏' : '顯示'}
+                  {showNewPassword ? '隱藏' : '顯示'}
                 </Button>
               </InputRightElement>
             </InputGroup>

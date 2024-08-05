@@ -39,7 +39,7 @@ export const componentLibrary: Record<string, Component> = {
   navbar_b: {
     type: 'navbar_02',
     name: 'Navbar B',
-    className: 'navbar',
+    className: 'navbar_second',
     style: {
       backgroundColor: '#ffffff',
       navItemColor: '#000000',
