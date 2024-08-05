@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 import { loadAdminToken } from '@helpers/token';
@@ -11,10 +11,11 @@ import {
   setPageBlocks,
 } from '@reducers/admin/admin-edit-pages';
 import { setAdminUserInfo } from '@reducers/admin/auth';
+import { createDesignPageAsync } from '@reducers/admin/design-pages/actions';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-
+import LoadingLayout from '../LoadingLayout';
 import Canvas from './Canvas';
 import EditPageSidebar from './EditPageSidebar';
 
@@ -25,6 +26,7 @@ interface FormValues {
 const AdminEditPageLayout: React.FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const toast = useToast();
   const {
     userInfo,
     status: { loginLoading },
@@ -32,6 +34,14 @@ const AdminEditPageLayout: React.FC = () => {
   const { active: isEditing, pageBlocks: components } = useAppSelector(
     (state) => state.adminEditPages,
   );
+  const {
+    status: {
+      createDesignPageFailed,
+      createDesignPageLoading,
+      createDesignPageSuccess,
+    },
+    error: { createDesignPageError },
+  } = useAppSelector((state) => state.adminDesignPage);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -98,8 +108,45 @@ const AdminEditPageLayout: React.FC = () => {
   };
 
   const onSubmit = (data: FormValues) => {
-    console.log(data);
+    const formData = new FormData();
+    formData.append('route', currentRoute);
+
+    const blocks = components.map((component) => ({
+      className: component.className || '',
+      elements: component.elements || [],
+    }));
+
+    console.log('blocks:', blocks); // 確認 blocks 的內容
+
+    formData.append('blocks', JSON.stringify(blocks));
+
+    dispatch(createDesignPageAsync(formData));
   };
+  useEffect(() => {
+    if (createDesignPageSuccess) {
+      toast({
+        title: '建立頁面版型成功',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+
+    if (createDesignPageFailed) {
+      toast({
+        title: '建立頁面版型失敗',
+        description: createDesignPageError,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [
+    createDesignPageFailed,
+    createDesignPageSuccess,
+    createDesignPageError,
+    toast,
+  ]);
 
   useEffect(() => {
     setIsClient(true);
@@ -125,52 +172,56 @@ const AdminEditPageLayout: React.FC = () => {
 
   return (
     <FormProvider {...formMethods}>
-      <Flex
-        h='100vh'
-        direction='column'
-        as='form'
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <LoadingLayout isLoading={createDesignPageLoading}>
         <Flex
-          justify='space-between'
-          p={4}
-          bg='gray.100'
-          borderBottom='1px solid'
-          borderColor='gray.200'
+          h='100vh'
+          direction='column'
+          as='form'
+          onSubmit={handleSubmit(onSubmit)}
         >
-          <Heading as='h1' size='lg'></Heading>
-          <Flex>
-            <Button
-              onClick={() => dispatch(setCustomPageActive(!isEditing))}
-              mr={2}
-            >
-              {isEditing ? '結束編輯模式' : '進入編輯模式'}
-            </Button>
-            <Button colorScheme='blue'>發佈到前台</Button>
+          <Flex
+            justify='space-between'
+            p={4}
+            bg='gray.100'
+            borderBottom='1px solid'
+            borderColor='gray.200'
+          >
+            <Heading as='h1' size='lg'></Heading>
+            <Flex>
+              <Button
+                onClick={() => dispatch(setCustomPageActive(!isEditing))}
+                mr={2}
+              >
+                {isEditing ? '結束編輯模式' : '進入編輯模式'}
+              </Button>
+              <Button colorScheme='blue' type='submit'>
+                發佈到前台
+              </Button>
+            </Flex>
+          </Flex>
+          <Flex flex='1'>
+            <EditPageSidebar
+              isCollapsed={isCollapsed}
+              onToggle={handleToggleSidebar}
+              onDragStart={handleDragStart}
+              isEditing={isEditing}
+              currentRoute={currentRoute}
+              onRouteChange={handleRouteChange}
+            />
+            <Box flex='1' p={8} overflowY='auto'>
+              <Canvas
+                components={components}
+                onDropComponent={handleDropComponent}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+                onDragOver={handleDragOver}
+                onRemoveComponent={handleRemoveComponent}
+                isEditing={isEditing}
+              />
+            </Box>
           </Flex>
         </Flex>
-        <Flex flex='1'>
-          <EditPageSidebar
-            isCollapsed={isCollapsed}
-            onToggle={handleToggleSidebar}
-            onDragStart={handleDragStart}
-            isEditing={isEditing}
-            currentRoute={currentRoute}
-            onRouteChange={handleRouteChange}
-          />
-          <Box flex='1' p={8} overflowY='auto'>
-            <Canvas
-              components={components}
-              onDropComponent={handleDropComponent}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              onDragOver={handleDragOver}
-              onRemoveComponent={handleRemoveComponent}
-              isEditing={isEditing}
-            />
-          </Box>
-        </Flex>
-      </Flex>
+      </LoadingLayout>
     </FormProvider>
   );
 };

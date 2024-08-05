@@ -41,4 +41,5 @@ export enum ReducerName {
   ADMIN_ERP_REPORT = 'AdminERPReport',
   ADMIN_ERP_SALESORDER = 'AdminERPSalesorder',
   ADMIN_ERP_SUPPLIER = 'AdminERPSupplier',
+  ADMIN_CREATE_DESIGN_PAGE = 'AdminCreateDesignPage',
 }

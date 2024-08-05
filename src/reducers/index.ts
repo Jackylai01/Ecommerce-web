@@ -9,6 +9,7 @@ import adminAuth from './admin/auth';
 import adminClientUsers from './admin/client-users';
 import customPage from './admin/custom-page';
 import dashBoardTheme from './admin/dash-board/themeSlice';
+import adminDesignPage from './admin/design-pages';
 import adminDiscount from './admin/discount';
 import adminOrders from './admin/orders';
 import adminPayments from './admin/payments';
@@ -70,6 +71,7 @@ const appReducer = {
   adminERPSalesOrder,
   adminERPSuppliers,
   adminEditPages,
+  adminDesignPage,
 };
 
 export default appReducer;
