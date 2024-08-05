@@ -12,23 +12,23 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-
+import { calculateItemsTotal } from '@helpers/products';
 import useAppSelector from '@hooks/useAppSelector';
 import { addItem, resetItems } from '@reducers/client/cart';
-
-import { calculateItemsTotal } from '@helpers/products';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
-import { BsCart4 } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 import { CartItem } from './CartItem';
 
-export const Cart = () => {
+interface CartIconProps {
+  icon: React.ElementType;
+}
+
+export const Cart: React.FC<CartIconProps> = ({ icon: Icon }) => {
   const { cart } = useAppSelector((state) => state.clientCart);
   const dispatch = useDispatch();
   const router = useRouter();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<any>();
 
@@ -61,7 +61,7 @@ export const Cart = () => {
         }}
         pos='relative'
       >
-        <BsCart4 /> <Text mx='1'>Cart</Text>
+        <Icon /> <Text mx='1'>Cart</Text>
         {cart.length !== 0 && (
           <Flex
             pos='absolute'

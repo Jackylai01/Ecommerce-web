@@ -21,9 +21,10 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { updateBlock } from '@reducers/admin/admin-edit-pages';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
-import { Search, ShoppingBag, User } from 'lucide-react';
+import { Search, User } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { BsCart4 } from 'react-icons/bs';
 import {
   FaBars,
   FaEdit,
@@ -313,8 +314,7 @@ const NavbarEditorSecond: React.FC<NavbarEditorSecondProps> = ({
               </MenuList>
             </Menu>
             <Box className='navbar_second__action-btn'>
-              <ShoppingBag size={20} strokeWidth={1} />
-              <span className='navbar_second__cart-count'>2</span>
+              <Cart icon={BsCart4} />
             </Box>
           </Box>
           <Box className='navbar_second__hamburger'>
@@ -378,7 +378,7 @@ const NavbarEditorSecond: React.FC<NavbarEditorSecondProps> = ({
               </Box>
             ))}
             <Box className='navbar_second__drawer-item'>
-              <Cart />
+              <Cart icon={BsCart4} />
             </Box>
             {userInfo && (
               <Box className='navbar_second__drawer-item'>

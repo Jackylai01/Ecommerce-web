@@ -24,6 +24,7 @@ import { updateBlock } from '@reducers/admin/admin-edit-pages';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { BsCart4 } from 'react-icons/bs';
 import {
   FaBars,
   FaEdit,
@@ -284,7 +285,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
           {!isEdit && (
             <>
               <Box className='navbar__item navbar__link-item'>
-                <Cart />
+                <Cart icon={BsCart4} />
               </Box>
               {userInfo && (
                 <Box className='navbar__item navbar__link-item'>
@@ -372,7 +373,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
               </Box>
             ))}
             <Box className='navbar__drawer-item'>
-              <Cart />
+              <Cart icon={BsCart4} />
             </Box>
             {userInfo && (
               <Box className='navbar__drawer-item'>

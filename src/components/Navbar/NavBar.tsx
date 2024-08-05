@@ -16,6 +16,7 @@ import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import Link from 'next/link';
 import router from 'next/router';
 import { useEffect } from 'react';
+import { BsCart4 } from 'react-icons/bs';
 import { FaUser } from 'react-icons/fa';
 import { Cart } from '../Cart/Cart';
 import { Wishlist } from '../Wishlist/Wishlist';
@@ -67,7 +68,7 @@ export const Navbar = () => {
               maxW={{ base: '100%', lg: 'auto' }}
             >
               <Wishlist />
-              <Cart />
+              <Cart icon={BsCart4} />
               <Box>
                 {userInfo ? (
                   <Menu>
