@@ -23,7 +23,7 @@ export interface IDesignPageElement {
 
 export const componentLibrary: Record<string, Component> = {
   navbar_a: {
-    type: 'navbar_01',
+    type: 'navbar',
     name: 'Navbar A',
     className: 'navbar',
     style: {
@@ -37,7 +37,7 @@ export const componentLibrary: Record<string, Component> = {
     ],
   },
   navbar_b: {
-    type: 'navbar_02',
+    type: 'navbar_second',
     name: 'Navbar B',
     className: 'navbar_second',
     style: {

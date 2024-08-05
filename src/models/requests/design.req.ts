@@ -10,8 +10,15 @@ export interface IDesignPageElement {
 }
 
 export interface IDesignPageBlock {
-  className: string;
-  elements: IDesignPageElement[];
+  type: string;
+  name: string;
+  className?: string;
+  elements?: IDesignPageElement[];
+  content?: string;
+  style?: {
+    backgroundColor?: string;
+    navItemColor?: string;
+  };
 }
 
 export interface IDesignPage {

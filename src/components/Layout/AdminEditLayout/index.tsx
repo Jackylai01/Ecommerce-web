@@ -2,8 +2,6 @@ import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 import { loadAdminToken } from '@helpers/token';
-import useAppDispatch from '@hooks/useAppDispatch';
-import useAppSelector from '@hooks/useAppSelector';
 import {
   addBlock,
   removeBlockItem,
@@ -11,9 +9,15 @@ import {
   setPageBlocks,
 } from '@reducers/admin/admin-edit-pages';
 import { setAdminUserInfo } from '@reducers/admin/auth';
-import { createDesignPageAsync } from '@reducers/admin/design-pages/actions';
+import {
+  createDesignPageAsync,
+  getDesignPageByRouteAsync,
+} from '@reducers/admin/design-pages/actions';
+
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import LoadingLayout from '../LoadingLayout';
 import Canvas from './Canvas';
@@ -35,6 +39,7 @@ const AdminEditPageLayout: React.FC = () => {
     (state) => state.adminEditPages,
   );
   const {
+    currentPage,
     status: {
       createDesignPageFailed,
       createDesignPageLoading,
@@ -49,20 +54,15 @@ const AdminEditPageLayout: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
 
   const formMethods = useForm<FormValues>({
-    defaultValues: {
-      components: components,
-    },
+    defaultValues: { components: components },
   });
-
   const { control, handleSubmit } = formMethods;
   const { fields, append, remove, swap } = useFieldArray({
     control,
     name: 'components',
   });
 
-  const handleToggleSidebar = () => {
-    setIsCollapsed((prev) => !prev);
-  };
+  const handleToggleSidebar = () => setIsCollapsed((prev) => !prev);
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
@@ -78,16 +78,13 @@ const AdminEditPageLayout: React.FC = () => {
 
   const handleRouteChange = (route: string) => {
     setCurrentRoute(route);
-    // 在這裡根據路由變更加載相應頁面的數據
+    dispatch(getDesignPageByRouteAsync(route));
   };
 
-  const handleDropComponent = (component: Component) => {
+  const handleDropComponent = (component: Component) =>
     dispatch(addBlock(component));
-  };
 
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
-  };
+  const handleDragEnd = () => setDraggedIndex(null);
 
   const handleDragOver = (
     e: React.DragEvent<HTMLDivElement>,
@@ -103,25 +100,20 @@ const AdminEditPageLayout: React.FC = () => {
     }
   };
 
-  const handleRemoveComponent = (index: number) => {
+  const handleRemoveComponent = (index: number) =>
     dispatch(removeBlockItem(index));
-  };
 
   const onSubmit = (data: FormValues) => {
     const formData = new FormData();
     formData.append('route', currentRoute);
-
     const blocks = components.map((component) => ({
       className: component.className || '',
       elements: component.elements || [],
     }));
-
-    console.log('blocks:', blocks); // 確認 blocks 的內容
-
     formData.append('blocks', JSON.stringify(blocks));
-
     dispatch(createDesignPageAsync(formData));
   };
+
   useEffect(() => {
     if (createDesignPageSuccess) {
       toast({
@@ -131,7 +123,6 @@ const AdminEditPageLayout: React.FC = () => {
         isClosable: true,
       });
     }
-
     if (createDesignPageFailed) {
       toast({
         title: '建立頁面版型失敗',
@@ -166,9 +157,26 @@ const AdminEditPageLayout: React.FC = () => {
     }
   }, [userInfo, router]);
 
-  if (!isClient) {
-    return null;
-  }
+  useEffect(() => {
+    handleRouteChange(currentRoute);
+  }, [dispatch, currentRoute]);
+
+  useEffect(() => {
+    if (currentPage) {
+      console.log('Current Page Data: ', currentPage); // Log currentPage data
+      const componentsWithType = currentPage.blocks.map((block) => ({
+        ...block,
+        type: block.className, // Ensure `type` and `name` are correctly set
+        name: block.className,
+      })) as Component[];
+      dispatch(setPageBlocks(componentsWithType));
+      console.log('Components with Type: ', componentsWithType); // Log componentsWithType
+    } else {
+      dispatch(setPageBlocks([])); // If no currentPage, set components to empty
+    }
+  }, [currentPage, dispatch]);
+
+  if (!isClient) return null;
 
   return (
     <FormProvider {...formMethods}>
@@ -210,7 +218,7 @@ const AdminEditPageLayout: React.FC = () => {
             />
             <Box flex='1' p={8} overflowY='auto'>
               <Canvas
-                components={components}
+                components={components as Component[]}
                 onDropComponent={handleDropComponent}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}

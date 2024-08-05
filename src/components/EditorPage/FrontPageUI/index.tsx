@@ -17,7 +17,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
   onBlur,
 }) => {
   switch (component.type) {
-    case 'navbar_01':
+    case 'navbar':
       return (
         <NavbarEditor
           index={index}
@@ -26,7 +26,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           onBlur={onBlur}
         />
       );
-    case 'navbar_02':
+    case 'navbar_second':
       return (
         <NavbarEditorSecond
           index={index}
@@ -35,8 +35,8 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           onBlur={onBlur}
         />
       );
-
-    default:
+    default: // Warn for unknown types
+      console.warn('Unknown component type:', component.type);
       return null;
   }
 };
