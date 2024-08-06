@@ -23,7 +23,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { updateBlock } from '@reducers/admin/admin-edit-pages';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BsCart4 } from 'react-icons/bs';
 import {
   FaBars,
@@ -66,6 +66,8 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
     userInfo,
     status: { logoutLoading, logoutSuccess, logoutFailed },
   } = useAppSelector((state) => state.clientAuth);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setContent(element.elements || []);
@@ -186,6 +188,10 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
     setColorPickerVisible(!colorPickerVisible);
   };
 
+  const handleIconClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <>
       <Flex
@@ -195,14 +201,29 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
         style={{ backgroundColor: bgColor }}
       >
         <Box className='navbar__logo'>
-          {logo ? <Image src={logo} alt='Logo' /> : <Box>Logo</Box>}
+          {logo ? (
+            <Image src={logo} alt='Logo' w='auto' maxH='60px' />
+          ) : (
+            <Box>Logo</Box>
+          )}
           {isEdit && (
-            <input
-              type='file'
-              accept='image/*'
-              onChange={uploadImage}
-              className='navbar__upload'
-            />
+            <>
+              <IconButton
+                icon={<FaPlus />}
+                aria-label='Upload Image'
+                onClick={handleIconClick}
+                size='sm'
+                ml='1rem'
+              />
+              <Input
+                type='file'
+                accept='image/*'
+                onChange={uploadImage}
+                className='navbar__upload'
+                ref={fileInputRef}
+                display='none'
+              />
+            </>
           )}
         </Box>
         <Flex className='navbar__search'>
