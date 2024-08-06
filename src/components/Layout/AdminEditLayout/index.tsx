@@ -52,6 +52,7 @@ const AdminEditPageLayout: React.FC = () => {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [currentRoute, setCurrentRoute] = useState<string>('/home');
   const [isClient, setIsClient] = useState(false);
+  const [logoFile, setLogoFile] = useState<File | null>(null); // Add state for logo file
 
   const formMethods = useForm<FormValues>({
     defaultValues: { components: components },
@@ -106,12 +107,39 @@ const AdminEditPageLayout: React.FC = () => {
   const onSubmit = (data: FormValues) => {
     const formData = new FormData();
     formData.append('route', currentRoute);
+
     const blocks = components.map((component) => ({
       className: component.className || '',
       elements: component.elements || [],
     }));
     formData.append('blocks', JSON.stringify(blocks));
+
+    // 確保圖片文件和表單數據一起發送
+    if (logoFile) {
+      formData.append('images', logoFile);
+    }
+
     dispatch(createDesignPageAsync(formData));
+  };
+
+  const handleImageUpload = (index: number, file: File) => {
+    setLogoFile(file); // Store the logo file in state
+    const updatedComponents = components.map((component, compIndex) => {
+      if (compIndex === index) {
+        return {
+          ...component,
+          elements: component.elements?.map((element: any) => {
+            if (element.tagName === 'img') {
+              return { ...element, src: file };
+            }
+            return element;
+          }),
+        };
+      }
+      return component;
+    });
+
+    dispatch(setPageBlocks(updatedComponents));
   };
 
   useEffect(() => {
@@ -225,6 +253,7 @@ const AdminEditPageLayout: React.FC = () => {
                 onDragOver={handleDragOver}
                 onRemoveComponent={handleRemoveComponent}
                 isEditing={isEditing}
+                onImageUpload={handleImageUpload}
               />
             </Box>
           </Flex>

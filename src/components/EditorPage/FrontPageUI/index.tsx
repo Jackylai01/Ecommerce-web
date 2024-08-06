@@ -8,6 +8,7 @@ interface EditorComponentFactoryProps {
   index: number;
   isEdit: boolean;
   onBlur: () => void;
+  onImageUpload: (index: number, file: File) => void; // Add onImageUpload prop
 }
 
 const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
@@ -15,6 +16,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
   index,
   isEdit,
   onBlur,
+  onImageUpload, // Destructure the prop
 }) => {
   switch (component.type) {
     case 'navbar':
@@ -24,6 +26,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           element={component}
           isEdit={isEdit}
           onBlur={onBlur}
+          onImageUpload={onImageUpload} // Pass the onImageUpload prop
         />
       );
     case 'navbar_second':

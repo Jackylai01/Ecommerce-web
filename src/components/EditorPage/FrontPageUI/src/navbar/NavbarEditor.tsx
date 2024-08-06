@@ -39,6 +39,7 @@ interface NavbarEditorProps {
   element: Component;
   isEdit: boolean;
   onBlur: () => void;
+  onImageUpload: (index: number, file: File) => void;
 }
 
 const NavbarEditor: React.FC<NavbarEditorProps> = ({
@@ -46,6 +47,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   element,
   isEdit,
   onBlur,
+  onImageUpload,
 }) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -71,6 +73,10 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
 
   useEffect(() => {
     setContent(element.elements || []);
+    const logoElement = element.elements?.find((el) => el.tagName === 'img');
+    if (logoElement) {
+      setLogo(logoElement.src || null);
+    }
   }, [element]);
 
   const handleChange = (linkIndex: number, key: string, value: string) => {
@@ -111,13 +117,15 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
 
   const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target && event.target.result) {
           setLogo(event.target.result as string);
+          onImageUpload(index, file);
         }
       };
-      reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(file);
     }
   };
 
@@ -230,70 +238,72 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
           <Search />
         </Flex>
         <Flex className='navbar__items'>
-          {content.map((link, linkIndex) => (
-            <Flex key={linkIndex} className='navbar__item navbar__link-item'>
-              <a
-                href={link.href}
-                className='navbar__link'
-                onClick={(event) => handleLinkClick(link.href, event)}
-                style={{ color: navItemColor }}
-              >
-                {link.context}
-              </a>
-              {isEdit && (
-                <>
-                  <span
-                    className='navbar__link-edit'
-                    onClick={() =>
-                      setEditingIndex(
-                        linkIndex === editingIndex ? null : linkIndex,
-                      )
-                    }
-                  >
-                    <FaEdit />
-                  </span>
-                  {editingIndex === linkIndex && (
-                    <Box className='navbar__edit-fields'>
-                      <Box
-                        className='navbar__input'
-                        contentEditable
-                        suppressContentEditableWarning
-                        onBlur={(e) =>
-                          handleChange(
-                            linkIndex,
-                            'context',
-                            e.currentTarget.textContent || '',
-                          )
-                        }
-                      >
-                        {link.context}
+          {content.map((link, linkIndex) =>
+            link.tagName !== 'img' ? (
+              <Flex key={linkIndex} className='navbar__item navbar__link-item'>
+                <a
+                  href={link.href}
+                  className='navbar__link'
+                  onClick={(event) => handleLinkClick(link.href, event)}
+                  style={{ color: navItemColor }}
+                >
+                  {link.context}
+                </a>
+                {isEdit && (
+                  <>
+                    <span
+                      className='navbar__link-edit'
+                      onClick={() =>
+                        setEditingIndex(
+                          linkIndex === editingIndex ? null : linkIndex,
+                        )
+                      }
+                    >
+                      <FaEdit />
+                    </span>
+                    {editingIndex === linkIndex && (
+                      <Box className='navbar__edit-fields'>
+                        <Box
+                          className='navbar__input'
+                          contentEditable
+                          suppressContentEditableWarning
+                          onBlur={(e) =>
+                            handleChange(
+                              linkIndex,
+                              'context',
+                              e.currentTarget.textContent || '',
+                            )
+                          }
+                        >
+                          {link.context}
+                        </Box>
+                        <Box
+                          className='navbar__input'
+                          contentEditable
+                          suppressContentEditableWarning
+                          onBlur={(e) =>
+                            handleChange(
+                              linkIndex,
+                              'href',
+                              e.currentTarget.textContent || '',
+                            )
+                          }
+                        >
+                          {link.href}
+                        </Box>
+                        <IconButton
+                          icon={<FaTrash />}
+                          onClick={() => removeLink(linkIndex)}
+                          aria-label='刪除連結'
+                          className='navbar__delete-button'
+                        />
                       </Box>
-                      <Box
-                        className='navbar__input'
-                        contentEditable
-                        suppressContentEditableWarning
-                        onBlur={(e) =>
-                          handleChange(
-                            linkIndex,
-                            'href',
-                            e.currentTarget.textContent || '',
-                          )
-                        }
-                      >
-                        {link.href}
-                      </Box>
-                      <IconButton
-                        icon={<FaTrash />}
-                        onClick={() => removeLink(linkIndex)}
-                        aria-label='刪除連結'
-                        className='navbar__delete-button'
-                      />
-                    </Box>
-                  )}
-                </>
-              )}
-            </Flex>
-          ))}
+                    )}
+                  </>
+                )}
+              </Flex>
+            ) : null,
+          )}
           {isEdit && (
             <Flex className='navbar__item navbar__item--add'>
               <IconButton

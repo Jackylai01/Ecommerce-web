@@ -21,6 +21,9 @@ export interface IDesignPageElement {
   [key: string]: any;
 }
 
+export const testImage =
+  'https://res.cloudinary.com/dqawkwte9/image/upload/v1705117456/gryubprhot8skehcqtxt.jpg';
+
 export const componentLibrary: Record<string, Component> = {
   navbar_a: {
     type: 'navbar',
@@ -34,6 +37,7 @@ export const componentLibrary: Record<string, Component> = {
       { tagName: 'a', context: '首頁', href: '#' },
       { tagName: 'a', context: '產品', href: '#' },
       { tagName: 'a', context: '關於我們', href: '#' },
+      { tagName: 'img', context: 'logo', href: '/', src: testImage },
     ],
   },
   navbar_b: {
