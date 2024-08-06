@@ -56,6 +56,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newItemText, setNewItemText] = useState('');
   const [logo, setLogo] = useState<string | null>(null);
+  const [uploadedLogo, setUploadedLogo] = useState<string | null>(null);
   const [bgColor, setBgColor] = useState<string>(
     element.style?.backgroundColor || '#ffffff',
   );
@@ -121,9 +122,8 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target && event.target.result) {
-          console.log('New image uploaded:', event.target.result);
-          setLogo(event.target.result as string);
-          onImageUpload(index, file);
+          setUploadedLogo(event.target.result as string); // 预览上传的图片
+          onImageUpload(index, file); // 上传图片文件
         }
       };
       reader.readAsDataURL(file);
@@ -210,7 +210,9 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
         style={{ backgroundColor: bgColor }}
       >
         <Box className='navbar__logo'>
-          {logo ? (
+          {uploadedLogo ? (
+            <Image src={uploadedLogo} alt='Logo' w='auto' maxH='60px' />
+          ) : logo ? (
             <Image src={logo} alt='Logo' w='auto' maxH='60px' />
           ) : (
             <Box>Logo</Box>
