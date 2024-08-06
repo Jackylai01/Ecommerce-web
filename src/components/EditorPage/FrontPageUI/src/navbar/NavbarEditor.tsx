@@ -121,6 +121,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target && event.target.result) {
+          console.log('New image uploaded:', event.target.result);
           setLogo(event.target.result as string);
           onImageUpload(index, file);
         }
