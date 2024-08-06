@@ -32,8 +32,6 @@ const Canvas: React.FC<CanvasProps> = ({
     }
   };
 
-  console.log('Canvas Components: ', components); // Log components in Canvas
-
   return (
     <Box
       minH='600px'

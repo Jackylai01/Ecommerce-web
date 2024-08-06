@@ -35,8 +35,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           onBlur={onBlur}
         />
       );
-    default: // Warn for unknown types
-      console.warn('Unknown component type:', component.type);
+    default:
       return null;
   }
 };

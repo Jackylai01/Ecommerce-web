@@ -17,11 +17,12 @@
   display: flex;
   align-items: center;
   flex: 1;
+  width: 10%;
+  height: auto;
 }
 
 .navbar__upload {
   margin-left: 1rem;
-  display: none;
 
   &::file-selector-button {
     display: none;
