@@ -52,7 +52,7 @@ const AdminEditPageLayout: React.FC = () => {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [currentRoute, setCurrentRoute] = useState<string>('/home');
   const [isClient, setIsClient] = useState(false);
-  const [logoFile, setLogoFile] = useState<File | null>(null); // Add state for logo file
+  const [logoFile, setLogoFile] = useState<File | null>(null);
 
   const formMethods = useForm<FormValues>({
     defaultValues: { components: components },
@@ -150,6 +150,7 @@ const AdminEditPageLayout: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
+      dispatch(getDesignPageByRouteAsync(currentRoute)); // 在成功创建页面后重新获取页面数据
     }
     if (createDesignPageFailed) {
       toast({
@@ -165,6 +166,8 @@ const AdminEditPageLayout: React.FC = () => {
     createDesignPageSuccess,
     createDesignPageError,
     toast,
+    currentRoute,
+    dispatch,
   ]);
 
   useEffect(() => {
@@ -191,16 +194,14 @@ const AdminEditPageLayout: React.FC = () => {
 
   useEffect(() => {
     if (currentPage) {
-      console.log('Current Page Data: ', currentPage); // Log currentPage data
       const componentsWithType = currentPage.blocks.map((block) => ({
         ...block,
-        type: block.className, // Ensure `type` and `name` are correctly set
+        type: block.className,
         name: block.className,
       })) as Component[];
       dispatch(setPageBlocks(componentsWithType));
-      console.log('Components with Type: ', componentsWithType); // Log componentsWithType
     } else {
-      dispatch(setPageBlocks([])); // If no currentPage, set components to empty
+      dispatch(setPageBlocks([]));
     }
   }, [currentPage, dispatch]);
 
