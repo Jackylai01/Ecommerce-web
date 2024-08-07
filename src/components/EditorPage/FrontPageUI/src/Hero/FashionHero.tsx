@@ -1,4 +1,4 @@
-import { EditIcon } from '@chakra-ui/icons';
+import { ArrowRightIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -23,11 +23,11 @@ import {
   Stack,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Component, testImage } from '@fixtures/componentLibrary';
+import { Component } from '@fixtures/componentLibrary';
 import useEditModeNavigation from '@hooks/useEditModeNavigation';
 import { updateBlock } from '@reducers/admin/admin-edit-pages';
 import dynamic from 'next/dynamic';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SketchPicker } from 'react-color';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -57,14 +57,13 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   onBlur,
   onImageUpload,
 }) => {
-  const { safeDispatch, safeNavigation } = useEditModeNavigation();
+  const { safeDispatch } = useEditModeNavigation();
   const [content, setContent] = useState(element.elements || []);
   const [gradientColors, setGradientColors] = useState([
     { color: 'rgba(59, 29, 116, 0.7)', stop: 0 },
     { color: 'rgba(204, 51, 153, 0.6)', stop: 50 },
     { color: 'transparent', stop: 100 },
   ]);
-
   const [backgroundImage, setBackgroundImage] = useState(
     element.style?.backgroundImage || '',
   );
@@ -84,7 +83,6 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   const [buttonHref, setButtonHref] = useState(
     content.find((el) => el.tagName === 'button')?.href || '/default-route',
   );
-
   const [buttonText, setButtonText] = useState(
     content.find((el) => el.tagName === 'button')?.context || '立即選購',
   );
@@ -105,7 +103,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
       setContent(updatedContent);
       safeDispatch(
         updateBlock({ index, block: { ...element, elements: updatedContent } }),
-      );
+      )();
     }
   };
 
@@ -208,6 +206,10 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     onClose();
   };
 
+  useEffect(() => {
+    setContent(element.elements || []);
+  }, [element]);
+
   const renderQuillEditor = (
     elIndex: number,
     placeholder: string,
@@ -219,8 +221,35 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
       modules={{ toolbar: baseQuillToolbar }}
       placeholder={placeholder}
       value={content[elIndex]?.context || ''}
-      onChange={(value) => handleChange(elIndex, 'context', value)}
-      onBlur={onBlur}
+      onChange={(value) => {
+        const updatedContent = content.map((item, idx) => {
+          if (idx === elIndex) {
+            return { ...item, context: value };
+          }
+          return item;
+        });
+        if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
+          setContent(updatedContent);
+        }
+      }}
+      onBlur={() => {
+        const updatedContent = content.map((item, idx) => {
+          if (idx === elIndex) {
+            return { ...item, context: content[elIndex].context };
+          }
+          return item;
+        });
+        if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
+          setContent(updatedContent);
+          safeDispatch(
+            updateBlock({
+              index,
+              block: { ...element, elements: updatedContent },
+            }),
+          )();
+        }
+        onBlur();
+      }}
     />
   );
 
@@ -291,12 +320,17 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
                       '探索我們的2024秋冬系列，體驗前所未有的時尚魅力。每一件單品都是精心打造的藝術品。',
                   )}
             </Box>
-            <Flex>
+            <Flex align='center'>
               <Button
                 className='fashion-hero__button'
-                onClick={safeNavigation(buttonHref)}
+                onClick={() => {
+                  if (buttonHref) {
+                    window.location.href = buttonHref;
+                  }
+                }}
               >
                 {buttonText}
+                <ArrowRightIcon className='ml-2' />
               </Button>
               {isEdit && (
                 <IconButton
@@ -315,15 +349,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
                 mt={2}
                 placeholder='設定按鈕路由'
                 value={buttonHref}
-                onChange={(e) =>
-                  handleChange(
-                    content.findIndex(
-                      (el) => el.className === 'fashion-hero__button',
-                    ),
-                    'href',
-                    e.target.value,
-                  )
-                }
+                onChange={(e) => setButtonHref(e.target.value)}
               />
             )}
             {isEdit && isButtonTextInputVisible && (
@@ -331,15 +357,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
                 mt={2}
                 placeholder='設定按鈕名稱'
                 value={buttonText}
-                onChange={(e) =>
-                  handleChange(
-                    content.findIndex(
-                      (el) => el.className === 'fashion-hero__button',
-                    ),
-                    'context',
-                    e.target.value,
-                  )
-                }
+                onChange={(e) => setButtonText(e.target.value)}
               />
             )}
           </Box>
@@ -374,7 +392,9 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
         onChange={(e) =>
           uploadImage(
             e,
-            content.findIndex((el) => el.className === testImage),
+            content.findIndex(
+              (el) => el.className === 'fashion-hero__background-img',
+            ),
           )
         }
         ref={fileInputRef}
