@@ -23,9 +23,6 @@ import {
 
 const categorizedComponents: any = {
   layout: ['navbar_a', 'navbar_b'],
-  footer: ['footer_a', 'footer_b'],
-  main: ['main_section'],
-  card: ['card_a', 'card_b'],
 };
 
 interface EditPageSidebarProps {

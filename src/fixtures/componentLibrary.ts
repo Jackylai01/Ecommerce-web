@@ -55,42 +55,4 @@ export const componentLibrary: Record<string, Component> = {
       { tagName: 'a', context: '聯繫我們', href: '#' },
     ],
   },
-  footer_a: {
-    type: 'footer',
-    name: 'Footer A',
-    className: 'footer',
-    elements: [
-      { tagName: 'a', context: '隱私政策', href: '#' },
-      { tagName: 'a', context: '使用條款', href: '#' },
-      { tagName: 'a', context: '聯繫我們', href: '#' },
-    ],
-  },
-  footer_b: {
-    type: 'footer',
-    name: 'Footer B',
-    className: 'footer',
-    elements: [
-      { tagName: 'a', context: '關於我們', href: '#' },
-      { tagName: 'a', context: '客戶服務', href: '#' },
-      { tagName: 'a', context: '社交媒體', href: '#' },
-    ],
-  },
-  main_section: {
-    type: 'main',
-    name: 'Main Section',
-    className: 'main-section',
-    content: '這是主要內容區域。您可以在這裡添加文字、圖片和其他元素。',
-  },
-  card_a: {
-    type: 'card',
-    name: 'Card A',
-    className: 'card',
-    content: '這是卡片 A 的內容。它可以包含產品信息、文章摘要等。',
-  },
-  card_b: {
-    type: 'card',
-    name: 'Card B',
-    className: 'card',
-    content: '這是卡片 B 的內容。它可以用於顯示團隊成員、服務項目等。',
-  },
 };
