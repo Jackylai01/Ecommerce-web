@@ -1,0 +1,97 @@
+.checkout-page {
+  &__container {
+    .checkout-page__title {
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__main {
+    flex-direction: column;
+
+    @media (min-width: 1024px) {
+      flex-direction: row;
+    }
+  }
+
+  &__card {
+    &-header {
+      padding: 1rem;
+    }
+
+    &-title {
+      display: flex;
+      align-items: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    &-content {
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+
+      @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  }
+
+  &__product {
+    &-details {
+      .checkout-page__product-image {
+        width: 5rem;
+        height: 5rem;
+        object-fit: cover;
+        border-radius: 0.5rem;
+      }
+
+      .checkout-page__product-name {
+        font-weight: 600;
+      }
+
+      .checkout-page__product-quantity {
+        color: gray;
+        font-size: 0.875rem;
+      }
+    }
+
+    &-price {
+      font-weight: 600;
+    }
+  }
+
+  &__summary {
+    &-row {
+      justify-content: space-between;
+    }
+  }
+
+  &__total {
+    &-amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+  }
+
+  &__submit-btn {
+    width: 100%;
+    background-color: blue;
+    padding: 1rem;
+    &:hover {
+      background-color: darkblue;
+    }
+  }
+
+  &__terms {
+    text-align: center;
+    color: gray;
+    font-size: 0.75rem;
+  }
+
+  &__payment-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
