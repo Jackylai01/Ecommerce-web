@@ -27,7 +27,7 @@ import { Component, testImage } from '@fixtures/componentLibrary';
 import useEditModeNavigation from '@hooks/useEditModeNavigation';
 import { updateBlock } from '@reducers/admin/admin-edit-pages';
 import dynamic from 'next/dynamic';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { SketchPicker } from 'react-color';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -105,7 +105,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
       setContent(updatedContent);
       safeDispatch(
         updateBlock({ index, block: { ...element, elements: updatedContent } }),
-      )();
+      );
     }
   };
 
@@ -208,10 +208,6 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     onClose();
   };
 
-  useEffect(() => {
-    setContent(element.elements || []);
-  }, [element]);
-
   const renderQuillEditor = (
     elIndex: number,
     placeholder: string,
@@ -223,35 +219,8 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
       modules={{ toolbar: baseQuillToolbar }}
       placeholder={placeholder}
       value={content[elIndex]?.context || ''}
-      onChange={(value) => {
-        const updatedContent = content.map((item, idx) => {
-          if (idx === elIndex) {
-            return { ...item, context: value };
-          }
-          return item;
-        });
-        if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
-          setContent(updatedContent);
-        }
-      }}
-      onBlur={() => {
-        const updatedContent = content.map((item, idx) => {
-          if (idx === elIndex) {
-            return { ...item, context: content[elIndex].context };
-          }
-          return item;
-        });
-        if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
-          setContent(updatedContent);
-          safeDispatch(
-            updateBlock({
-              index,
-              block: { ...element, elements: updatedContent },
-            }),
-          )();
-        }
-        onBlur();
-      }}
+      onChange={(value) => handleChange(elIndex, 'context', value)}
+      onBlur={onBlur}
     />
   );
 
@@ -346,7 +315,15 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
                 mt={2}
                 placeholder='設定按鈕路由'
                 value={buttonHref}
-                onChange={(e) => setButtonHref(e.target.value)}
+                onChange={(e) =>
+                  handleChange(
+                    content.findIndex(
+                      (el) => el.className === 'fashion-hero__button',
+                    ),
+                    'href',
+                    e.target.value,
+                  )
+                }
               />
             )}
             {isEdit && isButtonTextInputVisible && (
@@ -354,7 +331,15 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
                 mt={2}
                 placeholder='設定按鈕名稱'
                 value={buttonText}
-                onChange={(e) => setButtonText(e.target.value)}
+                onChange={(e) =>
+                  handleChange(
+                    content.findIndex(
+                      (el) => el.className === 'fashion-hero__button',
+                    ),
+                    'context',
+                    e.target.value,
+                  )
+                }
               />
             )}
           </Box>

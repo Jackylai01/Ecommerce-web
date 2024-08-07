@@ -18,7 +18,8 @@ const useEditModeNavigation = () => {
   );
 
   const safeNavigation = useCallback(
-    (href: string) => (event: React.MouseEvent) => {
+    (href?: string) => (event: React.MouseEvent) => {
+      if (!href) return; // 如果 href 為 undefined，直接返回
       if (isEditMode) {
         event.preventDefault();
       } else {
@@ -27,7 +28,6 @@ const useEditModeNavigation = () => {
     },
     [router, isEditMode],
   );
-
   return { safeDispatch, safeNavigation };
 };
 
