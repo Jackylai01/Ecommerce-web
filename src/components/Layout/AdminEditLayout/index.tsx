@@ -109,6 +109,8 @@ const AdminEditPageLayout: React.FC = () => {
     formData.append('route', currentRoute);
 
     const blocks = components.map((component) => ({
+      ...component,
+      style: component.style || {},
       className: component.className || '',
       elements: component.elements || [],
     }));
