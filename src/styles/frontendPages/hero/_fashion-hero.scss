@@ -1,7 +1,7 @@
 .fashion-hero {
   &__container {
     position: relative;
-    height: 100vh;
+    height: auto;
     width: 100%;
     overflow: hidden;
     background-color: #f7fafc;
@@ -12,20 +12,14 @@
     inset: 0;
     z-index: 0;
   }
-  &__background-img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-  }
-  &__background-gradient {
+  &__background-img,
+  &__background-gradient,
+  &__background-color {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to bottom right,
-      rgba(59, 29, 116, 0.7),
-      rgba(204, 51, 153, 0.6),
-      transparent
-    );
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   &__content {
     position: relative;
@@ -38,20 +32,6 @@
     @media (min-width: 768px) {
       padding: 4rem;
     }
-  }
-  &__nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #ffffff;
-  }
-  &__logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  &__nav-items {
-    display: flex;
-    gap: 1.5rem;
   }
   &__main {
     display: flex;
@@ -93,6 +73,7 @@
     align-items: center;
     border-radius: 9999px;
     transition: background-color 0.3s;
+
     &:hover {
       background-color: #edf2f7;
     }
@@ -111,17 +92,7 @@
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
     transform: rotate(-6deg);
   }
-  &__rating {
-    background-color: #ffffff;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-    position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    display: flex;
-    align-items: center;
-  }
+
   &__rating-icon {
     color: #fbbf24;
     margin-right: 0.5rem;
@@ -133,31 +104,7 @@
     color: #4a5568;
     margin-left: 0.5rem;
   }
-  &__footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    color: #ffffff;
-  }
-  &__footer-discount {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-  &__footer-info {
-    font-size: 1.25rem;
-  }
-  &__footer-inspiration {
-    text-align: right;
-  }
-  &__footer-inspiration-text {
-    font-size: 0.875rem;
-    margin-bottom: 0.25rem;
-  }
-  &__footer-inspiration-source {
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
+
   &__decor-circle {
     position: absolute;
     top: 25%;

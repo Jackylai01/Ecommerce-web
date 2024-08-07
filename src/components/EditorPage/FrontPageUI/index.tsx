@@ -1,5 +1,6 @@
 import { Component } from '@fixtures/componentLibrary';
 import React from 'react';
+import FashionHeroEditor from './src/Hero/FashionHero';
 import NavbarEditor from './src/navbar/NavbarEditor';
 import NavbarEditorSecond from './src/navbar/NavbarEditorSecond';
 
@@ -8,7 +9,7 @@ interface EditorComponentFactoryProps {
   index: number;
   isEdit: boolean;
   onBlur: () => void;
-  onImageUpload: (index: number, file: File) => void; // Add onImageUpload prop
+  onImageUpload: (index: number, file: File) => void;
 }
 
 const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
@@ -16,7 +17,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
   index,
   isEdit,
   onBlur,
-  onImageUpload, // Destructure the prop
+  onImageUpload,
 }) => {
   switch (component.type) {
     case 'navbar':
@@ -26,7 +27,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           element={component}
           isEdit={isEdit}
           onBlur={onBlur}
-          onImageUpload={onImageUpload} // Pass the onImageUpload prop
+          onImageUpload={onImageUpload}
         />
       );
     case 'navbar_second':
@@ -36,6 +37,16 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           element={component}
           isEdit={isEdit}
           onBlur={onBlur}
+        />
+      );
+    case 'fashion_hero':
+      return (
+        <FashionHeroEditor
+          index={index}
+          element={component}
+          isEdit={isEdit}
+          onBlur={onBlur}
+          onImageUpload={onImageUpload}
         />
       );
     default:

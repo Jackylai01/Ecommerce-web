@@ -1,4 +1,4 @@
-import { ArrowRightIcon, StarIcon } from '@chakra-ui/icons';
+import { EditIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -7,15 +7,42 @@ import {
   IconButton,
   Image,
   Input,
-  Text,
-  Tooltip,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Radio,
+  RadioGroup,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
+  Stack,
+  useDisclosure,
 } from '@chakra-ui/react';
-import { Component } from '@fixtures/componentLibrary';
+import { Component, testImage } from '@fixtures/componentLibrary';
 import useEditModeNavigation from '@hooks/useEditModeNavigation';
 import { updateBlock } from '@reducers/admin/admin-edit-pages';
-import React, { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useEffect, useRef, useState } from 'react';
+import { SketchPicker } from 'react-color';
 
-interface HeroEditorProps {
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
+const baseQuillToolbar = [
+  [{ header: [1, 2, false] }],
+  ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
+  [{ color: [] }],
+  [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+  ['link'],
+  [{ align: [] }],
+  ['clean'],
+];
+
+interface FashionHeroEditorProps {
   index: number;
   element: Component;
   isEdit: boolean;
@@ -23,7 +50,7 @@ interface HeroEditorProps {
   onImageUpload: (index: number, file: File) => void;
 }
 
-const HeroEditor: React.FC<HeroEditorProps> = ({
+const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   index,
   element,
   isEdit,
@@ -32,208 +59,430 @@ const HeroEditor: React.FC<HeroEditorProps> = ({
 }) => {
   const { safeDispatch } = useEditModeNavigation();
   const [content, setContent] = useState(element.elements || []);
-  const [bgColor, setBgColor] = useState<string>(
+  const [gradientColors, setGradientColors] = useState([
+    { color: 'rgba(59, 29, 116, 0.7)', stop: 0 },
+    { color: 'rgba(204, 51, 153, 0.6)', stop: 50 },
+    { color: 'transparent', stop: 100 },
+  ]);
+  const [backgroundImage, setBackgroundImage] = useState(
+    element.style?.backgroundImage || '',
+  );
+  const [backgroundOpacity, setBackgroundOpacity] = useState(
+    element.style?.backgroundOpacity || 1,
+  );
+  const [backgroundType, setBackgroundType] = useState('gradient');
+  const [backgroundColor, setBackgroundColor] = useState(
     element.style?.backgroundColor || '#ffffff',
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [tempBackgroundImage, setTempBackgroundImage] =
+    useState(backgroundImage);
+  const [tempBackgroundOpacity, setTempBackgroundOpacity] =
+    useState(backgroundOpacity);
+  const [buttonHref, setButtonHref] = useState(
+    content.find((el) => el.tagName === 'button')?.href || '/default-route',
+  );
+  const [buttonText, setButtonText] = useState(
+    content.find((el) => el.tagName === 'button')?.context || '立即選購',
+  );
+  const [isButtonHrefInputVisible, setIsButtonHrefInputVisible] =
+    useState(false);
+  const [isButtonTextInputVisible, setIsButtonTextInputVisible] =
+    useState(false);
 
-  useEffect(() => {
-    setContent(element.elements || []);
-  }, [element]);
-
-  const handleChange = (itemIndex: number, key: string, value: string) => {
+  const handleChange = (elIndex: number, key: string, value: string) => {
     const updatedContent = content.map((item, idx) => {
-      if (idx === itemIndex) {
+      if (idx === elIndex) {
         return { ...item, [key]: value };
       }
       return item;
     });
-    setContent(updatedContent);
-    safeDispatch(
-      updateBlock({ index, block: { ...element, elements: updatedContent } }),
-    );
+
+    if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
+      setContent(updatedContent);
+      safeDispatch(
+        updateBlock({ index, block: { ...element, elements: updatedContent } }),
+      )();
+    }
   };
 
-  const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadImage = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    elIndex: number,
+  ) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (event) => {
         const result = event.target?.result;
         if (result) {
-          const updatedContent = content.map((item) => {
-            if (item.tagName === 'img') {
+          const updatedContent = content.map((item, idx) => {
+            if (idx === elIndex) {
               return { ...item, src: result as string };
             }
             return item;
           });
-          setContent(updatedContent);
-          onImageUpload(index, file); // Upload image file
+          if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
+            setContent(updatedContent);
+            safeDispatch(
+              updateBlock({
+                index,
+                block: { ...element, elements: updatedContent },
+              }),
+            )();
+          }
+          onImageUpload(index, file);
         }
       };
       reader.readAsDataURL(file);
     }
   };
 
+  const handleIconClick = (elIndex: number) => {
+    fileInputRef.current?.click();
+    fileInputRef.current?.addEventListener('change', (e) =>
+      uploadImage(e as unknown as React.ChangeEvent<HTMLInputElement>, elIndex),
+    );
+  };
+
+  const handleGradientColorChange = (color: any, index: number) => {
+    const updatedGradientColors = [...gradientColors];
+    updatedGradientColors[index].color = color.hex;
+    setGradientColors(updatedGradientColors);
+  };
+
+  const handleBackgroundImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result;
+        if (result) {
+          setTempBackgroundImage(result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const applyBackgroundChanges = () => {
+    let newBackground = '';
+    if (backgroundType === 'gradient') {
+      newBackground = `linear-gradient(to bottom right, ${gradientColors
+        .map((colorStop) => `${colorStop.color} ${colorStop.stop}%`)
+        .join(', ')})`;
+      setBackgroundImage('');
+    } else if (backgroundType === 'color') {
+      newBackground = backgroundColor;
+      setBackgroundImage('');
+    } else if (backgroundType === 'image') {
+      newBackground = '';
+      setBackgroundImage(tempBackgroundImage);
+    }
+
+    setBackgroundOpacity(tempBackgroundOpacity);
+
+    safeDispatch(
+      updateBlock({
+        index,
+        block: {
+          ...element,
+          style: {
+            ...element.style,
+            backgroundGradient:
+              backgroundType === 'gradient' ? newBackground : '',
+            backgroundColor: backgroundType === 'color' ? newBackground : '',
+            backgroundImage:
+              backgroundType === 'image' ? tempBackgroundImage : '',
+            backgroundOpacity:
+              backgroundType === 'image' ? tempBackgroundOpacity : 1,
+          },
+        },
+      }),
+    )();
+    onClose();
+  };
+
+  useEffect(() => {
+    setContent(element.elements || []);
+  }, [element]);
+
+  const renderQuillEditor = (
+    elIndex: number,
+    placeholder: string,
+    className: string,
+  ) => (
+    <ReactQuill
+      className={className}
+      theme='bubble'
+      modules={{ toolbar: baseQuillToolbar }}
+      placeholder={placeholder}
+      value={content[elIndex]?.context || ''}
+      onChange={(value) => {
+        const updatedContent = content.map((item, idx) => {
+          if (idx === elIndex) {
+            return { ...item, context: value };
+          }
+          return item;
+        });
+        if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
+          setContent(updatedContent);
+        }
+      }}
+      onBlur={() => {
+        const updatedContent = content.map((item, idx) => {
+          if (idx === elIndex) {
+            return { ...item, context: content[elIndex].context };
+          }
+          return item;
+        });
+        if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
+          setContent(updatedContent);
+          safeDispatch(
+            updateBlock({
+              index,
+              block: { ...element, elements: updatedContent },
+            }),
+          )();
+        }
+        onBlur();
+      }}
+    />
+  );
+
+  const stripTags = (input: string) => {
+    return input.replace(/<\/?[^>]+(>|$)/g, '');
+  };
+
   return (
-    <Box
-      className='fashion-hero__container'
-      style={{ backgroundColor: bgColor }}
-    >
+    <Box className='fashion-hero__container'>
       <Box className='fashion-hero__background'>
-        <Image
-          src='/api/placeholder/1920/1080'
-          alt='時尚背景'
-          className='fashion-hero__background-img'
-        />
-        <Box className='fashion-hero__background-gradient'></Box>
+        {backgroundType === 'image' && (
+          <Image
+            src={backgroundImage}
+            alt='時尚背景'
+            className='fashion-hero__background-img'
+            style={{ opacity: backgroundOpacity }}
+          />
+        )}
+        {backgroundType === 'gradient' && (
+          <Box
+            className='fashion-hero__background-gradient'
+            style={{
+              background: `linear-gradient(to bottom right, ${gradientColors
+                .map((colorStop) => `${colorStop.color} ${colorStop.stop}%`)
+                .join(', ')})`,
+            }}
+          ></Box>
+        )}
+        {backgroundType === 'color' && (
+          <Box
+            className='fashion-hero__background-color'
+            style={{ backgroundColor }}
+          ></Box>
+        )}
       </Box>
+
       <Box className='fashion-hero__content'>
-        <Flex className='fashion-hero__nav'>
-          <Text
-            className='fashion-hero__logo'
-            contentEditable={isEdit}
-            suppressContentEditableWarning
-            onBlur={(e) =>
-              handleChange(
-                content.findIndex((item) => item.tagName === 'logo'),
-                'context',
-                e.currentTarget.textContent || 'LOGO',
-              )
-            }
-          >
-            {content.find((item) => item.tagName === 'logo')?.context || 'LOGO'}
-          </Text>
-          <Flex className='fashion-hero__nav-items'>
-            {content
-              .filter((item) => item.tagName === 'navItem')
-              .map((item, idx) => (
-                <Text
-                  mx='3'
-                  key={idx}
-                  contentEditable={isEdit}
-                  suppressContentEditableWarning
-                  onBlur={(e) =>
-                    handleChange(
-                      content.findIndex((navItem) => navItem === item),
-                      'context',
-                      e.currentTarget.textContent || '',
-                    )
-                  }
-                >
-                  {item.context}
-                </Text>
-              ))}
-          </Flex>
-        </Flex>
         <Flex className='fashion-hero__main'>
           <Box className='fashion-hero__main-text'>
-            <Heading
-              as='h1'
-              size='2xl'
-              className='fashion-hero__heading'
-              contentEditable={isEdit}
-              suppressContentEditableWarning
-              onBlur={(e) =>
-                handleChange(
-                  content.findIndex((item) => item.tagName === 'h1'),
-                  'context',
-                  e.currentTarget.textContent || '秋冬 新風尚',
-                )
-              }
-            >
-              {content.find((item) => item.tagName === 'h1')?.context ||
-                '秋冬 新風尚'}
+            <Heading as='h1' size='2xl' className='fashion-hero__heading'>
+              {isEdit
+                ? renderQuillEditor(
+                    content.findIndex(
+                      (el) => el.className === 'fashion-hero__heading',
+                    ),
+                    '標題',
+                    'fashion-hero__heading-input',
+                  )
+                : stripTags(
+                    content.find(
+                      (el) => el.className === 'fashion-hero__heading',
+                    )?.context || '秋冬 新風尚',
+                  )}
             </Heading>
-            <Text
-              className='fashion-hero__subheading'
-              contentEditable={isEdit}
-              suppressContentEditableWarning
-              onBlur={(e) =>
-                handleChange(
-                  content.findIndex((item) => item.tagName === 'h2'),
-                  'context',
-                  e.currentTarget.textContent ||
-                    '探索我們的2024秋冬系列，體驗前所未有的時尚魅力。每一件單品都是精心打造的藝術品。',
-                )
-              }
-            >
-              {content.find((item) => item.tagName === 'h2')?.context ||
-                '探索我們的2024秋冬系列，體驗前所未有的時尚魅力。每一件單品都是精心打造的藝術品。'}
-            </Text>
-            <Button className='fashion-hero__button'>
-              {content.find((item) => item.tagName === 'button')?.context ||
-                '立即選購'}
-              <ArrowRightIcon className='ml-2' />
-            </Button>
+            <Box className='fashion-hero__subheading'>
+              {isEdit
+                ? renderQuillEditor(
+                    content.findIndex(
+                      (el) => el.className === 'fashion-hero__subheading',
+                    ),
+                    '子標題',
+                    'fashion-hero__subheading-input',
+                  )
+                : stripTags(
+                    content.find(
+                      (el) => el.className === 'fashion-hero__subheading',
+                    )?.context ||
+                      '探索我們的2024秋冬系列，體驗前所未有的時尚魅力。每一件單品都是精心打造的藝術品。',
+                  )}
+            </Box>
+            <Flex>
+              <Button
+                className='fashion-hero__button'
+                onClick={() => {
+                  if (buttonHref) {
+                    window.location.href = buttonHref;
+                  }
+                }}
+              >
+                {buttonText}
+              </Button>
+              {isEdit && (
+                <IconButton
+                  aria-label='Edit button settings'
+                  icon={<EditIcon />}
+                  ml={2}
+                  onClick={() => {
+                    setIsButtonHrefInputVisible(!isButtonHrefInputVisible);
+                    setIsButtonTextInputVisible(!isButtonTextInputVisible);
+                  }}
+                />
+              )}
+            </Flex>
+            {isEdit && isButtonHrefInputVisible && (
+              <Input
+                mt={2}
+                placeholder='設定按鈕路由'
+                value={buttonHref}
+                onChange={(e) => setButtonHref(e.target.value)}
+              />
+            )}
+            {isEdit && isButtonTextInputVisible && (
+              <Input
+                mt={2}
+                placeholder='設定按鈕名稱'
+                value={buttonText}
+                onChange={(e) => setButtonText(e.target.value)}
+              />
+            )}
           </Box>
+
           <Box className='fashion-hero__product'>
             <Image
               src={
-                content.find((item) => item.tagName === 'img')?.src ||
-                '/api/placeholder/500/700'
+                content.find(
+                  (el) => el.className === 'fashion-hero__product-img',
+                )?.src || ''
               }
-              alt={
-                content.find((item) => item.tagName === 'img')?.alt ||
-                '秋冬新品'
-              }
+              alt='秋冬新品'
               className='fashion-hero__product-img'
+              onClick={() =>
+                handleIconClick(
+                  content.findIndex(
+                    (el) => el.className === 'fashion-hero__product-img',
+                  ),
+                )
+              }
             />
-            <Flex align='center' className='fashion-hero__rating'>
-              <StarIcon className='fashion-hero__rating-icon' />
-              <Text className='fashion-hero__rating-score'>4.9</Text>
-              <Text className='fashion-hero__rating-text' ml='2'>
-                (3000+ 評價)
-              </Text>
-            </Flex>
-          </Box>
-        </Flex>
-        <Flex className='fashion-hero__footer'>
-          <Box>
-            <Text className='fashion-hero__footer-discount'>30% OFF</Text>
-            <Text className='fashion-hero__footer-info'>全場新品限時優惠</Text>
-          </Box>
-          <Box textAlign='right' className='fashion-hero__footer-inspiration'>
-            <Text className='fashion-hero__footer-inspiration-text'>
-              靈感來源
-            </Text>
-            <Text className='fashion-hero__footer-inspiration-source'>
-              巴黎時裝周
-            </Text>
           </Box>
         </Flex>
       </Box>
+
       <Box className='fashion-hero__decor-circle'></Box>
       <Box className='fashion-hero__decor-square'></Box>
+
+      <Input
+        type='file'
+        accept='image/*'
+        onChange={(e) =>
+          uploadImage(
+            e,
+            content.findIndex((el) => el.className === testImage),
+          )
+        }
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+      />
+
       {isEdit && (
-        <>
-          <Tooltip label='更改背景顏色' aria-label='更改背景顏色'>
-            <Input
-              type='color'
-              value={bgColor}
-              onChange={(e) => setBgColor(e.target.value)}
-              style={{ position: 'absolute', top: '10px', right: '10px' }}
-            />
-          </Tooltip>
-          <Tooltip label='更改圖片' aria-label='更改圖片'>
-            <IconButton
-              icon={<ArrowRightIcon />}
-              aria-label='更改圖片'
-              onClick={() => fileInputRef.current?.click()}
-              style={{ position: 'absolute', top: '50px', right: '10px' }}
-            />
-            <Input
-              type='file'
-              accept='image/*'
-              ref={fileInputRef}
-              onChange={uploadImage}
-              style={{ display: 'none' }}
-            />
-          </Tooltip>
-        </>
+        <Button onClick={onOpen} mt={4}>
+          編輯背景
+        </Button>
       )}
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>編輯背景</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <RadioGroup onChange={setBackgroundType} value={backgroundType}>
+              <Stack direction='row'>
+                <Radio value='gradient'>漸層色</Radio>
+                <Radio value='color'>單色</Radio>
+                <Radio value='image'>上傳圖片</Radio>
+              </Stack>
+            </RadioGroup>
+            {backgroundType === 'gradient' &&
+              gradientColors.map((colorStop, index) => (
+                <Box key={index} mt={4}>
+                  <SketchPicker
+                    color={colorStop.color}
+                    onChange={(color) =>
+                      handleGradientColorChange(color, index)
+                    }
+                  />
+                </Box>
+              ))}
+            {backgroundType === 'color' && (
+              <Box mt={4}>
+                <SketchPicker
+                  color={backgroundColor}
+                  onChange={(color) => setBackgroundColor(color.hex)}
+                />
+              </Box>
+            )}
+            {backgroundType === 'image' && (
+              <Box mt={4}>
+                <Input
+                  type='file'
+                  accept='image/*'
+                  onChange={handleBackgroundImageChange}
+                  placeholder='上傳背景圖片'
+                />
+                {tempBackgroundImage && (
+                  <>
+                    <Image
+                      src={tempBackgroundImage}
+                      alt='預覽背景圖片'
+                      mt={4}
+                      boxSize='100%'
+                    />
+                    <Box mt={4}>
+                      <Slider
+                        value={tempBackgroundOpacity}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        onChange={setTempBackgroundOpacity}
+                      >
+                        <SliderTrack>
+                          <SliderFilledTrack />
+                        </SliderTrack>
+                        <SliderThumb />
+                      </Slider>
+                    </Box>
+                  </>
+                )}
+              </Box>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button variant='ghost' onClick={onClose}>
+              取消
+            </Button>
+            <Button colorScheme='blue' onClick={applyBackgroundChanges}>
+              確定
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
 
-export default HeroEditor;
+export default FashionHeroEditor;
