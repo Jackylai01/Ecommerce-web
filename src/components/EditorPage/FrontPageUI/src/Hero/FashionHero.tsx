@@ -57,13 +57,14 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   onBlur,
   onImageUpload,
 }) => {
-  const { safeDispatch } = useEditModeNavigation();
+  const { safeDispatch, safeNavigation } = useEditModeNavigation();
   const [content, setContent] = useState(element.elements || []);
   const [gradientColors, setGradientColors] = useState([
     { color: 'rgba(59, 29, 116, 0.7)', stop: 0 },
     { color: 'rgba(204, 51, 153, 0.6)', stop: 50 },
     { color: 'transparent', stop: 100 },
   ]);
+
   const [backgroundImage, setBackgroundImage] = useState(
     element.style?.backgroundImage || '',
   );
@@ -83,6 +84,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   const [buttonHref, setButtonHref] = useState(
     content.find((el) => el.tagName === 'button')?.href || '/default-route',
   );
+
   const [buttonText, setButtonText] = useState(
     content.find((el) => el.tagName === 'button')?.context || '立即選購',
   );
@@ -323,11 +325,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
             <Flex>
               <Button
                 className='fashion-hero__button'
-                onClick={() => {
-                  if (buttonHref) {
-                    window.location.href = buttonHref;
-                  }
-                }}
+                onClick={safeNavigation(buttonHref)}
               >
                 {buttonText}
               </Button>

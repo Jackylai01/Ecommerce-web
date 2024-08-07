@@ -104,7 +104,31 @@
     color: #4a5568;
     margin-left: 0.5rem;
   }
-
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    color: #ffffff;
+  }
+  &__footer-discount {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  &__footer-info {
+    font-size: 1.25rem;
+  }
+  &__footer-inspiration {
+    text-align: right;
+  }
+  &__footer-inspiration-text {
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+  &__footer-inspiration-source {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
   &__decor-circle {
     position: absolute;
     top: 25%;
