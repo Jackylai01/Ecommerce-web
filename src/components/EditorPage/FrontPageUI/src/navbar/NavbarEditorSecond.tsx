@@ -19,6 +19,7 @@ import { Cart } from '@components/Cart/Cart';
 import { Component } from '@fixtures/componentLibrary';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import useEditModeNavigation from '@hooks/useEditModeNavigation';
 import { updateBlock } from '@reducers/admin/admin-edit-pages';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import { Search, User } from 'lucide-react';
@@ -47,6 +48,7 @@ const NavbarEditorSecond: React.FC<NavbarEditorSecondProps> = ({
   isEdit,
   onBlur,
 }) => {
+  const { safeDispatch, safeNavigation } = useEditModeNavigation();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -138,23 +140,6 @@ const NavbarEditorSecond: React.FC<NavbarEditorSecondProps> = ({
     }
   };
 
-  const handleLinkClick = (href: string, event: React.MouseEvent) => {
-    if (router.pathname.includes('/design')) {
-      event.preventDefault();
-    } else {
-      router.push(href);
-    }
-  };
-
-  const handleClassNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(
-      updateBlock({
-        index,
-        block: { ...element, className: e.target.value },
-      }),
-    );
-  };
-
   const handleBgColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const color = e.target.value;
     setBgColor(color);
@@ -211,7 +196,7 @@ const NavbarEditorSecond: React.FC<NavbarEditorSecondProps> = ({
                   as='a'
                   href={link.href}
                   className='navbar_second__link'
-                  onClick={(event: any) => handleLinkClick(link.href, event)}
+                  onClick={(event: any) => safeNavigation(link.href)(event)}
                   style={{ color: navItemColor }}
                 >
                   {link.context}
@@ -370,7 +355,7 @@ const NavbarEditorSecond: React.FC<NavbarEditorSecondProps> = ({
                   as='a'
                   href={link.href}
                   className='navbar_second__link'
-                  onClick={(event: any) => handleLinkClick(link.href, event)}
+                  onClick={(event) => safeNavigation(link.href)(event)}
                   style={{ color: navItemColor }}
                 >
                   {link.context}
