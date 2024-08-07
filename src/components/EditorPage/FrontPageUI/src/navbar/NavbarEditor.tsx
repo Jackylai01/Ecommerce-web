@@ -18,11 +18,10 @@ import {
 import { Cart } from '@components/Cart/Cart';
 import { Search } from '@components/Search/Search';
 import { Component } from '@fixtures/componentLibrary';
-import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import useEditModeNavigation from '@hooks/useEditModeNavigation';
 import { updateBlock } from '@reducers/admin/admin-edit-pages';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
-import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import { BsCart4 } from 'react-icons/bs';
 import {
@@ -49,8 +48,6 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   onBlur,
   onImageUpload,
 }) => {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [content, setContent] = useState(element.elements || []);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -71,6 +68,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   } = useAppSelector((state) => state.clientAuth);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { safeDispatch, safeNavigation } = useEditModeNavigation();
 
   useEffect(() => {
     setContent(element.elements || []);
@@ -88,9 +86,9 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
       return item;
     });
     setContent(updatedContent);
-    dispatch(
+    safeDispatch(
       updateBlock({ index, block: { ...element, elements: updatedContent } }),
-    );
+    )();
   };
 
   const addLink = () => {
@@ -102,18 +100,18 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
     };
     const updatedContent = [...content, newLink];
     setContent(updatedContent);
-    dispatch(
+    safeDispatch(
       updateBlock({ index, block: { ...element, elements: updatedContent } }),
-    );
+    )();
     setNewItemText('');
   };
 
   const removeLink = (linkIndex: number) => {
     const updatedContent = content.filter((_, idx) => idx !== linkIndex);
     setContent(updatedContent);
-    dispatch(
+    safeDispatch(
       updateBlock({ index, block: { ...element, elements: updatedContent } }),
-    );
+    )();
   };
 
   const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,38 +128,16 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
     }
   };
 
-  const handleLogout = () => {
-    if (!router.pathname.includes('/design')) {
-      dispatch(clientLogoutAsync());
-      onClose();
-    }
-  };
-
-  const handleNavigation = (href: string) => {
-    if (!router.pathname.includes('/design')) {
-      router.push(href);
-      onClose();
-    }
-  };
-
-  const handleLinkClick = (href: string, event: React.MouseEvent) => {
-    if (router.pathname.includes('/design')) {
-      event.preventDefault();
-    } else {
-      router.push(href);
-    }
-  };
-
   const handleClassNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(
+    safeDispatch(
       updateBlock({ index, block: { ...element, className: e.target.value } }),
-    );
+    )();
   };
 
   const handleBgColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const color = e.target.value;
     setBgColor(color);
-    dispatch(
+    safeDispatch(
       updateBlock({
         index,
         block: {
@@ -170,7 +146,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
           style: { ...element.style, backgroundColor: color },
         },
       }),
-    );
+    )();
   };
 
   const handleNavItemColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,7 +157,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
       style: { ...item.style, color },
     }));
     setContent(updatedContent);
-    dispatch(
+    safeDispatch(
       updateBlock({
         index,
         block: {
@@ -190,7 +166,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
           style: { ...element.style, navItemColor: color },
         },
       }),
-    );
+    )();
   };
 
   const toggleColorPicker = () => {
@@ -247,7 +223,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                 <a
                   href={link.href}
                   className='navbar__link'
-                  onClick={(event) => handleLinkClick(link.href, event)}
+                  onClick={(event) => safeNavigation(link.href)(event)}
                   style={{ color: navItemColor }}
                 >
                   {link.context}
@@ -330,10 +306,14 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                       variant='ghost'
                     />
                     <MenuList>
-                      <MenuItem onClick={() => handleNavigation('/client')}>
+                      <MenuItem
+                        onClick={(event) => safeNavigation('/client')(event)}
+                      >
                         會員管理
                       </MenuItem>
-                      <MenuItem onClick={handleLogout}>登出</MenuItem>
+                      <MenuItem onClick={safeDispatch(clientLogoutAsync())}>
+                        登出
+                      </MenuItem>
                     </MenuList>
                   </Menu>
                 </Box>
@@ -399,7 +379,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                 <a
                   href={link.href}
                   className='navbar__link'
-                  onClick={(event) => handleLinkClick(link.href, event)}
+                  onClick={(event) => safeNavigation(link.href)(event)}
                   style={{ color: navItemColor }}
                 >
                   {link.context}
@@ -418,10 +398,14 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                     variant='ghost'
                   />
                   <MenuList>
-                    <MenuItem onClick={() => handleNavigation('/client')}>
+                    <MenuItem
+                      onClick={(event) => safeNavigation('/client')(event)}
+                    >
                       會員管理
                     </MenuItem>
-                    <MenuItem onClick={handleLogout}>登出</MenuItem>
+                    <MenuItem onClick={safeDispatch(clientLogoutAsync())}>
+                      登出
+                    </MenuItem>
                   </MenuList>
                 </Menu>
               </Box>

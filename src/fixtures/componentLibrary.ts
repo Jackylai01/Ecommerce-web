@@ -37,7 +37,7 @@ export const componentLibrary: Record<string, Component> = {
       { tagName: 'a', context: '首頁', href: '#' },
       { tagName: 'a', context: '產品', href: '#' },
       { tagName: 'a', context: '關於我們', href: '#' },
-      { tagName: 'img', context: 'logo', href: '/', src: testImage },
+      { tagName: 'img', context: '', href: '/', src: testImage },
     ],
   },
   navbar_b: {

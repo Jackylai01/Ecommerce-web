@@ -1,0 +1,34 @@
+import { useRouter } from 'next/router';
+import { useCallback } from 'react';
+import useAppDispatch from './useAppDispatch';
+
+const useEditModeNavigation = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const isEditMode = router.pathname.includes('/design');
+
+  const safeDispatch = useCallback(
+    (action) => () => {
+      if (!isEditMode) {
+        dispatch(action);
+      }
+    },
+    [dispatch, isEditMode],
+  );
+
+  const safeNavigation = useCallback(
+    (href: string) => (event: React.MouseEvent) => {
+      if (isEditMode) {
+        event.preventDefault();
+      } else {
+        router.push(href);
+      }
+    },
+    [router, isEditMode],
+  );
+
+  return { safeDispatch, safeNavigation };
+};
+
+export default useEditModeNavigation;
