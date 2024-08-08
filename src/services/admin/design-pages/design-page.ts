@@ -41,3 +41,12 @@ export const apiUpdateDesignPage = async (route: string, body: IDesignPage) => {
 export const apiDeleteDesignPage = async (route: string) => {
   return deleteRequest<ApiResult<void>>(`/design-pages/${route}`);
 };
+
+/**
+ * 上傳編輯區圖片
+ */
+export const apiUploadImage = async (formData: FormData) => {
+  return postRequest<ApiResult<string[]>>('/design-pages/upload', formData, {
+    'Content-Type': 'multipart/form-data',
+  });
+};

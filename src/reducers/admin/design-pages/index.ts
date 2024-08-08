@@ -10,6 +10,7 @@ import {
   getAllDesignPagesAsync,
   getDesignPageByRouteAsync,
   updateDesignPageAsync,
+  uploadImageAsync,
 } from './actions';
 
 export enum DesignPageActions {
@@ -23,11 +24,13 @@ export enum DesignPageActions {
 type DesignPageState = ApiState<DesignPageActions> & {
   pages: IDesignPage[] | null;
   currentPage: IDesignPage | null;
+  uploadedImageUrls: string[] | null;
 };
 
 const initialState: DesignPageState = {
   pages: null,
   currentPage: null,
+  uploadedImageUrls: null,
   ...newApiState<DesignPageState>(DesignPageActions),
 };
 
@@ -66,6 +69,9 @@ const designPageSlice = createSlice({
           (page) => page.route !== action.payload,
         );
       }
+    });
+    builder.addCase(uploadImageAsync.fulfilled, (state, action) => {
+      state.uploadedImageUrls = action.payload;
     });
     asyncMatcher(builder, ReducerName.ADMIN_CREATE_DESIGN_PAGE);
   },

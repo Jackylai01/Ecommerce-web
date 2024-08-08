@@ -7,6 +7,7 @@ import {
   apiGetAllDesignPages,
   apiGetDesignPageByRoute,
   apiUpdateDesignPage,
+  apiUploadImage,
 } from '@services/admin/design-pages/design-page';
 
 export enum DesignPageActions {
@@ -15,6 +16,7 @@ export enum DesignPageActions {
   GET_DESIGN_PAGE_BY_ROUTE = 'getDesignPageByRoute',
   UPDATE_DESIGN_PAGE = 'updateDesignPage',
   DELETE_DESIGN_PAGE = 'deleteDesignPage',
+  UPLOAD_IMAGE = 'uploadImage',
 }
 
 // 創建新的設計頁面
@@ -59,5 +61,15 @@ export const deleteDesignPageAsync = createAsyncThunk(
   async (route: string) => {
     await apiDeleteDesignPage(route);
     return route;
+  },
+);
+
+// 上傳圖片
+export const uploadImageAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_CREATE_DESIGN_PAGE}/${DesignPageActions.UPLOAD_IMAGE}`,
+  async (formData: FormData) => {
+    const response = await apiUploadImage(formData);
+    console.log(response);
+    return response.result.data;
   },
 );
