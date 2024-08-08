@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import React from 'react';
 import FashionHeroEditor from './src/Hero/FashionHero';
@@ -50,7 +51,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
         />
       );
     default:
-      return <p>未知的組件類型: {component.className}</p>;
+      return <Box>未知的組件類型: {component.className}</Box>;
   }
 };
 

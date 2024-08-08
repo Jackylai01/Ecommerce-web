@@ -1,6 +1,7 @@
 import { PageLayoutType } from '@enums/page-layout-type';
 import {
   ADMIN_EDIT_PAGES_ROUTE,
+  ADMIN_PREVIEW_ROUTE,
   ADMIN_ROUTE,
   CLIENT_ROUTE,
   PUBLIC_ROUTE,
@@ -29,6 +30,9 @@ export const toPageLayoutType = (pathname: string) => {
   if (pathname.startsWith(`/${ADMIN_EDIT_PAGES_ROUTE}/edit`)) {
     return PageLayoutType.ADMIN_EDIT; // 如果 URL 的開頭是 pages 的 edit 路由，則頁面佈局類型為 ADMIN_EDIT
   }
+  if (pathname.startsWith(`/${ADMIN_PREVIEW_ROUTE}`)) {
+    return PageLayoutType.ADMIN_PREVIEW_PAGE; // 如果 URL 的開頭是 pages 的 edit 路由，則頁面佈局類型為 ADMIN_EDIT
+  }
 
   const mainRoute = getMainRoute(pathname);
   switch (
@@ -38,6 +42,8 @@ export const toPageLayoutType = (pathname: string) => {
       return PageLayoutType.ADMIN;
     case CLIENT_ROUTE:
       return PageLayoutType.CLIENT;
+    case ADMIN_PREVIEW_ROUTE:
+      return PageLayoutType.ADMIN_PREVIEW_PAGE;
     case ADMIN_EDIT_PAGES_ROUTE:
       return PageLayoutType.ADMIN_EDIT;
     default:

@@ -11,6 +11,7 @@ import AdminEditPageLayout from './AdminEditLayout';
 import AdminLayout from './AdminLayout';
 import ClientLayout from './ClientLayout';
 import ClientPublicLayout from './ClientPublicLayout';
+import PreviewLayout from './PreviewLayout';
 
 type Props = {
   children?: React.ReactNode;
@@ -46,6 +47,9 @@ const Layout = ({ children }: Props) => {
       )}
       {pageLayoutType === PageLayoutType.CLIENT_PUBLIC && (
         <ClientPublicLayout>{children}</ClientPublicLayout>
+      )}
+      {pageLayoutType === PageLayoutType.ADMIN_PREVIEW_PAGE && (
+        <PreviewLayout>{children}</PreviewLayout>
       )}
       {pageLayoutType === PageLayoutType.ADMIN_EDIT && (
         <AdminEditPageLayout>{children}</AdminEditPageLayout>
