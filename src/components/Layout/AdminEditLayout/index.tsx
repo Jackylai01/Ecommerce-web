@@ -2,6 +2,8 @@ import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 import { loadAdminToken } from '@helpers/token';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
 import {
   addBlock,
   removeBlockItem,
@@ -13,9 +15,6 @@ import {
   createDesignPageAsync,
   getDesignPageByRouteAsync,
 } from '@reducers/admin/design-pages/actions';
-
-import useAppDispatch from '@hooks/useAppDispatch';
-import useAppSelector from '@hooks/useAppSelector';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
@@ -116,7 +115,6 @@ const AdminEditPageLayout: React.FC = () => {
     }));
     formData.append('blocks', JSON.stringify(blocks));
 
-    // 確保圖片文件和表單數據一起發送
     if (logoFile) {
       formData.append('images', logoFile);
     }
@@ -125,7 +123,7 @@ const AdminEditPageLayout: React.FC = () => {
   };
 
   const handleImageUpload = (index: number, file: File) => {
-    setLogoFile(file); // Store the logo file in state
+    setLogoFile(file);
     const updatedComponents = components.map((component, compIndex) => {
       if (compIndex === index) {
         return {
@@ -152,7 +150,7 @@ const AdminEditPageLayout: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
-      dispatch(getDesignPageByRouteAsync(currentRoute)); // 在成功创建页面后重新获取页面数据
+      dispatch(getDesignPageByRouteAsync(currentRoute));
     }
     if (createDesignPageFailed) {
       toast({
@@ -232,6 +230,13 @@ const AdminEditPageLayout: React.FC = () => {
                 mr={2}
               >
                 {isEditing ? '結束編輯模式' : '進入編輯模式'}
+              </Button>
+              <Button
+                colorScheme='blue'
+                mr={2}
+                onClick={() => router.push(`/preview?route=${currentRoute}`)}
+              >
+                查看頁面預覽
               </Button>
               <Button colorScheme='blue' type='submit'>
                 發佈到前台

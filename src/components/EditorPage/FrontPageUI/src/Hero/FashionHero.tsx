@@ -246,248 +246,250 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   };
 
   return (
-    <Box className='fashion-hero__container'>
-      <Box className='fashion-hero__background'>
-        {backgroundType === 'image' && (
-          <Image
-            src={backgroundImage}
-            alt='時尚背景'
-            className='fashion-hero__background-img'
-            style={{ opacity: backgroundOpacity }}
-          />
-        )}
-        {backgroundType === 'gradient' && (
-          <Box
-            className='fashion-hero__background-gradient'
-            style={{
-              background: `linear-gradient(to bottom right, ${gradientColors
-                .map((colorStop) => `${colorStop.color} ${colorStop.stop}%`)
-                .join(', ')})`,
-            }}
-          ></Box>
-        )}
-        {backgroundType === 'color' && (
-          <Box
-            className='fashion-hero__background-color'
-            style={{ backgroundColor }}
-          ></Box>
-        )}
-      </Box>
+    <Box className={`fashion-hero ${element.className}`}>
+      <Box className='fashion-hero__container'>
+        <Box className='fashion-hero__background'>
+          {backgroundType === 'image' && (
+            <Image
+              src={backgroundImage}
+              alt='時尚背景'
+              className='fashion-hero__background-img'
+              style={{ opacity: backgroundOpacity }}
+            />
+          )}
+          {backgroundType === 'gradient' && (
+            <Box
+              className='fashion-hero__background-gradient'
+              style={{
+                background: `linear-gradient(to bottom right, ${gradientColors
+                  .map((colorStop) => `${colorStop.color} ${colorStop.stop}%`)
+                  .join(', ')})`,
+              }}
+            ></Box>
+          )}
+          {backgroundType === 'color' && (
+            <Box
+              className='fashion-hero__background-color'
+              style={{ backgroundColor }}
+            ></Box>
+          )}
+        </Box>
 
-      <Box className='fashion-hero__content'>
-        <Flex className='fashion-hero__main'>
-          <Box className='fashion-hero__main-text'>
-            <Heading as='h1' size='2xl' className='fashion-hero__heading'>
-              {isEdit
-                ? renderQuillEditor(
-                    content.findIndex(
-                      (el) => el.className === 'fashion-hero__heading',
-                    ),
-                    '標題',
-                    'fashion-hero__heading-input',
-                  )
-                : stripTags(
-                    content.find(
-                      (el) => el.className === 'fashion-hero__heading',
-                    )?.context || '秋冬 新風尚',
-                  )}
-            </Heading>
-            <Box className='fashion-hero__subheading'>
-              {isEdit
-                ? renderQuillEditor(
-                    content.findIndex(
-                      (el) => el.className === 'fashion-hero__subheading',
-                    ),
-                    '子標題',
-                    'fashion-hero__subheading-input',
-                  )
-                : stripTags(
-                    content.find(
-                      (el) => el.className === 'fashion-hero__subheading',
-                    )?.context ||
-                      '探索我們的2024秋冬系列，體驗前所未有的時尚魅力。每一件單品都是精心打造的藝術品。',
-                  )}
-            </Box>
-            <Flex align='center'>
-              <Button
-                className='fashion-hero__button'
-                onClick={() => {
-                  if (buttonHref) {
-                    window.location.href = buttonHref;
-                  }
-                }}
-              >
-                {buttonText}
-                <ArrowRightIcon className='ml-2' />
-              </Button>
-              {isEdit && (
-                <IconButton
-                  aria-label='Edit button settings'
-                  icon={<EditIcon />}
-                  ml={2}
+        <Box className='fashion-hero__content'>
+          <Flex className='fashion-hero__main'>
+            <Box className='fashion-hero__main-text'>
+              <Heading as='h1' size='2xl' className='fashion-hero__heading'>
+                {isEdit
+                  ? renderQuillEditor(
+                      content.findIndex(
+                        (el) => el.className === 'fashion-hero__heading',
+                      ),
+                      '標題',
+                      'fashion-hero__heading-input',
+                    )
+                  : stripTags(
+                      content.find(
+                        (el) => el.className === 'fashion-hero__heading',
+                      )?.context || '秋冬 新風尚',
+                    )}
+              </Heading>
+              <Box className='fashion-hero__subheading'>
+                {isEdit
+                  ? renderQuillEditor(
+                      content.findIndex(
+                        (el) => el.className === 'fashion-hero__subheading',
+                      ),
+                      '子標題',
+                      'fashion-hero__subheading-input',
+                    )
+                  : stripTags(
+                      content.find(
+                        (el) => el.className === 'fashion-hero__subheading',
+                      )?.context ||
+                        '探索我們的2024秋冬系列，體驗前所未有的時尚魅力。每一件單品都是精心打造的藝術品。',
+                    )}
+              </Box>
+              <Flex align='center'>
+                <Button
+                  className='fashion-hero__button'
                   onClick={() => {
-                    setIsButtonHrefInputVisible(!isButtonHrefInputVisible);
-                    setIsButtonTextInputVisible(!isButtonTextInputVisible);
+                    if (buttonHref) {
+                      window.location.href = buttonHref;
+                    }
                   }}
+                >
+                  {buttonText}
+                  <ArrowRightIcon className='ml-2' />
+                </Button>
+                {isEdit && (
+                  <IconButton
+                    aria-label='Edit button settings'
+                    icon={<EditIcon />}
+                    ml={2}
+                    onClick={() => {
+                      setIsButtonHrefInputVisible(!isButtonHrefInputVisible);
+                      setIsButtonTextInputVisible(!isButtonTextInputVisible);
+                    }}
+                  />
+                )}
+              </Flex>
+              {isEdit && isButtonHrefInputVisible && (
+                <Input
+                  mt={2}
+                  placeholder='設定按鈕路由'
+                  value={buttonHref}
+                  onChange={(e) =>
+                    handleChange(
+                      content.findIndex(
+                        (el) => el.className === 'fashion-hero__button',
+                      ),
+                      'href',
+                      e.target.value,
+                    )
+                  }
                 />
               )}
-            </Flex>
-            {isEdit && isButtonHrefInputVisible && (
-              <Input
-                mt={2}
-                placeholder='設定按鈕路由'
-                value={buttonHref}
-                onChange={(e) =>
-                  handleChange(
-                    content.findIndex(
-                      (el) => el.className === 'fashion-hero__button',
-                    ),
-                    'href',
-                    e.target.value,
-                  )
-                }
-              />
-            )}
-            {isEdit && isButtonTextInputVisible && (
-              <Input
-                mt={2}
-                placeholder='設定按鈕名稱'
-                value={buttonText}
-                onChange={(e) =>
-                  handleChange(
-                    content.findIndex(
-                      (el) => el.className === 'fashion-hero__button',
-                    ),
-                    'context',
-                    e.target.value,
-                  )
-                }
-              />
-            )}
-          </Box>
+              {isEdit && isButtonTextInputVisible && (
+                <Input
+                  mt={2}
+                  placeholder='設定按鈕名稱'
+                  value={buttonText}
+                  onChange={(e) =>
+                    handleChange(
+                      content.findIndex(
+                        (el) => el.className === 'fashion-hero__button',
+                      ),
+                      'context',
+                      e.target.value,
+                    )
+                  }
+                />
+              )}
+            </Box>
 
-          <Box className='fashion-hero__product'>
-            <Image
-              src={
-                content.find(
-                  (el) => el.className === 'fashion-hero__product-img',
-                )?.src || ''
-              }
-              alt='秋冬新品'
-              className='fashion-hero__product-img'
-              onClick={() =>
-                handleIconClick(
-                  content.findIndex(
+            <Box className='fashion-hero__product'>
+              <Image
+                src={
+                  content.find(
                     (el) => el.className === 'fashion-hero__product-img',
-                  ),
-                )
-              }
-            />
-          </Box>
-        </Flex>
-      </Box>
+                  )?.src || ''
+                }
+                alt='秋冬新品'
+                className='fashion-hero__product-img'
+                onClick={() =>
+                  handleIconClick(
+                    content.findIndex(
+                      (el) => el.className === 'fashion-hero__product-img',
+                    ),
+                  )
+                }
+              />
+            </Box>
+          </Flex>
+        </Box>
 
-      <Box className='fashion-hero__decor-circle'></Box>
-      <Box className='fashion-hero__decor-square'></Box>
+        <Box className='fashion-hero__decor-circle'></Box>
+        <Box className='fashion-hero__decor-square'></Box>
 
-      <Input
-        type='file'
-        accept='image/*'
-        onChange={(e) =>
-          uploadImage(
-            e,
-            content.findIndex(
-              (el) => el.className === 'fashion-hero__background-img',
-            ),
-          )
-        }
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-      />
+        <Input
+          type='file'
+          accept='image/*'
+          onChange={(e) =>
+            uploadImage(
+              e,
+              content.findIndex(
+                (el) => el.className === 'fashion-hero__background-img',
+              ),
+            )
+          }
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+        />
 
-      {isEdit && (
-        <Button onClick={onOpen} mt={4}>
-          編輯背景
-        </Button>
-      )}
+        {isEdit && (
+          <Button onClick={onOpen} mt={4}>
+            編輯背景
+          </Button>
+        )}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>編輯背景</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <RadioGroup onChange={setBackgroundType} value={backgroundType}>
-              <Stack direction='row'>
-                <Radio value='gradient'>漸層色</Radio>
-                <Radio value='color'>單色</Radio>
-                <Radio value='image'>上傳圖片</Radio>
-              </Stack>
-            </RadioGroup>
-            {backgroundType === 'gradient' &&
-              gradientColors.map((colorStop, index) => (
-                <Box key={index} mt={4}>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>編輯背景</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <RadioGroup onChange={setBackgroundType} value={backgroundType}>
+                <Stack direction='row'>
+                  <Radio value='gradient'>漸層色</Radio>
+                  <Radio value='color'>單色</Radio>
+                  <Radio value='image'>上傳圖片</Radio>
+                </Stack>
+              </RadioGroup>
+              {backgroundType === 'gradient' &&
+                gradientColors.map((colorStop, index) => (
+                  <Box key={index} mt={4}>
+                    <SketchPicker
+                      color={colorStop.color}
+                      onChange={(color) =>
+                        handleGradientColorChange(color, index)
+                      }
+                    />
+                  </Box>
+                ))}
+              {backgroundType === 'color' && (
+                <Box mt={4}>
                   <SketchPicker
-                    color={colorStop.color}
-                    onChange={(color) =>
-                      handleGradientColorChange(color, index)
-                    }
+                    color={backgroundColor}
+                    onChange={(color) => setBackgroundColor(color.hex)}
                   />
                 </Box>
-              ))}
-            {backgroundType === 'color' && (
-              <Box mt={4}>
-                <SketchPicker
-                  color={backgroundColor}
-                  onChange={(color) => setBackgroundColor(color.hex)}
-                />
-              </Box>
-            )}
-            {backgroundType === 'image' && (
-              <Box mt={4}>
-                <Input
-                  type='file'
-                  accept='image/*'
-                  onChange={handleBackgroundImageChange}
-                  placeholder='上傳背景圖片'
-                />
-                {tempBackgroundImage && (
-                  <>
-                    <Image
-                      src={tempBackgroundImage}
-                      alt='預覽背景圖片'
-                      mt={4}
-                      boxSize='100%'
-                    />
-                    <Box mt={4}>
-                      <Slider
-                        value={tempBackgroundOpacity}
-                        min={0}
-                        max={1}
-                        step={0.01}
-                        onChange={setTempBackgroundOpacity}
-                      >
-                        <SliderTrack>
-                          <SliderFilledTrack />
-                        </SliderTrack>
-                        <SliderThumb />
-                      </Slider>
-                    </Box>
-                  </>
-                )}
-              </Box>
-            )}
-          </ModalBody>
-          <ModalFooter>
-            <Button variant='ghost' onClick={onClose}>
-              取消
-            </Button>
-            <Button colorScheme='blue' onClick={applyBackgroundChanges}>
-              確定
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+              )}
+              {backgroundType === 'image' && (
+                <Box mt={4}>
+                  <Input
+                    type='file'
+                    accept='image/*'
+                    onChange={handleBackgroundImageChange}
+                    placeholder='上傳背景圖片'
+                  />
+                  {tempBackgroundImage && (
+                    <>
+                      <Image
+                        src={tempBackgroundImage}
+                        alt='預覽背景圖片'
+                        mt={4}
+                        boxSize='100%'
+                      />
+                      <Box mt={4}>
+                        <Slider
+                          value={tempBackgroundOpacity}
+                          min={0}
+                          max={1}
+                          step={0.01}
+                          onChange={setTempBackgroundOpacity}
+                        >
+                          <SliderTrack>
+                            <SliderFilledTrack />
+                          </SliderTrack>
+                          <SliderThumb />
+                        </Slider>
+                      </Box>
+                    </>
+                  )}
+                </Box>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button variant='ghost' onClick={onClose}>
+                取消
+              </Button>
+              <Button colorScheme='blue' onClick={applyBackgroundChanges}>
+                確定
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Box>
     </Box>
   );
 };

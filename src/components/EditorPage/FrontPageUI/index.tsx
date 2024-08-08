@@ -19,7 +19,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
   onBlur,
   onImageUpload,
 }) => {
-  switch (component.type) {
+  switch (component.className) {
     case 'navbar':
       return (
         <NavbarEditor
@@ -39,7 +39,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           onBlur={onBlur}
         />
       );
-    case 'fashion_hero':
+    case 'fashion-hero':
       return (
         <FashionHeroEditor
           index={index}
@@ -50,7 +50,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
         />
       );
     default:
-      return null;
+      return <p>未知的組件類型: {component.className}</p>;
   }
 };
 
