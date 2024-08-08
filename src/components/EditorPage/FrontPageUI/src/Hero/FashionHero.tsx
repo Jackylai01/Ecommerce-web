@@ -59,7 +59,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   onImageUpload,
 }) => {
   const dispatch = useAppDispatch();
-  const { safeDispatch } = useEditModeNavigation();
+  const { safeNavigation } = useEditModeNavigation();
   const [content, setContent] = useState(element.elements || []);
   const [gradientColors, setGradientColors] = useState([
     { color: 'rgba(59, 29, 116, 0.7)', stop: 0 },
@@ -312,11 +312,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
               <Flex align='center'>
                 <Button
                   className='fashion-hero__button'
-                  onClick={() => {
-                    if (buttonHref) {
-                      window.location.href = buttonHref;
-                    }
-                  }}
+                  onClick={safeNavigation(buttonHref)}
                 >
                   {buttonText}
                   <ArrowRightIcon className='ml-2' />
@@ -391,27 +387,28 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
         <Box className='fashion-hero__decor-circle'></Box>
         <Box className='fashion-hero__decor-square'></Box>
 
-        <Input
-          type='file'
-          accept='image/*'
-          onChange={(e) =>
-            uploadImage(
-              e,
-              content.findIndex(
-                (el) => el.className === 'fashion-hero__background-img',
-              ),
-            )
-          }
-          ref={fileInputRef}
-          style={{ display: 'none' }}
-        />
+        {isEdit && (
+          <Input
+            type='file'
+            accept='image/*'
+            onChange={(e) =>
+              uploadImage(
+                e,
+                content.findIndex(
+                  (el) => el.className === 'fashion-hero__background-img',
+                ),
+              )
+            }
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+          />
+        )}
 
         {isEdit && (
           <Button onClick={onOpen} mt={4}>
             編輯背景
           </Button>
         )}
-
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>

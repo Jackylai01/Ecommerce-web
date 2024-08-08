@@ -6,7 +6,8 @@ const useEditModeNavigation = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const isEditMode = router.pathname.includes('/design');
+  const isEditMode =
+    router.pathname.includes('/design') || router.pathname.includes('/preview');
 
   const safeDispatch = useCallback(
     (action) => () => {
@@ -28,6 +29,7 @@ const useEditModeNavigation = () => {
     },
     [router, isEditMode],
   );
+
   return { safeDispatch, safeNavigation };
 };
 
