@@ -11,7 +11,10 @@ import {
   setPageBlocks,
 } from '@reducers/admin/admin-edit-pages';
 import { setAdminUserInfo } from '@reducers/admin/auth';
-import { createDesignPageAsync } from '@reducers/admin/design-pages/actions';
+import {
+  createDesignPageAsync,
+  getDesignPageByRouteAsync,
+} from '@reducers/admin/design-pages/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
@@ -35,6 +38,7 @@ const AdminEditPageLayout: React.FC = () => {
     (state) => state.adminEditPages,
   );
   const {
+    currentPage,
     status: {
       createDesignPageFailed,
       createDesignPageLoading,
@@ -74,6 +78,7 @@ const AdminEditPageLayout: React.FC = () => {
 
   const handleRouteChange = (route: string) => {
     setCurrentRoute(route);
+    dispatch(getDesignPageByRouteAsync(route));
   };
 
   const handleDropComponent = (component: Component) =>
@@ -145,6 +150,7 @@ const AdminEditPageLayout: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
+      dispatch(getDesignPageByRouteAsync(currentRoute));
     }
     if (createDesignPageFailed) {
       toast({
@@ -160,6 +166,8 @@ const AdminEditPageLayout: React.FC = () => {
     createDesignPageSuccess,
     createDesignPageError,
     toast,
+    currentRoute,
+    dispatch,
   ]);
 
   useEffect(() => {
@@ -179,6 +187,23 @@ const AdminEditPageLayout: React.FC = () => {
       router.push(`/${ADMIN_ROUTE}/auth/login`);
     }
   }, [userInfo, router]);
+
+  useEffect(() => {
+    handleRouteChange(currentRoute);
+  }, [dispatch, currentRoute]);
+
+  useEffect(() => {
+    if (currentPage) {
+      const componentsWithType = currentPage.blocks.map((block) => ({
+        ...block,
+        type: block.className,
+        name: block.className,
+      })) as Component[];
+      dispatch(setPageBlocks(componentsWithType));
+    } else {
+      dispatch(setPageBlocks([]));
+    }
+  }, [currentPage, dispatch]);
 
   if (!isClient) return null;
 

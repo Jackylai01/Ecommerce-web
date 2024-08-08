@@ -28,18 +28,24 @@ const PreviewPage: React.FC = () => {
     <PreviewLayout>
       <LoadingLayout isLoading={getDesignPageByRouteLoading}>
         {currentPage ? (
-          <Box p={8}>
-            {currentPage.blocks.map((block, index) => (
-              <EditorComponentFactory
-                key={index}
-                component={block}
-                index={index}
-                isEdit={false}
-                onBlur={() => {}}
-                onImageUpload={() => {}}
-              />
-            ))}
-          </Box>
+          currentPage.blocks.length > 0 ? (
+            <Box>
+              {currentPage.blocks.map((block, index) => (
+                <EditorComponentFactory
+                  key={index}
+                  component={block}
+                  index={index}
+                  isEdit={false}
+                  onBlur={() => {}}
+                  onImageUpload={() => {}}
+                />
+              ))}
+            </Box>
+          ) : (
+            <Box textAlign='center' p={8}>
+              此頁面尚未設計。
+            </Box>
+          )
         ) : (
           <Box>沒有找到頁面數據。</Box>
         )}
@@ -48,6 +54,7 @@ const PreviewPage: React.FC = () => {
           display='flex'
           alignItems='center'
           justifyContent='center'
+          mt='1rem'
         >
           <Button
             rightIcon={<ArrowForwardIcon />}

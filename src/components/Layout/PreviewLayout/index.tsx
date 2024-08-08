@@ -7,7 +7,7 @@ type Props = {
 const PreviewLayout = ({ children }: Props) => {
   return (
     <Box>
-      <Box as='aside'>{children}</Box>
+      <Box>{children}</Box>
     </Box>
   );
 };
