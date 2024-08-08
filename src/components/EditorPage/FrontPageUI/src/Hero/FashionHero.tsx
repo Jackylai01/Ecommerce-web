@@ -24,6 +24,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
+import useAppDispatch from '@hooks/useAppDispatch';
 import useEditModeNavigation from '@hooks/useEditModeNavigation';
 import { updateBlock } from '@reducers/admin/admin-edit-pages';
 import dynamic from 'next/dynamic';
@@ -57,6 +58,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   onBlur,
   onImageUpload,
 }) => {
+  const dispatch = useAppDispatch();
   const { safeDispatch } = useEditModeNavigation();
   const [content, setContent] = useState(element.elements || []);
   const [gradientColors, setGradientColors] = useState([
@@ -101,9 +103,9 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
 
     if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
       setContent(updatedContent);
-      safeDispatch(
+      dispatch(
         updateBlock({ index, block: { ...element, elements: updatedContent } }),
-      )();
+      );
     }
   };
 
@@ -125,12 +127,12 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
           });
           if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
             setContent(updatedContent);
-            safeDispatch(
+            dispatch(
               updateBlock({
                 index,
                 block: { ...element, elements: updatedContent },
               }),
-            )();
+            );
           }
           onImageUpload(index, file);
         }
@@ -185,7 +187,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
 
     setBackgroundOpacity(tempBackgroundOpacity);
 
-    safeDispatch(
+    dispatch(
       updateBlock({
         index,
         block: {
@@ -202,12 +204,26 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
           },
         },
       }),
-    )();
+    );
     onClose();
   };
 
   useEffect(() => {
     setContent(element.elements || []);
+    setGradientColors([
+      { color: 'rgba(59, 29, 116, 0.7)', stop: 0 },
+      { color: 'rgba(204, 51, 153, 0.6)', stop: 50 },
+      { color: 'transparent', stop: 100 },
+    ]);
+    setBackgroundImage(element.style?.backgroundImage || '');
+    setBackgroundOpacity(element.style?.backgroundOpacity || 1);
+    setBackgroundColor(element.style?.backgroundColor || '#ffffff');
+    setButtonHref(
+      content.find((el) => el.tagName === 'button')?.href || '/default-route',
+    );
+    setButtonText(
+      content.find((el) => el.tagName === 'button')?.context || '立即選購',
+    );
   }, [element]);
 
   const renderQuillEditor = (
@@ -221,35 +237,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
       modules={{ toolbar: baseQuillToolbar }}
       placeholder={placeholder}
       value={content[elIndex]?.context || ''}
-      onChange={(value) => {
-        const updatedContent = content.map((item, idx) => {
-          if (idx === elIndex) {
-            return { ...item, context: value };
-          }
-          return item;
-        });
-        if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
-          setContent(updatedContent);
-        }
-      }}
-      onBlur={() => {
-        const updatedContent = content.map((item, idx) => {
-          if (idx === elIndex) {
-            return { ...item, context: content[elIndex].context };
-          }
-          return item;
-        });
-        if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
-          setContent(updatedContent);
-          safeDispatch(
-            updateBlock({
-              index,
-              block: { ...element, elements: updatedContent },
-            }),
-          )();
-        }
-        onBlur();
-      }}
+      onChange={(value) => handleChange(elIndex, 'context', value)}
     />
   );
 
@@ -349,7 +337,15 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
                 mt={2}
                 placeholder='設定按鈕路由'
                 value={buttonHref}
-                onChange={(e) => setButtonHref(e.target.value)}
+                onChange={(e) =>
+                  handleChange(
+                    content.findIndex(
+                      (el) => el.className === 'fashion-hero__button',
+                    ),
+                    'href',
+                    e.target.value,
+                  )
+                }
               />
             )}
             {isEdit && isButtonTextInputVisible && (
@@ -357,7 +353,15 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
                 mt={2}
                 placeholder='設定按鈕名稱'
                 value={buttonText}
-                onChange={(e) => setButtonText(e.target.value)}
+                onChange={(e) =>
+                  handleChange(
+                    content.findIndex(
+                      (el) => el.className === 'fashion-hero__button',
+                    ),
+                    'context',
+                    e.target.value,
+                  )
+                }
               />
             )}
           </Box>
