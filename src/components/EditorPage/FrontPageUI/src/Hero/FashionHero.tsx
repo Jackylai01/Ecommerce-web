@@ -72,7 +72,13 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   const [backgroundOpacity, setBackgroundOpacity] = useState(
     element.style?.backgroundOpacity || 1,
   );
-  const [backgroundType, setBackgroundType] = useState('gradient');
+  const [backgroundType, setBackgroundType] = useState(
+    element.style?.backgroundGradient
+      ? 'gradient'
+      : element.style?.backgroundColor
+      ? 'color'
+      : 'image',
+  );
   const [backgroundColor, setBackgroundColor] = useState(
     element.style?.backgroundColor || '#ffffff',
   );
@@ -224,6 +230,13 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     setButtonText(
       content.find((el) => el.tagName === 'button')?.context || '立即選購',
     );
+    setBackgroundType(
+      element.style?.backgroundGradient
+        ? 'gradient'
+        : element.style?.backgroundColor
+        ? 'color'
+        : 'image',
+    );
   }, [element]);
 
   const renderQuillEditor = (
@@ -257,6 +270,12 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
               style={{ opacity: backgroundOpacity }}
             />
           )}
+          {backgroundType === 'color' && (
+            <Box
+              className='fashion-hero__background-color'
+              style={{ backgroundColor }}
+            ></Box>
+          )}
           {backgroundType === 'gradient' && (
             <Box
               className='fashion-hero__background-gradient'
@@ -265,12 +284,6 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
                   .map((colorStop) => `${colorStop.color} ${colorStop.stop}%`)
                   .join(', ')})`,
               }}
-            ></Box>
-          )}
-          {backgroundType === 'color' && (
-            <Box
-              className='fashion-hero__background-color'
-              style={{ backgroundColor }}
             ></Box>
           )}
         </Box>
