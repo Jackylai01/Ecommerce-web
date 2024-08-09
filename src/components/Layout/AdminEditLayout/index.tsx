@@ -15,6 +15,7 @@ import {
   createDesignPageAsync,
   getDesignPageByRouteAsync,
 } from '@reducers/admin/design-pages/actions';
+import { apiUploadImage } from '@services/admin/design-pages/design-page';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
@@ -113,33 +114,38 @@ const AdminEditPageLayout: React.FC = () => {
       className: component.className || '',
       elements: component.elements || [],
     }));
-    formData.append('blocks', JSON.stringify(blocks));
 
-    if (logoFile) {
-      formData.append('images', logoFile);
-    }
+    formData.append('blocks', JSON.stringify(blocks));
 
     dispatch(createDesignPageAsync(formData));
   };
 
   const handleImageUpload = (index: number, file: File) => {
-    setLogoFile(file);
-    const updatedComponents = components.map((component, compIndex) => {
-      if (compIndex === index) {
-        return {
-          ...component,
-          elements: component.elements?.map((element: any) => {
-            if (element.tagName === 'img') {
-              return { ...element, src: file };
-            }
-            return element;
-          }),
-        };
-      }
-      return component;
-    });
+    // 上傳圖片至 Cloudinary
+    const formData = new FormData();
+    formData.append('images', file);
 
-    dispatch(setPageBlocks(updatedComponents));
+    apiUploadImage(formData).then((response) => {
+      console.log(response);
+      const imageUrl = response.res.data.secure_urls[0];
+
+      const updatedComponents = components.map((component, compIndex) => {
+        if (compIndex === index) {
+          return {
+            ...component,
+            elements: component.elements?.map((element: any) => {
+              if (element.tagName === 'img') {
+                return { ...element, src: imageUrl };
+              }
+              return element;
+            }),
+          };
+        }
+        return component;
+      });
+
+      dispatch(setPageBlocks(updatedComponents));
+    });
   };
 
   useEffect(() => {

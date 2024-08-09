@@ -1,5 +1,6 @@
 import { IDesignPage } from '@models/requests/design.req';
 import {
+  ApiResponse,
   ApiResult,
   deleteRequest,
   getRequest,
@@ -46,7 +47,7 @@ export const apiDeleteDesignPage = async (route: string) => {
  * 上傳編輯區圖片
  */
 export const apiUploadImage = async (formData: FormData) => {
-  return postRequest<ApiResult<string[]>>('/design-pages/upload', formData, {
+  return postRequest<ApiResponse<string[]>>('/design-pages/upload', formData, {
     'Content-Type': 'multipart/form-data',
   });
 };
