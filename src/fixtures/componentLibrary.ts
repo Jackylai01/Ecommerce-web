@@ -1,4 +1,5 @@
 export interface Component {
+  id?: string;
   type: string;
   name: string;
   className?: string;
@@ -14,6 +15,7 @@ export interface Component {
 }
 
 export interface IDesignPageElement {
+  id?: string;
   tagName: string;
   className?: string;
   context?: string;
@@ -38,10 +40,10 @@ export const componentLibrary: Record<string, Component> = {
       navItemColor: '#000000',
     },
     elements: [
-      { tagName: 'a', context: '首頁', href: '#' },
-      { tagName: 'a', context: '產品', href: '#' },
-      { tagName: 'a', context: '關於我們', href: '#' },
-      { tagName: 'img', context: '', href: '/', src: testImage },
+      { id: 'home', tagName: 'a', context: '首頁', href: '#' },
+      { id: 'products', tagName: 'a', context: '產品', href: '#' },
+      { id: 'about', tagName: 'a', context: '關於我們', href: '#' },
+      { id: 'logo', tagName: 'img', context: '', href: '/', src: testImage },
     ],
   },
   navbar_b: {
@@ -54,10 +56,10 @@ export const componentLibrary: Record<string, Component> = {
       backgroundOpacity: 0,
     },
     elements: [
-      { tagName: 'a', context: '商店', href: '#' },
-      { tagName: 'a', context: '分類', href: '#' },
-      { tagName: 'a', context: '購物車', href: '#' },
-      { tagName: 'a', context: '聯繫我們', href: '#' },
+      { id: 'shop', tagName: 'a', context: '商店', href: '#' },
+      { id: 'category', tagName: 'a', context: '分類', href: '#' },
+      { id: 'cart', tagName: 'a', context: '購物車', href: '#' },
+      { id: 'contact', tagName: 'a', context: '聯繫我們', href: '#' },
     ],
   },
   fashion_hero: {
@@ -73,29 +75,34 @@ export const componentLibrary: Record<string, Component> = {
     },
     elements: [
       {
+        id: 'background',
         tagName: 'img',
         className: 'fashion-hero__background-img',
-        src: '',
+        src: testImage,
         alt: '時尚背景',
       },
       {
+        id: 'product',
         tagName: 'img',
         className: 'fashion-hero__product-img',
         src: testImage,
         alt: '秋冬新品',
       },
       {
+        id: 'heading',
         tagName: 'h1',
         className: 'fashion-hero__heading',
         context: '秋冬 新風尚',
       },
       {
+        id: 'subheading',
         tagName: 'p',
         className: 'fashion-hero__subheading',
         context:
           '探索我們的2024秋冬系列，體驗前所未有的時尚魅力。每一件單品都是精心打造的藝術品。',
       },
       {
+        id: 'button',
         tagName: 'button',
         className: 'fashion-hero__button',
         context: '立即選購',

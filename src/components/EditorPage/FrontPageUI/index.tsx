@@ -10,7 +10,7 @@ interface EditorComponentFactoryProps {
   index: number;
   isEdit: boolean;
   onBlur: () => void;
-  onImageUpload: (index: number, file: File) => void;
+  onImageUpload: (index: number, file: File, elementId: string) => void;
 }
 
 const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({

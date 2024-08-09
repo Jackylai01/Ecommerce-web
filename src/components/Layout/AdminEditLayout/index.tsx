@@ -52,7 +52,6 @@ const AdminEditPageLayout: React.FC = () => {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [currentRoute, setCurrentRoute] = useState<string>('/home');
   const [isClient, setIsClient] = useState(false);
-  const [logoFile, setLogoFile] = useState<File | null>(null);
 
   const formMethods = useForm<FormValues>({
     defaultValues: { components: components },
@@ -119,30 +118,40 @@ const AdminEditPageLayout: React.FC = () => {
 
     dispatch(createDesignPageAsync(formData));
   };
-  const handleImageUpload = (index: number, file: File) => {
-    // 上傳圖片至 Cloudinary
+
+  const handleImageUpload = (index: number, file: File, elementId?: string) => {
     const formData = new FormData();
     formData.append('images', file);
 
     apiUploadImage(formData).then((response) => {
       const imageUrl = response.res.data.secure_urls[0];
+      console.log('Image URL:', imageUrl);
 
+      // 創建一個全新的 components 陣列和物件
       const updatedComponents = components.map((component, compIndex) => {
-        if (compIndex === index) {
-          return {
-            ...component,
-            elements: component.elements?.map((element: any) => {
-              if (element.tagName === 'img') {
-                return { ...element, src: imageUrl };
-              }
-              return element;
-            }),
-          };
-        }
-        return component;
+        console.log('Found matching component, updating elements...');
+        const updatedElements = component.elements.map((element: any) => {
+          console.log(
+            'Element ID:',
+            element.id,
+            'Target Element ID:',
+            elementId,
+          );
+          if (element.id === elementId) {
+            console.log('Found matching element, updating src...');
+            return { ...element, src: imageUrl }; // 創建新的 element 物件
+          }
+          return element;
+        });
+
+        console.log('Updated Elements:', updatedElements);
+        return { ...component, elements: updatedElements }; // 創建新的 component 物件
       });
 
-      dispatch(setPageBlocks(updatedComponents));
+      console.log('Updated Components:', updatedComponents);
+
+      // Dispatch 新的狀態
+      dispatch(setPageBlocks([...updatedComponents]));
     });
   };
 

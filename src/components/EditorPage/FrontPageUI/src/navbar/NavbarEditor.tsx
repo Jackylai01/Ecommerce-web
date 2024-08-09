@@ -38,7 +38,7 @@ interface NavbarEditorProps {
   element: Component;
   isEdit: boolean;
   onBlur: () => void;
-  onImageUpload: (index: number, file: File) => void;
+  onImageUpload: (index: number, file: File, elementId?: string) => void;
 }
 
 const NavbarEditor: React.FC<NavbarEditorProps> = ({
