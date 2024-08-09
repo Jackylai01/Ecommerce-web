@@ -18,8 +18,8 @@ import {
 import { Cart } from '@components/Cart/Cart';
 import { Search } from '@components/Search/Search';
 import { Component } from '@fixtures/componentLibrary';
+import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import useEditModeNavigation from '@hooks/useEditModeNavigation';
 import { updateBlock } from '@reducers/admin/admin-edit-pages';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import React, { useEffect, useRef, useState } from 'react';
@@ -68,7 +68,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   } = useAppSelector((state) => state.clientAuth);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { safeDispatch, safeNavigation } = useEditModeNavigation();
+  const dispatch = useAppDispatch(); // 使用 useAppDispatch 直接获得 dispatch
 
   useEffect(() => {
     setContent(element.elements || []);
@@ -86,9 +86,9 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
       return item;
     });
     setContent(updatedContent);
-    safeDispatch(
+    dispatch(
       updateBlock({ index, block: { ...element, elements: updatedContent } }),
-    )();
+    );
   };
 
   const addLink = () => {
@@ -100,18 +100,18 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
     };
     const updatedContent = [...content, newLink];
     setContent(updatedContent);
-    safeDispatch(
+    dispatch(
       updateBlock({ index, block: { ...element, elements: updatedContent } }),
-    )();
+    );
     setNewItemText('');
   };
 
   const removeLink = (linkIndex: number) => {
     const updatedContent = content.filter((_, idx) => idx !== linkIndex);
     setContent(updatedContent);
-    safeDispatch(
+    dispatch(
       updateBlock({ index, block: { ...element, elements: updatedContent } }),
-    )();
+    );
   };
 
   const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,15 +129,15 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   };
 
   const handleClassNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    safeDispatch(
+    dispatch(
       updateBlock({ index, block: { ...element, className: e.target.value } }),
-    )();
+    );
   };
 
   const handleBgColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const color = e.target.value;
     setBgColor(color);
-    safeDispatch(
+    dispatch(
       updateBlock({
         index,
         block: {
@@ -146,7 +146,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
           style: { ...element.style, backgroundColor: color },
         },
       }),
-    )();
+    );
   };
 
   const handleNavItemColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,7 +157,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
       style: { ...item.style, color },
     }));
     setContent(updatedContent);
-    safeDispatch(
+    dispatch(
       updateBlock({
         index,
         block: {
@@ -166,7 +166,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
           style: { ...element.style, navItemColor: color },
         },
       }),
-    )();
+    );
   };
 
   const toggleColorPicker = () => {
@@ -223,7 +223,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                 <a
                   href={link.href}
                   className='navbar__link'
-                  onClick={(event) => safeNavigation(link.href)(event)}
+                  onClick={(event) => event.preventDefault()}
                   style={{ color: navItemColor }}
                 >
                   {link.context}
@@ -306,12 +306,8 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                       variant='ghost'
                     />
                     <MenuList>
-                      <MenuItem
-                        onClick={(event) => safeNavigation('/client')(event)}
-                      >
-                        會員管理
-                      </MenuItem>
-                      <MenuItem onClick={safeDispatch(clientLogoutAsync())}>
+                      <MenuItem>會員管理</MenuItem>
+                      <MenuItem onClick={() => dispatch(clientLogoutAsync())}>
                         登出
                       </MenuItem>
                     </MenuList>
@@ -379,7 +375,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                 <a
                   href={link.href}
                   className='navbar__link'
-                  onClick={(event) => safeNavigation(link.href)(event)}
+                  onClick={(event) => event.preventDefault()}
                   style={{ color: navItemColor }}
                 >
                   {link.context}
@@ -398,12 +394,8 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
                     variant='ghost'
                   />
                   <MenuList>
-                    <MenuItem
-                      onClick={(event) => safeNavigation('/client')(event)}
-                    >
-                      會員管理
-                    </MenuItem>
-                    <MenuItem onClick={safeDispatch(clientLogoutAsync())}>
+                    <MenuItem>會員管理</MenuItem>
+                    <MenuItem onClick={() => dispatch(clientLogoutAsync())}>
                       登出
                     </MenuItem>
                   </MenuList>

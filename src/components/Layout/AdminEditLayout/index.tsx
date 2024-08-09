@@ -104,7 +104,7 @@ const AdminEditPageLayout: React.FC = () => {
   const handleRemoveComponent = (index: number) =>
     dispatch(removeBlockItem(index));
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = () => {
     const formData = new FormData();
     formData.append('route', currentRoute);
 
@@ -119,14 +119,12 @@ const AdminEditPageLayout: React.FC = () => {
 
     dispatch(createDesignPageAsync(formData));
   };
-
   const handleImageUpload = (index: number, file: File) => {
     // 上傳圖片至 Cloudinary
     const formData = new FormData();
     formData.append('images', file);
 
     apiUploadImage(formData).then((response) => {
-      console.log(response);
       const imageUrl = response.res.data.secure_urls[0];
 
       const updatedComponents = components.map((component, compIndex) => {
