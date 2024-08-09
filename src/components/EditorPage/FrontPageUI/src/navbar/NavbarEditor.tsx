@@ -38,7 +38,7 @@ interface NavbarEditorProps {
   element: Component;
   isEdit: boolean;
   onBlur: () => void;
-  onImageUpload: (index: number, file: File, elementId?: string) => void;
+  onImageUpload: (index: number, file: File, elementId: string) => void;
 }
 
 const NavbarEditor: React.FC<NavbarEditorProps> = ({
@@ -117,14 +117,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target && event.target.result) {
-          setUploadedLogo(event.target.result as string); // 预览上传的图片
-          onImageUpload(index, file); // 上传图片文件
-        }
-      };
-      reader.readAsDataURL(file);
+      onImageUpload(index, file, 'logo'); // 调用 onImageUpload 并传入 elementId 为 'logo'
     }
   };
 

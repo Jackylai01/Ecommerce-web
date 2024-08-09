@@ -125,30 +125,18 @@ const AdminEditPageLayout: React.FC = () => {
 
     apiUploadImage(formData).then((response) => {
       const imageUrl = response.res.data.secure_urls[0];
-      console.log('Image URL:', imageUrl);
 
       // 創建一個全新的 components 陣列和物件
       const updatedComponents = components.map((component, compIndex) => {
-        console.log('Found matching component, updating elements...');
         const updatedElements = component.elements.map((element: any) => {
-          console.log(
-            'Element ID:',
-            element.id,
-            'Target Element ID:',
-            elementId,
-          );
           if (element.id === elementId) {
-            console.log('Found matching element, updating src...');
             return { ...element, src: imageUrl }; // 創建新的 element 物件
           }
           return element;
         });
 
-        console.log('Updated Elements:', updatedElements);
         return { ...component, elements: updatedElements }; // 創建新的 component 物件
       });
-
-      console.log('Updated Components:', updatedComponents);
 
       // Dispatch 新的狀態
       dispatch(setPageBlocks([...updatedComponents]));
