@@ -47,7 +47,16 @@ export const apiDeleteDesignPage = async (route: string) => {
  * 上傳編輯區圖片
  */
 export const apiUploadImage = async (formData: FormData) => {
-  return postRequest<ApiResponse<string[]>>('/design-pages/upload', formData, {
+  return postRequest<ApiResponse<any>>('/design-pages/upload', formData, {
     'Content-Type': 'multipart/form-data',
+  });
+};
+
+/**
+ * 刪除編輯區圖片
+ */
+export const apiDeleteImage = async (publicId: string) => {
+  return postRequest<ApiResponse<string[]>>('/design-pages/delete-image', {
+    publicId,
   });
 };

@@ -69,7 +69,6 @@ export const componentLibrary: Record<string, Component> = {
     style: {
       backgroundColor: '#ffffff',
       navItemColor: '#000000',
-      backgroundImage: '',
       backgroundGradient:
         'linear-gradient(to bottom right, rgba(59, 29, 116, 0.7), rgba(204, 51, 153, 0.6), transparent)',
     },
