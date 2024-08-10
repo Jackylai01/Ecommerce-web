@@ -124,7 +124,7 @@ const AdminEditPageLayout: React.FC = () => {
     formData.append('images', file);
 
     apiUploadImage(formData).then((response) => {
-      const imageUrl = response.res.data.secure_urls[0];
+      const imageUrl = response.res.data.data.secure_urls[0];
 
       // 創建一個全新的 components 陣列和物件
       const updatedComponents = components.map((component, compIndex) => {
