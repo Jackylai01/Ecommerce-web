@@ -23,7 +23,12 @@ interface FashionHeroEditorProps {
   element: Component;
   isEdit: boolean;
   onBlur: () => void;
-  onImageUpload: (index: number, file: File, elementId: string) => void;
+  onImageUpload: (
+    index: number,
+    file: File,
+    elementId: string,
+    elementUuid: string,
+  ) => void;
 }
 
 const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
@@ -58,28 +63,29 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     }
   };
 
+  const handleIconClick = (elIndex: number, elementId: string) => {
+    const elementUuid = content[elIndex].elementUuid; // 獲取當前元素的 elementUuid
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+      fileInputRef.current.dataset.elementUuid = elementUuid; // 保存 elementUuid
+      fileInputRef.current.dataset.elementId = elementId; // 保存 elementId
+      fileInputRef.current.click();
+    }
+  };
+
   const uploadImage = (
     e: React.ChangeEvent<HTMLInputElement>,
     elIndex: number,
     elementId: string,
   ) => {
+    const elementUuid = content[elIndex].elementUuid;
     if (!isUploading && e.target.files && e.target.files[0]) {
       setIsUploading(true);
       const file = e.target.files[0];
-      onImageUpload(elIndex, file, elementId);
+      onImageUpload(elIndex, file, elementUuid, elementId); // 傳遞 elementUuid 和 elementId
       setIsUploading(false);
     }
   };
-
-  const handleIconClick = (elIndex: number, elementId: string) => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''; // 重置 input 值以允許同一個檔案再次上傳
-      fileInputRef.current.dataset.elementId = elementId; // 將 elementId 儲存在 dataset 中
-      fileInputRef.current.dataset.elIndex = elIndex.toString(); // 將 elIndex 儲存在 dataset 中
-      fileInputRef.current.click();
-    }
-  };
-
   useEffect(() => {
     setContent(element.elements || []);
   }, [element]);

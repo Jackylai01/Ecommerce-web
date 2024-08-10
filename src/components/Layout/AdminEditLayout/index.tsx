@@ -4,6 +4,7 @@ import { ADMIN_ROUTE } from '@fixtures/constants';
 import { loadAdminToken } from '@helpers/token';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { v4 as uuidv4 } from 'uuid';
 
 import { setAdminUserInfo } from '@reducers/admin/auth';
 import {
@@ -28,6 +29,14 @@ interface FormValues {
   components: Component[];
 }
 
+const generateComponentWithUUIDs = (component: Component): Component => ({
+  ...component,
+  id: uuidv4(), // 給每個組件一個唯一的 UUID
+  elements: component.elements?.map((el) => ({
+    ...el,
+    elementUuid: uuidv4(), // 給每個元素一個唯一的 UUID
+  })),
+});
 const AdminEditPageLayout: React.FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -82,8 +91,10 @@ const AdminEditPageLayout: React.FC = () => {
     dispatch(getDesignPageByRouteAsync(route));
   };
 
-  const handleDropComponent = (component: Component) =>
-    dispatch(addBlock(component));
+  const handleDropComponent = (component: Component) => {
+    const newComponent = generateComponentWithUUIDs(component);
+    dispatch(addBlock(newComponent));
+  };
 
   const handleDragEnd = () => setDraggedIndex(null);
 
@@ -120,27 +131,37 @@ const AdminEditPageLayout: React.FC = () => {
     dispatch(createDesignPageAsync(formData));
   };
 
-  const handleImageUpload = (index: number, file: File, elementId?: string) => {
+  const handleImageUpload = (
+    index: number,
+    file: File,
+    elementUuid?: string,
+    elementId?: string,
+  ) => {
     const formData = new FormData();
     formData.append('images', file);
 
     apiUploadImage(formData).then((response) => {
       const imageUrl = response.res.data.data.secure_urls[0];
 
-      // 創建一個全新的 components 陣列和物件
-      const updatedComponents = components.map((component, compIndex) => {
+      const updatedComponents = components.map((component) => {
         const updatedElements = component.elements.map((element: any) => {
-          if (element.id === elementId) {
-            return { ...element, src: imageUrl }; // 創建新的 element 物件
+          console.log(`Checking element:`, element);
+          console.log(
+            `Comparing elementUuid: ${element.elementUuid} with ${elementUuid}`,
+          );
+          console.log(`Comparing elementId: ${element.id} with ${elementId}`);
+
+          if (element.elementUuid === elementUuid) {
+            console.log(`Match Found! Updating src to ${imageUrl}`);
+            return { ...element, src: imageUrl }; // 更新 src 屬性
           }
           return element;
         });
 
-        return { ...component, elements: updatedElements }; // 創建新的 component 物件
+        return { ...component, elements: updatedElements };
       });
 
-      // Dispatch 新的狀態
-      dispatch(setPageBlocks([...updatedComponents]));
+      dispatch(setPageBlocks(updatedComponents));
     });
   };
 
