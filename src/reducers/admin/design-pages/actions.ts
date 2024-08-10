@@ -69,7 +69,6 @@ export const uploadImageAsync = createAsyncThunk(
   `${ReducerName.ADMIN_CREATE_DESIGN_PAGE}/${DesignPageActions.UPLOAD_IMAGE}`,
   async (formData: FormData) => {
     const response = await apiUploadImage(formData);
-    console.log(response);
-    return response.result.data;
+    return response.res.data;
   },
 );
