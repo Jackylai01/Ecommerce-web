@@ -4,13 +4,14 @@ import { ADMIN_ROUTE } from '@fixtures/constants';
 import { loadAdminToken } from '@helpers/token';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+
+import { setAdminUserInfo } from '@reducers/admin/auth';
 import {
   addBlock,
   removeBlockItem,
   setCustomPageActive,
   setPageBlocks,
-} from '@reducers/admin/admin-edit-pages';
-import { setAdminUserInfo } from '@reducers/admin/auth';
+} from '@reducers/admin/design-pages';
 import {
   createDesignPageAsync,
   getDesignPageByRouteAsync,
@@ -35,10 +36,10 @@ const AdminEditPageLayout: React.FC = () => {
     userInfo,
     status: { loginLoading },
   } = useAppSelector((state) => state.adminAuth);
-  const { active: isEditing, pageBlocks: components } = useAppSelector(
-    (state) => state.adminEditPages,
-  );
+
   const {
+    active: isEditing,
+    pageBlocks: components,
     currentPage,
     status: {
       createDesignPageFailed,

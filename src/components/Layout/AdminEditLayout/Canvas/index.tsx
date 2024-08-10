@@ -47,7 +47,7 @@ const Canvas: React.FC<CanvasProps> = ({
       display='flex'
       flexDirection='column'
     >
-      {components.map((component, index) => (
+      {components?.map((component, index) => (
         <Box
           key={index}
           position='relative'

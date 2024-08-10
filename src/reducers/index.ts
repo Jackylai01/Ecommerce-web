@@ -1,4 +1,3 @@
-import adminEditPages from './admin/admin-edit-pages';
 import adminERPInventory from './admin/admin-erp/inventory';
 import adminERPPurchaseOrder from './admin/admin-erp/purchaseOrder';
 import adminERPReports from './admin/admin-erp/reports';
@@ -70,7 +69,6 @@ const appReducer = {
   adminERPReports,
   adminERPSalesOrder,
   adminERPSuppliers,
-  adminEditPages,
   adminDesignPage,
 };
 

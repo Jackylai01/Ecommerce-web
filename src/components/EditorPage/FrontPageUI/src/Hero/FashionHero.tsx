@@ -2,7 +2,7 @@ import { Box, Button, Flex, Heading, Image, Input } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useEditModeNavigation from '@hooks/useEditModeNavigation';
-import { updateBlock } from '@reducers/admin/admin-edit-pages';
+import { updateBlock } from '@reducers/admin/design-pages';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 

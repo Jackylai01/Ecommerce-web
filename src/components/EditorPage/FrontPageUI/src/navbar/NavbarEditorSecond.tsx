@@ -20,7 +20,7 @@ import { Component } from '@fixtures/componentLibrary';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import useEditModeNavigation from '@hooks/useEditModeNavigation';
-import { updateBlock } from '@reducers/admin/admin-edit-pages';
+import { updateBlock } from '@reducers/admin/design-pages';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import { Search, User } from 'lucide-react';
 import { useRouter } from 'next/router';

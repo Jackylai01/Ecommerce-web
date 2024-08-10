@@ -3,34 +3,38 @@ import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
 import { IDesignPage } from '@models/requests/design.req';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   createDesignPageAsync,
   deleteDesignPageAsync,
+  DesignPageActions,
   getAllDesignPagesAsync,
   getDesignPageByRouteAsync,
   updateDesignPageAsync,
   uploadImageAsync,
 } from './actions';
 
-export enum DesignPageActions {
-  CREATE_DESIGN_PAGE = 'createDesignPage',
-  GET_ALL_DESIGN_PAGES = 'getAllDesignPages',
-  GET_DESIGN_PAGE_BY_ROUTE = 'getDesignPageByRoute',
-  UPDATE_DESIGN_PAGE = 'updateDesignPage',
-  DELETE_DESIGN_PAGE = 'deleteDesignPage',
-}
+type DragItem = {
+  index?: number;
+  block: any;
+};
 
 type DesignPageState = ApiState<DesignPageActions> & {
   pages: IDesignPage[] | null;
   currentPage: IDesignPage | null;
   uploadedImageUrls: string[] | null;
+  active: boolean;
+  dragItem: DragItem | null;
+  pageBlocks: any[];
 };
 
 const initialState: DesignPageState = {
   pages: null,
   currentPage: null,
   uploadedImageUrls: null,
+  active: false,
+  dragItem: null,
+  pageBlocks: [],
   ...newApiState<DesignPageState>(DesignPageActions),
 };
 
@@ -44,6 +48,30 @@ const designPageSlice = createSlice({
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
+    },
+    setCustomPageActive: (state, action: PayloadAction<boolean>) => {
+      state.active = action.payload;
+    },
+    setDragItem: (state, action: PayloadAction<DragItem | null>) => {
+      state.dragItem = action.payload;
+    },
+    setPageBlocks: (state, action: PayloadAction<any[]>) => {
+      state.pageBlocks = action.payload;
+    },
+    removeBlockItem: (state, action: PayloadAction<number>) => {
+      state.pageBlocks = state.pageBlocks.filter(
+        (_, index) => index !== action.payload,
+      );
+    },
+    updateBlock: (
+      state,
+      action: PayloadAction<{ index: number; block: any }>,
+    ) => {
+      const { index, block } = action.payload;
+      state.pageBlocks[index] = block;
+    },
+    addBlock: (state, action: PayloadAction<any>) => {
+      state.pageBlocks.push(action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -77,6 +105,15 @@ const designPageSlice = createSlice({
   },
 });
 
-export const { resetDesignPageState, setPages, setCurrentPage } =
-  designPageSlice.actions;
+export const {
+  resetDesignPageState,
+  setPages,
+  setCurrentPage,
+  setCustomPageActive,
+  setDragItem,
+  addBlock,
+  setPageBlocks,
+  removeBlockItem,
+  updateBlock,
+} = designPageSlice.actions;
 export default designPageSlice.reducer;

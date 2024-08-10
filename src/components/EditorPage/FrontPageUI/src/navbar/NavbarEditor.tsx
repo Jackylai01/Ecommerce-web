@@ -20,7 +20,7 @@ import { Search } from '@components/Search/Search';
 import { Component } from '@fixtures/componentLibrary';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { updateBlock } from '@reducers/admin/admin-edit-pages';
+import { updateBlock } from '@reducers/admin/design-pages';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import React, { useEffect, useRef, useState } from 'react';
 import { BsCart4 } from 'react-icons/bs';
