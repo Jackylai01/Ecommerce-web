@@ -56,9 +56,9 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     });
 
     if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
-      setContent(updatedContent);
+      setContent(updatedContent); // 更新本地狀態
       dispatch(
-        updateBlock({ index, block: { ...element, elements: updatedContent } }),
+        updateBlock({ index, block: { ...element, elements: updatedContent } }), // 更新Redux狀態
       );
     }
   };
@@ -69,9 +69,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     elementId: string,
   ) => {
     const elementUuid = content[elIndex].elementUuid;
-    console.log('Component Index:', index);
-    console.log('Element Index:', elIndex);
-    console.log('Element ID:', elementId);
+
     if (!isUploading && e.target.files && e.target.files[0]) {
       setIsUploading(true);
       const file = e.target.files[0];
@@ -150,28 +148,38 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
           <Flex className='fashion-hero__main'>
             <Box className='fashion-hero__main-text'>
               <Heading as='h1' size='2xl' className='fashion-hero__heading'>
-                {isEdit
-                  ? renderQuillEditor(
-                      content.findIndex((el) => el.id === 'heading'),
-                      '標題',
-                      'fashion-hero__heading-input',
-                    )
-                  : stripTags(
-                      content.find((el) => el.id === 'heading')?.context ||
+                {isEdit ? (
+                  renderQuillEditor(
+                    content.findIndex((el) => el.id === 'heading'),
+                    '標題',
+                    'fashion-hero__heading-input',
+                  )
+                ) : (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        content.find((el) => el.id === 'heading')?.context ||
                         '秋冬 新風尚',
-                    )}
+                    }}
+                  />
+                )}
               </Heading>
               <Box className='fashion-hero__subheading'>
-                {isEdit
-                  ? renderQuillEditor(
-                      content.findIndex((el) => el.id === 'subheading'),
-                      '子標題',
-                      'fashion-hero__subheading-input',
-                    )
-                  : stripTags(
-                      content.find((el) => el.id === 'subheading')?.context ||
+                {isEdit ? (
+                  renderQuillEditor(
+                    content.findIndex((el) => el.id === 'subheading'),
+                    '子標題',
+                    'fashion-hero__subheading-input',
+                  )
+                ) : (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        content.find((el) => el.id === 'subheading')?.context ||
                         '探索我們的2024秋冬系列，體驗前所未有的時尚魅力。每一件單品都是精心打造的藝術品。',
-                    )}
+                    }}
+                  />
+                )}
               </Box>
               <Flex align='center'>
                 <Button
