@@ -152,11 +152,9 @@ const AdminEditPageLayout: React.FC = () => {
           ): IDesignPageElement[] => {
             return elements.map((element: IDesignPageElement) => {
               if (elementUuid && element.elementUuid === elementUuid) {
-                console.log(`Updating element with UUID: ${elementUuid}`);
                 return { ...element, src: imageUrl };
               }
               if (!elementUuid && element.id === elementId) {
-                console.log(`Updating element with ID: ${elementId}`);
                 return { ...element, src: imageUrl };
               }
 
