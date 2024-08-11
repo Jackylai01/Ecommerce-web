@@ -140,29 +140,50 @@ const AdminEditPageLayout: React.FC = () => {
     const formData = new FormData();
     formData.append('images', file);
 
-    apiUploadImage(formData).then((response) => {
-      const imageUrl = response.res.data.data.secure_urls[0];
+    console.log('Starting image upload...');
+    console.log('index:', index);
+    console.log('elementUuid:', elementUuid);
+    console.log('elementId:', elementId);
 
-      const updatedComponents = components.map((component) => {
-        const updatedElements = component.elements.map((element: any) => {
-          console.log(`Checking element:`, element);
-          console.log(
-            `Comparing elementUuid: ${element.elementUuid} with ${elementUuid}`,
-          );
-          console.log(`Comparing elementId: ${element.id} with ${elementId}`);
+    apiUploadImage(formData)
+      .then((response) => {
+        const imageUrl = response.res.data.data.secure_urls[0];
+        console.log('Image uploaded successfully. URL:', imageUrl);
 
-          if (element.elementUuid === elementUuid) {
-            console.log(`Match Found! Updating src to ${imageUrl}`);
-            return { ...element, src: imageUrl }; // 更新 src 屬性
-          }
-          return element;
+        const updatedComponents = components.map((component) => {
+          console.log('Processing component:', component);
+
+          const updatedElements = component.elements.map((element: any) => {
+            console.log('Checking element:', element);
+            if (
+              element.elementUuid === elementUuid &&
+              element.id === elementId
+            ) {
+              console.log(
+                `Match found! Updating element src from ${element.src} to ${imageUrl}`,
+              );
+              return { ...element, src: imageUrl };
+            } else {
+              console.log(
+                `No match: elementUuid(${element.elementUuid}) !== elementUuid(${elementUuid}) or elementId(${element.id}) !== elementId(${elementId})`,
+              );
+            }
+            return element;
+          });
+
+          console.log('Updated elements:', updatedElements);
+          return { ...component, elements: updatedElements };
         });
 
-        return { ...component, elements: updatedElements };
-      });
+        console.log('Final updated components:', updatedComponents);
 
-      dispatch(setPageBlocks(updatedComponents));
-    });
+        // 更新 Redux 狀態，確保觸發重渲染
+        dispatch(setPageBlocks([...updatedComponents]));
+        console.log('Updated components dispatched to Redux.');
+      })
+      .catch((error) => {
+        console.error('Image upload failed:', error);
+      });
   };
 
   useEffect(() => {

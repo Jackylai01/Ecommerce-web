@@ -47,6 +47,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     content.find((el) => el.tagName === 'button')?.href || '/',
   );
 
+  // 更新元素的內容
   const handleChange = (elIndex: number, key: string, value: string) => {
     const updatedContent = content.map((item, idx) => {
       if (idx === elIndex) {
@@ -63,16 +64,22 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     }
   };
 
-  const handleIconClick = (elIndex: number, elementId: string) => {
-    const elementUuid = content[elIndex].elementUuid; // 獲取當前元素的 elementUuid
+  // 圖片點擊處理邏輯，將 uuid 和 id 綁定到 input
+  const handleIconClick = (
+    elIndex: number,
+    elementId: string,
+    elementUuid: string,
+  ) => {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
+      fileInputRef.current.dataset.elIndex = elIndex.toString(); // 保存 elIndex
       fileInputRef.current.dataset.elementUuid = elementUuid; // 保存 elementUuid
       fileInputRef.current.dataset.elementId = elementId; // 保存 elementId
       fileInputRef.current.click();
     }
   };
 
+  // 處理圖片上傳
   const uploadImage = (
     e: React.ChangeEvent<HTMLInputElement>,
     elIndex: number,
@@ -82,7 +89,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     if (!isUploading && e.target.files && e.target.files[0]) {
       setIsUploading(true);
       const file = e.target.files[0];
-      onImageUpload(elIndex, file, elementUuid, elementId); // 傳遞 elementUuid 和 elementId
+      onImageUpload(elIndex, file, elementId, elementUuid); // 傳遞 elementUuid 和 elementId
       setIsUploading(false);
     }
   };
@@ -121,9 +128,11 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
               handleIconClick(
                 content.findIndex((el) => el.id === 'background'),
                 'background',
+                content.find((el) => el.id === 'background')?.elementUuid || '',
               )
             }
           />
+
           {isEdit && (
             <Input
               type='file'
@@ -190,6 +199,8 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
                   handleIconClick(
                     content.findIndex((el) => el.id === 'product'),
                     'product',
+                    content.find((el) => el.id === 'product')?.elementUuid ||
+                      '',
                   )
                 }
               />
@@ -206,6 +217,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
               handleIconClick(
                 content.findIndex((el) => el.id === 'background'),
                 'background',
+                content.find((el) => el.id === 'background')?.elementUuid || '',
               )
             }
             mt={4}
