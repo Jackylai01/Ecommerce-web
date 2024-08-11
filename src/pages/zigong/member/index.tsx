@@ -1,6 +1,7 @@
 import { EmailIcon } from '@chakra-ui/icons';
 import { Box, IconButton, useDisclosure } from '@chakra-ui/react';
 import SendEmailForm from '@components/Form/FormCRUD/SendEmail';
+import MerbershipLevel from '@components/Layout/AdminLayout/MerbershipLevel';
 import Members from '@components/Layout/AdminLayout/Tables/components/Members';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import TabsLayout from '@components/Layout/TabsLayout';
@@ -85,6 +86,7 @@ const MembersPages: NextPage = () => {
         >
           <SendEmailForm />
         </FormModal>
+        <MerbershipLevel />
         <MessageModal
           title='寄送郵件'
           isActive={isModalOpen}

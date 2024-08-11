@@ -1,7 +1,6 @@
 import { UsersForm } from '@components/Form/FormCRUD/Users';
 import AddButton from '@components/Icons/AddFormIcon';
 import Authors from '@components/Layout/AdminLayout/Tables/components/Authors';
-import Projects from '@components/Layout/AdminLayout/Tables/components/Projects';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import TabsLayout from '@components/Layout/TabsLayout';
 import MessageModal from '@components/Modal/MessageModal';
@@ -10,7 +9,6 @@ import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { adminCreateAccountsAsync } from '@reducers/admin/auth/actions';
 import { useEffect, useState } from 'react';
-import { dashboardTableData } from 'src/variables/general';
 
 const TablesPage = () => {
   const dispatch = useAppDispatch();
@@ -64,11 +62,6 @@ const TablesPage = () => {
           captions={['使用者名稱', '信箱', '角色', '城市', '']}
         />
       </TabsLayout>
-      <Projects
-        title={'Projects Table'}
-        captions={['Companies', 'Budget', 'Status', 'Completion', '']}
-        data={dashboardTableData}
-      />
 
       <MessageModal
         title={modalTitle}

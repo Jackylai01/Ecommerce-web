@@ -64,7 +64,7 @@ const MembershipLevelManagement: React.FC = () => {
         description: '初級會員',
         minPointsRequired: 0,
         discountRate: 0,
-        color: 'linear(to-r, amber.500, yellow.500)',
+        color: 'linear(to-r, blue.500, blue.500)',
         members: [
           { id: 1, name: '張三', points: 500 },
           { id: 2, name: '李四', points: 800 },
@@ -131,18 +131,15 @@ const MembershipLevelManagement: React.FC = () => {
   };
 
   return (
-    <Box
-      bgGradient='linear(to-br, blue.50, indigo.100)'
-      minH='100vh'
-      p={{ base: 4, sm: 6, md: 8 }}
-    >
+    <Box minH='100vh'>
       <Box
-        maxW='7xl'
+        w='100%'
         mx='auto'
         bg='white'
-        rounded='2xl'
+        borderRadius='20px'
         shadow='xl'
         overflow='hidden'
+        mt='1rem'
       >
         <Box
           p={{ base: 6, sm: 8 }}
@@ -151,12 +148,12 @@ const MembershipLevelManagement: React.FC = () => {
           <Heading
             fontSize={{ base: '3xl', sm: '4xl' }}
             fontWeight='bold'
-            color='white'
+            color='black'
             mb={2}
           >
             會員分級管理
           </Heading>
-          <Text color='blue.100'>管理您的VIP客戶等級和優惠</Text>
+          <Text color='blue.700'>管理您的VIP客戶等級和優惠</Text>
         </Box>
         <Box p={{ base: 4, sm: 6, md: 8 }}>
           <Flex
