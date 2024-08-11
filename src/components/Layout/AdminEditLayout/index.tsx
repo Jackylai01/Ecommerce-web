@@ -1,11 +1,11 @@
 import { Box, Button, Flex, Heading, useToast } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
-import { ADMIN_ROUTE } from '@fixtures/constants';
 import { loadAdminToken } from '@helpers/token';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { v4 as uuidv4 } from 'uuid';
 
+import { ADMIN_ROUTE } from '@fixtures/constants';
 import { setAdminUserInfo } from '@reducers/admin/auth';
 import {
   addBlock,
@@ -31,12 +31,13 @@ interface FormValues {
 
 const generateComponentWithUUIDs = (component: Component): Component => ({
   ...component,
-  id: uuidv4(), // 給每個組件一個唯一的 UUID
+  id: uuidv4(),
   elements: component.elements?.map((el) => ({
     ...el,
-    elementUuid: uuidv4(), // 給每個元素一個唯一的 UUID
+    elementUuid: uuidv4(),
   })),
 });
+
 const AdminEditPageLayout: React.FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -82,7 +83,7 @@ const AdminEditPageLayout: React.FC = () => {
     if (typeof key === 'number') {
       setDraggedIndex(key);
     } else {
-      e.dataTransfer.setData('component', key);
+      e.dataTransfer.setData('component', `${key}`);
     }
   };
 
@@ -140,50 +141,30 @@ const AdminEditPageLayout: React.FC = () => {
     const formData = new FormData();
     formData.append('images', file);
 
-    console.log('Starting image upload...');
-    console.log('index:', index);
-    console.log('elementUuid:', elementUuid);
-    console.log('elementId:', elementId);
+    apiUploadImage(formData).then((response) => {
+      const imageUrl = response.res.data.data.secure_urls[0];
 
-    apiUploadImage(formData)
-      .then((response) => {
-        const imageUrl = response.res.data.data.secure_urls[0];
-        console.log('Image uploaded successfully. URL:', imageUrl);
+      const updatedComponents = components.map((component, compIndex) => {
+        const updatedElements = component.elements.map((element: any) => {
+          console.log(`Checking element:`, element);
+          console.log(
+            `Comparing elementUuid: ${element.elementUuid} with ${elementUuid}`,
+          );
+          console.log(`Comparing elementId: ${element.id} with ${elementId}`);
 
-        const updatedComponents = components.map((component) => {
-          console.log('Processing component:', component);
-
-          const updatedElements = component.elements.map((element: any) => {
-            console.log('Checking element:', element);
-            if (
-              element.elementUuid === elementUuid &&
-              element.id === elementId
-            ) {
-              console.log(
-                `Match found! Updating element src from ${element.src} to ${imageUrl}`,
-              );
-              return { ...element, src: imageUrl };
-            } else {
-              console.log(
-                `No match: elementUuid(${element.elementUuid}) !== elementUuid(${elementUuid}) or elementId(${element.id}) !== elementId(${elementId})`,
-              );
-            }
-            return element;
-          });
-
-          console.log('Updated elements:', updatedElements);
-          return { ...component, elements: updatedElements };
+          // 首先匹配 elementUuid，然後備用 elementId 進行匹配
+          if (element.elementUuid === elementUuid || element.id === elementId) {
+            console.log(`Match Found! Updating src to ${imageUrl}`);
+            return { ...element, src: imageUrl };
+          }
+          return element;
         });
 
-        console.log('Final updated components:', updatedComponents);
-
-        // 更新 Redux 狀態，確保觸發重渲染
-        dispatch(setPageBlocks([...updatedComponents]));
-        console.log('Updated components dispatched to Redux.');
-      })
-      .catch((error) => {
-        console.error('Image upload failed:', error);
+        return { ...component, elements: updatedElements };
       });
+
+      dispatch(setPageBlocks(updatedComponents));
+    });
   };
 
   useEffect(() => {
