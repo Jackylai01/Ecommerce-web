@@ -69,10 +69,13 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     elementId: string,
   ) => {
     const elementUuid = content[elIndex].elementUuid;
+    console.log('Component Index:', index);
+    console.log('Element Index:', elIndex);
+    console.log('Element ID:', elementId);
     if (!isUploading && e.target.files && e.target.files[0]) {
       setIsUploading(true);
       const file = e.target.files[0];
-      onImageUpload(elIndex, file, elementUuid, elementId); // 傳遞 elementUuid 和 elementId
+      onImageUpload(index, file, elementUuid, elementId);
       setIsUploading(false);
     }
   };

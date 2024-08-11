@@ -6,6 +6,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ADMIN_ROUTE } from '@fixtures/constants';
+import { IDesignPageElement } from '@models/requests/design.req';
 import { setAdminUserInfo } from '@reducers/admin/auth';
 import {
   addBlock,
@@ -145,22 +146,36 @@ const AdminEditPageLayout: React.FC = () => {
       const imageUrl = response.res.data.data.secure_urls[0];
 
       const updatedComponents = components.map((component, compIndex) => {
-        const updatedElements = component.elements.map((element: any) => {
-          console.log(`Checking element:`, element);
-          console.log(
-            `Comparing elementUuid: ${element.elementUuid} with ${elementUuid}`,
-          );
-          console.log(`Comparing elementId: ${element.id} with ${elementId}`);
+        if (compIndex === index) {
+          const updateElement = (
+            elements: IDesignPageElement[],
+          ): IDesignPageElement[] => {
+            return elements.map((element: IDesignPageElement) => {
+              if (elementUuid && element.elementUuid === elementUuid) {
+                console.log(`Updating element with UUID: ${elementUuid}`);
+                return { ...element, src: imageUrl };
+              }
+              if (!elementUuid && element.id === elementId) {
+                console.log(`Updating element with ID: ${elementId}`);
+                return { ...element, src: imageUrl };
+              }
 
-          // 首先匹配 elementUuid，然後備用 elementId 進行匹配
-          if (element.elementUuid === elementUuid || element.id === elementId) {
-            console.log(`Match Found! Updating src to ${imageUrl}`);
-            return { ...element, src: imageUrl };
-          }
-          return element;
-        });
+              // 遞歸更新嵌套的 elements
+              if (element.elements && element.elements.length > 0) {
+                return {
+                  ...element,
+                  elements: updateElement(element.elements),
+                };
+              }
 
-        return { ...component, elements: updatedElements };
+              return element;
+            });
+          };
+
+          const updatedElements = updateElement(component.elements || []);
+          return { ...component, elements: updatedElements };
+        }
+        return component;
       });
 
       dispatch(setPageBlocks(updatedComponents));
