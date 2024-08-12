@@ -5,6 +5,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiAddBirthdayShoppingCredits,
   apiAddShoppingCredit,
+  apiAddShoppingCreditsForMembershipLevel,
   apiDeleteExpiredShoppingCredits,
   apiDeleteShoppingCredit,
   apiGetAllShoppingCredits,
@@ -20,6 +21,7 @@ export enum ShoppingCreditsAction {
   updateShoppingCreditStatus = 'updateShoppingCreditStatus',
   deleteShoppingCredit = 'deleteShoppingCredit',
   deleteExpiredShoppingCredits = 'deleteExpiredShoppingCredits',
+  addShoppingCreditsForMembershipLevel = 'addShoppingCreditsForMembershipLevel',
 }
 
 export const getAllShoppingCreditsAsync = createAsyncThunk(
@@ -97,6 +99,14 @@ export const deleteExpiredShoppingCreditsAsync = createAsyncThunk(
   `${ReducerName.ADMIN_SHOPPING_CREDITS}/${ShoppingCreditsAction.deleteExpiredShoppingCredits}`,
   async () => {
     const response = await apiDeleteExpiredShoppingCredits();
+    return response.result;
+  },
+);
+
+export const addShoppingCreditsForMembershipLevelAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_SHOPPING_CREDITS}/${ShoppingCreditsAction.addShoppingCreditsForMembershipLevel}`,
+  async (body: ShoppingCredit) => {
+    const response = await apiAddShoppingCreditsForMembershipLevel(body);
     return response.result;
   },
 );

@@ -110,7 +110,6 @@ const AddShoppingCreditTab = () => {
               <option value='other'>其他</option>
             </Select>
           </FormControl>
-
           <FormControl id='expiryDate' mb='4'>
             <FormLabel>到期日</FormLabel>
             <Input type='date' {...register('expiryDate')} />

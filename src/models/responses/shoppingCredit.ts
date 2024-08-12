@@ -2,6 +2,7 @@ export interface ShoppingCredit {
   _id: string;
   userId: string;
   user?: User;
+  levelId?: string;
   amount: number;
   type: string;
   status: string;

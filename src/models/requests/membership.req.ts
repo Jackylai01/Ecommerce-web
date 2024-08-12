@@ -3,6 +3,5 @@ export interface IMembershipLevel {
   name: string; // 會員級別名稱
   description?: string; // 會員級別描述
   benefits?: string[]; // 會員級別的權益
-  minPointsRequired?: number; // 升級至此級別所需的最低積分
   minTotalSpent: number; // 最低消費總額
 }

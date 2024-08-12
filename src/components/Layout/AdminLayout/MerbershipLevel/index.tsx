@@ -21,13 +21,10 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import ShoppingCreditModal from '@components/Modal/ShoppingCreditModal';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { IMembershipLevel } from '@models/requests/membership.req';
-import {
-  Level,
-  MembershipLevelResponse,
-} from '@models/responses/membership.res';
 import {
   createMembershipLevelAsync,
   deleteMembershipLevelAsync,
@@ -40,12 +37,15 @@ import { useForm } from 'react-hook-form';
 
 const MembershipLevelManagement: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [currentLevel, setCurrentLevel] = useState<Level | null>(null);
+  const [currentLevel, setCurrentLevel] = useState<IMembershipLevel | null>(
+    null,
+  );
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filterLevel, setFilterLevel] = useState<string>('all');
   const [expandedLevel, setExpandedLevel] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const toast = useToast();
+
   const {
     register,
     handleSubmit,
@@ -146,19 +146,12 @@ const MembershipLevelManagement: React.FC = () => {
     dispatch,
   ]);
 
-  const handleAddEdit = (level: MembershipLevelResponse | null = null) => {
+  const handleAddEdit = (level: IMembershipLevel | null = null) => {
     if (level) {
-      const updatedLevel: Level = {
-        ...level,
-        minPointsRequired: level.minPointsRequired ?? 0,
-        members: level.members || [],
-        description: level.description || '',
-      };
-      setCurrentLevel(updatedLevel);
-      setValue('name', updatedLevel.name);
-      setValue('description', updatedLevel.description || '');
-      setValue('minPointsRequired', updatedLevel.minPointsRequired);
-      setValue('minTotalSpent', updatedLevel.minTotalSpent);
+      setCurrentLevel(level);
+      setValue('name', level.name);
+      setValue('description', level.description || '');
+      setValue('minTotalSpent', level.minTotalSpent);
     } else {
       setCurrentLevel(null);
       reset();
@@ -173,7 +166,7 @@ const MembershipLevelManagement: React.FC = () => {
   };
 
   const onSubmit = (data: IMembershipLevel) => {
-    if (currentLevel) {
+    if (currentLevel && currentLevel._id) {
       dispatch(updateMembershipLevelAsync({ levelId: currentLevel._id, data }));
     } else {
       dispatch(createMembershipLevelAsync(data));
@@ -314,12 +307,6 @@ const MembershipLevelManagement: React.FC = () => {
                       mb={6}
                     >
                       <Box>
-                        <Text color='gray.600'>最低積分要求</Text>
-                        <Text fontSize='2xl' fontWeight='bold'>
-                          {level.minPointsRequired}
-                        </Text>
-                      </Box>
-                      <Box>
                         <Text color='gray.600'>會員列表</Text>
                         {level.members && level.members.length > 0 ? (
                           <Grid gap={4}>
@@ -357,6 +344,7 @@ const MembershipLevelManagement: React.FC = () => {
                       >
                         刪除
                       </Button>
+                      <ShoppingCreditModal levelId={level._id} />
                     </Flex>
                   </Box>
                 )}
@@ -391,16 +379,7 @@ const MembershipLevelManagement: React.FC = () => {
                 rows={3}
               />
             </FormControl>
-            <FormControl mb={4} isInvalid={!!errors.minPointsRequired}>
-              <FormLabel>最低積分要求</FormLabel>
-              <Input
-                type='number'
-                placeholder='最低積分要求'
-                {...register('minPointsRequired', {
-                  valueAsNumber: true,
-                })}
-              />
-            </FormControl>
+
             <FormControl mb={4} isInvalid={!!errors.minTotalSpent}>
               <FormLabel>最低消費總額</FormLabel>
               <Input

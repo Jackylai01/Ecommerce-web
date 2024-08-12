@@ -80,3 +80,16 @@ export const apiDeleteShoppingCredit = async (id: string) => {
 export const apiDeleteExpiredShoppingCredits = async () => {
   return deleteRequest<ApiResult<ShoppingCredit>>('/zigong/shoppingCredits');
 };
+
+/**
+ * 批量給各級別會員購物金
+ */
+
+export const apiAddShoppingCreditsForMembershipLevel = async (
+  body: ShoppingCredit,
+) => {
+  return postRequest<ApiResult<any>>(
+    '/zigong/shopping-credits/membership-levels',
+    body,
+  );
+};
