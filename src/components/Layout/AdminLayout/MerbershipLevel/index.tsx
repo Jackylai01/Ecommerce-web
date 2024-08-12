@@ -110,15 +110,15 @@ const MembershipLevelManagement: React.FC = () => {
   useEffect(() => {
     if (deleteMembershipLevelSuccess) {
       toast({
-        title: '已删除',
-        description: '删除成功',
+        title: '已刪除',
+        description: '刪除成功',
         status: 'success',
         duration: 3000,
         isClosable: true,
       });
     } else if (deleteMembershipLevelFailed) {
       toast({
-        title: '删除失败',
+        title: '刪除失敗',
         description: deleteMembershipLevelError,
         status: 'error',
         duration: 3000,
@@ -153,9 +153,9 @@ const MembershipLevelManagement: React.FC = () => {
             color='black'
             mb={2}
           >
-            会员分级管理
+            會員分級管理
           </Heading>
-          <Text color='blue.700'>管理您的VIP客户等级和优惠</Text>
+          <Text color='blue.700'>管理您的VIP客戶等級和優惠</Text>
         </Box>
         <Box p={{ base: 4, sm: 6, md: 8 }}>
           <Flex
@@ -172,13 +172,13 @@ const MembershipLevelManagement: React.FC = () => {
               w={{ base: 'full', sm: 'auto' }}
               transform='hover:translateY(-2px) hover:scale(1.05)'
             >
-              新增会员分级
+              新增會員分級
             </Button>
             <Flex direction={{ base: 'column', sm: 'row' }} gap={4} w='full'>
               <FormControl position='relative'>
                 <Input
                   type='text'
-                  placeholder='搜索会员...'
+                  placeholder='搜尋會員...'
                   pl='10'
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -197,7 +197,7 @@ const MembershipLevelManagement: React.FC = () => {
                 onChange={(e) => setFilterLevel(e.target.value)}
                 focusBorderColor='blue.500'
               >
-                <option value='all'>所有等级</option>
+                <option value='all'>所有等級</option>
                 {membershipLevels?.map((level) => (
                   <option key={level._id} value={level._id}>
                     {level.name}
@@ -267,7 +267,7 @@ const MembershipLevelManagement: React.FC = () => {
                         mb={6}
                       >
                         <Box>
-                          <Text color='gray.600'>最低积分要求</Text>
+                          <Text color='gray.600'>最低積分要求</Text>
                           <Text fontSize='2xl' fontWeight='bold'>
                             {level.minPointsRequired}
                           </Text>
@@ -280,7 +280,7 @@ const MembershipLevelManagement: React.FC = () => {
                         </Box>
                       </Grid>
                       <Heading fontSize='xl' fontWeight='semibold' mb={4}>
-                        会员列表
+                        會員列表
                       </Heading>
                       <Box overflowX='auto'>
                         <Table>
@@ -288,7 +288,7 @@ const MembershipLevelManagement: React.FC = () => {
                             <Tr>
                               <Th>ID</Th>
                               <Th>姓名</Th>
-                              <Th>积分</Th>
+                              <Th>積分</Th>
                             </Tr>
                           </Thead>
                           <Tbody>
@@ -312,14 +312,14 @@ const MembershipLevelManagement: React.FC = () => {
                           leftIcon={<Icon as={Edit} />}
                           colorScheme='yellow'
                         >
-                          编辑
+                          編輯
                         </Button>
                         <Button
                           onClick={() => handleDelete(level._id)}
                           leftIcon={<Icon as={Trash} />}
                           colorScheme='red'
                         >
-                          删除
+                          刪除
                         </Button>
                       </Flex>
                     </Box>
@@ -334,13 +334,13 @@ const MembershipLevelManagement: React.FC = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            {currentLevel ? '编辑会员分级' : '新增会员分级'}
+            {currentLevel ? '編輯會員分級' : '新增會員分級'}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl mb={4}>
-              <FormLabel>名称</FormLabel>
-              <Input placeholder='名称' defaultValue={currentLevel?.name} />
+              <FormLabel>名稱</FormLabel>
+              <Input placeholder='名稱' defaultValue={currentLevel?.name} />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>描述</FormLabel>
@@ -351,10 +351,10 @@ const MembershipLevelManagement: React.FC = () => {
               />
             </FormControl>
             <FormControl mb={4}>
-              <FormLabel>最低积分要求</FormLabel>
+              <FormLabel>最低積分要求</FormLabel>
               <Input
                 type='number'
-                placeholder='最低积分要求'
+                placeholder='最低積分要求'
                 defaultValue={currentLevel?.minPointsRequired}
               />
             </FormControl>
