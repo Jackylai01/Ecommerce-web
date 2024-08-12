@@ -6,6 +6,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
   VStack,
 } from '@chakra-ui/react';
 import ClientLayout from '@components/Layout/ClientLayout';
@@ -28,7 +29,7 @@ import { useEffect } from 'react';
 
 const ClientDashboard = () => {
   const dispatch = useAppDispatch();
-  const { userInfo } = useAppSelector((state) => state.clientAuth);
+  const { userInfo, userProfile } = useAppSelector((state) => state.clientAuth);
   const {
     list: orderList,
     historyList: orderHistoryList,
@@ -93,7 +94,14 @@ const ClientDashboard = () => {
             <Heading fontSize='32px' fontWeight='600' letterSpacing='1px'>
               會員專區
             </Heading>
+
+            {userProfile?.membershipLevel?.name && (
+              <Text fontSize='18px' fontWeight='500' mt='10px'>
+                {userProfile.membershipLevel.name}
+              </Text>
+            )}
           </Box>
+
           <Tabs variant='soft-rounded' colorScheme='orange'>
             <TabList
               justifyContent='center'

@@ -25,6 +25,7 @@ export class UserInfo {
   expirationDate: Date | null = null;
   phoneNumber!: string;
   currentSessionId!: string;
+  membershipLevel!: any;
 }
 
 export class ProfileResponse {
@@ -39,6 +40,7 @@ export class ProfileResponse {
   profileImage!: any;
   roles!: string;
   emailVerificationToken!: string;
+  membershipLevel: any;
 }
 
 export class UserCreateAccountResponse {
