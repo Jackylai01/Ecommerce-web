@@ -3,6 +3,7 @@ import adminERPPurchaseOrder from './admin/admin-erp/purchaseOrder';
 import adminERPReports from './admin/admin-erp/reports';
 import adminERPSalesOrder from './admin/admin-erp/salesOrder';
 import adminERPSuppliers from './admin/admin-erp/supplier';
+import adminMembershipLevel from './admin/admin-membership-level';
 import adminRefunds from './admin/admin-refunds';
 import adminAuth from './admin/auth';
 import adminClientUsers from './admin/client-users';
@@ -33,7 +34,6 @@ import publicFavorites from './public/favorite';
 import publicPayments from './public/payments';
 import publicProducts from './public/products';
 import publicShipment from './public/shipment';
-
 const appReducer = {
   layout,
   crudLayout,
@@ -70,6 +70,7 @@ const appReducer = {
   adminERPSalesOrder,
   adminERPSuppliers,
   adminDesignPage,
+  adminMembershipLevel,
 };
 
 export default appReducer;
