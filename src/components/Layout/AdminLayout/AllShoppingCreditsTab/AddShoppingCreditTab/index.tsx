@@ -11,6 +11,7 @@ import LoadingLayout from '@components/Layout/LoadingLayout';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { adminGetAllClientUsersAsync } from '@reducers/admin/client-users/actions';
+import { getAllShoppingCreditTypesAsync } from '@reducers/admin/shopping-credits-type/actions';
 import { addShoppingCreditAsync } from '@reducers/admin/shoppingCredits/actions';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -20,7 +21,7 @@ const AddShoppingCreditTab = () => {
     defaultValues: {
       userId: '',
       amount: '',
-      type: 'birthday',
+      type: '',
       status: 'unused',
       expiryDate: '',
     },
@@ -42,13 +43,19 @@ const AddShoppingCreditTab = () => {
     status: { adminDetailClientUserProfileLoading },
   } = useAppSelector((state) => state.adminClientUsers);
 
+  const {
+    list: shoppingCreditTypes,
+    status: { getAllShoppingCreditTypesLoading },
+  } = useAppSelector((state) => state.adminShoppingCreditsType);
+
   useEffect(() => {
     dispatch(adminGetAllClientUsersAsync({ page: 1, limit: 10 }));
+    dispatch(getAllShoppingCreditTypesAsync());
   }, [dispatch]);
 
-  const onSubmit = async (data: any) => {
-    await dispatch(addShoppingCreditAsync(data));
-    reset(); // 清空表單
+  const onSubmit = (data: any) => {
+    dispatch(addShoppingCreditAsync(data));
+    reset();
   };
 
   useEffect(() => {
@@ -76,6 +83,7 @@ const AddShoppingCreditTab = () => {
     addShoppingCreditError,
   ]);
 
+  console.log(shoppingCreditTypes);
   return (
     <LoadingLayout isLoading={addShoppingCreditLoading}>
       <Box p={4} borderWidth={1} borderRadius='lg' boxShadow='lg'>
@@ -104,10 +112,16 @@ const AddShoppingCreditTab = () => {
           </FormControl>
           <FormControl id='type' mb='4'>
             <FormLabel>類型</FormLabel>
-            <Select {...register('type')}>
-              <option value='birthday'>生日</option>
-              <option value='promotion'>促銷</option>
-              <option value='other'>其他</option>
+            <Select
+              {...register('type')}
+              placeholder='選擇購物金類型'
+              isDisabled={getAllShoppingCreditTypesLoading}
+            >
+              {shoppingCreditTypes?.map((type) => (
+                <option key={type._id} value={type._id}>
+                  {type.name}
+                </option>
+              ))}
             </Select>
           </FormControl>
           <FormControl id='expiryDate' mb='4'>

@@ -34,8 +34,8 @@ export enum ReducerName {
   ADMIN_REQUESTRETURN = 'adminQequestReturn',
   CLIENT_ORDERS = 'clientOrders',
   PUBLIC_DISCOUNTS = 'publicDiscounts',
-  ADMIN_SHOPPING_CREDITS = 'admin_shopping_credits',
-  CLIENT_SHOPPING_CREDITS = 'client_shopping_credits',
+  ADMIN_SHOPPING_CREDITS = 'adminShoppingCredits',
+  CLIENT_SHOPPING_CREDITS = 'clientShoppingCredits',
   ADMIN_ERP_INVENTORY = 'AdminERPInventory',
   ADMIN_ERP_PURCHASEORDER = 'AdminERPPurchaseOrder',
   ADMIN_ERP_REPORT = 'AdminERPReport',
@@ -43,4 +43,5 @@ export enum ReducerName {
   ADMIN_ERP_SUPPLIER = 'AdminERPSupplier',
   ADMIN_CREATE_DESIGN_PAGE = 'AdminCreateDesignPage',
   ADMIN_MEMBERSHIP_LEVEL = 'adminMemberShiptLevel',
+  ADMIN_SHOPPING_CREDITS_TYPE = 'adminShoppingCreditsType',
 }

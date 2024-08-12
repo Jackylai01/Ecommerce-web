@@ -17,6 +17,7 @@ import adminProductsCategory from './admin/product-category';
 import adminProductsTags from './admin/product-tags';
 import adminProducts from './admin/products';
 import adminShipment from './admin/shipments';
+import adminShoppingCreditsType from './admin/shopping-credits-type';
 import adminShoppingCredits from './admin/shoppingCredits';
 import adminUpload from './admin/upload';
 import clientAuth from './client/auth';
@@ -34,6 +35,7 @@ import publicFavorites from './public/favorite';
 import publicPayments from './public/payments';
 import publicProducts from './public/products';
 import publicShipment from './public/shipment';
+
 const appReducer = {
   layout,
   crudLayout,
@@ -71,6 +73,7 @@ const appReducer = {
   adminERPSuppliers,
   adminDesignPage,
   adminMembershipLevel,
+  adminShoppingCreditsType,
 };
 
 export default appReducer;

@@ -11,7 +11,7 @@ import {
   apiGetAllShoppingCredits,
   apiGetUserShoppingCredits,
   apiUpdateShoppingCreditStatus,
-} from '@services/admin/admin-shoppingCredits/admin-shoppingCredits';
+} from '@services/admin/admin-shopping-credits/admin-shopping-credits';
 
 export enum ShoppingCreditsAction {
   getAllShoppingCredits = 'getAllShoppingCredits',
