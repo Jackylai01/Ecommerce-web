@@ -204,7 +204,7 @@ const ClientDashboard = () => {
                         <Box textAlign='center' mt='10px'>
                           可兌換價值 NT$ {credit.amount} 的商品
                         </Box>
-                        類型: {credit.type}
+                        類型: {credit.type.name}
                       </Box>
                       <Box fontSize='14px' color='gray.600' textAlign='center'>
                         創建日期:{' '}
