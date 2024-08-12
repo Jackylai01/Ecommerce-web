@@ -2,6 +2,7 @@ import {
   FaBoxOpen,
   FaDollarSign,
   FaEdit,
+  FaFileAlt,
   FaFileInvoiceDollar,
   FaHome,
   FaShoppingCart,
@@ -11,6 +12,7 @@ import {
 
 import { PayPalIcon } from '@components/Icons/Icons';
 import AdminEditPageLayout from '@components/Layout/AdminEditLayout';
+import ArticleManagement from '@components/Layout/AdminLayout/ArticleManagement';
 import Billing from '@components/Layout/AdminLayout/Billing';
 import Dashboard from '@components/Layout/AdminLayout/Dashboard';
 import DiscountTableContainer from '@components/Layout/AdminLayout/Discount';
@@ -75,6 +77,13 @@ const dashRoutes = [
     name: 'Inventory System',
     icon: FaBoxOpen,
     component: InventorySystem,
+    layout: `/${ADMIN_ROUTE}`,
+  },
+  {
+    path: '/articles',
+    name: 'Articles',
+    icon: FaFileAlt,
+    component: ArticleManagement,
     layout: `/${ADMIN_ROUTE}`,
   },
   {
