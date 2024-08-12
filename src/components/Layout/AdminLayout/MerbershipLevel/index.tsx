@@ -182,6 +182,9 @@ const MembershipLevelManagement: React.FC = () => {
     setExpandedLevel(expandedLevel === id ? null : id);
   };
 
+  // 預定的背景顏色組
+  const bgColorList = ['blue.300', 'green.300', 'purple.300', 'orange.300'];
+
   return (
     <Box minH='100vh'>
       <Box
@@ -258,10 +261,10 @@ const MembershipLevelManagement: React.FC = () => {
           </Flex>
 
           <Grid gap={6}>
-            {filteredLevels.map((level) => (
+            {filteredLevels.map((level, index) => (
               <Box
                 key={level._id}
-                bg='blue.300'
+                bg={bgColorList[index % bgColorList.length]}
                 rounded='xl'
                 shadow='md'
                 overflow='hidden'
