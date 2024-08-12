@@ -12,9 +12,10 @@ export interface MembershipLevelResponse {
 }
 
 export interface Member {
-  id: string;
-  name: string;
-  points: number;
+  _id: string;
+  username: string;
+  totalSpent: number;
+  email: string;
 }
 
 export interface Level {
@@ -22,7 +23,6 @@ export interface Level {
   name: string;
   description?: string;
   minPointsRequired: number;
-  discountRate: number;
   color?: string;
   members: Member[];
 }

@@ -13,14 +13,17 @@ import {
  * 新增會員分級
  */
 export const apiCreateMembershipLevel = async (data: IMembershipLevel) =>
-  postRequest<ApiResult<MembershipLevelResponse>>('/membership-levels', data);
+  postRequest<ApiResult<MembershipLevelResponse>>(
+    '/zigong/membership-levels',
+    data,
+  );
 
 /**
  * 獲取全部會員分級
  */
 export const apiGetAllMembershipLevels = async (query: PagingQuery) =>
   getRequest<ApiPaginationResult<MembershipLevelResponse>>(
-    formatQueryString('/membership-levels', query),
+    formatQueryString('/zigong/membership-levels', query),
   );
 
 /**
@@ -28,7 +31,7 @@ export const apiGetAllMembershipLevels = async (query: PagingQuery) =>
  */
 export const apiGetMembershipLevelById = async (levelId: string) =>
   getRequest<ApiResult<MembershipLevelResponse>>(
-    `/membership-levels/${levelId}`,
+    `/zigong/membership-levels/${levelId}`,
   );
 
 /**
@@ -36,7 +39,7 @@ export const apiGetMembershipLevelById = async (levelId: string) =>
  */
 export const apiUpdateMembershipLevel = async (levelId: string, data: any) =>
   postRequest<ApiResult<MembershipLevelResponse>>(
-    `/membership-levels/${levelId}`,
+    `/zigong/membership-levels/${levelId}`,
     data,
   );
 
@@ -45,7 +48,7 @@ export const apiUpdateMembershipLevel = async (levelId: string, data: any) =>
  */
 export const apiDeleteMembershipLevel = async (levelId: string) =>
   postRequest<ApiResult<MembershipLevelResponse>>(
-    `/membership-levels/${levelId}`,
+    `/zigong/membership-levels/${levelId}`,
   );
 
 /**
@@ -53,7 +56,7 @@ export const apiDeleteMembershipLevel = async (levelId: string) =>
  */
 export const apiCheckAndUpgradeMembershipLevel = async () =>
   getRequest<ApiResult<MembershipLevelResponse>>(
-    '/membership-levels/check-upgrade',
+    '/zigong/membership-levels/check-upgrade',
   );
 
 /**
@@ -64,6 +67,6 @@ export const apiUpdateMembershipLevelOrderStatus = async (
   data: any,
 ) =>
   postRequest<ApiResult<MembershipLevelResponse>>(
-    `/membership-levels/Level-order/${orderId}`,
+    `/zigong/membership-levels/Level-order/${orderId}`,
     data,
   );
