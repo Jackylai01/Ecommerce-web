@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Heading, Image, Input } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Input,
+  Text,
+} from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useEditModeNavigation from '@hooks/useEditModeNavigation';
@@ -46,6 +54,9 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   const [buttonHref, setButtonHref] = useState(
     content.find((el) => el.tagName === 'button')?.href || '/',
   );
+  const [buttonText, setButtonText] = useState(
+    content.find((el) => el.tagName === 'button')?.context || '立即選購',
+  );
 
   const handleChange = (elIndex: number, key: string, value: string) => {
     const updatedContent = content.map((item, idx) => {
@@ -92,6 +103,14 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   useEffect(() => {
     setContent(element.elements || []);
   }, [element]);
+
+  useEffect(() => {
+    const buttonElement = content.find((el) => el.tagName === 'button');
+    if (buttonElement) {
+      setButtonText(buttonElement.context || '立即選購');
+      setButtonHref(buttonElement.href || '/');
+    }
+  }, [content]);
 
   const renderQuillEditor = (
     elIndex: number,
@@ -182,15 +201,52 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
                 )}
               </Box>
               <Flex align='center'>
-                <Button
-                  className='fashion-hero__button'
-                  onClick={() => {
-                    safeNavigation(buttonHref);
-                  }}
-                >
-                  {content.find((el) => el.id === 'button')?.context ||
-                    '立即選購'}
-                </Button>
+                {isEdit ? (
+                  <Box>
+                    <Flex direction='column' alignItems='flex-start'>
+                      <Text mb={1}>按鈕文字</Text>
+                      <Input
+                        size='sm'
+                        maxWidth='200px'
+                        placeholder='按鈕文字'
+                        value={buttonText}
+                        onChange={(e) => setButtonText(e.target.value)}
+                        onBlur={() =>
+                          handleChange(
+                            content.findIndex((el) => el.id === 'button'),
+                            'context',
+                            buttonText,
+                          )
+                        }
+                        mb={2}
+                      />
+                      <Text mb={1}>按鈕路由</Text>
+                      <Input
+                        size='sm'
+                        maxWidth='200px'
+                        placeholder='按鈕路由'
+                        value={buttonHref}
+                        onChange={(e) => setButtonHref(e.target.value)}
+                        onBlur={() =>
+                          handleChange(
+                            content.findIndex((el) => el.id === 'button'),
+                            'href',
+                            buttonHref,
+                          )
+                        }
+                      />
+                    </Flex>
+                  </Box>
+                ) : (
+                  <Button
+                    className='fashion-hero__button'
+                    onClick={() => {
+                      safeNavigation(buttonHref);
+                    }}
+                  >
+                    {buttonText}
+                  </Button>
+                )}
               </Flex>
             </Box>
 
