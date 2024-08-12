@@ -11,14 +11,17 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
 import { ShoppingCredit } from '@models/responses/shoppingCredit';
+import { getAllShoppingCreditTypesAsync } from '@reducers/admin/shopping-credits-type/actions';
 import { addShoppingCreditsForMembershipLevelAsync } from '@reducers/admin/shoppingCredits/actions';
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 interface ShoppingCreditModalProps {
@@ -38,14 +41,36 @@ const ShoppingCreditModal: React.FC<ShoppingCreditModalProps> = ({
     formState: { errors },
   } = useForm<ShoppingCredit>();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    list: creditTypes,
+    status: {
+      addShoppingCreditTypeFailed,
+      addShoppingCreditTypeLoading,
+      addShoppingCreditTypeSuccess,
+    },
+    error: { addShoppingCreditTypeError },
+  } = useAppSelector((state) => state.adminShoppingCreditsType);
 
-  const onSubmit = async (data: ShoppingCredit) => {
-    setIsLoading(true);
-    try {
-      await dispatch(
-        addShoppingCreditsForMembershipLevelAsync({ ...data, levelId }),
-      );
+  useEffect(() => {
+    dispatch(getAllShoppingCreditTypesAsync());
+  }, [dispatch]);
+
+  const onSubmit = (data: ShoppingCredit) => {
+    const selectedType = creditTypes?.find((type) => type.name === data.type);
+    if (!selectedType) {
+      throw new Error('無效的購物金類型');
+    }
+    dispatch(
+      addShoppingCreditsForMembershipLevelAsync({
+        ...data,
+        type: selectedType._id,
+        levelId,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    if (addShoppingCreditTypeSuccess) {
       toast({
         title: '購物金發放成功',
         description: '已成功發放購物金給該會員分級的所有會員。',
@@ -53,20 +78,21 @@ const ShoppingCreditModal: React.FC<ShoppingCreditModalProps> = ({
         duration: 3000,
         isClosable: true,
       });
-      onClose();
-      reset();
-    } catch (error) {
+    } else if (addShoppingCreditTypeFailed) {
       toast({
-        title: '發放失敗',
-        description: '購物金發放過程中發生錯誤。',
+        title: '購物金發放失敗',
+        description: addShoppingCreditTypeError,
         status: 'error',
         duration: 3000,
         isClosable: true,
       });
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, [
+    toast,
+    addShoppingCreditTypeSuccess,
+    addShoppingCreditTypeFailed,
+    addShoppingCreditTypeError,
+  ]);
 
   return (
     <>
@@ -96,12 +122,18 @@ const ShoppingCreditModal: React.FC<ShoppingCreditModalProps> = ({
             </FormControl>
             <FormControl mb={4} isInvalid={!!errors.type}>
               <FormLabel>類型</FormLabel>
-              <Input
-                placeholder='輸入購物金類型'
+              <Select
+                placeholder='選擇購物金類型'
                 {...register('type', {
                   required: '購物金類型是必填項目',
                 })}
-              />
+              >
+                {creditTypes?.map((type) => (
+                  <option key={type._id} value={type.name}>
+                    {type.name}
+                  </option>
+                ))}
+              </Select>
               {errors.type && <Box color='red.500'>{errors.type.message}</Box>}
             </FormControl>
             <FormControl mb={4}>
@@ -121,7 +153,7 @@ const ShoppingCreditModal: React.FC<ShoppingCreditModalProps> = ({
               colorScheme='blue'
               ml={3}
               type='submit'
-              isLoading={isLoading}
+              isLoading={addShoppingCreditTypeLoading}
             >
               發放
             </Button>
