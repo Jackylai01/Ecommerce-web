@@ -5,8 +5,10 @@ import { MembershipLevelResponse } from '@models/responses/membership.res';
 import {
   ApiPaginationResult,
   ApiResult,
+  deleteRequest,
   getRequest,
   postRequest,
+  putRequest,
 } from '@services/shared/api';
 
 /**
@@ -38,7 +40,7 @@ export const apiGetMembershipLevelById = async (levelId: string) =>
  * 更新會員分級
  */
 export const apiUpdateMembershipLevel = async (levelId: string, data: any) =>
-  postRequest<ApiResult<MembershipLevelResponse>>(
+  putRequest<ApiResult<MembershipLevelResponse>>(
     `/zigong/membership-levels/${levelId}`,
     data,
   );
@@ -47,7 +49,7 @@ export const apiUpdateMembershipLevel = async (levelId: string, data: any) =>
  * 刪除會員分級
  */
 export const apiDeleteMembershipLevel = async (levelId: string) =>
-  postRequest<ApiResult<MembershipLevelResponse>>(
+  deleteRequest<ApiResult<MembershipLevelResponse>>(
     `/zigong/membership-levels/${levelId}`,
   );
 

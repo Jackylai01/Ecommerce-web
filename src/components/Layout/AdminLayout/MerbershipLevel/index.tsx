@@ -21,22 +21,20 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import LoadingLayout from '@components/Layout/LoadingLayout';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { IMembershipLevel } from '@models/requests/membership.req';
-
 import {
   Level,
-  Member,
   MembershipLevelResponse,
 } from '@models/responses/membership.res';
 import {
   createMembershipLevelAsync,
   deleteMembershipLevelAsync,
   getAllMembershipLevelsAsync,
+  updateMembershipLevelAsync,
 } from '@reducers/admin/admin-membership-level/actions';
-import { ChevronDown, Plus, Search } from 'lucide-react';
+import { ChevronDown, Edit, Plus, Search, Trash } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -52,12 +50,12 @@ const MembershipLevelManagement: React.FC = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<IMembershipLevel>();
 
   const {
     membershipLevels,
-    metadata,
     status: {
       deleteMembershipLevelFailed,
       deleteMembershipLevelLoading,
@@ -65,8 +63,15 @@ const MembershipLevelManagement: React.FC = () => {
       createMembershipLevelFailed,
       createMembershipLevelLoading,
       createMembershipLevelSuccess,
+      updateMembershipLevelFailed,
+      updateMembershipLevelLoading,
+      updateMembershipLevelSuccess,
     },
-    error: { createMembershipLevelError, deleteMembershipLevelError },
+    error: {
+      createMembershipLevelError,
+      deleteMembershipLevelError,
+      updateMembershipLevelError,
+    },
   } = useAppSelector((state) => state.adminMembershipLevel);
 
   useEffect(() => {
@@ -74,10 +79,10 @@ const MembershipLevelManagement: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (createMembershipLevelSuccess) {
+    if (createMembershipLevelSuccess || updateMembershipLevelSuccess) {
       toast({
-        title: '新增成功',
-        description: '會員分級已成功新增。',
+        title: currentLevel ? '更新成功' : '新增成功',
+        description: `會員分級已成功${currentLevel ? '更新' : '新增'}`,
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -93,65 +98,37 @@ const MembershipLevelManagement: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
+    } else if (updateMembershipLevelFailed) {
+      toast({
+        title: '更新失敗',
+        description: updateMembershipLevelError,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   }, [
     toast,
     createMembershipLevelSuccess,
     createMembershipLevelFailed,
     createMembershipLevelError,
+    updateMembershipLevelSuccess,
+    updateMembershipLevelFailed,
+    updateMembershipLevelError,
     onClose,
     reset,
   ]);
-
-  const handleAddEdit = (level: MembershipLevelResponse | null = null) => {
-    if (level) {
-      const updatedLevel: Level = {
-        ...level,
-        minPointsRequired: level.minPointsRequired ?? 0,
-        members: level.members || [],
-        description: level.description || '',
-      };
-      setCurrentLevel(updatedLevel);
-    } else {
-      setCurrentLevel(null);
-    }
-    onOpen();
-  };
-
-  const handleDelete = (id: string) => {
-    dispatch(deleteMembershipLevelAsync(id));
-  };
-
-  const onSubmit = (data: IMembershipLevel) => {
-    dispatch(createMembershipLevelAsync(data));
-  };
-
-  const filteredLevels =
-    membershipLevels?.filter(
-      (level) => filterLevel === 'all' || level._id === filterLevel,
-    ) || [];
-
-  const filteredMembers = (members: Member[]) => {
-    return members.filter(
-      (member) =>
-        member.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        member.totalSpent.toString().includes(searchTerm),
-    );
-  };
-
-  const toggleExpand = (id: string) => {
-    setExpandedLevel(expandedLevel === id ? null : id);
-  };
 
   useEffect(() => {
     if (deleteMembershipLevelSuccess) {
       toast({
         title: '已刪除',
-        description: '刪除成功',
+        description: '會員分級已成功刪除',
         status: 'success',
         duration: 3000,
         isClosable: true,
       });
+      dispatch(getAllMembershipLevelsAsync({ page: 1, limit: 10 }));
     } else if (deleteMembershipLevelFailed) {
       toast({
         title: '刪除失敗',
@@ -166,7 +143,51 @@ const MembershipLevelManagement: React.FC = () => {
     deleteMembershipLevelSuccess,
     deleteMembershipLevelFailed,
     deleteMembershipLevelError,
+    dispatch,
   ]);
+
+  const handleAddEdit = (level: MembershipLevelResponse | null = null) => {
+    if (level) {
+      const updatedLevel: Level = {
+        ...level,
+        minPointsRequired: level.minPointsRequired ?? 0,
+        members: level.members || [],
+        description: level.description || '',
+      };
+      setCurrentLevel(updatedLevel);
+      setValue('name', updatedLevel.name);
+      setValue('description', updatedLevel.description || '');
+      setValue('minPointsRequired', updatedLevel.minPointsRequired);
+      setValue('minTotalSpent', updatedLevel.minTotalSpent);
+    } else {
+      setCurrentLevel(null);
+      reset();
+    }
+    onOpen();
+  };
+
+  const handleDelete = (id: string) => {
+    if (window.confirm('你確定要刪除此會員分級嗎？')) {
+      dispatch(deleteMembershipLevelAsync(id));
+    }
+  };
+
+  const onSubmit = (data: IMembershipLevel) => {
+    if (currentLevel) {
+      dispatch(updateMembershipLevelAsync({ levelId: currentLevel._id, data }));
+    } else {
+      dispatch(createMembershipLevelAsync(data));
+    }
+  };
+
+  const filteredLevels =
+    membershipLevels?.filter(
+      (level) => filterLevel === 'all' || level._id === filterLevel,
+    ) || [];
+
+  const toggleExpand = (id: string) => {
+    setExpandedLevel(expandedLevel === id ? null : id);
+  };
 
   return (
     <Box minH='100vh'>
@@ -242,98 +263,106 @@ const MembershipLevelManagement: React.FC = () => {
               </Select>
             </Flex>
           </Flex>
-          <LoadingLayout
-            isLoading={
-              deleteMembershipLevelLoading || createMembershipLevelLoading
-            }
-            arrayData={membershipLevels}
-          >
-            <Grid gap={6}>
-              {filteredLevels.map((level) => (
+
+          <Grid gap={6}>
+            {filteredLevels.map((level) => (
+              <Box
+                key={level._id}
+                bg='blue.300'
+                rounded='xl'
+                shadow='md'
+                overflow='hidden'
+              >
                 <Box
-                  key={level._id}
-                  bg='blue.300'
-                  rounded='xl'
-                  shadow='md'
-                  overflow='hidden'
+                  p={6}
+                  bgGradient='linear(to-r, blue.600, indigo.700)'
+                  cursor='pointer'
+                  onClick={() => toggleExpand(level._id)}
                 >
-                  <Box
-                    p={6}
-                    bgGradient='linear(to-r, blue.600, indigo.700)'
-                    cursor='pointer'
-                    onClick={() => toggleExpand(level._id)}
-                  >
-                    <Flex justify='space-between' align='center'>
-                      <Heading
-                        fontSize={{ base: 'xl', sm: '2xl' }}
-                        fontWeight='semibold'
+                  <Flex justify='space-between' align='center'>
+                    <Heading
+                      fontSize={{ base: 'xl', sm: '2xl' }}
+                      fontWeight='semibold'
+                      color='white'
+                    >
+                      {level.name}
+                    </Heading>
+                    <Flex align='center'>
+                      <Icon
+                        as={ChevronDown}
+                        h={6}
+                        w={6}
                         color='white'
-                      >
-                        {level.name}
-                      </Heading>
-                      <Flex align='center'>
-                        <Icon
-                          as={ChevronDown}
-                          h={6}
-                          w={6}
-                          color='white'
-                          transform={
-                            expandedLevel === level._id ? 'rotate(180deg)' : ''
-                          }
-                        />
-                      </Flex>
+                        transform={
+                          expandedLevel === level._id ? 'rotate(180deg)' : ''
+                        }
+                      />
                     </Flex>
-                    <Text color='white' mt={2}>
-                      {level.description}
-                    </Text>
-                  </Box>
-                  {expandedLevel === level._id && (
-                    <Box p={6} bg='gray.100'>
-                      <Grid
-                        templateColumns={{
-                          base: '1fr',
-                          sm: 'repeat(2, 1fr)',
-                        }}
-                        gap={4}
-                        mb={6}
-                      >
-                        <Box>
-                          <Text color='gray.600'>最低積分要求</Text>
-                          <Text fontSize='2xl' fontWeight='bold'>
-                            {level.minPointsRequired}
-                          </Text>
-                        </Box>
-                        <Box>
-                          <Text color='gray.600'>會員列表</Text>
-                          {level.members && level.members.length > 0 ? (
-                            <Grid gap={4}>
-                              {filteredMembers(level.members).map((member) => (
-                                <Box
-                                  key={member._id}
-                                  bg='white'
-                                  p={4}
-                                  rounded='md'
-                                  shadow='sm'
-                                >
-                                  <Text fontWeight='bold'>
-                                    {member.username}
-                                  </Text>
-                                  <Text>{member.email}</Text>
-                                  <Text>總消費金額: {member.totalSpent}</Text>
-                                </Box>
-                              ))}
-                            </Grid>
-                          ) : (
-                            <Text color='gray.500'>目前沒有符合條件的會員</Text>
-                          )}
-                        </Box>
-                      </Grid>
-                    </Box>
-                  )}
+                  </Flex>
+                  <Text color='white' mt={2}>
+                    {level.description}
+                  </Text>
                 </Box>
-              ))}
-            </Grid>
-          </LoadingLayout>
+                {expandedLevel === level._id && (
+                  <Box p={6} bg='gray.100'>
+                    <Grid
+                      templateColumns={{
+                        base: '1fr',
+                        sm: 'repeat(2, 1fr)',
+                      }}
+                      gap={4}
+                      mb={6}
+                    >
+                      <Box>
+                        <Text color='gray.600'>最低積分要求</Text>
+                        <Text fontSize='2xl' fontWeight='bold'>
+                          {level.minPointsRequired}
+                        </Text>
+                      </Box>
+                      <Box>
+                        <Text color='gray.600'>會員列表</Text>
+                        {level.members && level.members.length > 0 ? (
+                          <Grid gap={4}>
+                            {level.members.map((member) => (
+                              <Box
+                                key={member._id}
+                                bg='white'
+                                p={4}
+                                rounded='md'
+                                shadow='sm'
+                              >
+                                <Text fontWeight='bold'>{member.username}</Text>
+                                <Text>{member.email}</Text>
+                                <Text>總消費金額: {member.totalSpent}</Text>
+                              </Box>
+                            ))}
+                          </Grid>
+                        ) : (
+                          <Text color='gray.500'>目前沒有符合條件的會員</Text>
+                        )}
+                      </Box>
+                    </Grid>
+                    <Flex mt={4} justify='flex-end' gap={4}>
+                      <Button
+                        colorScheme='blue'
+                        leftIcon={<Icon as={Edit} />}
+                        onClick={() => handleAddEdit(level)}
+                      >
+                        編輯
+                      </Button>
+                      <Button
+                        colorScheme='red'
+                        leftIcon={<Icon as={Trash} />}
+                        onClick={() => handleDelete(level._id)}
+                      >
+                        刪除
+                      </Button>
+                    </Flex>
+                  </Box>
+                )}
+              </Box>
+            ))}
+          </Grid>
         </Box>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -348,7 +377,6 @@ const MembershipLevelManagement: React.FC = () => {
               <FormLabel>名稱</FormLabel>
               <Input
                 placeholder='名稱'
-                defaultValue={currentLevel?.name}
                 {...register('name', { required: '名稱是必填項目' })}
               />
               {errors.name && (
@@ -359,7 +387,6 @@ const MembershipLevelManagement: React.FC = () => {
               <FormLabel>描述</FormLabel>
               <Textarea
                 placeholder='描述'
-                defaultValue={currentLevel?.description}
                 {...register('description')}
                 rows={3}
               />
@@ -369,7 +396,6 @@ const MembershipLevelManagement: React.FC = () => {
               <Input
                 type='number'
                 placeholder='最低積分要求'
-                defaultValue={currentLevel?.minPointsRequired}
                 {...register('minPointsRequired', {
                   valueAsNumber: true,
                 })}
@@ -398,7 +424,11 @@ const MembershipLevelManagement: React.FC = () => {
               colorScheme='blue'
               ml={3}
               type='submit'
-              isLoading={createMembershipLevelLoading}
+              isLoading={
+                createMembershipLevelLoading ||
+                updateMembershipLevelLoading ||
+                deleteMembershipLevelLoading
+              }
             >
               保存
             </Button>

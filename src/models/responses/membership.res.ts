@@ -25,4 +25,5 @@ export interface Level {
   minPointsRequired: number;
   color?: string;
   members: Member[];
+  minTotalSpent: number;
 }
