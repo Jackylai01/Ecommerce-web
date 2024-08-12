@@ -42,4 +42,5 @@ export enum ReducerName {
   ADMIN_ERP_SALESORDER = 'AdminERPSalesorder',
   ADMIN_ERP_SUPPLIER = 'AdminERPSupplier',
   ADMIN_CREATE_DESIGN_PAGE = 'AdminCreateDesignPage',
+  ADMIN_MEMBERSHIP_LEVEL = 'adminMemberShiptLevel',
 }
