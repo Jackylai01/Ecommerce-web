@@ -1,3 +1,4 @@
+import adminArticles from './admin/admin-articles';
 import adminERPInventory from './admin/admin-erp/inventory';
 import adminERPPurchaseOrder from './admin/admin-erp/purchaseOrder';
 import adminERPReports from './admin/admin-erp/reports';
@@ -74,6 +75,7 @@ const appReducer = {
   adminDesignPage,
   adminMembershipLevel,
   adminShoppingCreditsType,
+  adminArticles,
 };
 
 export default appReducer;
