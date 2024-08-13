@@ -10,7 +10,7 @@ import {
   apiUpdateArticlesCategory,
 } from '@services/admin/admin-articles-category/articles-category';
 
-export enum CategoryAction {
+export enum ArticleCategoryAction {
   getAllCategories = 'getAllCategories',
   getCategoryById = 'getCategoryById',
   addCategory = 'addCategory',
@@ -18,8 +18,8 @@ export enum CategoryAction {
   deleteCategory = 'deleteCategory',
 }
 
-export const getAllCategoriesAsync = createAsyncThunk(
-  `${ReducerName.ADMIN_ARTICLES_CATEGORY}/${CategoryAction.getAllCategories}`,
+export const getAllArticleCategoriesAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_ARTICLES_CATEGORY}/${ArticleCategoryAction.getAllCategories}`,
   async ({ page, limit }: QueryParams) => {
     const query: PagingQuery = { page, limit };
     const response = await apiGetArticlesCategories(query);
@@ -27,32 +27,32 @@ export const getAllCategoriesAsync = createAsyncThunk(
   },
 );
 
-export const getCategoryByIdAsync = createAsyncThunk(
-  `${ReducerName.ADMIN_ARTICLES_CATEGORY}/${CategoryAction.getCategoryById}`,
+export const getArticleCategoryByIdAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_ARTICLES_CATEGORY}/${ArticleCategoryAction.getCategoryById}`,
   async (id: string) => {
     const response = await apiGetArticlesCategoryById(id);
     return response.result.data;
   },
 );
 
-export const addCategoryAsync = createAsyncThunk(
-  `${ReducerName.ADMIN_ARTICLES_CATEGORY}/${CategoryAction.addCategory}`,
+export const addArticleCategoryAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_ARTICLES_CATEGORY}/${ArticleCategoryAction.addCategory}`,
   async (body: any) => {
     const response = await apiAddArticlesCategory(body);
     return response.result.data;
   },
 );
 
-export const updateCategoryAsync = createAsyncThunk(
-  `${ReducerName.ADMIN_ARTICLES_CATEGORY}/${CategoryAction.updateCategory}`,
+export const updateArticleCategoryAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_ARTICLES_CATEGORY}/${ArticleCategoryAction.updateCategory}`,
   async ({ id, body }: { id: string; body: any }) => {
     const response = await apiUpdateArticlesCategory(id, body);
     return response.result.data;
   },
 );
 
-export const deleteCategoryAsync = createAsyncThunk(
-  `${ReducerName.ADMIN_ARTICLES_CATEGORY}/${CategoryAction.deleteCategory}`,
+export const deleteArticleCategoryAsync = createAsyncThunk(
+  `${ReducerName.ADMIN_ARTICLES_CATEGORY}/${ArticleCategoryAction.deleteCategory}`,
   async (id: string) => {
     await apiDeleteArticlesCategory(id);
     return id;
