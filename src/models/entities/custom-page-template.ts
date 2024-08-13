@@ -1,4 +1,5 @@
 type CustomPageElement = {
+  id: string;
   tagName: string;
   className?: string;
   context?: string;

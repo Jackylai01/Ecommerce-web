@@ -1,9 +1,5 @@
 import { PagingQuery } from '@models/entities/shared/pagination';
-import {
-  AddArticleRequest,
-  AddCommentRequest,
-  EditArticleRequest,
-} from '@models/requests/article.req';
+import { AddCommentRequest } from '@models/requests/article.req';
 import { Article, Comment } from '@models/responses/article.res';
 import {
   ApiPaginationResult,
@@ -17,32 +13,32 @@ import {
 /**
  * 新增文章
  */
-export const apiAddArticle = async (body: AddArticleRequest) => {
-  return postRequest<ApiResult<Article>>('/articles', body);
+export const apiAddArticle = async (body: FormData) => {
+  return postRequest<ApiResult<Article>>('/zigong/articles', body, {
+    'Content-Type': 'multipart/form-data',
+  });
 };
 
 /**
  * 編輯文章
  */
-export const apiEditArticle = async (
-  articleId: string,
-  body: EditArticleRequest,
-) => {
-  return putRequest<ApiResult<Article>>(`/articles/${articleId}`, body);
+export const apiEditArticle = async (articleId: string, body: FormData) => {
+  return putRequest<ApiResult<Article>>(`/zigong/articles/${articleId}`, body, {
+    'Content-Type': 'multipart/form-data',
+  });
 };
-
 /**
  * 刪除文章
  */
 export const apiDeleteArticle = async (articleId: string) => {
-  return deleteRequest<ApiResult<Article>>(`/articles/${articleId}`);
+  return deleteRequest<ApiResult<Article>>(`/zigong/articles/${articleId}`);
 };
 
 /**
  * 查詢全部文章
  */
 export const apiGetAllArticles = async (query: PagingQuery) => {
-  return getRequest<ApiPaginationResult<any>>('/articles', query);
+  return getRequest<ApiPaginationResult<any>>('/zigong/articles', query);
 };
 
 /**
@@ -53,7 +49,7 @@ export const apiAddCommentToArticle = async (
   body: AddCommentRequest,
 ) => {
   return postRequest<ApiResult<Comment>>(
-    `/articles/${articleId}/comments`,
+    `/zigong/articles/${articleId}/comments`,
     body,
   );
 };
@@ -62,5 +58,5 @@ export const apiAddCommentToArticle = async (
  * 查詢單一文章
  */
 export const apiGetArticleById = async (articleId: string) => {
-  return getRequest<ApiResult<Article>>(`/articles/${articleId}`);
+  return getRequest<ApiResult<Article>>(`/zigong/articles/${articleId}`);
 };

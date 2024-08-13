@@ -1,10 +1,6 @@
 import { ReducerName } from '@enums/reducer-name';
 import { PagingQuery } from '@models/entities/shared/pagination';
-import {
-  AddArticleRequest,
-  AddCommentRequest,
-  EditArticleRequest,
-} from '@models/requests/article.req';
+import { AddCommentRequest } from '@models/requests/article.req';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiAddArticle,
@@ -42,7 +38,7 @@ export const getArticleByIdAsync = createAsyncThunk(
 
 export const addArticleAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ARTICLES}/${ArticleAction.addArticle}`,
-  async (body: AddArticleRequest) => {
+  async (body: FormData) => {
     const response = await apiAddArticle(body);
     return response.result.data;
   },
@@ -50,18 +46,11 @@ export const addArticleAsync = createAsyncThunk(
 
 export const editArticleAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ARTICLES}/${ArticleAction.editArticle}`,
-  async ({
-    articleId,
-    body,
-  }: {
-    articleId: string;
-    body: EditArticleRequest;
-  }) => {
+  async ({ articleId, body }: { articleId: string; body: FormData }) => {
     const response = await apiEditArticle(articleId, body);
     return response.result.data;
   },
 );
-
 export const deleteArticleAsync = createAsyncThunk(
   `${ReducerName.ADMIN_ARTICLES}/${ArticleAction.deleteArticle}`,
   async (articleId: string) => {

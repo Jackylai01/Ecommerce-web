@@ -1,7 +1,9 @@
 export interface AddArticleRequest {
   title: string;
   content: string;
-  author: string;
+  author: any;
+  blocks?: any;
+  coverImage?: any;
 }
 
 export interface EditArticleRequest {
