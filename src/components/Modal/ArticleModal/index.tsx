@@ -87,14 +87,6 @@ export default function ArticleModal({
     } else {
       dispatch(addArticleAsync(formData));
     }
-
-    toast({
-      title: isEditing ? '編輯成功' : '新增成功',
-      status: 'success',
-      isClosable: true,
-    });
-
-    onClose();
   };
 
   return (
