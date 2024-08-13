@@ -6,6 +6,12 @@ export interface Article {
   createdAt: Date;
   updatedAt: Date;
   comments: Comment[];
+  tags: string[];
+  excerpt: any;
+  status: string;
+  isFeatured: boolean;
+  category: any;
+  blocks: any;
 }
 
 export interface Comment {

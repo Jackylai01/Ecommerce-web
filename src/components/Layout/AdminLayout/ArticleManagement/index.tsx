@@ -3,20 +3,8 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
-  FormLabel,
   Heading,
   Image,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Select,
-  Switch,
   Tab,
   Table,
   TabList,
@@ -31,75 +19,62 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-
 import LoadingLayout from '@components/Layout/LoadingLayout';
+import CategoryModal from '@components/Modal/ArticleCategoryModal';
+import ArticleModal from '@components/Modal/ArticleModal';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { resetArticleState } from '@reducers/admin/admin-articles';
-import {
-  addArticleAsync,
-  deleteArticleAsync,
-  editArticleAsync,
-  getAllArticlesAsync,
-} from '@reducers/admin/admin-articles/actions';
 
 import {
-  addArticleCategoryAsync,
   deleteArticleCategoryAsync,
   getAllArticleCategoriesAsync,
-  updateArticleCategoryAsync,
 } from '@reducers/admin/admin-articles-category/actions';
+import {
+  deleteArticleAsync,
+  getAllArticlesAsync,
+} from '@reducers/admin/admin-articles/actions';
 import { useEffect, useState } from 'react';
-import ArticleCustomBlocks from './ArticleCustomBlocks';
 
 export default function ArticleManagement() {
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [title, setTitle] = useState('');
-  const [tags, setTags] = useState<string[]>([]);
-  const [readTime, setReadTime] = useState<number>(0);
-  const [excerpt, setExcerpt] = useState('');
-  const [contentBlocks, setContentBlocks] = useState<any[]>([]);
-  const [status, setStatus] = useState('draft');
-  const [coverImage, setCoverImage] = useState<File | null>(null);
-  const [isFeatured, setIsFeatured] = useState(false);
-  const [category, setCategory] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
-  const [currentArticleId, setCurrentArticleId] = useState<string | null>(null);
-
-  const [categoryName, setCategoryName] = useState('');
-  const [categoryDescription, setCategoryDescription] = useState('');
-  const [currentCategoryId, setCurrentCategoryId] = useState<string | null>(
+  const [modalType, setModalType] = useState<'article' | 'category' | null>(
     null,
   );
-  const [isCategoryEditing, setIsCategoryEditing] = useState(false);
+  const [currentArticle, setCurrentArticle] = useState<any>(null);
+  const [currentCategory, setCurrentCategory] = useState<any>(null);
 
   const dispatch = useAppDispatch();
-  const toast = useToast();
-  const { userInfo } = useAppSelector((state) => state.adminAuth);
   const {
     list: articles,
     status: {
-      addArticleLoading,
       addArticleFailed,
+      addArticleLoading,
       addArticleSuccess,
-      deleteArticleLoading,
-      deleteArticleFailed,
+      editArticleLoading,
+      editArticleFailed,
+      editArticleSuccess,
       deleteArticleSuccess,
+      deleteArticleFailed,
+      deleteArticleLoading,
     },
-    error: { addArticleError, deleteArticleError },
+    error: { addArticleError, deleteArticleError, editArticleError },
   } = useAppSelector((state) => state.adminArticles);
-
   const {
     list: categories,
     status: {
       addCategoryLoading,
+      deleteCategoryLoading,
+      updateCategoryLoading,
       addCategoryFailed,
       addCategorySuccess,
-      deleteCategoryLoading,
+      updateCategoryFailed,
+      updateCategorySuccess,
       deleteCategoryFailed,
       deleteCategorySuccess,
     },
-    error: { addCategoryError, deleteCategoryError },
+    error: { addCategoryError, updateCategoryError, deleteCategoryError },
   } = useAppSelector((state) => state.adminArticlesCategories);
 
   useEffect(() => {
@@ -107,45 +82,22 @@ export default function ArticleManagement() {
     dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
-  const handleSaveArticle = async () => {
-    if (!userInfo) return;
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('tags', tags.join(','));
-    formData.append('readTime', readTime.toString());
-    formData.append('excerpt', excerpt);
-    formData.append('status', status);
-    formData.append('author', userInfo._id);
-    formData.append('isFeatured', isFeatured.toString());
-    formData.append('category', category);
-
-    const blocksJson = JSON.stringify(contentBlocks);
-    formData.append('blocks', blocksJson);
-
-    if (coverImage) {
-      formData.append('coverImage', coverImage);
-    }
-
-    if (isEditing && currentArticleId) {
-      dispatch(
-        editArticleAsync({ articleId: currentArticleId, body: formData }),
-      );
+  const openArticleModal = (article: any = null) => {
+    if (!article) {
+      setCurrentArticle({
+        title: '',
+        tags: [],
+        excerpt: '',
+        status: 'draft',
+        coverImage: null,
+        isFeatured: false,
+        category: '',
+        blocks: [],
+      });
     } else {
-      dispatch(addArticleAsync(formData));
+      setCurrentArticle(article);
     }
-  };
-
-  const handleEditArticle = (article: any) => {
-    setTitle(article.title);
-    setTags(article.tags || []);
-    setReadTime(article.readTime || 0);
-    setExcerpt(article.excerpt || '');
-    setStatus(article.status);
-    setContentBlocks(article.blocks);
-    setIsFeatured(article.isFeatured || false);
-    setCategory(article.category || '');
-    setCurrentArticleId(article._id);
-    setIsEditing(true);
+    setModalType('article');
     onOpen();
   };
 
@@ -153,71 +105,27 @@ export default function ArticleManagement() {
     dispatch(deleteArticleAsync(articleId));
   };
 
-  const resetForm = () => {
-    setTitle('');
-    setTags([]);
-    setReadTime(0);
-    setExcerpt('');
-    setStatus('draft');
-    setContentBlocks([]);
-    setCoverImage(null);
-    setIsFeatured(false);
-    setCategory('');
-    setCurrentArticleId(null);
-    setIsEditing(false);
-  };
-
-  const handleSaveCategory = async () => {
-    const categoryData = {
-      name: categoryName,
-      description: categoryDescription,
-    };
-
-    if (isCategoryEditing && currentCategoryId) {
-      dispatch(
-        updateArticleCategoryAsync({
-          id: currentCategoryId,
-          body: categoryData,
-        }),
-      );
-    } else {
-      dispatch(addArticleCategoryAsync(categoryData));
-    }
-  };
-
-  const handleEditCategory = (category: any) => {
-    setCategoryName(category.name);
-    setCategoryDescription(category.description);
-    setCurrentCategoryId(category._id);
-    setIsCategoryEditing(true);
-    onOpen();
-  };
-
   const handleDeleteCategory = (categoryId: string) => {
     dispatch(deleteArticleCategoryAsync(categoryId));
   };
 
-  const resetCategoryForm = () => {
-    setCategoryName('');
-    setCategoryDescription('');
-    setCurrentCategoryId(null);
-    setIsCategoryEditing(false);
+  const openCategoryModal = (category: any = null) => {
+    setCurrentCategory(category);
+    setModalType('category');
+    onOpen();
   };
 
   useEffect(() => {
     if (addArticleSuccess) {
       toast({
-        title: isEditing ? '編輯成功' : '新增成功',
-        description: isEditing ? '文章編輯成功' : '新增文章建立成功',
+        title: '新增文章成功',
         status: 'success',
         isClosable: true,
       });
-      onClose();
-      resetForm();
       dispatch(getAllArticlesAsync({ page: 1, limit: 10 }));
     } else if (addArticleFailed) {
       toast({
-        title: isEditing ? '編輯文章失敗' : '新增文章失敗',
+        title: '新增文章失敗',
         description: addArticleError,
         status: 'error',
         isClosable: true,
@@ -230,8 +138,24 @@ export default function ArticleManagement() {
     addArticleError,
     onClose,
     dispatch,
-    isEditing,
   ]);
+
+  useEffect(() => {
+    if (editArticleSuccess) {
+      toast({
+        title: '更新文章成功',
+        status: 'success',
+        isClosable: true,
+      });
+    } else if (editArticleFailed) {
+      toast({
+        title: '更新文章失敗',
+        description: editArticleError,
+        status: 'error',
+        isClosable: true,
+      });
+    }
+  }, [toast, editArticleSuccess, editArticleFailed, editArticleError]);
 
   useEffect(() => {
     if (deleteArticleSuccess) {
@@ -255,19 +179,16 @@ export default function ArticleManagement() {
   useEffect(() => {
     if (addCategorySuccess) {
       toast({
-        title: isCategoryEditing ? '編輯成功' : '新增成功',
-        description: isCategoryEditing
-          ? '文章類別編輯成功'
-          : '新增文章類別建立成功',
+        title: '新增成功',
         status: 'success',
         isClosable: true,
       });
       onClose();
-      resetCategoryForm();
+
       dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 10 }));
     } else if (addCategoryFailed) {
       toast({
-        title: isCategoryEditing ? '編輯文章類別失敗' : '新增文章類別失敗',
+        title: '新增文章類別失敗',
         description: addCategoryError,
         status: 'error',
         isClosable: true,
@@ -280,18 +201,16 @@ export default function ArticleManagement() {
     addCategoryError,
     onClose,
     dispatch,
-    isCategoryEditing,
   ]);
 
   useEffect(() => {
     if (deleteCategorySuccess) {
       toast({
         title: '刪除文章類別成功',
-        description: '刪除文章類別成功',
         status: 'success',
         isClosable: true,
       });
-      resetCategoryForm();
+
       dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 10 }));
     } else if (deleteCategoryFailed) {
       toast({
@@ -301,15 +220,48 @@ export default function ArticleManagement() {
         isClosable: true,
       });
     }
-  }, [toast, deleteCategoryFailed, deleteCategorySuccess, deleteCategoryError]);
+  }, [
+    toast,
+    dispatch,
+    deleteCategoryFailed,
+    deleteCategorySuccess,
+    deleteCategoryError,
+  ]);
+
+  useEffect(() => {
+    if (updateCategorySuccess) {
+      toast({
+        title: '更新文章類別成功',
+        status: 'success',
+        isClosable: true,
+      });
+
+      dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 10 }));
+    } else if (updateCategoryFailed) {
+      toast({
+        title: '更新文章類別失敗',
+        description: updateCategoryError,
+        status: 'error',
+        isClosable: true,
+      });
+    }
+  }, [
+    toast,
+    dispatch,
+    updateCategoryFailed,
+    updateCategorySuccess,
+    updateCategoryError,
+  ]);
 
   return (
     <LoadingLayout
       isLoading={
         addArticleLoading ||
-        deleteArticleLoading ||
         addCategoryLoading ||
-        deleteCategoryLoading
+        deleteCategoryLoading ||
+        updateCategoryLoading ||
+        editArticleLoading ||
+        deleteArticleLoading
       }
     >
       <Box py='2rem' w='100%'>
@@ -331,16 +283,9 @@ export default function ArticleManagement() {
                 p='2rem'
                 mb='2rem'
               >
-                <Button
-                  colorScheme='purple'
-                  onClick={() => {
-                    resetForm();
-                    onOpen();
-                  }}
-                >
+                <Button colorScheme='purple' onClick={() => openArticleModal()}>
                   + 新增文章
                 </Button>
-
                 <Box overflowX='auto' mt='2rem'>
                   <Table variant='simple'>
                     <Thead>
@@ -385,7 +330,7 @@ export default function ArticleManagement() {
                               <Button
                                 colorScheme='purple'
                                 size='sm'
-                                onClick={() => handleEditArticle(article)}
+                                onClick={() => openArticleModal(article)}
                               >
                                 編輯
                               </Button>
@@ -415,14 +360,10 @@ export default function ArticleManagement() {
               >
                 <Button
                   colorScheme='purple'
-                  onClick={() => {
-                    resetCategoryForm();
-                    onOpen();
-                  }}
+                  onClick={() => openCategoryModal()}
                 >
                   + 新增文章類別
                 </Button>
-
                 <Box overflowX='auto' mt='2rem'>
                   <Table variant='simple'>
                     <Thead>
@@ -434,15 +375,15 @@ export default function ArticleManagement() {
                     </Thead>
                     <Tbody>
                       {categories?.map((category) => (
-                        <Tr key={category._id}>
-                          <Td>{category.name}</Td>
-                          <Td>{category.description}</Td>
+                        <Tr key={category?._id}>
+                          <Td>{category?.name || '無名'}</Td>
+                          <Td>{category?.description || '無描述'}</Td>
                           <Td>
                             <Flex gap='0.5rem'>
                               <Button
                                 colorScheme='purple'
                                 size='sm'
-                                onClick={() => handleEditCategory(category)}
+                                onClick={() => openCategoryModal(category)}
                               >
                                 編輯
                               </Button>
@@ -467,162 +408,22 @@ export default function ArticleManagement() {
           </TabPanels>
         </Tabs>
 
-        <Modal isOpen={isOpen} onClose={onClose} isCentered size='5xl'>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>
-              {isEditing
-                ? '編輯文章'
-                : isCategoryEditing
-                ? '編輯文章類別'
-                : '新增'}
-            </ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              {isEditing || !isCategoryEditing ? (
-                <>
-                  <FormControl mb='1.5rem'>
-                    <FormLabel htmlFor='title'>標題</FormLabel>
-                    <Input
-                      id='title'
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      placeholder='輸入文章標題'
-                    />
-                  </FormControl>
-
-                  <FormControl mb='1.5rem'>
-                    <FormLabel htmlFor='tags'>標籤</FormLabel>
-                    <Input
-                      id='tags'
-                      placeholder='輸入文章標籤 (用逗號分隔)'
-                      value={tags.join(', ')}
-                      onChange={(e) =>
-                        setTags(
-                          e.target.value.split(',').map((tag) => tag.trim()),
-                        )
-                      }
-                    />
-                  </FormControl>
-
-                  <FormControl mb='1.5rem'>
-                    <FormLabel htmlFor='readTime'>閱讀時間（分鐘）</FormLabel>
-                    <Input
-                      id='readTime'
-                      type='number'
-                      value={readTime}
-                      onChange={(e) => setReadTime(Number(e.target.value))}
-                      placeholder='輸入預估閱讀時間（分鐘）'
-                    />
-                  </FormControl>
-
-                  <FormControl mb='1.5rem'>
-                    <FormLabel htmlFor='excerpt'>文章摘要</FormLabel>
-                    <Input
-                      id='excerpt'
-                      value={excerpt}
-                      onChange={(e) => setExcerpt(e.target.value)}
-                      placeholder='輸入文章摘要'
-                    />
-                  </FormControl>
-
-                  <FormControl mb='1.5rem'>
-                    <ArticleCustomBlocks
-                      name='blocks'
-                      label='文章內容'
-                      blocks={contentBlocks}
-                      setBlocks={setContentBlocks}
-                    />
-                  </FormControl>
-
-                  <FormControl mb='1.5rem'>
-                    <FormLabel htmlFor='status'>狀態</FormLabel>
-                    <Select
-                      id='status'
-                      value={status}
-                      onChange={(e) => setStatus(e.target.value)}
-                    >
-                      <option value='draft'>草稿</option>
-                      <option value='published'>發佈</option>
-                    </Select>
-                  </FormControl>
-
-                  <FormControl mb='1.5rem'>
-                    <FormLabel htmlFor='cover'>封面圖片</FormLabel>
-                    <Input
-                      id='cover'
-                      type='file'
-                      accept='image/*'
-                      onChange={(e) =>
-                        setCoverImage(e.target.files?.[0] || null)
-                      }
-                    />
-                  </FormControl>
-
-                  <FormControl display='flex' alignItems='center' mb='1.5rem'>
-                    <FormLabel htmlFor='isFeatured' mb='0'>
-                      設為精選文章
-                    </FormLabel>
-                    <Switch
-                      id='isFeatured'
-                      isChecked={isFeatured}
-                      onChange={(e) => setIsFeatured(e.target.checked)}
-                    />
-                  </FormControl>
-
-                  <FormControl mb='1.5rem'>
-                    <FormLabel htmlFor='category'>文章類別</FormLabel>
-                    <Select
-                      id='category'
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                    >
-                      {categories?.map((cat) => (
-                        <option key={cat._id} value={cat._id}>
-                          {cat.name}
-                        </option>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </>
-              ) : (
-                <>
-                  <FormControl mb='1.5rem'>
-                    <FormLabel htmlFor='categoryName'>類別名稱</FormLabel>
-                    <Input
-                      id='categoryName'
-                      value={categoryName}
-                      onChange={(e) => setCategoryName(e.target.value)}
-                      placeholder='輸入類別名稱'
-                    />
-                  </FormControl>
-
-                  <FormControl mb='1.5rem'>
-                    <FormLabel htmlFor='categoryDescription'>
-                      類別描述
-                    </FormLabel>
-                    <Input
-                      id='categoryDescription'
-                      value={categoryDescription}
-                      onChange={(e) => setCategoryDescription(e.target.value)}
-                      placeholder='輸入類別描述'
-                    />
-                  </FormControl>
-                </>
-              )}
-            </ModalBody>
-
-            <ModalFooter>
-              <Button
-                colorScheme='purple'
-                mr='3'
-                onClick={isEditing ? handleSaveArticle : handleSaveCategory}
-              >
-                {isEditing ? '保存修改' : '保存'}
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+        {modalType === 'article' && (
+          <ArticleModal
+            isOpen={isOpen}
+            onClose={onClose}
+            article={currentArticle}
+            isEditing={Boolean(currentArticle)}
+          />
+        )}
+        {modalType === 'category' && (
+          <CategoryModal
+            isOpen={isOpen}
+            onClose={onClose}
+            category={currentCategory}
+            isEditing={Boolean(currentCategory)}
+          />
+        )}
       </Box>
     </LoadingLayout>
   );
