@@ -55,14 +55,6 @@ export default function CategoryModal({
     } else {
       dispatch(addArticleCategoryAsync(categoryData));
     }
-
-    toast({
-      title: isEditing ? '編輯成功' : '新增成功',
-      status: 'success',
-      isClosable: true,
-    });
-
-    onClose();
   };
 
   return (

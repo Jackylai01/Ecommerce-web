@@ -24,6 +24,7 @@ import CategoryModal from '@components/Modal/ArticleCategoryModal';
 import ArticleModal from '@components/Modal/ArticleModal';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { useNotification } from '@hooks/useNotification';
 import { resetArticleState } from '@reducers/admin/admin-articles';
 
 import {
@@ -115,143 +116,62 @@ export default function ArticleManagement() {
     onOpen();
   };
 
-  useEffect(() => {
-    if (addArticleSuccess) {
-      toast({
-        title: '新增文章成功',
-        status: 'success',
-        isClosable: true,
-      });
-      dispatch(getAllArticlesAsync({ page: 1, limit: 10 }));
-    } else if (addArticleFailed) {
-      toast({
-        title: '新增文章失敗',
-        description: addArticleError,
-        status: 'error',
-        isClosable: true,
-      });
-    }
-  }, [
-    toast,
-    addArticleSuccess,
-    addArticleFailed,
-    addArticleError,
-    onClose,
-    dispatch,
-  ]);
+  useNotification({
+    success: addArticleSuccess,
+    error: addArticleFailed,
+    successTitle: '新增文章成功',
+    successDescription: '新增文章建立成功',
+    errorTitle: '新增文章失敗',
+    errorDescription: addArticleError,
+    onSuccess: () => dispatch(getAllArticlesAsync({ page: 1, limit: 10 })),
+  });
 
-  useEffect(() => {
-    if (editArticleSuccess) {
-      toast({
-        title: '更新文章成功',
-        status: 'success',
-        isClosable: true,
-      });
-    } else if (editArticleFailed) {
-      toast({
-        title: '更新文章失敗',
-        description: editArticleError,
-        status: 'error',
-        isClosable: true,
-      });
-    }
-  }, [toast, editArticleSuccess, editArticleFailed, editArticleError]);
+  useNotification({
+    success: editArticleSuccess,
+    error: editArticleFailed,
+    successTitle: '更新文章成功',
+    errorTitle: '更新文章失敗',
+    errorDescription: editArticleError,
+  });
 
-  useEffect(() => {
-    if (deleteArticleSuccess) {
-      toast({
-        title: '刪除文章成功',
-        description: '刪除文章成功',
-        status: 'success',
-        isClosable: true,
-      });
-      dispatch(resetArticleState());
-    } else if (deleteArticleFailed) {
-      toast({
-        title: '刪除文章失敗',
-        description: deleteArticleError,
-        status: 'error',
-        isClosable: true,
-      });
-    }
-  }, [toast, deleteArticleFailed, deleteArticleSuccess, deleteArticleError]);
+  useNotification({
+    success: deleteArticleSuccess,
+    error: deleteArticleFailed,
+    successTitle: '刪除文章成功',
+    errorTitle: '刪除文章失敗',
+    errorDescription: deleteArticleError,
+    onSuccess: () => dispatch(resetArticleState()),
+  });
 
-  useEffect(() => {
-    if (addCategorySuccess) {
-      toast({
-        title: '新增成功',
-        status: 'success',
-        isClosable: true,
-      });
-      onClose();
+  useNotification({
+    success: addCategorySuccess,
+    error: addCategoryFailed,
+    successTitle: '新增文章類別成功',
+    errorTitle: '新增文章類別失敗',
+    errorDescription: addCategoryError,
+    onSuccess: () =>
+      dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 10 })),
+  });
 
-      dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 10 }));
-    } else if (addCategoryFailed) {
-      toast({
-        title: '新增文章類別失敗',
-        description: addCategoryError,
-        status: 'error',
-        isClosable: true,
-      });
-    }
-  }, [
-    toast,
-    addCategorySuccess,
-    addCategoryFailed,
-    addCategoryError,
-    onClose,
-    dispatch,
-  ]);
+  useNotification({
+    success: deleteCategorySuccess,
+    error: deleteCategoryFailed,
+    successTitle: '刪除文章類別成功',
+    errorTitle: '刪除文章類別失敗',
+    errorDescription: deleteCategoryError,
+    onSuccess: () =>
+      dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 10 })),
+  });
 
-  useEffect(() => {
-    if (deleteCategorySuccess) {
-      toast({
-        title: '刪除文章類別成功',
-        status: 'success',
-        isClosable: true,
-      });
-
-      dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 10 }));
-    } else if (deleteCategoryFailed) {
-      toast({
-        title: '刪除文章類別失敗',
-        description: deleteCategoryError,
-        status: 'error',
-        isClosable: true,
-      });
-    }
-  }, [
-    toast,
-    dispatch,
-    deleteCategoryFailed,
-    deleteCategorySuccess,
-    deleteCategoryError,
-  ]);
-
-  useEffect(() => {
-    if (updateCategorySuccess) {
-      toast({
-        title: '更新文章類別成功',
-        status: 'success',
-        isClosable: true,
-      });
-
-      dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 10 }));
-    } else if (updateCategoryFailed) {
-      toast({
-        title: '更新文章類別失敗',
-        description: updateCategoryError,
-        status: 'error',
-        isClosable: true,
-      });
-    }
-  }, [
-    toast,
-    dispatch,
-    updateCategoryFailed,
-    updateCategorySuccess,
-    updateCategoryError,
-  ]);
+  useNotification({
+    success: updateCategorySuccess,
+    error: updateCategoryFailed,
+    successTitle: '更新文章類別成功',
+    errorTitle: '更新文章類別失敗',
+    errorDescription: updateCategoryError,
+    onSuccess: () =>
+      dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 10 })),
+  });
 
   return (
     <LoadingLayout
