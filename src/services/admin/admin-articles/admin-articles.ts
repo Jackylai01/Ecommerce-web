@@ -1,3 +1,4 @@
+import { formatQueryString } from '@helpers/query';
 import { PagingQuery } from '@models/entities/shared/pagination';
 import { AddCommentRequest } from '@models/requests/article.req';
 import { Article, Comment } from '@models/responses/article.res';
@@ -38,7 +39,9 @@ export const apiDeleteArticle = async (articleId: string) => {
  * 查詢全部文章
  */
 export const apiGetAllArticles = async (query: PagingQuery) => {
-  return getRequest<ApiPaginationResult<any>>('/zigong/articles', query);
+  return getRequest<ApiPaginationResult<any>>(
+    formatQueryString('/zigong/articles', query),
+  );
 };
 
 /**

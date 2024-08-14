@@ -5,6 +5,7 @@ import {
   Flex,
   Heading,
   Image,
+  Input,
   Tab,
   Table,
   TabList,
@@ -45,7 +46,7 @@ export default function ArticleManagement() {
   );
   const [currentArticle, setCurrentArticle] = useState<any>(null);
   const [currentCategory, setCurrentCategory] = useState<any>(null);
-
+  const [searchTerm, setSearchTerm] = useState('');
   const dispatch = useAppDispatch();
   const {
     list: articles,
@@ -114,6 +115,15 @@ export default function ArticleManagement() {
     setCurrentCategory(category);
     setModalType('category');
     onOpen();
+  };
+
+  const handleSearch = (searchTerm: string) => {
+    dispatch(getAllArticlesAsync({ page: 1, limit: 10, search: searchTerm }));
+  };
+  const handleCategorySearch = (searchTerm: string) => {
+    dispatch(
+      getAllArticleCategoriesAsync({ page: 1, limit: 10, search: searchTerm }),
+    );
   };
 
   useNotification({
@@ -206,6 +216,14 @@ export default function ArticleManagement() {
                 <Button colorScheme='purple' onClick={() => openArticleModal()}>
                   + 新增文章
                 </Button>
+                <Box display='flex' flexDirection='row' mt='1rem'>
+                  <Input
+                    placeholder='搜尋文章'
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <Button onClick={() => handleSearch(searchTerm)}>搜尋</Button>
+                </Box>
                 <Box overflowX='auto' mt='2rem'>
                   <Table variant='simple'>
                     <Thead>
@@ -234,7 +252,7 @@ export default function ArticleManagement() {
                                 : '草稿'}
                             </Badge>
                           </Td>
-                          <Td>{article.editor}</Td>
+                          <Td>{article.author.username}</Td>
                           <Td>
                             <Image
                               src={article.coverImage}
@@ -284,6 +302,16 @@ export default function ArticleManagement() {
                 >
                   + 新增文章類別
                 </Button>
+                <Box display='flex' flexDirection='row' mt='1rem'>
+                  <Input
+                    placeholder='搜尋文章類別'
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <Button onClick={() => handleCategorySearch(searchTerm)}>
+                    搜尋
+                  </Button>
+                </Box>
                 <Box overflowX='auto' mt='2rem'>
                   <Table variant='simple'>
                     <Thead>
