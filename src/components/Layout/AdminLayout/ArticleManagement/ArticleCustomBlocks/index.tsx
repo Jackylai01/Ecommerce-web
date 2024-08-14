@@ -71,6 +71,15 @@ const ArticleCustomBlocks = ({
   };
 
   const toggleEditMode = () => {
+    if (isEdit) {
+      const updatedBlocks = blocks.map((block) => {
+        return block;
+      });
+
+      setBlocks(updatedBlocks);
+    }
+
+    // 切换编辑模式
     setIsEdit(!isEdit);
   };
 

@@ -16,7 +16,6 @@ const TagElement = ({ element, isEdit, onBlur }: ElementProps) => {
 
   const handleChange = (value: string) => {
     setContent(value);
-    element.context = value;
   };
 
   const updateContent = () => {
