@@ -36,7 +36,6 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
       min,
       max,
       isReadOnly = false,
-      value,
       style,
     },
     ref,
@@ -56,9 +55,8 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
       register(name, { required: isRequired });
     }, [register, name, isRequired]);
 
-    useEffect(() => {
-      setValue(name, value);
-    }, [value, setValue, name]);
+    // 使用 watch 来获取当前输入的值
+    const currentValue = watch(name);
 
     return (
       <FormControl isInvalid={isInvalid} isRequired={isRequired} style={style}>
@@ -91,7 +89,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputType>(
             },
           }}
           ref={ref}
-          value={value}
+          value={currentValue} // 使用 watch 获取的值
           onChange={(e) => setValue(name, e.target.value)}
         />
         <FormErrorMessage>{errors[name]?.message}</FormErrorMessage>
