@@ -156,9 +156,6 @@ export default function ArticleManagement() {
     successDescription: '新增文章建立成功',
     errorTitle: '新增文章失敗',
     errorDescription: addArticleError,
-    onSuccess: () => {
-      onClose();
-    },
   });
 
   useNotification({
@@ -167,9 +164,6 @@ export default function ArticleManagement() {
     successTitle: '更新文章成功',
     errorTitle: '更新文章失敗',
     errorDescription: editArticleError,
-    onSuccess: () => {
-      onClose();
-    },
   });
 
   useNotification({
@@ -186,9 +180,6 @@ export default function ArticleManagement() {
     successTitle: '新增文章類別成功',
     errorTitle: '新增文章類別失敗',
     errorDescription: addCategoryError,
-    onSuccess: () => {
-      onClose();
-    },
   });
 
   useNotification({
@@ -205,9 +196,6 @@ export default function ArticleManagement() {
     successTitle: '更新文章類別成功',
     errorTitle: '更新文章類別失敗',
     errorDescription: updateCategoryError,
-    onSuccess: () => {
-      onClose();
-    },
   });
 
   useEffect(() => {
