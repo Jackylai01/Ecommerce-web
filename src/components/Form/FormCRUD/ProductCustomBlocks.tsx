@@ -171,11 +171,14 @@ const ProductCustomBlocks = ({ name, label }: ProductCustomBlockType) => {
 
   const toggleEditMode = () => {
     setIsEdit(!isEdit);
-    if (!isEdit) {
+    if (isEdit) {
       const updatedBlocks = getValues(name);
       dispatch(setPageBlocks(updatedBlocks));
+    } else {
+      handleBlur();
     }
   };
+
   return (
     <VStack spacing={4} align='flex-start' w='100%' mt='2rem'>
       <Box fontSize='xl' mb='4'>
