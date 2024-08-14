@@ -16,24 +16,34 @@ import ContentSelectionModal from '@components/CustomPage/ContentSelectionModal'
 import NestedDisplayUI from '@components/CustomPage/NestedDisplayUI';
 import { customPageTemplates } from '@fixtures/custom-page-templates';
 import generateUUID from '@helpers/generate-uuid';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
 import { CustomPageTemplate } from '@models/entities/custom-page-template';
-import { useState } from 'react';
+import { setPageBlocks } from '@reducers/admin/custom-page';
+import { adminDeleteFilesAsync } from '@reducers/admin/upload/actions';
+import { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
-interface ArticleCustomBlockProps {
+// 修改接口以包括 `blocks` 和 `setBlocks`
+interface ProductCustomBlockType {
   name: string;
   label: string;
   blocks: any[];
   setBlocks: (blocks: any[]) => void;
 }
 
-const ArticleCustomBlocks = ({
+const ProductCustomBlocks = ({
   name,
   label,
   blocks,
   setBlocks,
-}: ArticleCustomBlockProps) => {
+}: ProductCustomBlockType) => {
+  const dispatch = useAppDispatch();
+  const { setValue, getValues } = useFormContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isEdit, setIsEdit] = useState(false);
+  const { uploadedImages } = useAppSelector((state) => state.adminUpload);
+  const { productDetails } = useAppSelector((state) => state.adminProducts);
 
   const handleAddBlock = (template: CustomPageTemplate) => {
     const newBlock = JSON.parse(JSON.stringify(template.block));
@@ -44,12 +54,59 @@ const ArticleCustomBlocks = ({
     });
 
     const updatedBlocks = [...blocks, newBlock];
-    setBlocks(updatedBlocks);
+    setBlocks(updatedBlocks); // 使用 setBlocks 更新狀態
+    setValue(name, updatedBlocks, { shouldValidate: true });
+    dispatch(setPageBlocks(updatedBlocks));
   };
 
-  const handleDeleteBlock = (index: number) => {
+  const handleDeleteBlock = async (index: number) => {
+    const blockToDelete = blocks[index];
+
+    for (const element of blockToDelete.elements) {
+      if (element.tagName === 'img' && element.imageId) {
+        const isEditMode = !!productDetails?._id;
+
+        if (isEditMode) {
+          const newDetailDescription = productDetails.detailDescription
+            .map((detail: any) => ({
+              ...detail,
+              elements: detail.elements.filter(
+                (img: any) => img.imageId !== element.imageId,
+              ),
+            }))
+            .filter((detail: any) => detail.elements.length > 0);
+
+          const imageExists = newDetailDescription.some((detail: any) =>
+            detail.elements.some((img: any) => img.imageId === element.imageId),
+          );
+
+          if (!imageExists) {
+            try {
+              await dispatch(adminDeleteFilesAsync(element.imageId));
+              console.log('Image deleted successfully');
+            } catch (error) {
+              console.error('Failed to delete image:', error);
+            }
+          }
+        } else {
+          const imageIndex = uploadedImages.findIndex(
+            (img) => img.imageId === element.imageId,
+          );
+          if (imageIndex !== -1) {
+            try {
+              await dispatch(adminDeleteFilesAsync(element.imageId));
+              console.log('Image deleted successfully');
+            } catch (error) {
+              console.error('Failed to delete image:', error);
+            }
+          }
+        }
+      }
+    }
+
     const updatedBlocks = blocks.filter((_: any, idx: number) => idx !== index);
-    setBlocks(updatedBlocks);
+    setBlocks(updatedBlocks); // 使用 setBlocks 更新狀態
+    setValue(name, updatedBlocks, { shouldValidate: true });
   };
 
   const onDragStart = (e: any, index: number) => {
@@ -67,20 +124,71 @@ const ArticleCustomBlocks = ({
     );
     remainingItems.splice(dropIndex, 0, itemToMove);
 
-    setBlocks(remainingItems);
+    const updatedBlocks = blocks.filter(
+      (_: any, index: number) => index !== parseInt(dragIndex),
+    );
+    updatedBlocks.splice(dropIndex, 0, itemToMove);
+
+    setBlocks(updatedBlocks); // 使用 setBlocks 更新狀態
+    dispatch(setPageBlocks(updatedBlocks));
+    setValue(name, remainingItems);
   };
 
-  const toggleEditMode = () => {
-    if (isEdit) {
-      const updatedBlocks = blocks.map((block) => {
-        return block;
-      });
+  const handleImageUploadSuccess = (imageId: string, imageUrl: string) => {
+    const newBlocks = blocks.map((block: any) => {
+      return {
+        ...block,
+        elements: block.elements.map((element: any) => {
+          if (element.tagName === 'img') {
+            return { ...element, src: imageUrl, imageId: imageId };
+          }
+          return element;
+        }),
+      };
+    });
+    setBlocks(newBlocks); // 使用 setBlocks 更新狀態
+    setValue(name, newBlocks, { shouldValidate: true });
+    dispatch(setPageBlocks(newBlocks));
+  };
 
-      setBlocks(updatedBlocks);
+  const handleBlur = () => {
+    const updatedBlocks = getValues(name);
+    setBlocks(updatedBlocks); // 使用 setBlocks 更新狀態
+    setValue(name, updatedBlocks, { shouldValidate: true });
+    dispatch(setPageBlocks(updatedBlocks));
+  };
+
+  useEffect(() => {
+    if (productDetails) {
+      setBlocks(productDetails.detailDescription); // 使用 setBlocks 初始化狀態
+      setValue('detailDescription', productDetails.detailDescription);
     }
+  }, [productDetails, setBlocks, setValue]);
 
-    // 切换编辑模式
+  useEffect(() => {
+    const imageBlocks = uploadedImages.map((image) => ({
+      className: 'image-selectable',
+      elements: [
+        {
+          tagName: 'img',
+          src: image.imageUrl,
+          imageId: image.imageId,
+        },
+      ],
+    }));
+    setBlocks(imageBlocks); // 使用 setBlocks 初始化狀態
+    setValue(name, imageBlocks);
+  }, [uploadedImages, setBlocks, setValue, name]);
+
+  const toggleEditMode = () => {
     setIsEdit(!isEdit);
+    if (isEdit) {
+      const updatedBlocks = getValues(name);
+      setBlocks(updatedBlocks); // 使用 setBlocks 更新狀態
+      dispatch(setPageBlocks(updatedBlocks));
+    } else {
+      handleBlur();
+    }
   };
 
   return (
@@ -103,7 +211,12 @@ const ArticleCustomBlocks = ({
           position='relative'
           onDragOver={(e) => e.preventDefault()}
         >
-          <NestedDisplayUI elements={block.elements} isEdit={isEdit} />
+          <NestedDisplayUI
+            elements={block.elements}
+            isEdit={isEdit}
+            onImageUpdate={handleImageUploadSuccess}
+            onBlur={handleBlur}
+          />
           {isEdit && (
             <>
               <Icon
@@ -138,7 +251,7 @@ const ArticleCustomBlocks = ({
         </Box>
       ))}
       <IconButton
-        aria-label='新增区块'
+        aria-label='新增组件'
         icon={<AddIcon />}
         colorScheme='teal'
         size='lg'
@@ -155,4 +268,4 @@ const ArticleCustomBlocks = ({
   );
 };
 
-export default ArticleCustomBlocks;
+export default ProductCustomBlocks;
