@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 interface NotificationConfig {
   success: boolean | null;
@@ -21,10 +21,9 @@ export function useNotification({
   onSuccess,
 }: NotificationConfig) {
   const toast = useToast();
-  const hasExecutedSuccess = useRef(false);
 
   useEffect(() => {
-    if (success && !hasExecutedSuccess.current) {
+    if (success) {
       toast({
         title: successTitle,
         description: successDescription,
@@ -34,7 +33,6 @@ export function useNotification({
       if (onSuccess) {
         onSuccess();
       }
-      hasExecutedSuccess.current = true;
     } else if (error) {
       toast({
         title: errorTitle,
@@ -53,10 +51,4 @@ export function useNotification({
     errorDescription,
     onSuccess,
   ]);
-
-  useEffect(() => {
-    if (!success) {
-      hasExecutedSuccess.current = false;
-    }
-  }, [success]);
 }

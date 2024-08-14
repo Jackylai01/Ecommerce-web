@@ -2,7 +2,7 @@ export interface Article {
   _id: string;
   title: string;
   content: string;
-  author: string;
+  author: any;
   createdAt: Date;
   updatedAt: Date;
   comments: Comment[];
@@ -12,6 +12,7 @@ export interface Article {
   isFeatured: boolean;
   category: any;
   blocks: any;
+  coverImage: any;
 }
 
 export interface Comment {

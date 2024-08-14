@@ -2,6 +2,7 @@ import { ReducerName } from '@enums/reducer-name';
 import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
+import { Metadata } from '@models/entities/shared/pagination';
 import { createSlice } from '@reduxjs/toolkit';
 import {
   addArticleAsync,
@@ -15,6 +16,7 @@ import {
 
 type ArticleState = ApiState<ArticleAction> & {
   list: any[] | null;
+  metadata: Metadata | null;
   articleDetails: any | null;
   editingArticleId: string | null;
 };
@@ -23,6 +25,7 @@ const initialState: ArticleState = {
   list: null,
   articleDetails: null,
   editingArticleId: null,
+  metadata: null,
   ...newApiState<ArticleState>(ArticleAction),
 };
 
@@ -41,6 +44,7 @@ export const articleSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getAllArticlesAsync.fulfilled, (state, action) => {
       state.list = action.payload.data;
+      state.metadata = action.payload.metadata;
     });
     builder.addCase(getArticleByIdAsync.fulfilled, (state, action) => {
       state.articleDetails = action.payload;
