@@ -2,7 +2,6 @@ import {
   Badge,
   Box,
   Button,
-  Flex,
   Image,
   Input,
   Table,
@@ -90,22 +89,20 @@ const ArticleList: React.FC<ArticleListProps> = ({
                   />
                 </Td>
                 <Td className='tables-container__body-cell'>
-                  <Flex gap='0.5rem'>
-                    <Button
-                      colorScheme='purple'
-                      size='sm'
-                      onClick={() => openArticleModal(article)}
-                    >
-                      編輯
-                    </Button>
-                    <Button
-                      colorScheme='red'
-                      size='sm'
-                      onClick={() => handleDeleteArticle(article._id)}
-                    >
-                      刪除
-                    </Button>
-                  </Flex>
+                  <Button
+                    colorScheme='purple'
+                    size='sm'
+                    onClick={() => openArticleModal(article)}
+                  >
+                    編輯
+                  </Button>
+                  <Button
+                    colorScheme='red'
+                    size='sm'
+                    onClick={() => handleDeleteArticle(article._id)}
+                  >
+                    刪除
+                  </Button>
                 </Td>
               </Tr>
             ))}
