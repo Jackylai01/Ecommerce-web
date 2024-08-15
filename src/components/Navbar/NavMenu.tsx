@@ -9,9 +9,10 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  useBreakpointValue,
   useDisclosure,
 } from '@chakra-ui/react';
-
+import { Search } from '@components/Search/Search';
 import { navItems } from '@helpers/products';
 import { loadClientToken } from '@helpers/token';
 import useAppDispatch from '@hooks/useAppDispatch';
@@ -29,10 +30,13 @@ export const NavMenu = () => {
   const btnRef: any = useRef();
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   const {
     userInfo,
     error: { loginError },
   } = useAppSelector((state) => state.clientAuth);
+
   const handleLogout = () => {
     dispatch(clientLogoutAsync());
     onClose();
@@ -65,6 +69,12 @@ export const NavMenu = () => {
           <Divider />
 
           <DrawerBody>
+            {isMobile && (
+              <Box mb={4}>
+                <Search isMobileSearch /> {/* 這裡會顯示手機版搜尋 */}
+              </Box>
+            )}
+
             {navItems.map((navItem) => (
               <Link href={navItem.href} key={navItem.label}>
                 <Box

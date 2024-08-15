@@ -8,19 +8,25 @@ import {
   InputLeftElement,
   Tag,
   Text,
+  useBreakpointValue,
   useOutsideClick,
 } from '@chakra-ui/react';
 import { IProduct } from '@models/requests/products';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import { inputGroup } from './Style';
 
-export const Search = () => {
+interface SearchedProductListProps {
+  products: IProduct[];
+}
+
+export const Search = ({ isMobileSearch }: { isMobileSearch?: boolean }) => {
   const ref = useRef<any>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<IProduct[]>([]);
+
+  const isMobile = useBreakpointValue({ base: true, md: false }); // 檢查是否為手機模式
 
   useOutsideClick({
     ref: ref,
@@ -30,9 +36,14 @@ export const Search = () => {
     },
   });
 
+  // 如果當前為手機模式且不是從 Drawer 中渲染，則不顯示
+  if (isMobile && !isMobileSearch) {
+    return null;
+  }
+
   return (
-    <Box pos='relative' w={{ base: '100%' }} ref={ref} bg='white'>
-      <InputGroup {...inputGroup}>
+    <Box pos='relative' ref={ref} bg='white'>
+      <InputGroup>
         <InputLeftElement pointerEvents='none'>
           <SearchIcon color='gray.400' />
         </InputLeftElement>
@@ -75,10 +86,6 @@ export const Search = () => {
     </Box>
   );
 };
-
-interface SearchedProductListProps {
-  products: IProduct[];
-}
 
 const SearchedProductList = ({ products }: SearchedProductListProps) => {
   return (
