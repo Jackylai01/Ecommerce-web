@@ -31,6 +31,7 @@ import crudLayout from './crud-layout';
 import fileSelect from './file-select';
 import iconSelect from './icon-select';
 import layout from './layout';
+import publicArticles from './public/articles';
 import publicCategory from './public/categories';
 import publicDiscounts from './public/discounts';
 import publicFavorites from './public/favorite';
@@ -78,6 +79,7 @@ const appReducer = {
   adminShoppingCreditsType,
   adminArticles,
   adminArticlesCategories,
+  publicArticles,
 };
 
 export default appReducer;

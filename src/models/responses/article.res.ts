@@ -23,6 +23,24 @@ export interface Comment {
   articleId: string;
 }
 
+export interface ArticlePublicResponse {
+  _id: string;
+  title: string;
+  date: string;
+  author: any;
+  tags: string[];
+  readTime: number;
+  excerpt: string;
+  content: string;
+  category: string;
+  isTrending: boolean;
+}
+
+export interface ArticleCategoryPublicResponse {
+  _id: string;
+  name: string;
+}
+
 export interface AddCommentResponse {
   comment: Comment;
   articleId: string;

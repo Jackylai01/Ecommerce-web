@@ -44,4 +44,5 @@ export enum ReducerName {
   ADMIN_CREATE_DESIGN_PAGE = 'AdminCreateDesignPage',
   ADMIN_MEMBERSHIP_LEVEL = 'adminMemberShiptLevel',
   ADMIN_SHOPPING_CREDITS_TYPE = 'adminShoppingCreditsType',
+  PUBLIC_ARTICLES = 'publicArticles',
 }
