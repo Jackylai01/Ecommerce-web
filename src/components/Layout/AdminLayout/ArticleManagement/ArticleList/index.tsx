@@ -81,7 +81,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
                 </Td>
                 <Td className='tables-container__body-cell'>
                   <Image
-                    src={article.coverImage.imageUrl}
+                    src={article.coverImage?.imageUrl || ''}
                     alt='封面'
                     boxSize='48px'
                     borderRadius='6px'
