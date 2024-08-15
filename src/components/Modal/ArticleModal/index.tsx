@@ -101,8 +101,12 @@ export default function ArticleModal({
     formData.append('author', userInfo._id);
     formData.append('blocks', JSON.stringify(updatedContentBlocks));
 
+    // 檢查封面圖片是否正確存在
     if (coverImage) {
       formData.append('coverImage', coverImage);
+      console.log('Cover Image added to FormData:', coverImage); // 檢查封面圖片是否被正確添加
+    } else {
+      console.log('No cover image uploaded');
     }
 
     if (isEditing && article?._id) {
