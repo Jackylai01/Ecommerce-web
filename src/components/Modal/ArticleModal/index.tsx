@@ -131,9 +131,9 @@ export default function ArticleModal({
 
   return (
     <FormProvider {...methods}>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size='5xl'>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxW='90%'>
           <ModalHeader>{isEditing ? '編輯文章' : '新增文章'}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

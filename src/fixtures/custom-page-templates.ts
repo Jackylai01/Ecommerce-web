@@ -7,6 +7,8 @@ const testTitle = '標題文字';
 export const testImage =
   'https://res.cloudinary.com/dqawkwte9/image/upload/v1705117456/gryubprhot8skehcqtxt.jpg';
 
+export const testVideo = 'https://www.youtube.com/embed/MLNhLvA6Hto';
+
 export const customPageTemplates: CustomPageTemplate[] = [
   {
     _id: 'img_01',
@@ -45,6 +47,19 @@ export const customPageTemplates: CustomPageTemplate[] = [
             ['標題內容', '標題內容', '標題內容'],
             ['標題內容', '標題內容', '標題內容'],
           ],
+        },
+      ],
+    },
+  },
+  {
+    _id: 'video_01',
+    cover: '/block/table-1.png',
+    block: {
+      className: 'video-block',
+      elements: [
+        {
+          tagName: 'video',
+          src: testVideo,
         },
       ],
     },

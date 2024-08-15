@@ -1,11 +1,12 @@
 import generateUUID from '@helpers/generate-uuid';
 import { CustomPageElement } from '@models/entities/custom-page-template';
 import Icon from './src/Icon';
+import Items from './src/items';
 import LoginBlock from './src/LoginBlock';
 import SelectableImage from './src/SelectableImage';
 import TableElement from './src/TableElement';
 import TagElement from './src/TagElement';
-import Items from './src/items';
+import VideoElement from './src/VideoElement';
 
 type Props = {
   elements: CustomPageElement[];
@@ -56,6 +57,15 @@ const NestedDisplayUI = ({
           case 'table':
             return (
               <TableElement
+                key={element.id || generateUUID()}
+                element={element}
+                isEdit={isEdit}
+                onBlur={onBlur}
+              />
+            );
+          case 'video':
+            return (
+              <VideoElement
                 key={element.id || generateUUID()}
                 element={element}
                 isEdit={isEdit}
