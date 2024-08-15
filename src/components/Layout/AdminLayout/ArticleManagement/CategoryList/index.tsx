@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Flex,
   Input,
   Table,
   Tbody,
@@ -67,22 +66,20 @@ const CategoryList: React.FC<CategoryListProps> = ({
                   {category?.description || '無描述'}
                 </Td>
                 <Td className='tables-container__body-cell'>
-                  <Flex gap='0.5rem'>
-                    <Button
-                      colorScheme='purple'
-                      size='sm'
-                      onClick={() => openCategoryModal(category)}
-                    >
-                      編輯
-                    </Button>
-                    <Button
-                      colorScheme='red'
-                      size='sm'
-                      onClick={() => handleDeleteCategory(category._id)}
-                    >
-                      刪除
-                    </Button>
-                  </Flex>
+                  <Button
+                    colorScheme='purple'
+                    size='sm'
+                    onClick={() => openCategoryModal(category)}
+                  >
+                    編輯
+                  </Button>
+                  <Button
+                    colorScheme='red'
+                    size='sm'
+                    onClick={() => handleDeleteCategory(category._id)}
+                  >
+                    刪除
+                  </Button>
                 </Td>
               </Tr>
             ))}
