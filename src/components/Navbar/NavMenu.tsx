@@ -71,7 +71,7 @@ export const NavMenu = () => {
           <DrawerBody>
             {isMobile && (
               <Box mb={4}>
-                <Search isMobileSearch /> {/* 這裡會顯示手機版搜尋 */}
+                <Search isMobileSearch />
               </Box>
             )}
 
