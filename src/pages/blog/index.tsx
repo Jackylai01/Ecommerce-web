@@ -1,4 +1,4 @@
-import { Box, Flex, Heading } from '@chakra-ui/react';
+import { Box, Flex, Heading, useBreakpointValue } from '@chakra-ui/react';
 import BlogPostGrid from '@components/Article/BlogPostGrid';
 import FeaturedPost from '@components/Article/FeaturedPost';
 import Header from '@components/Article/Header';
@@ -11,12 +11,14 @@ import React, { useEffect } from 'react';
 const BlogHomepage: React.FC = () => {
   const dispatch = useAppDispatch();
 
+  const padding = useBreakpointValue({ base: '0.5rem', lg: '5rem' });
+
   useEffect(() => {
     dispatch(getArticlesListAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
   return (
-    <Box minH='100vh' p='5rem'>
+    <Box minH='100vh' p={padding}>
       <Header />
       <Box w='100%' py={12}>
         <Box mb={12}>

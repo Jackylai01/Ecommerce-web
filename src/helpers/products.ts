@@ -29,6 +29,10 @@ export const navItems: NavItem[] = [
     label: 'Categories',
     href: '/categories',
   },
+  {
+    label: 'Blog',
+    href: '/blog',
+  },
 ];
 
 export const fakeCategories = [
