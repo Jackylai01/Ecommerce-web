@@ -25,8 +25,8 @@ import {
 } from '@reducers/admin/admin-articles/actions';
 import { resetAdminUpload } from '@reducers/admin/upload';
 
-import { useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 type ArticleModalProps = {
   isOpen: boolean;
@@ -43,39 +43,50 @@ export default function ArticleModal({
 }: ArticleModalProps) {
   const dispatch = useAppDispatch();
   const toast = useToast();
-  const methods = useForm();
-  const { setValue, getValues } = methods;
-  const { userInfo } = useAppSelector((state) => state.adminAuth);
 
+  const methods = useForm({
+    defaultValues: {
+      title: article?.title || '',
+      tags: article?.tags?.join(', ') || '',
+      excerpt: article?.excerpt || '',
+      status: article?.status || 'draft',
+      isFeatured: article?.isFeatured || false,
+      category: article?.category || '',
+      blocks: article?.blocks || [],
+      coverImage: null,
+    },
+  });
+
+  const { userInfo } = useAppSelector((state) => state.adminAuth);
   const { list: categories } = useAppSelector(
     (state) => state.adminArticlesCategories,
   );
   const { uploadedImages } = useAppSelector((state) => state.adminUpload);
-  const [title, setTitle] = useState(article?.title || '');
-  const [tags, setTags] = useState(article?.tags || []);
-  const [excerpt, setExcerpt] = useState(article?.excerpt || '');
-  const [status, setStatus] = useState(article?.status || 'draft');
-  const [coverImage, setCoverImage] = useState<File | null>(null);
-  const [isFeatured, setIsFeatured] = useState(article?.isFeatured || false);
-  const [category, setCategory] = useState(article?.category || '');
-  const [contentBlocks, setContentBlocks] = useState<any[]>(
-    article?.blocks || [],
-  );
 
   useEffect(() => {
     if (isOpen && !isEditing) {
-      // 如果是新增文章且模態框打開，重置上傳的圖片狀態
       dispatch(resetAdminUpload());
     }
     if (!categories) {
       dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 100 }));
     }
-  }, [isOpen, isEditing, dispatch, categories]);
+    if (article) {
+      methods.reset({
+        title: article.title || '',
+        tags: article.tags?.join(', ') || '',
+        excerpt: article.excerpt || '',
+        status: article.status || 'draft',
+        isFeatured: article.isFeatured || false,
+        category: article.category || '',
+        blocks: article.blocks || [],
+      });
+    }
+  }, [isOpen, isEditing, dispatch, categories, article, methods]);
 
-  const handleSaveArticle = async () => {
+  const onSubmit = async (data: any) => {
     if (!userInfo) return;
 
-    let updatedContentBlocks = [...contentBlocks];
+    let updatedContentBlocks = [...data.blocks];
 
     uploadedImages.forEach((image) => {
       const newBlock = {
@@ -92,21 +103,23 @@ export default function ArticleModal({
     });
 
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('tags', tags.join(','));
-    formData.append('excerpt', excerpt);
-    formData.append('status', status);
-    formData.append('isFeatured', isFeatured.toString());
-    formData.append('category', category);
+    formData.append('title', data.title);
+    formData.append(
+      'tags',
+      data.tags
+        .split(',')
+        .map((tag: string) => tag.trim())
+        .join(','),
+    );
+    formData.append('excerpt', data.excerpt);
+    formData.append('status', data.status);
+    formData.append('isFeatured', data.isFeatured.toString());
+    formData.append('category', data.category);
     formData.append('author', userInfo._id);
     formData.append('blocks', JSON.stringify(updatedContentBlocks));
 
-    // 檢查封面圖片是否正確存在
-    if (coverImage) {
-      formData.append('coverImage', coverImage);
-      console.log('Cover Image added to FormData:', coverImage); // 檢查封面圖片是否被正確添加
-    } else {
-      console.log('No cover image uploaded');
+    if (data.coverImage && data.coverImage[0]) {
+      formData.append('coverImage', data.coverImage[0]);
     }
 
     if (isEditing && article?._id) {
@@ -124,95 +137,90 @@ export default function ArticleModal({
           <ModalHeader>{isEditing ? '編輯文章' : '新增文章'}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <FormControl mb='1.5rem'>
-              <FormLabel htmlFor='title'>標題</FormLabel>
-              <Input
-                id='title'
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder='輸入文章標題'
-              />
-            </FormControl>
-            <FormControl mb='1.5rem'>
-              <FormLabel htmlFor='tags'>標籤</FormLabel>
-              <Input
-                id='tags'
-                placeholder='輸入文章標籤 (用逗號分隔)'
-                value={tags.join(', ')}
-                onChange={(e) =>
-                  setTags(e.target.value.split(',').map((tag) => tag.trim()))
-                }
-              />
-            </FormControl>
-            <FormControl mb='1.5rem'>
-              <FormLabel htmlFor='excerpt'>文章摘要</FormLabel>
-              <Input
-                id='excerpt'
-                value={excerpt}
-                onChange={(e) => setExcerpt(e.target.value)}
-                placeholder='輸入文章摘要'
-              />
-            </FormControl>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>
+              <FormControl mb='1.5rem'>
+                <FormLabel htmlFor='title'>標題</FormLabel>
+                <Input
+                  id='title'
+                  {...methods.register('title', { required: '此欄位為必填' })}
+                  placeholder='輸入文章標題'
+                />
+              </FormControl>
+              <FormControl mb='1.5rem'>
+                <FormLabel htmlFor='tags'>標籤</FormLabel>
+                <Input
+                  id='tags'
+                  {...methods.register('tags')}
+                  placeholder='輸入文章標籤 (用逗號分隔)'
+                />
+              </FormControl>
+              <FormControl mb='1.5rem'>
+                <FormLabel htmlFor='excerpt'>文章摘要</FormLabel>
+                <Input
+                  id='excerpt'
+                  {...methods.register('excerpt')}
+                  placeholder='輸入文章摘要'
+                />
+              </FormControl>
 
-            <FormControl mb='1.5rem'>
-              <ArticleCustomBlocks
-                name='blocks'
-                label='文章內容'
-                blocks={contentBlocks}
-                setBlocks={setContentBlocks}
-              />
-            </FormControl>
+              <FormControl mb='1.5rem'>
+                <Controller
+                  name='blocks'
+                  control={methods.control}
+                  render={({ field }) => (
+                    <ArticleCustomBlocks
+                      name='blocks'
+                      label='文章內容'
+                      blocks={field.value}
+                      setBlocks={field.onChange}
+                    />
+                  )}
+                />
+              </FormControl>
 
-            <FormControl mb='1.5rem'>
-              <FormLabel htmlFor='status'>狀態</FormLabel>
-              <Select
-                id='status'
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option value='draft'>草稿</option>
-                <option value='published'>發佈</option>
-              </Select>
-            </FormControl>
-            <FormControl mb='1.5rem'>
-              <FormLabel htmlFor='cover'>封面圖片</FormLabel>
-              <Input
-                id='cover'
-                type='file'
-                accept='image/*'
-                onChange={(e) => setCoverImage(e.target.files?.[0] || null)}
-              />
-            </FormControl>
-            <FormControl mb='1.5rem'>
-              <FormLabel htmlFor='isFeatured' mb='0'>
-                設為精選文章
-              </FormLabel>
-              <Switch
-                id='isFeatured'
-                isChecked={isFeatured}
-                onChange={(e) => setIsFeatured(e.target.checked)}
-              />
-            </FormControl>
-            <FormControl mb='1.5rem'>
-              <FormLabel htmlFor='category'>文章類別</FormLabel>
-              <Select
-                id='category'
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                {categories?.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
+              <FormControl mb='1.5rem'>
+                <FormLabel htmlFor='status'>狀態</FormLabel>
+                <Select id='status' {...methods.register('status')}>
+                  <option value='draft'>草稿</option>
+                  <option value='published'>發佈</option>
+                </Select>
+              </FormControl>
+              <FormControl mb='1.5rem'>
+                <FormLabel htmlFor='cover'>封面圖片</FormLabel>
+                <Input
+                  id='cover'
+                  type='file'
+                  accept='image/*'
+                  {...methods.register('coverImage')}
+                />
+              </FormControl>
+              <FormControl mb='1.5rem'>
+                <FormLabel htmlFor='isFeatured' mb='0'>
+                  設為精選文章
+                </FormLabel>
+                <Switch
+                  id='isFeatured'
+                  {...methods.register('isFeatured')}
+                  defaultChecked={article?.isFeatured || false}
+                />
+              </FormControl>
+              <FormControl mb='1.5rem'>
+                <FormLabel htmlFor='category'>文章類別</FormLabel>
+                <Select id='category' {...methods.register('category')}>
+                  {categories?.map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+              <ModalFooter>
+                <Button type='submit' colorScheme='purple' mr='3'>
+                  保存
+                </Button>
+              </ModalFooter>
+            </form>
           </ModalBody>
-          <ModalFooter>
-            <Button colorScheme='purple' mr='3' onClick={handleSaveArticle}>
-              保存
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </FormProvider>

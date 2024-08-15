@@ -68,6 +68,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
                 </Td>
                 <Td className='tables-container__body-cell'>
                   <Badge
+                    as='aside'
                     colorScheme={
                       article.status === 'published' ? 'green' : 'yellow'
                     }
@@ -90,6 +91,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
                 </Td>
                 <Td className='tables-container__body-cell'>
                   <Button
+                    as='button'
                     colorScheme='purple'
                     size='sm'
                     onClick={() => openArticleModal(article)}
@@ -97,6 +99,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
                     編輯
                   </Button>
                   <Button
+                    as='button'
                     colorScheme='red'
                     size='sm'
                     onClick={() => handleDeleteArticle(article._id)}
@@ -107,8 +110,8 @@ const ArticleList: React.FC<ArticleListProps> = ({
               </Tr>
             ))}
           </Tbody>
-          {metadata && <Pagination metadata={metadata} />}
         </Table>
+        {metadata && <Pagination metadata={metadata} />}
       </Box>
     </Box>
   );

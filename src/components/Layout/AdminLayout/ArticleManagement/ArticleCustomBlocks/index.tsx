@@ -21,93 +21,27 @@ import useAppSelector from '@hooks/useAppSelector';
 import { CustomPageTemplate } from '@models/entities/custom-page-template';
 import { setPageBlocks } from '@reducers/admin/custom-page';
 import { adminDeleteFilesAsync } from '@reducers/admin/upload/actions';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-// 修改接口以包括 `blocks` 和 `setBlocks`
-interface ProductCustomBlockType {
+interface ArticleCustomBlockType {
   name: string;
   label: string;
   blocks: any[];
   setBlocks: (blocks: any[]) => void;
 }
 
-const ProductCustomBlocks = ({
+const ArticleCustomBlocks = ({
   name,
   label,
   blocks,
   setBlocks,
-}: ProductCustomBlockType) => {
+}: ArticleCustomBlockType) => {
   const dispatch = useAppDispatch();
   const { setValue, getValues } = useFormContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isEdit, setIsEdit] = useState(false);
   const { uploadedImages } = useAppSelector((state) => state.adminUpload);
-  const { productDetails } = useAppSelector((state) => state.adminProducts);
-
-  const handleAddBlock = (template: CustomPageTemplate) => {
-    const newBlock = JSON.parse(JSON.stringify(template.block));
-    newBlock.elements.forEach((element: any) => {
-      if (!element.id) {
-        element.id = generateUUID();
-      }
-    });
-
-    const updatedBlocks = [...blocks, newBlock];
-    setBlocks(updatedBlocks); // 使用 setBlocks 更新狀態
-    setValue(name, updatedBlocks, { shouldValidate: true });
-    dispatch(setPageBlocks(updatedBlocks));
-  };
-
-  const handleDeleteBlock = async (index: number) => {
-    const blockToDelete = blocks[index];
-
-    for (const element of blockToDelete.elements) {
-      if (element.tagName === 'img' && element.imageId) {
-        const isEditMode = !!productDetails?._id;
-
-        if (isEditMode) {
-          const newDetailDescription = productDetails.detailDescription
-            .map((detail: any) => ({
-              ...detail,
-              elements: detail.elements.filter(
-                (img: any) => img.imageId !== element.imageId,
-              ),
-            }))
-            .filter((detail: any) => detail.elements.length > 0);
-
-          const imageExists = newDetailDescription.some((detail: any) =>
-            detail.elements.some((img: any) => img.imageId === element.imageId),
-          );
-
-          if (!imageExists) {
-            try {
-              await dispatch(adminDeleteFilesAsync(element.imageId));
-              console.log('Image deleted successfully');
-            } catch (error) {
-              console.error('Failed to delete image:', error);
-            }
-          }
-        } else {
-          const imageIndex = uploadedImages.findIndex(
-            (img) => img.imageId === element.imageId,
-          );
-          if (imageIndex !== -1) {
-            try {
-              await dispatch(adminDeleteFilesAsync(element.imageId));
-              console.log('Image deleted successfully');
-            } catch (error) {
-              console.error('Failed to delete image:', error);
-            }
-          }
-        }
-      }
-    }
-
-    const updatedBlocks = blocks.filter((_: any, idx: number) => idx !== index);
-    setBlocks(updatedBlocks); // 使用 setBlocks 更新狀態
-    setValue(name, updatedBlocks, { shouldValidate: true });
-  };
 
   const onDragStart = (e: any, index: number) => {
     e.dataTransfer.setData('text/plain', index);
@@ -133,6 +67,42 @@ const ProductCustomBlocks = ({
     dispatch(setPageBlocks(updatedBlocks));
     setValue(name, remainingItems);
   };
+  const handleAddBlock = (template: CustomPageTemplate) => {
+    const newBlock = JSON.parse(JSON.stringify(template.block));
+    newBlock.elements.forEach((element: any) => {
+      if (!element.id) {
+        element.id = generateUUID();
+      }
+    });
+
+    const updatedBlocks = [...blocks, newBlock];
+    setBlocks(updatedBlocks);
+    setValue(name, updatedBlocks, { shouldValidate: true });
+    dispatch(setPageBlocks(updatedBlocks));
+  };
+
+  const handleDeleteBlock = async (index: number) => {
+    const blockToDelete = blocks[index];
+
+    for (const element of blockToDelete.elements) {
+      if (element.tagName === 'img' && element.imageId) {
+        const imageIndex = uploadedImages.findIndex(
+          (img) => img.imageId === element.imageId,
+        );
+        if (imageIndex !== -1) {
+          try {
+            await dispatch(adminDeleteFilesAsync(element.imageId));
+          } catch (error) {
+            console.error('Failed to delete image:', error);
+          }
+        }
+      }
+    }
+
+    const updatedBlocks = blocks.filter((_: any, idx: number) => idx !== index);
+    setBlocks(updatedBlocks);
+    setValue(name, updatedBlocks, { shouldValidate: true });
+  };
 
   const handleImageUploadSuccess = (imageId: string, imageUrl: string) => {
     const newBlocks = blocks.map((block: any) => {
@@ -146,49 +116,23 @@ const ProductCustomBlocks = ({
         }),
       };
     });
-    setBlocks(newBlocks); // 使用 setBlocks 更新狀態
+    setBlocks(newBlocks);
     setValue(name, newBlocks, { shouldValidate: true });
     dispatch(setPageBlocks(newBlocks));
   };
 
   const handleBlur = () => {
     const updatedBlocks = getValues(name);
-    setBlocks(updatedBlocks); // 使用 setBlocks 更新狀態
+    setBlocks(updatedBlocks);
     setValue(name, updatedBlocks, { shouldValidate: true });
     dispatch(setPageBlocks(updatedBlocks));
   };
 
-  useEffect(() => {
-    if (productDetails) {
-      setBlocks(productDetails.detailDescription); // 使用 setBlocks 初始化狀態
-      setValue('detailDescription', productDetails.detailDescription);
-    }
-  }, [productDetails, setBlocks, setValue]);
-
-  useEffect(() => {
-    const imageBlocks = uploadedImages.map((image) => ({
-      className: 'image-selectable',
-      elements: [
-        {
-          tagName: 'img',
-          src: image.imageUrl,
-          imageId: image.imageId,
-        },
-      ],
-    }));
-    setBlocks(imageBlocks); // 使用 setBlocks 初始化狀態
-    setValue(name, imageBlocks);
-  }, [uploadedImages, setBlocks, setValue, name]);
-
   const toggleEditMode = () => {
-    setIsEdit(!isEdit);
     if (isEdit) {
-      const updatedBlocks = getValues(name);
-      setBlocks(updatedBlocks); // 使用 setBlocks 更新狀態
-      dispatch(setPageBlocks(updatedBlocks));
-    } else {
       handleBlur();
     }
+    setIsEdit(!isEdit);
   };
 
   return (
@@ -204,7 +148,7 @@ const ProductCustomBlocks = ({
       >
         {isEdit ? '退出編輯模式' : '進入編輯模式'}
       </Button>
-      {blocks.map((block: any, index: number) => (
+      {blocks?.map((block: any, index: number) => (
         <Box
           key={block.id || index}
           className='custom-block'
@@ -268,4 +212,4 @@ const ProductCustomBlocks = ({
   );
 };
 
-export default ProductCustomBlocks;
+export default ArticleCustomBlocks;

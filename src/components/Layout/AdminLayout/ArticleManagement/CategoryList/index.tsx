@@ -67,6 +67,7 @@ const CategoryList: React.FC<CategoryListProps> = ({
                 </Td>
                 <Td className='tables-container__body-cell'>
                   <Button
+                    as='button'
                     colorScheme='purple'
                     size='sm'
                     onClick={() => openCategoryModal(category)}
@@ -74,6 +75,7 @@ const CategoryList: React.FC<CategoryListProps> = ({
                     編輯
                   </Button>
                   <Button
+                    as='button'
                     colorScheme='red'
                     size='sm'
                     onClick={() => handleDeleteCategory(category._id)}
@@ -84,8 +86,8 @@ const CategoryList: React.FC<CategoryListProps> = ({
               </Tr>
             ))}
           </Tbody>
-          {metadata && <Pagination metadata={metadata} />}
         </Table>
+        {metadata && <Pagination metadata={metadata} />}
       </Box>
     </Box>
   );
