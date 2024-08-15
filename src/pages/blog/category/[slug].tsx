@@ -4,6 +4,7 @@ import LoadingLayout from '@components/Layout/LoadingLayout';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { getArticlesListByCategoryAsync } from '@reducers/public/articles/actions';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -34,39 +35,46 @@ const CategoryPage: React.FC = () => {
           {articlesCategory && articlesCategory.length > 0 ? (
             <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={8}>
               {articlesCategory.map((article: any) => (
-                <Box
+                <Link
                   key={article._id}
-                  bg='white'
-                  borderRadius='lg'
-                  overflow='hidden'
-                  shadow='md'
-                  _hover={{ shadow: 'lg' }}
+                  href={`/blog/${article._id}-${article.slug}`}
+                  passHref
                 >
-                  {article.coverImage?.imageUrl && (
-                    <Image
-                      src={article.coverImage.imageUrl}
-                      alt={article.title}
-                      maxHeight='200px'
-                      width='100%'
-                      objectFit='cover'
-                    />
-                  )}
+                  <Box
+                    as='a'
+                    bg='white'
+                    borderRadius='lg'
+                    overflow='hidden'
+                    shadow='md'
+                    _hover={{ shadow: 'lg' }}
+                  >
+                    {article.coverImage?.imageUrl && (
+                      <Image
+                        src={article.coverImage.imageUrl}
+                        alt={article.title}
+                        maxHeight='200px'
+                        width='100%'
+                        objectFit='cover'
+                      />
+                    )}
 
-                  <Box p={6}>
-                    <Heading as='h2' size='md' mb={2}>
-                      {article.title}
-                    </Heading>
-                    <Text fontSize='sm' color='gray.600' noOfLines={2}>
-                      {article.excerpt}
-                    </Text>
+                    <Box p={6}>
+                      <Heading as='h2' size='md' mb={2}>
+                        {article.title}
+                      </Heading>
+                      <Text fontSize='sm' color='gray.600' noOfLines={2}>
+                        {article.excerpt}
+                      </Text>
+                    </Box>
                   </Box>
-                </Box>
+                </Link>
               ))}
             </SimpleGrid>
           ) : (
             <Text>該分類目前沒有文章。</Text>
           )}
         </Box>
+        {/* 右側側邊欄 */}
         <Box w={{ base: '100%', lg: '30%' }} mt={{ base: 8, lg: 0 }}>
           <Sidebar />
         </Box>
