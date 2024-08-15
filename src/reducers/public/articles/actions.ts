@@ -6,6 +6,7 @@ import {
   apiGetArticleById,
   apiGetArticleCategories,
   apiGetArticles,
+  apiGetArticlesByCategory,
   apiGetTrendingArticles,
 } from '@services/public/articles/public-articles';
 
@@ -14,6 +15,7 @@ export enum ArticleAsyncAction {
   articleDetail = 'articleDetail',
   trendingArticles = 'trendingArticles',
   categoriesList = 'categoriesList',
+  articlesByCategory = 'articlesByCategory',
 }
 
 /**
@@ -32,8 +34,8 @@ export const getArticlesListAsync = createAsyncThunk(
  */
 export const getArticleByIdAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_ARTICLES}/${ArticleAsyncAction.articleDetail}`,
-  async (id: string) => {
-    const response = await apiGetArticleById(id);
+  async (idSlug: string) => {
+    const response = await apiGetArticleById(idSlug);
     return response.result.data;
   },
 );
@@ -58,5 +60,13 @@ export const getArticleCategoriesAsync = createAsyncThunk(
     const response = await apiGetArticleCategories();
 
     return response.result.data;
+  },
+);
+
+export const getArticlesListByCategoryAsync = createAsyncThunk(
+  `${ReducerName.PUBLIC_ARTICLES}/${ArticleAsyncAction.articlesByCategory}`,
+  async ({ name, query }: { name: string; query: PagingQuery }) => {
+    const response = await apiGetArticlesByCategory(name, query);
+    return response.result;
   },
 );

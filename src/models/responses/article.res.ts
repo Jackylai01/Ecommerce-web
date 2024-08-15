@@ -25,6 +25,7 @@ export interface Comment {
 
 export interface ArticlePublicResponse {
   _id: string;
+  slug: string;
   title: string;
   date: string;
   author: any;
@@ -34,11 +35,17 @@ export interface ArticlePublicResponse {
   content: string;
   category: string;
   isTrending: boolean;
+  blocks?: any;
+  coverImage: {
+    imageUrl: string;
+  };
+  createdAt?: any;
 }
 
 export interface ArticleCategoryPublicResponse {
   _id: string;
   name: string;
+  slug: string;
 }
 
 export interface AddCommentResponse {

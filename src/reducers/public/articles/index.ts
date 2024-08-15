@@ -8,6 +8,7 @@ import {
   getArticleByIdAsync,
   getArticleCategoriesAsync,
   getArticlesListAsync,
+  getArticlesListByCategoryAsync,
   getTrendingArticlesAsync,
 } from './actions';
 
@@ -19,7 +20,9 @@ import {
 
 type ArticleState = ApiState<ArticleAsyncAction> & {
   list: ArticlePublicResponse[] | null;
+  articlesCategory: any;
   metadata: Metadata | undefined;
+  articlesCategoryMetadata: Metadata | undefined;
   article: ArticlePublicResponse | null;
   trendingArticles: ArticlePublicResponse[] | null;
   categories: ArticleCategoryPublicResponse[] | null;
@@ -28,6 +31,8 @@ type ArticleState = ApiState<ArticleAsyncAction> & {
 const initialState: ArticleState = {
   list: null,
   metadata: undefined,
+  articlesCategory: null,
+  articlesCategoryMetadata: undefined,
   article: null,
   trendingArticles: null,
   categories: null,
@@ -54,6 +59,13 @@ const publicArticleSlice = createSlice({
     builder.addCase(getArticleCategoriesAsync.fulfilled, (state, action) => {
       state.categories = action.payload;
     });
+    builder.addCase(
+      getArticlesListByCategoryAsync.fulfilled,
+      (state, action) => {
+        state.articlesCategory = action.payload.data;
+        state.articlesCategoryMetadata = action.payload.metadata;
+      },
+    );
 
     asyncMatcher(builder, ReducerName.PUBLIC_ARTICLES);
   },

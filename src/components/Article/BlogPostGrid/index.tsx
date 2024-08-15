@@ -8,12 +8,17 @@ import {
   SimpleGrid,
   Text,
 } from '@chakra-ui/react';
+import Pagination from '@components/Pagination';
 import useAppSelector from '@hooks/useAppSelector';
 import { Calendar, User } from 'lucide-react';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 const BlogPostGrid: React.FC = () => {
-  const { list: posts } = useAppSelector((state) => state.publicArticles);
+  const router = useRouter();
+  const { list: posts, metadata } = useAppSelector(
+    (state) => state.publicArticles,
+  );
 
   if (!posts || posts.length === 0) return null;
 
@@ -65,12 +70,14 @@ const BlogPostGrid: React.FC = () => {
               colorScheme='purple'
               variant='link'
               size='sm'
+              onClick={() => router.push(`/blog/${post._id}-${post.slug}`)}
             >
               閱讀更多
             </Button>
           </Flex>
         </Box>
       ))}
+      {metadata && <Pagination metadata={metadata} />}
     </SimpleGrid>
   );
 };

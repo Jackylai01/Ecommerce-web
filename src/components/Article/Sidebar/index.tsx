@@ -7,17 +7,27 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import {
+  getArticleCategoriesAsync,
+  getTrendingArticlesAsync,
+} from '@reducers/public/articles/actions';
 
 import { Tag as TagIcon, TrendingUp } from 'lucide-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const Sidebar: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { trendingArticles, categories } = useAppSelector(
     (state) => state.publicArticles,
   );
 
-  console.log(categories);
+  useEffect(() => {
+    dispatch(getTrendingArticlesAsync());
+    dispatch(getArticleCategoriesAsync());
+  }, [dispatch]);
+
   return (
     <Stack spacing={8}>
       <Box bg='white' borderRadius='lg' shadow='md' p={6}>
@@ -82,12 +92,12 @@ const Sidebar: React.FC = () => {
             <Button
               key={index}
               as='a'
-              href='#'
               variant='link'
               color='gray.600'
               _hover={{ color: 'purple.600' }}
               display='flex'
               alignItems='center'
+              href={`/blog/category/${category.name}`}
             >
               <Text as='span' mr={2}>
                 •

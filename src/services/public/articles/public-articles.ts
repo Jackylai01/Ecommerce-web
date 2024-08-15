@@ -18,8 +18,8 @@ export const apiGetArticles = async (query: PagingQuery) =>
 /**
  * 前台-取得單篇文章詳情
  */
-export const apiGetArticleById = async (id: string) =>
-  getRequest<ApiResult<ArticlePublicResponse>>(`/public/articles/${id}`);
+export const apiGetArticleById = async (idSlug: string) =>
+  getRequest<ApiResult<ArticlePublicResponse>>(`/public/articles/${idSlug}`);
 
 /**
  * 前台-取得熱門文章
@@ -33,4 +33,15 @@ export const apiGetTrendingArticles = async () =>
 export const apiGetArticleCategories = async () =>
   getRequest<ApiResult<ArticleCategoryPublicResponse[]>>(
     '/public/articles/categories',
+  );
+
+/**
+ * 前台-根據類別取得文章分類列表
+ */
+export const apiGetArticlesByCategory = async (
+  name: string,
+  query: PagingQuery,
+) =>
+  getRequest<ApiPaginationResult<ArticlePublicResponse[]>>(
+    formatQueryString(`/public/articles/category/${name}`, query),
   );
