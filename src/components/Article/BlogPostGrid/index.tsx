@@ -9,8 +9,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import useAppSelector from '@hooks/useAppSelector';
-
-import { Calendar, Clock, User } from 'lucide-react';
+import { Calendar, User } from 'lucide-react';
 import React from 'react';
 
 const BlogPostGrid: React.FC = () => {
@@ -29,8 +28,10 @@ const BlogPostGrid: React.FC = () => {
           overflow='hidden'
           transition='0.3s'
           _hover={{ shadow: 'xl' }}
+          display='flex'
+          flexDirection='column'
         >
-          <Box p={6}>
+          <Box p={6} flex='1'>
             <Heading
               as='h3'
               size='md'
@@ -45,7 +46,7 @@ const BlogPostGrid: React.FC = () => {
               <Icon as={Calendar} boxSize={3.5} />
               <Text>{post.date}</Text>
               <Icon as={User} boxSize={3.5} ml={3} />
-              <Text>{post.author?.username}</Text> {/* 修改此行 */}
+              <Text>{post.author?.username}</Text>
             </HStack>
             <Text color='gray.700' mb={4} fontSize='sm'>
               {post.excerpt}
@@ -58,10 +59,6 @@ const BlogPostGrid: React.FC = () => {
             justify='space-between'
             align='center'
           >
-            <HStack color='gray.600' fontSize='xs'>
-              <Icon as={Clock} boxSize={3.5} />
-              <Text>{post.readTime} 分鐘閱讀</Text>
-            </HStack>
             <Button
               as='a'
               href='#'

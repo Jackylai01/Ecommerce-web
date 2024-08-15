@@ -32,12 +32,8 @@ const BlogHomepage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <LoadingLayout
-      isLoading={
-        articlesListLoading || trendingArticlesLoading || categoriesListLoading
-      }
-    >
-      <Box minH='100vh' p='1rem'>
+    <LoadingLayout isLoading={trendingArticlesLoading || categoriesListLoading}>
+      <Box minH='100vh' p='5rem'>
         <Header />
         <Box w='100%' py={12}>
           <Box mb={12}>

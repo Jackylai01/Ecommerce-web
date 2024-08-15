@@ -46,7 +46,6 @@ const FeaturedPost: React.FC = () => {
           <Icon as={User} boxSize={4} ml={4} />
           <Text>{post.author?.username}</Text>
           <Icon as={Clock} boxSize={4} ml={4} />
-          <Text>{post.readTime} 分鐘閱讀</Text>
         </HStack>
         <Text color='gray.700' mb={4} fontSize='lg'>
           {post.excerpt}
