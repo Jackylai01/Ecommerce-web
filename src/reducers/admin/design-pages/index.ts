@@ -99,7 +99,21 @@ const designPageSlice = createSlice({
       }
     });
     builder.addCase(uploadImageAsync.fulfilled, (state, action) => {
-      state.uploadedImageUrls = action.payload;
+      const { imageUrl, index, elementUuid, elementId } = action.payload;
+      const updatedBlocks = state.pageBlocks.map((block, idx) => {
+        if (idx === index) {
+          const updatedElements = block.elements.map((el: any) => {
+            if (el.elementUuid === elementUuid || el.id === elementId) {
+              return { ...el, src: imageUrl };
+            }
+            return el;
+          });
+          return { ...block, elements: updatedElements };
+        }
+        return block;
+      });
+
+      state.pageBlocks = updatedBlocks;
     });
     asyncMatcher(builder, ReducerName.ADMIN_CREATE_DESIGN_PAGE);
   },

@@ -11,7 +11,6 @@ interface CanvasProps {
   onDragOver: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
   onRemoveComponent: (index: number) => void;
   isEditing: boolean;
-  onImageUpload: (index: number, file: File, elementId?: string) => void; // Add onImageUpload prop
 }
 
 const Canvas: React.FC<CanvasProps> = ({
@@ -22,7 +21,6 @@ const Canvas: React.FC<CanvasProps> = ({
   onDragOver,
   onRemoveComponent,
   isEditing,
-  onImageUpload, // Destructure the prop
 }) => {
   const handleDrop = (e: React.DragEvent) => {
     if (!isEditing) return;
@@ -96,7 +94,6 @@ const Canvas: React.FC<CanvasProps> = ({
             index={index}
             isEdit={isEditing}
             onBlur={() => {}}
-            onImageUpload={onImageUpload}
           />
         </Box>
       ))}

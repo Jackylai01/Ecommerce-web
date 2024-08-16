@@ -21,6 +21,7 @@ import { Component } from '@fixtures/componentLibrary';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { updateBlock } from '@reducers/admin/design-pages';
+import { uploadImageAsync } from '@reducers/admin/design-pages/actions';
 import { clientLogoutAsync } from '@reducers/client/auth/actions';
 import React, { useEffect, useRef, useState } from 'react';
 import { BsCart4 } from 'react-icons/bs';
@@ -38,7 +39,6 @@ interface NavbarEditorProps {
   element: Component;
   isEdit: boolean;
   onBlur: () => void;
-  onImageUpload: (index: number, file: File, elementId: string) => void;
 }
 
 const NavbarEditor: React.FC<NavbarEditorProps> = ({
@@ -46,14 +46,12 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   element,
   isEdit,
   onBlur,
-  onImageUpload,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [content, setContent] = useState(element.elements || []);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newItemText, setNewItemText] = useState('');
   const [logo, setLogo] = useState<string | null>(null);
-  const [uploadedLogo, setUploadedLogo] = useState<string | null>(null);
   const [bgColor, setBgColor] = useState<string>(
     element.style?.backgroundColor || '#ffffff',
   );
@@ -61,6 +59,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
     element.style?.navItemColor || '#000000',
   );
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
+  const dispatch = useAppDispatch();
 
   const {
     userInfo,
@@ -68,7 +67,6 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   } = useAppSelector((state) => state.clientAuth);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const dispatch = useAppDispatch(); // 使用 useAppDispatch 直接获得 dispatch
 
   useEffect(() => {
     setContent(element.elements || []);
@@ -117,7 +115,14 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
   const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      onImageUpload(index, file, 'logo'); // 调用 onImageUpload 并传入 elementId 为 'logo'
+      dispatch(
+        uploadImageAsync({
+          file,
+          index,
+          elementUuid: undefined,
+          elementId: 'logo',
+        }),
+      );
     }
   };
 
@@ -179,9 +184,7 @@ const NavbarEditor: React.FC<NavbarEditorProps> = ({
         style={{ backgroundColor: bgColor }}
       >
         <Box className='navbar__logo'>
-          {uploadedLogo ? (
-            <Image src={uploadedLogo} alt='Logo' w='auto' maxH='60px' />
-          ) : logo ? (
+          {logo ? (
             <Image src={logo} alt='Logo' w='auto' maxH='60px' />
           ) : (
             <Box>Logo</Box>

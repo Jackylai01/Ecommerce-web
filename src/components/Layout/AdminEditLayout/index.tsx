@@ -6,7 +6,6 @@ import useAppSelector from '@hooks/useAppSelector';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ADMIN_ROUTE } from '@fixtures/constants';
-import { IDesignPageElement } from '@models/requests/design.req';
 import { setAdminUserInfo } from '@reducers/admin/auth';
 import {
   addBlock,
@@ -18,7 +17,6 @@ import {
   createDesignPageAsync,
   getDesignPageByRouteAsync,
 } from '@reducers/admin/design-pages/actions';
-import { apiUploadImage } from '@services/admin/design-pages/design-page';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
@@ -131,53 +129,6 @@ const AdminEditPageLayout: React.FC = () => {
     formData.append('blocks', JSON.stringify(blocks));
 
     dispatch(createDesignPageAsync(formData));
-  };
-
-  const handleImageUpload = (
-    index: number,
-    file: File,
-    elementUuid?: string,
-    elementId?: string,
-  ) => {
-    const formData = new FormData();
-    formData.append('images', file);
-
-    apiUploadImage(formData).then((response) => {
-      const imageUrl = response.res.data.data.secure_urls[0];
-
-      const updatedComponents = components.map((component, compIndex) => {
-        if (compIndex === index) {
-          const updateElement = (
-            elements: IDesignPageElement[],
-          ): IDesignPageElement[] => {
-            return elements.map((element: IDesignPageElement) => {
-              if (elementUuid && element.elementUuid === elementUuid) {
-                return { ...element, src: imageUrl };
-              }
-              if (!elementUuid && element.id === elementId) {
-                return { ...element, src: imageUrl };
-              }
-
-              // 遞歸更新嵌套的 elements
-              if (element.elements && element.elements.length > 0) {
-                return {
-                  ...element,
-                  elements: updateElement(element.elements),
-                };
-              }
-
-              return element;
-            });
-          };
-
-          const updatedElements = updateElement(component.elements || []);
-          return { ...component, elements: updatedElements };
-        }
-        return component;
-      });
-
-      dispatch(setPageBlocks(updatedComponents));
-    });
   };
 
   useEffect(() => {
@@ -299,7 +250,6 @@ const AdminEditPageLayout: React.FC = () => {
                 onDragOver={handleDragOver}
                 onRemoveComponent={handleRemoveComponent}
                 isEditing={isEditing}
-                onImageUpload={handleImageUpload}
               />
             </Box>
           </Flex>

@@ -11,6 +11,7 @@ import { Component } from '@fixtures/componentLibrary';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useEditModeNavigation from '@hooks/useEditModeNavigation';
 import { updateBlock } from '@reducers/admin/design-pages';
+import { uploadImageAsync } from '@reducers/admin/design-pages/actions';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 
@@ -31,12 +32,6 @@ interface FashionHeroEditorProps {
   element: Component;
   isEdit: boolean;
   onBlur: () => void;
-  onImageUpload: (
-    index: number,
-    file: File,
-    elementId: string,
-    elementUuid: string,
-  ) => void;
 }
 
 const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
@@ -44,7 +39,6 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   element,
   isEdit,
   onBlur,
-  onImageUpload,
 }) => {
   const { safeNavigation } = useEditModeNavigation();
   const dispatch = useAppDispatch();
@@ -80,12 +74,10 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     elementId: string,
   ) => {
     const elementUuid = content[elIndex].elementUuid;
-
     if (!isUploading && e.target.files && e.target.files[0]) {
-      setIsUploading(true);
       const file = e.target.files[0];
-      onImageUpload(index, file, elementUuid, elementId);
-      setIsUploading(false);
+      console.log('Dispatching uploadImageAsync');
+      dispatch(uploadImageAsync({ file, index, elementUuid, elementId }));
     }
   };
 
@@ -101,8 +93,9 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   };
 
   useEffect(() => {
+    console.log('Updated element elements:', element.elements);
     setContent(element.elements || []);
-  }, [element]);
+  }, [element.elements]);
 
   useEffect(() => {
     const buttonElement = content.find((el) => el.tagName === 'button');

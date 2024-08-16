@@ -10,7 +10,6 @@ interface EditorComponentFactoryProps {
   index: number;
   isEdit: boolean;
   onBlur: () => void;
-  onImageUpload: (index: number, file: File, elementId: string) => void;
 }
 
 const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
@@ -18,7 +17,6 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
   index,
   isEdit,
   onBlur,
-  onImageUpload,
 }) => {
   switch (component.className) {
     case 'navbar':
@@ -28,7 +26,6 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           element={component}
           isEdit={isEdit}
           onBlur={onBlur}
-          onImageUpload={onImageUpload}
         />
       );
     case 'navbar_second':
@@ -47,7 +44,6 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           element={component}
           isEdit={isEdit}
           onBlur={onBlur}
-          onImageUpload={onImageUpload}
         />
       );
     default:

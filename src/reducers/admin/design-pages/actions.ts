@@ -67,8 +67,22 @@ export const deleteDesignPageAsync = createAsyncThunk(
 // 上傳圖片
 export const uploadImageAsync = createAsyncThunk(
   `${ReducerName.ADMIN_CREATE_DESIGN_PAGE}/${DesignPageActions.UPLOAD_IMAGE}`,
-  async (formData: FormData) => {
+  async ({
+    file,
+    index,
+    elementUuid,
+    elementId,
+  }: {
+    file: File;
+    index: number;
+    elementUuid?: string;
+    elementId?: string;
+  }) => {
+    const formData = new FormData();
+    formData.append('images', file);
+
     const response = await apiUploadImage(formData);
-    return response.res.data;
+    const imageUrl = response.res.data.data.secure_urls[0];
+    return { imageUrl, index, elementUuid, elementId };
   },
 );
