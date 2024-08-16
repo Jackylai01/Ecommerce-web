@@ -207,9 +207,9 @@ const SidebarContent = ({
         </Link>
         <Separator />
       </Box>
-      <Stack direction='column' mb='40px'>
-        {links}
-      </Stack>
+      <Box maxH='calc(100vh - 150px)' overflowY='auto' pr={4}>
+        <Stack direction='column'>{links}</Stack>
+      </Box>
     </>
   );
 };
