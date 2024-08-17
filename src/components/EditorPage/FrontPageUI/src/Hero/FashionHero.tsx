@@ -93,7 +93,6 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
   };
 
   useEffect(() => {
-    console.log('Updated element elements:', element.elements);
     setContent(element.elements || []);
   }, [element.elements]);
 

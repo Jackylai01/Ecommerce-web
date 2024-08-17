@@ -121,6 +121,7 @@ const AdminEditPageLayout: React.FC = () => {
 
     const blocks = components.map((component) => ({
       ...component,
+      type: component.type || '',
       style: component.style || {},
       className: component.className || '',
       elements: component.elements || [],
@@ -185,7 +186,7 @@ const AdminEditPageLayout: React.FC = () => {
     if (currentPage) {
       const componentsWithType = currentPage.blocks.map((block) => ({
         ...block,
-        type: block.className,
+        type: block.type,
         name: block.className,
       })) as Component[];
       dispatch(setPageBlocks(componentsWithType));

@@ -20,9 +20,8 @@ import { uploadImageAsync } from '@reducers/admin/design-pages/actions';
 import { Edit2, Zap } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
-import { SketchPicker } from 'react-color'; // 引入react-color包
+import { SketchPicker } from 'react-color';
 
-// 動態引入ReactQuill
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const baseQuillToolbar = [
@@ -42,6 +41,12 @@ interface CreativeHeroEditorProps {
   onBlur: () => void;
 }
 
+const parseGradient = (gradient: string) => {
+  const regex = /linear-gradient\(to right, ([^,]+), ([^)]+)\)/;
+  const match = gradient.match(regex);
+  return match ? [match[1].trim(), match[2].trim()] : ['#6b46c1', '#2c5282'];
+};
+
 const CreativeHeroEditor: React.FC<CreativeHeroEditorProps> = ({
   index,
   element,
@@ -60,15 +65,19 @@ const CreativeHeroEditor: React.FC<CreativeHeroEditorProps> = ({
   );
   const [isHovered, setIsHovered] = useState(false);
 
-  // 單色和漸層控制
   const [backgroundType, setBackgroundType] = useState<'solid' | 'gradient'>(
     element.style?.backgroundGradient ? 'gradient' : 'solid',
   );
   const [backgroundColor, setBackgroundColor] = useState(
     element.style?.backgroundColor || '#ffffff',
   );
-  const [gradientStart, setGradientStart] = useState('#6b46c1');
-  const [gradientEnd, setGradientEnd] = useState('#2c5282');
+
+  // Initialize gradient values by parsing the existing backgroundGradient
+  const initialGradient = element.style?.backgroundGradient
+    ? parseGradient(element.style.backgroundGradient)
+    : ['#6b46c1', '#2c5282'];
+  const [gradientStart, setGradientStart] = useState(initialGradient[0]);
+  const [gradientEnd, setGradientEnd] = useState(initialGradient[1]);
 
   useEffect(() => {
     if (JSON.stringify(element.elements) !== JSON.stringify(content)) {
@@ -76,39 +85,96 @@ const CreativeHeroEditor: React.FC<CreativeHeroEditorProps> = ({
     }
   }, [element.elements, content]);
 
-  const handleBackgroundChange = () => {
-    const newBackgroundGradient = `linear-gradient(to right, ${gradientStart}, ${gradientEnd})`;
-    dispatch(
-      updateBlock({
-        index,
-        block: {
-          ...element,
-          style: {
-            ...element.style,
-            backgroundColor: backgroundType === 'solid' ? backgroundColor : '',
-            backgroundGradient:
-              backgroundType === 'gradient' ? newBackgroundGradient : '',
+  const handleBackgroundChange = (
+    type: 'solid' | 'gradient',
+    color: string,
+  ) => {
+    if (type === 'solid') {
+      setBackgroundColor(color);
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundColor: color,
+              backgroundGradient: '', // 清除漸層背景
+            },
           },
-        },
-      }),
-    );
+        }),
+      );
+    } else if (type === 'gradient') {
+      const newGradient = `linear-gradient(to right, ${gradientStart}, ${color})`;
+      setGradientEnd(color);
+
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundGradient: newGradient,
+              backgroundColor: '',
+            },
+          },
+        }),
+      );
+    }
+  };
+
+  const handleBackgroundSave = () => {
+    if (backgroundType === 'solid') {
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundColor,
+              backgroundGradient: '', // 清除漸層背景
+            },
+          },
+        }),
+      );
+    } else if (backgroundType === 'gradient') {
+      const newBackgroundGradient = `linear-gradient(to right, ${gradientStart}, ${gradientEnd})`;
+
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundColor: '', // 清除單色背景
+              backgroundGradient: newBackgroundGradient,
+            },
+          },
+        }),
+      );
+    }
+    onClose(); // 關閉彈窗
   };
 
   const uploadImage = (
     e: React.ChangeEvent<HTMLInputElement>,
-    elIndex: number,
+    elementId: string,
   ) => {
-    const elementUuid = content[elIndex].elementUuid;
-    if (e.target.files && e.target.files[0]) {
+    const elementUuid = content.find((el) => el.id === elementId)?.elementUuid;
+    if (e.target.files && e.target.files[0] && elementUuid) {
       const file = e.target.files[0];
-      dispatch(
-        uploadImageAsync({
-          file,
-          index,
-          elementUuid,
-          elementId: content[elIndex].id,
-        }),
-      );
+      dispatch(uploadImageAsync({ file, index, elementUuid, elementId }));
+    }
+  };
+
+  const handleIconClick = (elementId: any) => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+      fileInputRef.current.dataset.elementId = elementId;
+      fileInputRef.current.click();
     }
   };
 
@@ -142,12 +208,12 @@ const CreativeHeroEditor: React.FC<CreativeHeroEditorProps> = ({
   return (
     <Box
       className={`creative-hero ${element.className}`}
-      bg={backgroundType === 'solid' ? backgroundColor : undefined}
-      background={
-        backgroundType === 'gradient'
-          ? `linear-gradient(to right, ${gradientStart}, ${gradientEnd})`
-          : undefined
-      }
+      style={{
+        background:
+          backgroundType === 'gradient'
+            ? `linear-gradient(to right, ${gradientStart}, ${gradientEnd})`
+            : backgroundColor,
+      }}
     >
       <Box className='creative-hero__container'>
         {isEdit && (
@@ -185,31 +251,32 @@ const CreativeHeroEditor: React.FC<CreativeHeroEditorProps> = ({
                   {backgroundType === 'solid' ? (
                     <SketchPicker
                       color={backgroundColor}
-                      onChangeComplete={(color) => {
-                        setBackgroundColor(color.hex);
-                        handleBackgroundChange();
-                      }}
+                      onChangeComplete={(color) =>
+                        handleBackgroundChange('solid', color.hex)
+                      }
                     />
                   ) : (
                     <Box>
                       <Text>起始顏色</Text>
                       <SketchPicker
                         color={gradientStart}
-                        onChangeComplete={(color) => {
-                          setGradientStart(color.hex);
-                          handleBackgroundChange();
-                        }}
+                        onChangeComplete={(color) =>
+                          setGradientStart(color.hex)
+                        }
                       />
                       <Text>結束顏色</Text>
                       <SketchPicker
                         color={gradientEnd}
-                        onChangeComplete={(color) => {
-                          setGradientEnd(color.hex);
-                          handleBackgroundChange();
-                        }}
+                        onChangeComplete={(color) =>
+                          handleBackgroundChange('gradient', color.hex)
+                        }
                       />
                     </Box>
                   )}
+                  {/* 確認按鈕 */}
+                  <Button mt={4} onClick={handleBackgroundSave}>
+                    確認
+                  </Button>
                 </ModalBody>
               </ModalContent>
             </Modal>
@@ -220,17 +287,13 @@ const CreativeHeroEditor: React.FC<CreativeHeroEditorProps> = ({
         <Box className='creative-hero__images'>
           {content
             .filter((el) => el.tagName === 'img')
-            .map((imgEl, elIndex) => (
-              <Box key={elIndex} position='relative'>
+            .map((imgEl) => (
+              <Box key={imgEl.id} position='relative'>
                 <Image
                   src={imgEl.src || ''}
                   alt={imgEl.alt || ''}
                   className={`${imgEl.className} creative-hero__images-image--${imgEl.id}`}
-                  onClick={() => {
-                    if (fileInputRef.current) {
-                      fileInputRef.current.click();
-                    }
-                  }}
+                  onClick={() => handleIconClick(imgEl.id)}
                 />
                 {isEdit && (
                   <Input
@@ -238,7 +301,12 @@ const CreativeHeroEditor: React.FC<CreativeHeroEditorProps> = ({
                     accept='image/*'
                     ref={fileInputRef}
                     style={{ display: 'none' }}
-                    onChange={(e) => uploadImage(e, elIndex)}
+                    onChange={(e) =>
+                      uploadImage(
+                        e,
+                        fileInputRef.current?.dataset.elementId || '',
+                      )
+                    }
                   />
                 )}
               </Box>

@@ -37,7 +37,6 @@ const PreviewPage: React.FC = () => {
                   index={index}
                   isEdit={false}
                   onBlur={() => {}}
-                  onImageUpload={() => {}}
                 />
               ))}
             </Box>

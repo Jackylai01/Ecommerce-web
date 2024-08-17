@@ -17,6 +17,7 @@ export interface IDesignPageBlock {
   content?: string;
   style?: {
     backgroundColor?: string;
+    backgroundGradient?: string;
     navItemColor?: string;
   };
 }
