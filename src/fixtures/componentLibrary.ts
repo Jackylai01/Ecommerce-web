@@ -109,4 +109,53 @@ export const componentLibrary: Record<string, Component> = {
       },
     ],
   },
+  creative_hero: {
+    type: 'creative_hero',
+    name: 'Creative Hero',
+    className: 'creative-hero',
+    style: {
+      backgroundColor: '#ffffff',
+      backgroundGradient:
+        'linear-gradient(to right, #6b46c1, #2c5282, #4c51bf)',
+    },
+    elements: [
+      {
+        id: 'image1',
+        tagName: 'img',
+        src: '',
+        alt: 'Abstract 1',
+        className:
+          'creative-hero__images-image creative-hero__images-image--first',
+      },
+      {
+        id: 'image2',
+        tagName: 'img',
+        src: '',
+        alt: 'Abstract 2',
+        className:
+          'creative-hero__images-image creative-hero__images-image--second',
+      },
+      {
+        id: 'image3',
+        tagName: 'img',
+        src: '',
+        alt: 'Abstract 3',
+        className:
+          'creative-hero__images-image creative-hero__images-image--third',
+      },
+      {
+        id: 'heading',
+        tagName: 'h1',
+        context: '創新視界，無限可能',
+        className: 'creative-hero__content-title',
+      },
+      {
+        id: 'subtitle',
+        tagName: 'p',
+        context:
+          '我們融合藝術與科技，打造前所未有的數字體驗。讓我們一同探索未來！',
+        className: 'creative-hero__content-subtitle',
+      },
+    ],
+  },
 };

@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import React from 'react';
+import CreativeHeroEditor from './src/Hero/CreativeHero';
 import FashionHeroEditor from './src/Hero/FashionHero';
 import NavbarEditor from './src/navbar/NavbarEditor';
 import NavbarEditorSecond from './src/navbar/NavbarEditorSecond';
@@ -18,7 +19,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
   isEdit,
   onBlur,
 }) => {
-  switch (component.className) {
+  switch (component.type) {
     case 'navbar':
       return (
         <NavbarEditor
@@ -37,7 +38,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           onBlur={onBlur}
         />
       );
-    case 'fashion-hero':
+    case 'fashion_hero':
       return (
         <FashionHeroEditor
           index={index}
@@ -46,6 +47,16 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           onBlur={onBlur}
         />
       );
+    case 'creative_hero':
+      return (
+        <CreativeHeroEditor
+          index={index}
+          element={component}
+          isEdit={isEdit}
+          onBlur={onBlur}
+        />
+      );
+
     default:
       return <Box>未知的組件類型: {component.className}</Box>;
   }
