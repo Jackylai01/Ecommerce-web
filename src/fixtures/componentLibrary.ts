@@ -122,7 +122,7 @@ export const componentLibrary: Record<string, Component> = {
       {
         id: 'image1',
         tagName: 'img',
-        src: '',
+        src: testImage,
         alt: 'Abstract 1',
         className:
           'creative-hero__images-image creative-hero__images-image--first',
@@ -130,7 +130,7 @@ export const componentLibrary: Record<string, Component> = {
       {
         id: 'image2',
         tagName: 'img',
-        src: '',
+        src: testImage,
         alt: 'Abstract 2',
         className:
           'creative-hero__images-image creative-hero__images-image--second',
@@ -138,7 +138,7 @@ export const componentLibrary: Record<string, Component> = {
       {
         id: 'image3',
         tagName: 'img',
-        src: '',
+        src: testImage,
         alt: 'Abstract 3',
         className:
           'creative-hero__images-image creative-hero__images-image--third',

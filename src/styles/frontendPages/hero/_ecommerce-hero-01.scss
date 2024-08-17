@@ -1,10 +1,9 @@
 .creative-hero {
   &__container {
-    min-height: 100vh;
-    background: linear-gradient(to bottom right, #6b46c1, #2c5282, #4c51bf);
     color: white;
     overflow: hidden;
     position: relative;
+    min-height: 70vh;
     padding: 6rem 1.5rem;
   }
 
@@ -16,7 +15,6 @@
     left: 0;
     overflow: hidden;
     z-index: 1;
-
     &-image {
       position: absolute;
       object-fit: cover;
@@ -36,12 +34,11 @@
         transform: rotate(-6deg);
       }
       &--third {
-        bottom: 2.5rem;
-        left: 25%;
+        top: 25rem;
+        left: 50%;
         width: 14rem;
         height: 14rem;
         border-radius: 50%;
-        transform: rotate(-12deg);
       }
     }
 
