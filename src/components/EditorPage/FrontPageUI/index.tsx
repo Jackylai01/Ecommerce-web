@@ -38,7 +38,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           onBlur={onBlur}
         />
       );
-    case 'fashion_hero':
+    case 'fashion-hero':
       return (
         <FashionHeroEditor
           index={index}
@@ -47,7 +47,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           onBlur={onBlur}
         />
       );
-    case 'creative_hero':
+    case 'creative-hero':
       return (
         <CreativeHeroEditor
           index={index}

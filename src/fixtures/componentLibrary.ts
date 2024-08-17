@@ -63,7 +63,7 @@ export const componentLibrary: Record<string, Component> = {
     ],
   },
   fashion_hero: {
-    type: 'fashion_hero',
+    type: 'fashion-hero',
     name: 'Fashion Hero',
     className: 'fashion-hero',
     style: {
@@ -110,7 +110,7 @@ export const componentLibrary: Record<string, Component> = {
     ],
   },
   creative_hero: {
-    type: 'creative_hero',
+    type: 'creative-hero',
     name: 'Creative Hero',
     className: 'creative-hero',
     style: {
