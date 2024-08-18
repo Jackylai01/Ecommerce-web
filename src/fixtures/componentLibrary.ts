@@ -158,4 +158,42 @@ export const componentLibrary: Record<string, Component> = {
       },
     ],
   },
+  socks_subscription: {
+    type: 'socks-subscription',
+    name: 'Socks Subscription',
+    className: 'socks-subscription',
+    style: {
+      backgroundColor: '#ffffff',
+      backgroundGradient: 'linear-gradient(to right, #fbbf24, #f97316)',
+    },
+    elements: [
+      {
+        id: 'heading',
+        tagName: 'h2',
+        className: 'socks-subscription__heading',
+        context: 'Fresh Socks Delivered Monthly, Right to Your Doorstep!',
+      },
+      {
+        id: 'subtitle',
+        tagName: 'p',
+        className: 'socks-subscription__subtitle',
+        context:
+          'Receive two pairs of stylish, high-quality socks delivered to your door every month. Elevate your wardrobe effortlessly with fresh designs that keep your feet comfortable and fashionable.',
+      },
+      {
+        id: 'button',
+        tagName: 'button',
+        className: 'socks-subscription__button',
+        context: 'Subscribe Now',
+        href: '/subscribe',
+      },
+      {
+        id: 'image',
+        tagName: 'img',
+        className: 'socks-subscription__image',
+        src: '/api/placeholder/300/200',
+        alt: 'Socks with pine cones and flowers',
+      },
+    ],
+  },
 };

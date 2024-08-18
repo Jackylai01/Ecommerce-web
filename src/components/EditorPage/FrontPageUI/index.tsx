@@ -3,6 +3,7 @@ import { Component } from '@fixtures/componentLibrary';
 import React from 'react';
 import CreativeHeroEditor from './src/Hero/CreativeHero';
 import FashionHeroEditor from './src/Hero/FashionHero';
+import SocksSubscriptionEditor from './src/Hero/SocksSubscriptionEditor';
 import NavbarEditor from './src/navbar/NavbarEditor';
 import NavbarEditorSecond from './src/navbar/NavbarEditorSecond';
 
@@ -50,6 +51,15 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
     case 'creative-hero':
       return (
         <CreativeHeroEditor
+          index={index}
+          element={component}
+          isEdit={isEdit}
+          onBlur={onBlur}
+        />
+      );
+    case 'socks-subscription':
+      return (
+        <SocksSubscriptionEditor
           index={index}
           element={component}
           isEdit={isEdit}
