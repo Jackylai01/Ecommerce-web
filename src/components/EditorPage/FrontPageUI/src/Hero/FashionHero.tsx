@@ -118,10 +118,6 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     />
   );
 
-  const stripTags = (input: string) => {
-    return input.replace(/<\/?[^>]+(>|$)/g, '');
-  };
-
   return (
     <Box className={`fashion-hero ${element.className}`}>
       <Box className='fashion-hero__container'>
