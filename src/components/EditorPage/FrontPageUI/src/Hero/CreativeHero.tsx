@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   IconButton,
-  Image,
   Input,
   Modal,
   ModalBody,
@@ -16,10 +15,9 @@ import {
 import { Component } from '@fixtures/componentLibrary';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { updateBlock } from '@reducers/admin/design-pages';
-import { uploadImageAsync } from '@reducers/admin/design-pages/actions';
 import { Edit2, Zap } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SketchPicker } from 'react-color';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -54,7 +52,6 @@ const CreativeHeroEditor: React.FC<CreativeHeroEditorProps> = ({
   onBlur,
 }) => {
   const dispatch = useAppDispatch();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [content, setContent] = useState(element.elements || []);
   const [buttonText, setButtonText] = useState(
@@ -157,25 +154,6 @@ const CreativeHeroEditor: React.FC<CreativeHeroEditorProps> = ({
       );
     }
     onClose(); // 關閉彈窗
-  };
-
-  const uploadImage = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    elementId: string,
-  ) => {
-    const elementUuid = content.find((el) => el.id === elementId)?.elementUuid;
-    if (e.target.files && e.target.files[0] && elementUuid) {
-      const file = e.target.files[0];
-      dispatch(uploadImageAsync({ file, index, elementUuid, elementId }));
-    }
-  };
-
-  const handleIconClick = (elementId: any) => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-      fileInputRef.current.dataset.elementId = elementId;
-      fileInputRef.current.click();
-    }
   };
 
   const handleChange = (elIndex: number, key: string, value: string) => {
@@ -282,36 +260,6 @@ const CreativeHeroEditor: React.FC<CreativeHeroEditorProps> = ({
             </Modal>
           </Box>
         )}
-
-        {/* 圖片區域 */}
-        <Box className='creative-hero__images'>
-          {content
-            .filter((el) => el.tagName === 'img')
-            .map((imgEl) => (
-              <Box key={imgEl.id} position='relative'>
-                <Image
-                  src={imgEl.src || ''}
-                  alt={imgEl.alt || ''}
-                  className={`${imgEl.className} creative-hero__images-image--${imgEl.id}`}
-                  onClick={() => handleIconClick(imgEl.id)}
-                />
-                {isEdit && (
-                  <Input
-                    type='file'
-                    accept='image/*'
-                    ref={fileInputRef}
-                    style={{ display: 'none' }}
-                    onChange={(e) =>
-                      uploadImage(
-                        e,
-                        fileInputRef.current?.dataset.elementId || '',
-                      )
-                    }
-                  />
-                )}
-              </Box>
-            ))}
-        </Box>
 
         {/* 內容區域 */}
         <Box className='creative-hero__content'>

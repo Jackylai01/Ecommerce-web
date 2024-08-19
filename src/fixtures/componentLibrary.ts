@@ -121,30 +121,6 @@ export const componentLibrary: Record<string, Component> = {
     },
     elements: [
       {
-        id: 'image1',
-        tagName: 'img',
-        src: testImage,
-        alt: 'Abstract 1',
-        className:
-          'creative-hero__images-image creative-hero__images-image--first',
-      },
-      {
-        id: 'image2',
-        tagName: 'img',
-        src: testImage,
-        alt: 'Abstract 2',
-        className:
-          'creative-hero__images-image creative-hero__images-image--second',
-      },
-      {
-        id: 'image3',
-        tagName: 'img',
-        src: testImage,
-        alt: 'Abstract 3',
-        className:
-          'creative-hero__images-image creative-hero__images-image--third',
-      },
-      {
         id: 'heading',
         tagName: 'h1',
         context: '創新視界，無限可能',
@@ -159,6 +135,7 @@ export const componentLibrary: Record<string, Component> = {
       },
     ],
   },
+
   socks_subscription: {
     type: 'socks-subscription',
     name: 'Socks Subscription',
