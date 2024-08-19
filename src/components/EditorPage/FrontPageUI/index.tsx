@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import React from 'react';
-import CreativeHeroEditor from './src/Hero/CreativeHero';
+
 import FashionHeroEditor from './src/Hero/FashionHero';
 import SocksSubscriptionEditor from './src/Hero/SocksSubscriptionEditor';
 import NavbarEditor from './src/navbar/NavbarEditor';
@@ -48,15 +48,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
           onBlur={onBlur}
         />
       );
-    case 'creative-hero':
-      return (
-        <CreativeHeroEditor
-          index={index}
-          element={component}
-          isEdit={isEdit}
-          onBlur={onBlur}
-        />
-      );
+
     case 'socks-subscription':
       return (
         <SocksSubscriptionEditor

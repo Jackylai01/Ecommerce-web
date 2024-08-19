@@ -110,31 +110,6 @@ export const componentLibrary: Record<string, Component> = {
       },
     ],
   },
-  creative_hero: {
-    type: 'creative-hero',
-    name: 'Creative Hero',
-    className: 'creative-hero',
-    style: {
-      backgroundColor: '#ffffff',
-      backgroundGradient:
-        'linear-gradient(to right, #6b46c1, #2c5282, #4c51bf)',
-    },
-    elements: [
-      {
-        id: 'heading',
-        tagName: 'h1',
-        context: '創新視界，無限可能',
-        className: 'creative-hero__content-title',
-      },
-      {
-        id: 'subtitle',
-        tagName: 'p',
-        context:
-          '我們融合藝術與科技，打造前所未有的數字體驗。讓我們一同探索未來！',
-        className: 'creative-hero__content-subtitle',
-      },
-    ],
-  },
 
   socks_subscription: {
     type: 'socks-subscription',

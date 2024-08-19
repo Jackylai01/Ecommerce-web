@@ -22,13 +22,7 @@ import {
 } from 'react-icons/fa';
 
 const categorizedComponents: any = {
-  layout: [
-    'navbar_a',
-    'navbar_b',
-    'fashion_hero',
-    'creative_hero',
-    'socks_subscription',
-  ],
+  layout: ['navbar_a', 'navbar_b', 'fashion_hero', 'socks_subscription'],
 };
 
 interface EditPageSidebarProps {
