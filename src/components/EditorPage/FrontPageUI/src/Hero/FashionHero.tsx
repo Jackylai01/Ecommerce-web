@@ -138,21 +138,6 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
               )
             }
           />
-          {isEdit && (
-            <Input
-              type='file'
-              accept='image/*'
-              onChange={(e) =>
-                uploadImage(
-                  e,
-                  parseInt(fileInputRef.current?.dataset.elIndex || '0', 10), // 確保這裡使用正確的 elIndex
-                  fileInputRef.current?.dataset.elementId || 'background', // 確保這裡使用正確的 elementId
-                )
-              }
-              ref={fileInputRef}
-              style={{ display: 'none' }}
-            />
-          )}
         </Box>
 
         <Box className='fashion-hero__content'>
@@ -254,6 +239,24 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
                   )
                 }
               />
+              {isEdit && (
+                <Input
+                  type='file'
+                  accept='image/*'
+                  onChange={(e) =>
+                    uploadImage(
+                      e,
+                      parseInt(
+                        fileInputRef.current?.dataset.elIndex || '0',
+                        10,
+                      ), // 確保這裡使用正確的 elIndex
+                      fileInputRef.current?.dataset.elementId || 'product',
+                    )
+                  }
+                  ref={fileInputRef}
+                  style={{ display: 'none' }}
+                />
+              )}
             </Box>
           </Flex>
         </Box>
@@ -261,17 +264,33 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
         <Box className='fashion-hero__decor-circle'></Box>
         <Box className='fashion-hero__decor-square'></Box>
         {isEdit && (
-          <Button
-            onClick={() =>
-              handleIconClick(
-                content.findIndex((el) => el.id === 'background'),
-                'background',
-              )
-            }
-            mt={4}
-          >
-            編輯背景
-          </Button>
+          <>
+            <Button
+              onClick={() =>
+                handleIconClick(
+                  content.findIndex((el) => el.id === 'background'),
+                  'background',
+                )
+              }
+              mt={4}
+            >
+              編輯背景
+            </Button>
+
+            <Input
+              type='file'
+              accept='image/*'
+              onChange={(e) =>
+                uploadImage(
+                  e,
+                  parseInt(fileInputRef.current?.dataset.elIndex || '0', 10),
+                  fileInputRef.current?.dataset.elementId || 'background',
+                )
+              }
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+            />
+          </>
         )}
       </Box>
     </Box>
