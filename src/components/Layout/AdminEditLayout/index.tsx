@@ -33,7 +33,8 @@ const generateComponentWithUUIDs = (component: Component): Component => ({
   id: uuidv4(),
   elements: component.elements?.map((el) => ({
     ...el,
-    elementUuid: uuidv4(),
+    // 只在 elementUuid 缺失時生成新的 UUID
+    elementUuid: el.elementUuid || uuidv4(),
   })),
 });
 
@@ -119,7 +120,7 @@ const AdminEditPageLayout: React.FC = () => {
     const formData = new FormData();
     formData.append('route', currentRoute);
 
-    const blocks = components.map((component) => ({
+    const blocks = components.map((component: any) => ({
       ...component,
       type: component.type || '',
       style: component.style || {},

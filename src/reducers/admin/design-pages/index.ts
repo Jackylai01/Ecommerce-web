@@ -113,7 +113,9 @@ const designPageSlice = createSlice({
         return block;
       });
 
+      // 僅更新特定的 pageBlocks，而不是全部
       state.pageBlocks = updatedBlocks;
+      console.log('Updated pageBlocks:', state.pageBlocks);
     });
     asyncMatcher(builder, ReducerName.ADMIN_CREATE_DESIGN_PAGE);
   },

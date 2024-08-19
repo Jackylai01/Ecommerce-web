@@ -180,4 +180,35 @@ export const componentLibrary: Record<string, Component> = {
       },
     ],
   },
+  product_grid: {
+    type: 'product-grid',
+    name: 'Product Grid',
+    className: 'product-grid medium',
+    elements: [
+      {
+        id: 'product-1',
+        tagName: 'img',
+        src: testImage,
+        href: '#',
+        context: '產品 1',
+        className: 'medium',
+      },
+      {
+        id: 'product-2',
+        tagName: 'img',
+        src: testImage,
+        href: '#',
+        context: '產品 2',
+        className: 'medium',
+      },
+      {
+        id: 'product-3',
+        tagName: 'img',
+        src: testImage,
+        href: '#',
+        context: '產品 3',
+        className: 'medium',
+      },
+    ],
+  },
 };
