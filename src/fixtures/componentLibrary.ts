@@ -191,7 +191,7 @@ export const componentLibrary: Record<string, Component> = {
         id: 'image',
         tagName: 'img',
         className: 'socks-subscription__image',
-        src: '/api/placeholder/300/200',
+        src: testImage,
         alt: 'Socks with pine cones and flowers',
       },
     ],

@@ -45,6 +45,19 @@ interface SocksSubscriptionEditorProps {
   onBlur: () => void;
 }
 
+interface IconTextBlock {
+  id: string;
+  icon: any;
+  text: string;
+}
+
+const icons = [
+  { label: 'Truck', icon: Truck },
+  { label: 'PhoneCall', icon: PhoneCall },
+  { label: 'RefreshCcw', icon: RefreshCcw },
+  { label: 'Package', icon: Package },
+];
+
 const parseGradient = (gradient: string) => {
   const regex = /linear-gradient\(to right, ([^,]+), ([^)]+)\)/;
   const match = gradient.match(regex);
@@ -60,6 +73,11 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
   const dispatch = useAppDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isIconOpen,
+    onOpen: onIconOpen,
+    onClose: onIconClose,
+  } = useDisclosure();
   const [content, setContent] = useState(element.elements || []);
   const [buttonText, setButtonText] = useState(
     content.find((el) => el.tagName === 'button')?.context || 'Subscribe Now',
@@ -74,6 +92,14 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
   const [backgroundColor, setBackgroundColor] = useState(
     element.style?.backgroundColor || '#ffffff',
   );
+
+  const [editingBlock, setEditingBlock] = useState<IconTextBlock | null>(null);
+  const [blocks, setBlocks] = useState<IconTextBlock[]>([
+    { id: '1', icon: Truck, text: 'Free Shipping' },
+    { id: '2', icon: PhoneCall, text: 'Support 24/7' },
+    { id: '3', icon: RefreshCcw, text: 'Money return' },
+    { id: '4', icon: Package, text: 'Order Discounts' },
+  ]);
 
   const initialGradient = element.style?.backgroundGradient
     ? parseGradient(element.style.backgroundGradient)
@@ -185,7 +211,6 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
       fileInputRef.current.click();
     }
   };
-
   const handleChange = (elIndex: number, key: string, value: string) => {
     const updatedContent = content.map((item, idx) =>
       idx === elIndex ? { ...item, [key]: value } : item,
@@ -193,25 +218,47 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
     if (JSON.stringify(updatedContent) !== JSON.stringify(content)) {
       setContent(updatedContent);
       dispatch(
-        updateBlock({ index, block: { ...element, elements: updatedContent } }),
+        updateBlock({
+          index,
+          block: { ...element, elements: updatedContent },
+        }),
       );
     }
   };
 
-  const renderQuillEditor = (
-    elIndex: number,
-    placeholder: string,
-    className: string,
-  ) => (
-    <ReactQuill
-      className={className}
-      theme='bubble'
-      modules={{ toolbar: baseQuillToolbar }}
-      placeholder={placeholder}
-      value={content[elIndex]?.context || ''}
-      onChange={(value) => handleChange(elIndex, 'context', value)}
-    />
-  );
+  const handleEditBlock = (block: IconTextBlock) => {
+    setEditingBlock(block);
+    onIconOpen();
+  };
+
+  const handleSaveBlock = () => {
+    if (editingBlock) {
+      setBlocks((prevBlocks) =>
+        prevBlocks.map((block) =>
+          block.id === editingBlock.id ? editingBlock : block,
+        ),
+      );
+    }
+    onIconClose();
+  };
+
+  const handleButtonTextChange = (value: string) => {
+    setButtonText(value);
+    handleChange(
+      content.findIndex((el) => el.tagName === 'button'),
+      'context',
+      value,
+    );
+  };
+
+  const handleButtonHrefChange = (value: string) => {
+    setButtonHref(value);
+    handleChange(
+      content.findIndex((el) => el.tagName === 'button'),
+      'href',
+      value,
+    );
+  };
 
   return (
     <Box
@@ -228,16 +275,48 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
           <Box className='socks-subscription__content'>
             {isEdit ? (
               <>
-                {renderQuillEditor(
-                  content.findIndex((el) => el.id === 'heading'),
-                  '輸入標題',
-                  'socks-subscription__heading-editor',
-                )}
-                {renderQuillEditor(
-                  content.findIndex((el) => el.id === 'subtitle'),
-                  '輸入內文',
-                  'socks-subscription__subtitle-editor',
-                )}
+                <Heading className='socks-subscription__heading'>
+                  <ReactQuill
+                    theme='bubble'
+                    value={
+                      content.find((el) => el.id === 'heading')?.context || ''
+                    }
+                    onChange={(value) =>
+                      handleChange(
+                        content.findIndex((el) => el.id === 'heading'),
+                        'context',
+                        value,
+                      )
+                    }
+                  />
+                </Heading>
+                <Text className='socks-subscription__subtitle'>
+                  <ReactQuill
+                    theme='bubble'
+                    value={
+                      content.find((el) => el.id === 'subtitle')?.context || ''
+                    }
+                    onChange={(value) =>
+                      handleChange(
+                        content.findIndex((el) => el.id === 'subtitle'),
+                        'context',
+                        value,
+                      )
+                    }
+                  />
+                </Text>
+                <Input
+                  value={buttonText}
+                  onChange={(e) => handleButtonTextChange(e.target.value)}
+                  placeholder='按鈕名稱'
+                  w='50%'
+                />
+                <Input
+                  value={buttonHref}
+                  onChange={(e) => handleButtonHrefChange(e.target.value)}
+                  placeholder='按鈕連結'
+                  w='50%'
+                />
                 <IconButton
                   icon={<Edit2 />}
                   aria-label='設定背景'
@@ -246,6 +325,7 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
                   zIndex='100'
                   position='absolute'
                   left='500px'
+                  top='10%'
                 />
                 <Modal isOpen={isOpen} onClose={onClose}>
                   <ModalOverlay />
@@ -304,7 +384,8 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
             ) : (
               <>
                 <Heading className='socks-subscription__heading'>
-                  <div
+                  <Box
+                    as='span'
                     dangerouslySetInnerHTML={{
                       __html:
                         content.find((el) => el.id === 'heading')?.context ||
@@ -313,7 +394,8 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
                   />
                 </Heading>
                 <Text className='socks-subscription__subtitle'>
-                  <div
+                  <Box
+                    as='span'
                     dangerouslySetInnerHTML={{
                       __html:
                         content.find((el) => el.id === 'subtitle')?.context ||
@@ -323,6 +405,7 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
                 </Text>
               </>
             )}
+            {/* 按鈕 */}
             <Button
               className='socks-subscription__button'
               onClick={() => (window.location.href = buttonHref)}
@@ -332,48 +415,96 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
           </Box>
 
           <Box className='socks-subscription__image-container'>
-            <Image
-              src={
-                content.find((el) => el.id === 'image')?.src ||
-                '/api/placeholder/300/200'
-              }
-              alt={
-                content.find((el) => el.id === 'image')?.alt ||
-                'Socks with pine cones and flowers'
-              }
-              className='socks-subscription__image'
-              onClick={() => handleIconClick('image')}
-            />
-            {isEdit && (
-              <Input
-                type='file'
-                accept='image/*'
-                ref={fileInputRef}
-                style={{ display: 'none' }}
-                onChange={(e) => uploadImage(e, 'image')}
-              />
-            )}
+            {content
+              .filter((el) => el.tagName === 'img')
+              .map((imgEl) => (
+                <Box key={imgEl.id} position='relative'>
+                  <Image
+                    src={content.find((el) => el.id === 'image')?.src || ''}
+                    alt={content.find((el) => el.id === 'image')?.alt || ''}
+                    className={`${imgEl.className} socks-subscription__image`}
+                    onClick={() => handleIconClick(imgEl.id)}
+                  />
+                  {isEdit && (
+                    <Input
+                      type='file'
+                      accept='image/*'
+                      ref={fileInputRef}
+                      style={{ display: 'none' }}
+                      onChange={(e) =>
+                        uploadImage(
+                          e,
+                          fileInputRef.current?.dataset.elementId || '',
+                        )
+                      }
+                    />
+                  )}
+                </Box>
+              ))}
           </Box>
         </Flex>
 
         <Grid className='socks-subscription__grid'>
-          <Flex className='socks-subscription__icon-text'>
-            <Icon as={Truck} className='socks-subscription__icon' />
-            <Text className='socks-subscription__text'>Free Shipping</Text>
-          </Flex>
-          <Flex className='socks-subscription__icon-text'>
-            <Icon as={PhoneCall} className='socks-subscription__icon' />
-            <Text className='socks-subscription__text'>Support 24/7</Text>
-          </Flex>
-          <Flex className='socks-subscription__icon-text'>
-            <Icon as={RefreshCcw} className='socks-subscription__icon' />
-            <Text className='socks-subscription__text'>Money return</Text>
-          </Flex>
-          <Flex className='socks-subscription__icon-text'>
-            <Icon as={Package} className='socks-subscription__icon' />
-            <Text className='socks-subscription__text'>Order Discounts</Text>
-          </Flex>
+          {blocks.map((block) => (
+            <Flex
+              key={block.id}
+              className='socks-subscription__icon-text'
+              onClick={() => handleEditBlock(block)}
+              cursor='pointer'
+            >
+              <Icon as={block.icon} className='socks-subscription__icon' />
+              <Text className='socks-subscription__text'>{block.text}</Text>
+            </Flex>
+          ))}
         </Grid>
+
+        {/* 編輯彈窗 */}
+        <Modal isOpen={isIconOpen} onClose={onIconClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>編輯區塊</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {editingBlock && (
+                <>
+                  <Text mb={2}>選擇圖標</Text>
+                  <Grid templateColumns='repeat(4, 1fr)' gap={2}>
+                    {icons.map((iconOption) => (
+                      <Button
+                        key={iconOption.label}
+                        onClick={() =>
+                          setEditingBlock({
+                            ...editingBlock,
+                            icon: iconOption.icon,
+                          })
+                        }
+                      >
+                        <Icon as={iconOption.icon} />
+                      </Button>
+                    ))}
+                  </Grid>
+
+                  <Text mt={4} mb={2}>
+                    編輯文字
+                  </Text>
+                  <Input
+                    value={editingBlock.text}
+                    onChange={(e) =>
+                      setEditingBlock({
+                        ...editingBlock,
+                        text: e.target.value,
+                      })
+                    }
+                  />
+
+                  <Button mt={4} colorScheme='blue' onClick={handleSaveBlock}>
+                    保存
+                  </Button>
+                </>
+              )}
+            </ModalBody>
+          </ModalContent>
+        </Modal>
       </Box>
     </Box>
   );
