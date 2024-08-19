@@ -1,3 +1,17 @@
+import {
+  CreditCard,
+  DollarSign,
+  Heart,
+  HelpCircle,
+  Package,
+  PhoneCall,
+  RefreshCcw,
+  ShoppingCart,
+  Star,
+  Tag,
+  Truck,
+  User,
+} from 'lucide-react';
 export const icons = [
   'icomoon-clipboard-list',
   'icomoon-awesome-book',
@@ -150,3 +164,18 @@ export const icons = [
   'icomoon-file-word',
   'icomoon-file-excel',
 ];
+
+export const iconsMap: any = {
+  Truck, // 送貨
+  PhoneCall, // 客服
+  RefreshCcw, // 退貨/更換
+  Package, // 包裹
+  ShoppingCart, // 購物車
+  CreditCard, // 信用卡付款
+  DollarSign, // 金錢
+  Heart, // 心願單/收藏
+  User, // 帳號
+  HelpCircle, // 幫助
+  Tag, // 折扣
+  Star, // 評價
+};

@@ -76,7 +76,7 @@ const FashionHeroEditor: React.FC<FashionHeroEditorProps> = ({
     const elementUuid = content[elIndex].elementUuid;
     if (!isUploading && e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      console.log('Dispatching uploadImageAsync');
+
       dispatch(uploadImageAsync({ file, index, elementUuid, elementId }));
     }
   };

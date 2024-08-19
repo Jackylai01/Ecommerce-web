@@ -18,10 +18,11 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
+import { iconsMap } from '@fixtures/icons';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { updateBlock } from '@reducers/admin/design-pages';
 import { uploadImageAsync } from '@reducers/admin/design-pages/actions';
-import { Edit2, Package, PhoneCall, RefreshCcw, Truck } from 'lucide-react';
+import { Edit2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useRef, useState } from 'react';
 import { SketchPicker } from 'react-color';
@@ -37,13 +38,6 @@ const baseQuillToolbar = [
   [{ align: [] }],
   ['clean'],
 ];
-
-const iconsMap: any = {
-  Truck,
-  PhoneCall,
-  RefreshCcw,
-  Package,
-};
 
 interface SocksSubscriptionEditorProps {
   index: number;
@@ -61,7 +55,7 @@ interface SocksSubscriptionEditorProps {
 interface IconTextBlock {
   id: string;
   icon: keyof typeof iconsMap;
-  text: string;
+  context: string;
 }
 
 const parseGradient = (gradient: string) => {
@@ -121,7 +115,11 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
       // 更新本地的 iconTextBlocks 狀態
       const updatedIconTextBlocks = iconTextBlocks.map((block: any) =>
         block.id === editingBlock.id
-          ? { ...block, icon: editingBlock.icon, text: editingBlock.text }
+          ? {
+              ...block,
+              icon: editingBlock.icon,
+              context: editingBlock.context,
+            }
           : block,
       );
       setIconTextBlocks(updatedIconTextBlocks);
@@ -224,18 +222,21 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
 
   const uploadImage = (
     e: React.ChangeEvent<HTMLInputElement>,
+    elIndex: number,
     elementId: string,
   ) => {
-    const elementUuid = content.find((el) => el.id === elementId)?.elementUuid;
-    if (e.target.files && e.target.files[0] && elementUuid) {
+    const elementUuid = content[elIndex].elementUuid;
+    if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       dispatch(uploadImageAsync({ file, index, elementUuid, elementId }));
     }
   };
 
-  const handleIconClick = (elementId: any) => {
+  const handleIconClick = (elIndex: number, elementId: any) => {
+    const elementUuid = content[elIndex].elementUuid;
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
+      fileInputRef.current.dataset.elementUuid = elementUuid;
       fileInputRef.current.dataset.elementId = elementId;
       fileInputRef.current.click();
     }
@@ -441,7 +442,12 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
                     src={content.find((el) => el.id === 'image')?.src || ''}
                     alt={content.find((el) => el.id === 'image')?.alt || ''}
                     className={`${imgEl.className} socks-subscription__image`}
-                    onClick={() => handleIconClick(imgEl.id)}
+                    onClick={() =>
+                      handleIconClick(
+                        content.findIndex((el) => el.id === 'image'),
+                        imgEl.id,
+                      )
+                    }
                   />
                   {isEdit && (
                     <Input
@@ -452,7 +458,11 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
                       onChange={(e) =>
                         uploadImage(
                           e,
-                          fileInputRef.current?.dataset.elementId || '',
+                          parseInt(
+                            fileInputRef.current?.dataset.elIndex || '0',
+                            10,
+                          ),
+                          fileInputRef.current?.dataset.elementId || 'image',
                         )
                       }
                     />
@@ -474,7 +484,7 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
                 as={iconsMap[block.icon]}
                 className='socks-subscription__icon'
               />
-              <Text className='socks-subscription__text'>{block.text}</Text>
+              <Text className='socks-subscription__text'>{block.context}</Text>
             </Flex>
           ))}
         </Grid>
@@ -502,9 +512,12 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
 
                 <Text mt={4}>編輯文字</Text>
                 <Input
-                  value={editingBlock.text}
+                  value={editingBlock.context}
                   onChange={(e) =>
-                    setEditingBlock({ ...editingBlock, text: e.target.value })
+                    setEditingBlock({
+                      ...editingBlock,
+                      context: e.target.value,
+                    })
                   }
                 />
 
