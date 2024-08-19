@@ -19,6 +19,7 @@ export interface IDesignPageElement {
   tagName: string;
   className?: string;
   context?: string;
+  icon?: string;
   alt?: string;
   src?: string;
   href?: string;
@@ -178,7 +179,7 @@ export const componentLibrary: Record<string, Component> = {
         tagName: 'p',
         className: 'socks-subscription__subtitle',
         context:
-          'Receive two pairs of stylish, high-quality socks delivered to your door every month. Elevate your wardrobe effortlessly with fresh designs that keep your feet comfortable and fashionable.',
+          'Receive two pairs of stylish, high-quality socks delivered to your door every month.',
       },
       {
         id: 'button',
@@ -193,6 +194,37 @@ export const componentLibrary: Record<string, Component> = {
         className: 'socks-subscription__image',
         src: testImage,
         alt: 'Socks with pine cones and flowers',
+      },
+      {
+        id: 'icon-text-blocks',
+        tagName: 'aside',
+        className: 'socks-subscription__icon-text-blocks',
+        elements: [
+          {
+            id: 'block-1',
+            tagName: 'span',
+            icon: 'Truck',
+            context: 'Free Shipping',
+          },
+          {
+            id: 'block-2',
+            tagName: 'span',
+            icon: 'PhoneCall',
+            context: 'Support 24/7',
+          },
+          {
+            id: 'block-3',
+            tagName: 'span',
+            icon: 'RefreshCcw',
+            context: 'Money return',
+          },
+          {
+            id: 'block-4',
+            tagName: 'span',
+            icon: 'Package',
+            context: 'Order Discounts',
+          },
+        ],
       },
     ],
   },
