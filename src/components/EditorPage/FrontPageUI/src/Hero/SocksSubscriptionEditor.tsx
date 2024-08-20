@@ -488,6 +488,7 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
             </Flex>
           ))}
         </Grid>
+
         {/* 編輯 Icon 和 Text 的彈窗 */}
         {isEdit && editingBlock && (
           <Modal isOpen={isIconOpen} onClose={onIconClose}>

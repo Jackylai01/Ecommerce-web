@@ -12,6 +12,16 @@ import {
   Truck,
   User,
 } from 'lucide-react';
+
+import {
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaTiktok,
+  FaTwitter,
+  FaYoutube,
+} from 'react-icons/fa';
+
 export const icons = [
   'icomoon-clipboard-list',
   'icomoon-awesome-book',
@@ -178,4 +188,13 @@ export const iconsMap: any = {
   HelpCircle, // 幫助
   Tag, // 折扣
   Star, // 評價
+};
+
+export const mediaIconsMap: any = {
+  FaFacebook, // Facebook 社群
+  FaTwitter, // Twitter 社群
+  FaInstagram, // Instagram 社群
+  FaLinkedin, // LinkedIn 社群
+  FaYoutube, // YouTube 社群
+  FaTiktok, // TikTok 社群
 };

@@ -1,15 +1,26 @@
-import { Box, Container, Flex, Heading, IconButton } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Grid,
+  Heading,
+  Icon,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
+import { mediaIconsMap } from '@fixtures/icons';
 import { updateBlock } from '@reducers/admin/design-pages';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaPlus,
-  FaTrashAlt,
-  FaTwitter,
-} from 'react-icons/fa';
+import { FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -31,6 +42,11 @@ interface FooterEditorProps {
   onBlur: () => void;
 }
 
+interface IconTextBlock {
+  id: string;
+  icon: keyof typeof mediaIconsMap;
+}
+
 const EcommerceFooter: React.FC<FooterEditorProps> = ({
   element,
   index,
@@ -40,6 +56,23 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
   const dispatch = useDispatch();
 
   const [content, setContent] = useState(element.elements || []);
+
+  const [iconTextBlocks, setIconTextBlocks] = useState<any>(
+    content.find((el) => el.id === 'social-media')?.elements || [],
+  );
+
+  const [editingBlock, setEditingBlock] = useState<IconTextBlock | null>(null);
+
+  const {
+    isOpen: isIconOpen,
+    onOpen: onIconOpen,
+    onClose: onIconClose,
+  } = useDisclosure();
+
+  const handleEditBlock = (block: any) => {
+    setEditingBlock(block);
+    onIconOpen();
+  };
 
   // 初次渲染時初始化 content，避免重複設置
   useEffect(() => {
@@ -111,6 +144,41 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
       dispatch(
         updateBlock({ index, block: { ...element, elements: updatedContent } }),
       ); // 更新 Redux 狀態
+    }
+  };
+
+  const handleSaveBlock = () => {
+    if (editingBlock) {
+      // 更新本地的 iconTextBlocks 狀態
+      const updatedIconTextBlocks = iconTextBlocks.map((block: any) =>
+        block.id === editingBlock.id
+          ? {
+              ...block,
+              icon: editingBlock.icon,
+            }
+          : block,
+      );
+      setIconTextBlocks(updatedIconTextBlocks);
+
+      // 更新 Redux store 中的 block 狀態
+      const updatedElements = content.map((el) =>
+        el.id === 'icon-text-blocks'
+          ? { ...el, elements: updatedIconTextBlocks }
+          : el,
+      );
+
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            elements: updatedElements,
+          },
+        }),
+      );
+
+      setEditingBlock(null);
+      onIconClose();
     }
   };
 
@@ -194,32 +262,50 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
             </Box>
           ))}
 
-          <Box className='ecommerce-footer__social'>
-            <Heading className='ecommerce-footer__title' size='md'>
-              關注我們
-            </Heading>
-            <Flex className='ecommerce-footer__social-icons' gap={4}>
-              <IconButton
-                as='a'
-                href='#'
-                aria-label='Facebook'
-                icon={<FaFacebookF />}
-              />
-              <IconButton
-                as='a'
-                href='#'
-                aria-label='Instagram'
-                icon={<FaInstagram />}
-              />
-              <IconButton
-                as='a'
-                href='#'
-                aria-label='Twitter'
-                icon={<FaTwitter />}
-              />
-            </Flex>
-          </Box>
+          <Grid className='socks-subscription__grid'>
+            {iconTextBlocks?.map((block: any) => (
+              <Flex
+                key={block.id}
+                className='socks-subscription__icon-text'
+                onClick={() => isEdit && handleEditBlock(block)}
+                cursor={isEdit ? 'pointer' : 'default'}
+              >
+                <Icon
+                  as={mediaIconsMap[block.icon]}
+                  className='socks-subscription__icon'
+                />
+              </Flex>
+            ))}
+          </Grid>
         </Flex>
+
+        {isEdit && editingBlock && (
+          <Modal isOpen={isIconOpen} onClose={onIconClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>編輯區塊</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Box>選擇圖標</Box>
+                <Grid templateColumns='repeat(4, 1fr)' gap={2}>
+                  {Object.keys(mediaIconsMap).map((iconKey) => (
+                    <Button
+                      key={iconKey}
+                      onClick={() =>
+                        setEditingBlock({ ...editingBlock, icon: iconKey })
+                      }
+                    >
+                      <Icon as={mediaIconsMap[iconKey]} />
+                    </Button>
+                  ))}
+                </Grid>
+                <Button mt={4} colorScheme='blue' onClick={handleSaveBlock}>
+                  保存
+                </Button>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        )}
 
         <Box className='ecommerce-footer__copyright' textAlign='center' mt={8}>
           &copy; 2024 您的電商網站名稱. 保留所有權利。
