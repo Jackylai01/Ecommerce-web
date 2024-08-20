@@ -30,6 +30,7 @@ const categorizedComponents: any = {
     'product_grid',
     'background_image',
     'footer_a',
+    'modern_footer',
   ],
 };
 

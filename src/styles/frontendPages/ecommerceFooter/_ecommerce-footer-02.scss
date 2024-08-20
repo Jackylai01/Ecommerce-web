@@ -1,7 +1,4 @@
 .modern-footer {
-  background-color: #2d3748;
-  color: white;
-
   &__container {
     max-width: 1200px;
     margin: 0 auto;
@@ -84,5 +81,12 @@
     &:hover {
       color: #a0aec0;
     }
+  }
+
+  &__copyright {
+    text-align: center;
+    color: white;
+    margin-top: 2rem;
+    font-size: 1rem;
   }
 }

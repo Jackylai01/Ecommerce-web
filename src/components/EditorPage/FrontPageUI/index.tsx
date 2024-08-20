@@ -6,6 +6,7 @@ import BackgroundImageEditor from './src/BackgroundImage';
 import EcommerceFooter from './src/EcommerceFooter';
 import FashionHeroEditor from './src/Hero/FashionHero';
 import SocksSubscriptionEditor from './src/Hero/SocksSubscriptionEditor';
+import ModernFooter from './src/modernFooter';
 import NavbarEditor from './src/navbar/NavbarEditor';
 import NavbarEditorSecond from './src/navbar/NavbarEditorSecond';
 import ProductGridEditor from './src/ProductGrid';
@@ -84,6 +85,15 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
     case 'footer':
       return (
         <EcommerceFooter
+          index={index}
+          element={component}
+          isEdit={isEdit}
+          onBlur={onBlur}
+        />
+      );
+    case 'modern-footer':
+      return (
+        <ModernFooter
           index={index}
           element={component}
           isEdit={isEdit}

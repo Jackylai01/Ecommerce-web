@@ -333,4 +333,147 @@ export const componentLibrary: Record<string, Component> = {
       },
     ],
   },
+  modern_footer: {
+    type: 'modern-footer',
+    name: 'Modern Footer',
+    className: 'modern-footer',
+    style: {
+      backgroundColor: '#ffffff',
+      backgroundGradient: 'linear-gradient(to right, #333333, #666666)',
+    },
+    elements: [
+      {
+        id: 'about-us',
+        tagName: 'section',
+        className: 'modern-footer__section',
+        context: '關於我們',
+        elements: [
+          {
+            id: 'about-text',
+            tagName: 'p',
+            className: 'modern-footer__text',
+            context: '我們是一家致力於提供高品質產品的電商平台。',
+          },
+        ],
+      },
+      {
+        id: 'customer-service',
+        tagName: 'section',
+        className: 'modern-footer__section', // 新增 className
+        context: '客戶服務',
+        elements: [
+          {
+            id: 'contact-us',
+            tagName: 'a',
+            className: 'modern-footer__link', // 新增 className
+            context: '聯繫我們',
+            href: '#',
+          },
+          {
+            id: 'return-policy',
+            tagName: 'a',
+            className: 'modern-footer__link', // 新增 className
+            context: '退換貨政策',
+            href: '#',
+          },
+          {
+            id: 'faq',
+            tagName: 'a',
+            className: 'modern-footer__link', // 新增 className
+            context: '常見問題',
+            href: '#',
+          },
+        ],
+      },
+      {
+        id: 'quick-links',
+        tagName: 'section',
+        className: 'modern-footer__section',
+        context: '快速連結',
+        elements: [
+          {
+            id: 'home',
+            tagName: 'a',
+            className: 'modern-footer__link',
+            context: '首頁',
+            href: '#',
+          },
+          {
+            id: 'products',
+            tagName: 'a',
+            className: 'modern-footer__link',
+            context: '產品',
+            href: '#',
+          },
+          {
+            id: 'promotions',
+            tagName: 'a',
+            className: 'modern-footer__link',
+            context: '優惠活動',
+            href: '#',
+          },
+        ],
+      },
+      {
+        id: 'newsletter',
+        tagName: 'section',
+        className: 'modern-footer__section',
+        context: '訂閱電子報',
+        elements: [
+          {
+            id: 'email-input',
+            tagName: 'input',
+            className: 'modern-footer__input',
+            context: '',
+            placeholder: '輸入您的電子郵件',
+          },
+          {
+            id: 'subscribe-button',
+            tagName: 'button',
+            className: 'modern-footer__button',
+            context: '訂閱',
+            href: '#',
+          },
+        ],
+      },
+      {
+        id: 'social-media',
+        tagName: 'section',
+        className: 'modern-footer__social',
+        elements: [
+          {
+            id: 'facebook-link',
+            tagName: 'a',
+            className: 'modern-footer__icon',
+            icon: 'FaFacebookF',
+            href: '#',
+            alt: 'Facebook',
+          },
+          {
+            id: 'instagram-link',
+            tagName: 'a',
+            className: 'modern-footer__icon',
+            icon: 'FaInstagram',
+            href: '#',
+            alt: 'Instagram',
+          },
+          {
+            id: 'twitter-link',
+            tagName: 'a',
+            className: 'modern-footer__icon',
+            icon: 'FaTwitter',
+            href: '#',
+            alt: 'Twitter',
+          },
+        ],
+      },
+      {
+        id: 'copyright',
+        tagName: 'span',
+        className: 'modern-footer__copyright',
+        context: '&copy; 2024 您的電商網站名稱. 保留所有權利。',
+        editable: true,
+      },
+    ],
+  },
 };
