@@ -7,6 +7,7 @@ import {
   Heading,
   Icon,
   IconButton,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -175,7 +176,7 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
     if (editingBlock) {
       const updatedIconTextBlocks = iconTextBlocks.map((block: any) =>
         block.id === editingBlock.id
-          ? { ...block, icon: editingBlock.icon }
+          ? { ...block, icon: editingBlock.icon, href: editingBlock.href }
           : block,
       );
       setIconTextBlocks(updatedIconTextBlocks);
@@ -209,7 +210,6 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
       alt: 'Facebook',
     };
 
-    // 使用空陣列作為預設值
     const existingElements = element.elements || [];
 
     setIconTextBlocks((prev: any) => [...prev, newIconBlock]);
@@ -240,7 +240,6 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
       bgGradient={
         element.style?.backgroundGradient || 'linear(to-r, gray.700, gray.900)'
       }
-      color='white'
     >
       <Container maxW='container.lg' py={8}>
         <Flex justify='space-between'>
@@ -300,22 +299,23 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
               )}
             </Box>
           ))}
-
-          <Grid className='socks-subscription__grid'>
+          <Grid
+            templateColumns={{ base: 'repeat(3, 1fr)', lg: 'repeat(6, 1fr)' }}
+            gap={4}
+          >
             {iconTextBlocks?.map((block: any) => (
               <Flex
                 key={block.id}
                 className='socks-subscription__icon-text'
-                position='relative'
-                alignItems='center'
-                justifyContent='center'
                 cursor={isEdit ? 'pointer' : 'default'}
               >
-                <Icon
-                  as={mediaIconsMap[block.icon]}
-                  className='socks-subscription__icon'
-                  boxSize={6}
-                />
+                <a href={block.href} target='_blank' rel='noopener noreferrer'>
+                  <Icon
+                    as={mediaIconsMap[block.icon]}
+                    className='socks-subscription__icon'
+                    boxSize={6}
+                  />
+                </a>
                 {isEdit && (
                   <IconButton
                     icon={<FaTrashAlt />}
@@ -370,6 +370,18 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
                         </Button>
                       ))}
                     </Grid>
+                    <Box mt={4}>
+                      <Input
+                        placeholder='Enter URL'
+                        value={editingBlock.href}
+                        onChange={(e) =>
+                          setEditingBlock({
+                            ...editingBlock,
+                            href: e.target.value,
+                          })
+                        }
+                      />
+                    </Box>
                     <Button mt={4} colorScheme='blue' onClick={handleSaveBlock}>
                       Save
                     </Button>
@@ -379,7 +391,6 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
             )}
           </>
         )}
-
         <Box className='ecommerce-footer__copyright' textAlign='center' mt={8}>
           &copy; 2024 您的電商網站名稱. 保留所有權利。
         </Box>
