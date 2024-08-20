@@ -126,13 +126,15 @@ const BackgroundImageEditor: React.FC<BackgroundImageEditorProps> = ({
     <Box display='flex' justifyContent='center'>
       {products.map((product, productIndex) => (
         <Box key={productIndex}>
-          <Image
-            src={product.src}
-            alt='Background'
-            width={product.style?.width || `${imageWidth}${widthUnit}`}
-            height={product.style?.height || `${imageHeight}${heightUnit}`}
-            objectFit='cover'
-          />
+          <a href={product.href} target='_blank' rel='noopener noreferrer'>
+            <Image
+              src={product.src}
+              alt='Background'
+              width={product.style?.width || `${imageWidth}${widthUnit}`}
+              height={product.style?.height || `${imageHeight}${heightUnit}`}
+              objectFit='cover'
+            />
+          </a>
         </Box>
       ))}
 
@@ -171,7 +173,29 @@ const BackgroundImageEditor: React.FC<BackgroundImageEditorProps> = ({
                     }
                   />
                 </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>圖片超連結</FormLabel>
+                  <Input
+                    type='url'
+                    value={products[0]?.href || ''}
+                    onChange={(e) => {
+                      const updatedProducts = products.map((product, index) => {
+                        if (index === 0) {
+                          return { ...product, href: e.target.value };
+                        }
+                        return product;
+                      });
+                      setProducts(updatedProducts);
 
+                      dispatch(
+                        updateBlock({
+                          index,
+                          block: { ...element, elements: updatedProducts },
+                        }),
+                      );
+                    }}
+                  />
+                </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>圖片寬度</FormLabel>
                   <Box display='flex' alignItems='center'>

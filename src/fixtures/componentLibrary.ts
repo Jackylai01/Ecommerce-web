@@ -228,6 +228,7 @@ export const componentLibrary: Record<string, Component> = {
         tagName: 'img',
         src: testImage,
         alt: '背景圖片',
+        href: '#',
         className: 'background-img',
         style: {
           width: '300px',
