@@ -1,25 +1,9 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Heading,
-  IconButton,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Box, Container, Flex, Heading, IconButton } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import { updateBlock } from '@reducers/admin/design-pages';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import {
-  FaEdit,
   FaFacebookF,
   FaInstagram,
   FaPlus,
@@ -53,11 +37,8 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
   isEdit,
   onBlur,
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
-  const [editingSection, setEditingSection] = useState<string | null>(null);
-  const [editedLink, setEditedLink] = useState<string>('');
-  const [editedText, setEditedText] = useState<string>('');
+
   const [content, setContent] = useState(element.elements || []);
 
   // 初次渲染時初始化 content，避免重複設置
@@ -66,13 +47,6 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
       setContent(element.elements);
     }
   }, [element.elements]);
-
-  const handleEditClick = (section: string, text: string, link: string) => {
-    setEditingSection(section);
-    setEditedText(text);
-    setEditedLink(link);
-    onOpen();
-  };
 
   const handleAddItem = (sectionIndex: number) => {
     const updatedContent = content.map((section, idx) => {
@@ -112,12 +86,6 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
     dispatch(
       updateBlock({ index, block: { ...element, elements: updatedContent } }),
     ); // 更新 Redux 狀態
-  };
-
-  const saveEdits = () => {
-    console.log('新連結文字:', editedText);
-    console.log('新連結網址:', editedLink);
-    onClose();
   };
 
   const handleQuillChange = (
@@ -174,23 +142,6 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
                       size='md'
                     >
                       {item.context}
-                      {isEdit && (
-                        <IconButton
-                          icon={<FaEdit />}
-                          aria-label={`Edit ${item.context}`}
-                          variant='ghost'
-                          colorScheme='teal'
-                          size='sm'
-                          ml={2}
-                          onClick={() =>
-                            handleEditClick(
-                              section.id || '',
-                              item.context || '',
-                              item.href || '',
-                            )
-                          }
-                        />
-                      )}
                     </Heading>
                   ) : item.tagName === 'a' ? (
                     <Box as='li'>
@@ -273,33 +224,6 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
         <Box className='ecommerce-footer__copyright' textAlign='center' mt={8}>
           &copy; 2024 您的電商網站名稱. 保留所有權利。
         </Box>
-
-        {/* 編輯彈窗 */}
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>編輯 {editingSection}</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Box>
-                <Input
-                  placeholder='修改連結文字'
-                  value={editedText}
-                  onChange={(e) => setEditedText(e.target.value)}
-                  mb={4}
-                />
-                <Input
-                  placeholder='修改連結網址'
-                  value={editedLink}
-                  onChange={(e) => setEditedLink(e.target.value)}
-                />
-              </Box>
-              <Button colorScheme='teal' mt={4} onClick={saveEdits}>
-                保存
-              </Button>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
       </Container>
     </Box>
   );
