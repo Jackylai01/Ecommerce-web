@@ -123,7 +123,7 @@ const BackgroundImageEditor: React.FC<BackgroundImageEditorProps> = ({
   }, [element.elements]);
 
   return (
-    <Box>
+    <Box display='flex' justifyContent='center'>
       {products.map((product, productIndex) => (
         <Box key={productIndex}>
           <Image
