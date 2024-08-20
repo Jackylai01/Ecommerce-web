@@ -45,6 +45,8 @@ interface FooterEditorProps {
 interface IconTextBlock {
   id: string;
   icon: keyof typeof mediaIconsMap;
+  href: string;
+  alt: string;
 }
 
 const EcommerceFooter: React.FC<FooterEditorProps> = ({
@@ -69,12 +71,6 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
     onClose: onIconClose,
   } = useDisclosure();
 
-  const handleEditBlock = (block: any) => {
-    setEditingBlock(block);
-    onIconOpen();
-  };
-
-  // 初次渲染時初始化 content，避免重複設置
   useEffect(() => {
     if (!content.length && element.elements) {
       setContent(element.elements);
@@ -121,6 +117,29 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
     ); // 更新 Redux 狀態
   };
 
+  const handleRemoveIconBlock = (iconId: string) => {
+    const updatedIconTextBlocks = iconTextBlocks.filter(
+      (block: any) => block.id !== iconId,
+    );
+    setIconTextBlocks(updatedIconTextBlocks);
+
+    const updatedElements = content.map((el) =>
+      el.id === 'social-media'
+        ? { ...el, elements: updatedIconTextBlocks }
+        : el,
+    );
+
+    dispatch(
+      updateBlock({
+        index,
+        block: {
+          ...element,
+          elements: updatedElements,
+        },
+      }),
+    );
+  };
+
   const handleQuillChange = (
     value: string,
     sectionIndex: number,
@@ -147,22 +166,22 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
     }
   };
 
+  const handleEditBlock = (block: IconTextBlock) => {
+    setEditingBlock(block);
+    onIconOpen(); // 打開編輯彈窗
+  };
+
   const handleSaveBlock = () => {
     if (editingBlock) {
-      // 更新本地的 iconTextBlocks 狀態
       const updatedIconTextBlocks = iconTextBlocks.map((block: any) =>
         block.id === editingBlock.id
-          ? {
-              ...block,
-              icon: editingBlock.icon,
-            }
+          ? { ...block, icon: editingBlock.icon }
           : block,
       );
       setIconTextBlocks(updatedIconTextBlocks);
 
-      // 更新 Redux store 中的 block 狀態
       const updatedElements = content.map((el) =>
-        el.id === 'icon-text-blocks'
+        el.id === 'social-media'
           ? { ...el, elements: updatedIconTextBlocks }
           : el,
       );
@@ -178,8 +197,40 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
       );
 
       setEditingBlock(null);
-      onIconClose();
+      onIconClose(); // 關閉彈窗
     }
+  };
+
+  const handleAddSocialIcon = () => {
+    const newIconBlock = {
+      id: `icon-${Math.random()}`,
+      icon: 'FaFacebook',
+      href: '#',
+      alt: 'Facebook',
+    };
+
+    // 使用空陣列作為預設值
+    const existingElements = element.elements || [];
+
+    setIconTextBlocks((prev: any) => [...prev, newIconBlock]);
+
+    dispatch(
+      updateBlock({
+        index,
+        block: {
+          ...element,
+          elements: [
+            ...existingElements.filter((el: any) => el.id !== 'social-media'),
+            {
+              id: 'social-media',
+              tagName: 'section',
+              className: 'ecommerce-footer__social',
+              elements: [...iconTextBlocks, newIconBlock],
+            },
+          ],
+        },
+      }),
+    );
   };
 
   return (
@@ -191,26 +242,14 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
       }
       color='white'
     >
-      <Container
-        className='ecommerce-footer__container'
-        maxW='container.lg'
-        py={8}
-      >
-        <Flex className='ecommerce-footer__sections' justify='space-between'>
+      <Container maxW='container.lg' py={8}>
+        <Flex justify='space-between'>
           {content.map((section, sectionIndex) => (
-            <Box
-              className={section.className || 'ecommerce-footer__section'}
-              key={sectionIndex}
-            >
+            <Box key={sectionIndex}>
               {section.elements?.map((item, itemIndex) => (
                 <Box key={itemIndex} position='relative'>
                   {item.tagName === 'h3' ? (
-                    <Heading
-                      className={item.className || 'ecommerce-footer__title'}
-                      size='md'
-                    >
-                      {item.context}
-                    </Heading>
+                    <Heading size='md'>{item.context}</Heading>
                   ) : item.tagName === 'a' ? (
                     <Box as='li'>
                       {isEdit ? (
@@ -267,44 +306,78 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
               <Flex
                 key={block.id}
                 className='socks-subscription__icon-text'
-                onClick={() => isEdit && handleEditBlock(block)}
+                position='relative'
+                alignItems='center'
+                justifyContent='center'
                 cursor={isEdit ? 'pointer' : 'default'}
               >
                 <Icon
                   as={mediaIconsMap[block.icon]}
                   className='socks-subscription__icon'
+                  boxSize={6}
                 />
+                {isEdit && (
+                  <IconButton
+                    icon={<FaTrashAlt />}
+                    aria-label='Remove icon'
+                    variant='ghost'
+                    colorScheme='red'
+                    size='sm'
+                    position='absolute'
+                    top={-1}
+                    right={-1}
+                    onClick={() => handleRemoveIconBlock(block.id)}
+                  />
+                )}
+                {isEdit && (
+                  <Button
+                    onClick={() => handleEditBlock(block)}
+                    size='sm'
+                    ml={2}
+                  >
+                    Edit
+                  </Button>
+                )}
               </Flex>
             ))}
           </Grid>
         </Flex>
 
-        {isEdit && editingBlock && (
-          <Modal isOpen={isIconOpen} onClose={onIconClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>編輯區塊</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Box>選擇圖標</Box>
-                <Grid templateColumns='repeat(4, 1fr)' gap={2}>
-                  {Object.keys(mediaIconsMap).map((iconKey) => (
-                    <Button
-                      key={iconKey}
-                      onClick={() =>
-                        setEditingBlock({ ...editingBlock, icon: iconKey })
-                      }
-                    >
-                      <Icon as={mediaIconsMap[iconKey]} />
+        {isEdit && (
+          <>
+            <Button onClick={handleAddSocialIcon} leftIcon={<FaPlus />}>
+              Add Social Icon
+            </Button>
+            {editingBlock && (
+              <Modal isOpen={isIconOpen} onClose={onIconClose}>
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>Edit Social Icon</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    <Grid templateColumns='repeat(4, 1fr)' gap={2}>
+                      {Object.keys(mediaIconsMap).map((iconKey) => (
+                        <Button
+                          key={iconKey}
+                          onClick={() =>
+                            setEditingBlock({
+                              ...editingBlock,
+                              icon: iconKey,
+                            })
+                          }
+                        >
+                          <Icon as={mediaIconsMap[iconKey]} />
+                        </Button>
+                      ))}
+                    </Grid>
+                    <Button mt={4} colorScheme='blue' onClick={handleSaveBlock}>
+                      Save
                     </Button>
-                  ))}
-                </Grid>
-                <Button mt={4} colorScheme='blue' onClick={handleSaveBlock}>
-                  保存
-                </Button>
-              </ModalBody>
-            </ModalContent>
-          </Modal>
+                  </ModalBody>
+                </ModalContent>
+              </Modal>
+            )}
+          </>
         )}
 
         <Box className='ecommerce-footer__copyright' textAlign='center' mt={8}>
