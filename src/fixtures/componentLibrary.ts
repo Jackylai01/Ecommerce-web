@@ -11,6 +11,9 @@ export interface Component {
     backgroundImage?: string;
     backgroundGradient?: string;
     backgroundOpacity?: number;
+    width?: number;
+    height?: number;
+    imageAlignment?: string;
   };
 }
 
@@ -23,6 +26,7 @@ export interface IDesignPageElement {
   alt?: string;
   src?: string;
   href?: string;
+  style?: any;
   elements?: IDesignPageElement[];
   data?: string[][];
   [key: string]: any;
@@ -211,6 +215,24 @@ export const componentLibrary: Record<string, Component> = {
         href: '#',
         context: '產品 3',
         className: 'medium',
+      },
+    ],
+  },
+  background_image: {
+    type: 'background-image',
+    name: 'Background Image',
+    className: 'background-image',
+    elements: [
+      {
+        id: 'background-img',
+        tagName: 'img',
+        src: testImage,
+        alt: '背景圖片',
+        className: 'background-img',
+        style: {
+          width: '300px',
+          height: '200px',
+        },
       },
     ],
   },

@@ -2,6 +2,7 @@ import { Box } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import React from 'react';
 
+import BackgroundImageEditor from './src/BackgroundImage';
 import FashionHeroEditor from './src/Hero/FashionHero';
 import SocksSubscriptionEditor from './src/Hero/SocksSubscriptionEditor';
 import NavbarEditor from './src/navbar/NavbarEditor';
@@ -62,6 +63,16 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
     case 'product-grid':
       return (
         <ProductGridEditor
+          index={index}
+          element={component}
+          isEdit={isEdit}
+          onBlur={onBlur}
+        />
+      );
+
+    case 'background-image':
+      return (
+        <BackgroundImageEditor
           index={index}
           element={component}
           isEdit={isEdit}

@@ -28,6 +28,7 @@ const categorizedComponents: any = {
     'fashion_hero',
     'socks_subscription',
     'product_grid',
+    'background_image',
   ],
 };
 
