@@ -29,6 +29,7 @@ const categorizedComponents: any = {
     'socks_subscription',
     'product_grid',
     'background_image',
+    'footer_a',
   ],
 };
 

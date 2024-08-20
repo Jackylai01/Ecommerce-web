@@ -1,0 +1,77 @@
+.ecommerce-footer {
+  background-color: #2d3748; // bg-gray-800
+  color: #ffffff; // text-white
+  padding: 2rem 0; // py-8
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem; // px-4
+  }
+
+  &__sections {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    @media (min-width: 1024px) {
+      // lg:flex-row
+      flex-direction: row;
+    }
+  }
+
+  &__section {
+    margin-bottom: 2rem; // mb-8
+
+    @media (min-width: 1024px) {
+      // lg:mb-0
+      margin-bottom: 0;
+    }
+  }
+
+  &__title {
+    font-size: 1.125rem; // text-lg
+    font-weight: 600; // font-semibold
+    margin-bottom: 1rem; // mb-4
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+
+    & > li {
+      margin-bottom: 0.5rem; // space-y-2
+    }
+  }
+
+  &__link {
+    color: #ffffff;
+    text-decoration: none;
+
+    &:hover {
+      color: #a0aec0; // hover:text-gray-300
+    }
+  }
+
+  &__social {
+    &-icons {
+      display: flex;
+      gap: 1rem; // space-x-4
+    }
+
+    &__icon {
+      color: #ffffff;
+
+      &:hover {
+        color: #a0aec0; // hover:text-gray-300
+      }
+    }
+  }
+
+  &__copyright {
+    margin-top: 2rem; // mt-8
+    padding-top: 2rem; // pt-8
+    border-top: 1px solid #4a5568; // border-t border-gray-700
+    text-align: center;
+  }
+}

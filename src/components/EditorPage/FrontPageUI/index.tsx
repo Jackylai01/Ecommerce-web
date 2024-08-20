@@ -3,6 +3,7 @@ import { Component } from '@fixtures/componentLibrary';
 import React from 'react';
 
 import BackgroundImageEditor from './src/BackgroundImage';
+import EcommerceFooter from './src/EcommerceFooter';
 import FashionHeroEditor from './src/Hero/FashionHero';
 import SocksSubscriptionEditor from './src/Hero/SocksSubscriptionEditor';
 import NavbarEditor from './src/navbar/NavbarEditor';
@@ -80,6 +81,15 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
         />
       );
 
+    case 'footer':
+      return (
+        <EcommerceFooter
+          index={index}
+          element={component}
+          isEdit={isEdit}
+          onBlur={onBlur}
+        />
+      );
     default:
       return <Box>未知的組件類型: {component.className}</Box>;
   }

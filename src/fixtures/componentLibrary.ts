@@ -237,4 +237,100 @@ export const componentLibrary: Record<string, Component> = {
       },
     ],
   },
+  footer_a: {
+    type: 'footer',
+    name: 'Footer',
+    className: 'ecommerce-footer',
+    style: {
+      backgroundColor: '#1a202c',
+      backgroundGradient: 'linear-gradient(to right, #2c3e50, #fd746c)',
+    },
+    elements: [
+      {
+        id: 'about-us',
+        tagName: 'section',
+        className: 'ecommerce-footer__section',
+        elements: [
+          {
+            id: 'about-us-title',
+            tagName: 'h3',
+            context: '關於我們',
+            className: 'ecommerce-footer__title',
+          },
+          {
+            id: 'company-profile',
+            tagName: 'a',
+            context: '公司簡介',
+            href: '#',
+            className: 'ecommerce-footer__link',
+          },
+          {
+            id: 'our-mission',
+            tagName: 'a',
+            context: '我們的使命',
+            href: '#',
+            className: 'ecommerce-footer__link',
+          },
+        ],
+      },
+      {
+        id: 'customer-service',
+        tagName: 'section',
+        className: 'ecommerce-footer__section',
+        elements: [
+          {
+            id: 'customer-service-title',
+            tagName: 'h3',
+            context: '客戶服務',
+            className: 'ecommerce-footer__title',
+          },
+          {
+            id: 'contact-us',
+            tagName: 'a',
+            context: '聯繫我們',
+            href: '#',
+            className: 'ecommerce-footer__link',
+          },
+          {
+            id: 'return-policy',
+            tagName: 'a',
+            context: '退換貨政策',
+            href: '#',
+            className: 'ecommerce-footer__link',
+          },
+        ],
+      },
+      {
+        id: 'social-media',
+        tagName: 'section',
+        className: 'ecommerce-footer__social',
+        elements: [
+          {
+            id: 'facebook-link',
+            tagName: 'a',
+            icon: 'FaFacebookF',
+            href: '#',
+            alt: 'Facebook',
+            className: 'ecommerce-footer__icon',
+          },
+          {
+            id: 'instagram-link',
+            tagName: 'a',
+            icon: 'FaInstagram',
+            href: '#',
+            alt: 'Instagram',
+            className: 'ecommerce-footer__icon',
+          },
+          {
+            id: 'twitter-link',
+            tagName: 'a',
+            icon: 'FaTwitter',
+            href: '#',
+            alt: 'Twitter',
+            className: 'ecommerce-footer__icon',
+          },
+        ],
+      },
+    ],
+  },
 };
