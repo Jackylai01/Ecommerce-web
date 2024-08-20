@@ -184,6 +184,9 @@ export const componentLibrary: Record<string, Component> = {
     type: 'product-grid',
     name: 'Product Grid',
     className: 'product-grid medium',
+    style: {
+      backgroundColor: '#ffffff',
+    },
     elements: [
       {
         id: 'product-1',

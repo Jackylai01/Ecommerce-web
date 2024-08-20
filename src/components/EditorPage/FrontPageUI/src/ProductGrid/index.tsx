@@ -7,7 +7,6 @@ import {
   IconButton,
   Image,
   Input,
-  Link,
   Select,
 } from '@chakra-ui/react';
 import { Component, testImage } from '@fixtures/componentLibrary';
@@ -34,6 +33,9 @@ const ProductGridEditor: React.FC<ProductGridEditorProps> = ({
   const [products, setProducts] = useState(element.elements || []);
   const [cardWidth, setCardWidth] = useState(
     products[0]?.className || 'medium',
+  );
+  const [backgroundColor, setBackgroundColor] = useState(
+    element.style?.backgroundColor || '#ffffff',
   );
   const dispatch = useAppDispatch();
 
@@ -71,7 +73,6 @@ const ProductGridEditor: React.FC<ProductGridEditorProps> = ({
     productIndex: number,
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    // 創建 products 的副本
     const newProducts = products.map((product, index) =>
       index === productIndex
         ? { ...product, href: event.target.value }
@@ -79,12 +80,11 @@ const ProductGridEditor: React.FC<ProductGridEditorProps> = ({
     );
 
     setProducts(newProducts);
-
-    // 更新 Redux 中的 block
     dispatch(
       updateBlock({ index, block: { ...element, elements: newProducts } }),
     );
   };
+
   const handleAddProduct = () => {
     const newProduct = {
       id: `product-${products.length + 1}`,
@@ -111,14 +111,30 @@ const ProductGridEditor: React.FC<ProductGridEditorProps> = ({
   };
 
   const handleIconClick = (productIndex: number, elementId: any) => {
-    const elementUuid = products[productIndex].elementUuid; // 獲取當前元素的 elementUuid
+    const elementUuid = products[productIndex].elementUuid;
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''; // 清除 file input 的值
+      fileInputRef.current.value = '';
       fileInputRef.current.dataset.elementUuid = elementUuid;
       fileInputRef.current.dataset.elementId = elementId;
-      fileInputRef.current.dataset.elIndex = `${productIndex}`; // 保存 productIndex
-      fileInputRef.current.click(); // 觸發文件選擇
+      fileInputRef.current.dataset.elIndex = `${productIndex}`;
+      fileInputRef.current.click();
     }
+  };
+
+  const handleBackgroundColorChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const newColor = e.target.value;
+    setBackgroundColor(newColor);
+    dispatch(
+      updateBlock({
+        index,
+        block: {
+          ...element,
+          style: { ...element.style, backgroundColor: newColor },
+        },
+      }),
+    );
   };
 
   // 根據 cardWidth 設定 maxWidth
@@ -140,7 +156,6 @@ const ProductGridEditor: React.FC<ProductGridEditorProps> = ({
   }, [element.elements]);
 
   useEffect(() => {
-    // 確保每個元素都有 elementUuid，如果缺失則生成
     const updatedProducts = (element.elements || []).map((el) => ({
       ...el,
       elementUuid: el.elementUuid || uuidv4(),
@@ -149,7 +164,7 @@ const ProductGridEditor: React.FC<ProductGridEditorProps> = ({
   }, [element.elements]);
 
   return (
-    <Box className='product-grid'>
+    <Box className='product-grid' style={{ backgroundColor }}>
       {isEdit && (
         <Box mb={4}>
           <Select
@@ -161,6 +176,12 @@ const ProductGridEditor: React.FC<ProductGridEditorProps> = ({
             <option value='medium'>中 (300px)</option>
             <option value='large'>大 (400px)</option>
           </Select>
+          <Input
+            type='color'
+            value={backgroundColor}
+            onChange={handleBackgroundColorChange}
+            mt={2}
+          />
         </Box>
       )}
       <Grid
@@ -172,10 +193,7 @@ const ProductGridEditor: React.FC<ProductGridEditorProps> = ({
         gap={6}
       >
         {products.map((product, productIndex) => (
-          <GridItem
-            key={product.id}
-            maxW={getMaxWidth()} // 動態應用 maxWidth
-          >
+          <GridItem key={product.id} maxW={getMaxWidth()}>
             <Box className='product-grid__card' position='relative'>
               {isEdit && (
                 <IconButton
@@ -188,18 +206,12 @@ const ProductGridEditor: React.FC<ProductGridEditorProps> = ({
                   onClick={() => handleRemoveProduct(productIndex)}
                 />
               )}
-              <Link
-                href={product.href}
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                <Image
-                  src={product.src}
-                  alt={product.context}
-                  className='product-grid__image'
-                  onClick={() => handleIconClick(productIndex, product.id)}
-                />
-              </Link>
+              <Image
+                src={product.src}
+                alt={product.context}
+                className='product-grid__image'
+                onClick={() => handleIconClick(productIndex, product.id)}
+              />
               {isEdit && (
                 <Box mt={2}>
                   <Input
