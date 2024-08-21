@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import { mediaIconsMap } from '@fixtures/icons';
-import { baseQuillToolbar } from '@fixtures/quill-configs';
+import { contentQuillToolbar } from '@fixtures/quill-configs';
 import { parseGradient } from '@helpers/gradient';
 import { updateBlock } from '@reducers/admin/design-pages';
 import { Edit2 } from 'lucide-react';
@@ -372,7 +372,7 @@ const ModernFooter: React.FC<FooterEditorProps> = ({
                         <>
                           <ReactQuill
                             theme='bubble'
-                            modules={{ toolbar: baseQuillToolbar }}
+                            modules={{ toolbar: contentQuillToolbar }}
                             value={item.context || ''}
                             onChange={(value) =>
                               handleQuillChange(value, sectionIndex, itemIndex)
@@ -550,7 +550,7 @@ const ModernFooter: React.FC<FooterEditorProps> = ({
           {isEdit ? (
             <ReactQuill
               theme='bubble'
-              modules={{ toolbar: baseQuillToolbar }}
+              modules={{ toolbar: contentQuillToolbar }}
               value={copyright}
               onChange={handleQuillCopyrightChange}
             />
