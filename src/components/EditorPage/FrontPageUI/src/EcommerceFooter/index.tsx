@@ -19,8 +19,10 @@ import {
 import { Component } from '@fixtures/componentLibrary';
 import { mediaIconsMap } from '@fixtures/icons';
 import { updateBlock } from '@reducers/admin/design-pages';
+import { Edit2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
+import { SketchPicker } from 'react-color';
 import { FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 
@@ -50,6 +52,12 @@ interface IconTextBlock {
   alt: string;
 }
 
+const parseGradient = (gradient: string) => {
+  const regex = /linear-gradient\(to right, ([^,]+), ([^)]+)\)/;
+  const match = gradient.match(regex);
+  return match ? [match[1].trim(), match[2].trim()] : ['#fbbf24', '#f97316'];
+};
+
 const EcommerceFooter: React.FC<FooterEditorProps> = ({
   element,
   index,
@@ -57,20 +65,38 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
   onBlur,
 }) => {
   const dispatch = useDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isIconOpen,
+    onOpen: onIconOpen,
+    onClose: onIconClose,
+  } = useDisclosure();
+
+  const [backgroundType, setBackgroundType] = useState<'solid' | 'gradient'>(
+    element.style?.backgroundGradient ? 'gradient' : 'solid',
+  );
+  const [backgroundColor, setBackgroundColor] = useState(
+    element.style?.backgroundColor || '#ffffff',
+  );
+
+  const initialGradient = element.style?.backgroundGradient
+    ? parseGradient(element.style.backgroundGradient)
+    : ['#fbbf24', '#f97316'];
+
+  const [gradientStart, setGradientStart] = useState(initialGradient[0]);
+  const [gradientEnd, setGradientEnd] = useState(initialGradient[1]);
 
   const [content, setContent] = useState(element.elements || []);
+
+  const [copyright, setCopyright] = useState<any>(
+    content.find((ml) => ml.id === 'copyright')?.context || [],
+  );
 
   const [iconTextBlocks, setIconTextBlocks] = useState<any>(
     content.find((el) => el.id === 'social-media')?.elements || [],
   );
 
   const [editingBlock, setEditingBlock] = useState<IconTextBlock | null>(null);
-
-  const {
-    isOpen: isIconOpen,
-    onOpen: onIconOpen,
-    onClose: onIconClose,
-  } = useDisclosure();
 
   useEffect(() => {
     if (!content.length && element.elements) {
@@ -233,13 +259,119 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
     );
   };
 
+  const handleQuillCopyrightChange = (value: string) => {
+    // 更新本地狀態
+    setCopyright(value);
+
+    // 更新 Redux 中的 state
+    const updatedContent = content.map((section) => {
+      if (section.id === 'copyright') {
+        return {
+          ...section,
+          context: value, // 更新 copyright section 的 context
+        };
+      }
+      return section;
+    });
+
+    setContent(updatedContent);
+
+    // 將更新發送到 Redux
+    dispatch(
+      updateBlock({
+        index,
+        block: {
+          ...element,
+          elements: updatedContent,
+        },
+      }),
+    );
+  };
+
+  const handleBackgroundChange = (
+    type: 'solid' | 'gradient',
+    color: string,
+  ) => {
+    if (type === 'solid') {
+      setBackgroundColor(color);
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundColor: color,
+              backgroundGradient: '', // 清除漸層背景
+            },
+          },
+        }),
+      );
+    } else if (type === 'gradient') {
+      const newGradient = `linear-gradient(to right, ${gradientStart}, ${color})`;
+      setGradientEnd(color);
+
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundGradient: newGradient,
+              backgroundColor: '',
+            },
+          },
+        }),
+      );
+    }
+  };
+
+  const handleBackgroundSave = () => {
+    if (backgroundType === 'solid') {
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundColor,
+              backgroundGradient: '', // 清除漸層背景
+            },
+          },
+        }),
+      );
+    } else if (backgroundType === 'gradient') {
+      const newBackgroundGradient = `linear-gradient(to right, ${gradientStart}, ${gradientEnd})`;
+
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundColor: '', // 清除單色背景
+              backgroundGradient: newBackgroundGradient,
+            },
+          },
+        }),
+      );
+    }
+    onClose(); // 關閉彈窗
+  };
+
   return (
     <Box
       as='footer'
       className={element.className || 'ecommerce-footer'}
-      bgGradient={
-        element.style?.backgroundGradient || 'linear(to-r, gray.700, gray.900)'
-      }
+      style={{
+        background:
+          backgroundType === 'gradient'
+            ? `linear-gradient(to right, ${gradientStart}, ${gradientEnd})`
+            : backgroundColor,
+      }}
     >
       <Container maxW='container.lg' py={8}>
         <Flex justify='space-between'>
@@ -389,10 +521,112 @@ const EcommerceFooter: React.FC<FooterEditorProps> = ({
                 </ModalContent>
               </Modal>
             )}
+
+            <IconButton
+              icon={<Edit2 />}
+              aria-label='設定背景'
+              onClick={onOpen}
+              variant='outline'
+              zIndex='100'
+              position='absolute'
+              left='100px'
+              top='10%'
+            />
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay backgroundColor='rgba(0, 0, 0, 0)' />
+              <ModalContent>
+                <ModalHeader>設定背景</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Box display='flex' mb={2}>
+                    <Button
+                      mr={2}
+                      onClick={() => setBackgroundType('solid')}
+                      isActive={backgroundType === 'solid'}
+                    >
+                      單色
+                    </Button>
+                    <Button
+                      onClick={() => setBackgroundType('gradient')}
+                      isActive={backgroundType === 'gradient'}
+                    >
+                      漸層
+                    </Button>
+                  </Box>
+                  {backgroundType === 'solid' ? (
+                    <Box
+                      style={{
+                        transform: 'scale(0.75)',
+                        transformOrigin: 'top left',
+                      }}
+                    >
+                      <SketchPicker
+                        color={backgroundColor}
+                        onChangeComplete={(color) =>
+                          handleBackgroundChange('solid', color.hex)
+                        }
+                      />
+                    </Box>
+                  ) : (
+                    <Flex justify='space-between'>
+                      <Box>
+                        <Box mb={2}>起始顏色</Box>
+                        <Box
+                          style={{
+                            transform: 'scale(0.75)',
+                            transformOrigin: 'top left',
+                          }}
+                        >
+                          <SketchPicker
+                            color={gradientStart}
+                            onChangeComplete={(color) =>
+                              setGradientStart(color.hex)
+                            }
+                          />
+                        </Box>
+                      </Box>
+                      <Box>
+                        <Box mb={2}>結束顏色</Box>
+                        <Box
+                          style={{
+                            transform: 'scale(0.75)',
+                            transformOrigin: 'top left',
+                          }}
+                        >
+                          <SketchPicker
+                            color={gradientEnd}
+                            onChangeComplete={(color) =>
+                              handleBackgroundChange('gradient', color.hex)
+                            }
+                          />
+                        </Box>
+                      </Box>
+                    </Flex>
+                  )}
+                  <Button mt={4} onClick={handleBackgroundSave}>
+                    確認
+                  </Button>
+                </ModalBody>
+              </ModalContent>
+            </Modal>
           </>
         )}
-        <Box className='ecommerce-footer__copyright' textAlign='center' mt={8}>
-          &copy; 2024 您的電商網站名稱. 保留所有權利。
+
+        <Box>
+          {isEdit ? (
+            <ReactQuill
+              theme='bubble'
+              modules={{ toolbar: baseQuillToolbar }}
+              value={copyright}
+              onChange={handleQuillCopyrightChange}
+            />
+          ) : (
+            <span
+              dangerouslySetInnerHTML={{
+                __html: copyright || '',
+              }}
+            />
+          )}
         </Box>
       </Container>
     </Box>

@@ -331,6 +331,13 @@ export const componentLibrary: Record<string, Component> = {
           },
         ],
       },
+      {
+        id: 'copyright',
+        tagName: 'span',
+        className: 'ecommerce-footer__copyright',
+        context: '&copy; 2024 您的電商網站名稱. 保留所有權利。',
+        editable: true,
+      },
     ],
   },
   modern_footer: {
