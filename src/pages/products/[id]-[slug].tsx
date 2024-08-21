@@ -130,26 +130,38 @@ const ProductDetails = () => {
       >
         <GridItem p='1rem' pos='relative'>
           <AddToWishlistButton product={product} />
-          <Image
-            src={product.coverImage.imageUrl}
-            alt={product.name}
-            mx='auto'
-          />
+          {product.coverImage?.imageUrl ? (
+            <Image
+              src={product.coverImage.imageUrl}
+              alt={product.name}
+              mx='auto'
+            />
+          ) : (
+            <Box mx='auto' textAlign='center'>
+              <Text>圖片無法顯示</Text>
+            </Box>
+          )}
           <Flex>
             {product.images?.length !== 0 &&
-              product.images?.map((image: any, i: number) => (
-                <Image
-                  key={i}
-                  src={image.imageUrl}
-                  alt={product.name}
-                  mx='auto'
-                  boxSize='70px'
-                  rounded='md'
-                  shadow='sm'
-                  borderWidth='1px'
-                  borderColor='gray.100'
-                />
-              ))}
+              product.images?.map((image: any, i: number) =>
+                image?.imageUrl ? (
+                  <Image
+                    key={i}
+                    src={image.imageUrl}
+                    alt={product.name}
+                    mx='auto'
+                    boxSize='70px'
+                    rounded='md'
+                    shadow='sm'
+                    borderWidth='1px'
+                    borderColor='gray.100'
+                  />
+                ) : (
+                  <Box key={i} textAlign='center'>
+                    <Text>圖片無法顯示</Text>
+                  </Box>
+                ),
+              )}
           </Flex>
         </GridItem>
         <GridItem p='1rem'>
@@ -204,13 +216,28 @@ const ProductDetails = () => {
         {product.detailDescription.map((block: any, index: number) => (
           <Box key={index} className={block.className} mb='4'>
             {block.elements.map((element: any, elemIndex: number) => {
-              const Tag = element.tagName;
-              return (
-                <Tag
-                  key={elemIndex}
-                  dangerouslySetInnerHTML={{ __html: element.context }}
-                />
-              );
+              if (element.tagName === 'img' && element.src) {
+                return (
+                  <Image
+                    key={elemIndex}
+                    src={element.src}
+                    alt={`image-${elemIndex}`}
+                    mx='auto'
+                  />
+                );
+              } else {
+                // 處理其他標籤
+                const Tag = element.tagName;
+                return (
+                  <Tag key={elemIndex}>
+                    {element.context ? (
+                      <div
+                        dangerouslySetInnerHTML={{ __html: element.context }}
+                      />
+                    ) : null}
+                  </Tag>
+                );
+              }
             })}
           </Box>
         ))}
