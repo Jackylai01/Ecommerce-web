@@ -3,6 +3,7 @@ import {
   Button,
   IconButton,
   Image,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -197,7 +198,7 @@ const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
                   element.elements?.find((e) => e.id === 'product_item')
                     ?.className
                 }
-                style={{ color: textColor }} // 套用全域的文字顏色
+                style={{ color: textColor }}
               >
                 <Box
                   as='article'
@@ -207,18 +208,20 @@ const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
                     )?.className
                   }
                 >
-                  <Image
-                    src={item.coverImage.imageUrl}
-                    alt='封面圖片'
-                    className={
-                      element.elements?.find((e) => e.id === 'product_image')
-                        ?.className
-                    }
-                    boxSize='full'
-                    objectFit='cover'
-                    maxHeight='18rem'
-                    borderRadius='lg'
-                  />
+                  <Link href={`/products/${item._id}-${item.slug}`}>
+                    <Image
+                      src={item.coverImage.imageUrl}
+                      alt='封面圖片'
+                      className={
+                        element.elements?.find((e) => e.id === 'product_image')
+                          ?.className
+                      }
+                      boxSize='full'
+                      objectFit='cover'
+                      maxHeight='18rem'
+                      borderRadius='lg'
+                    />
+                  </Link>
                 </Box>
                 <Box
                   as='section'
