@@ -38,7 +38,6 @@ const ProductsPages: NextPage = () => {
   const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
-    list,
     status: {
       addProductSuccess,
       addProductFailed,
@@ -49,7 +48,6 @@ const ProductsPages: NextPage = () => {
     },
     error: { addProductError, bulkUploadProductsError },
   } = useAppSelector((state) => state.adminProducts);
-  const { uploadedImages } = useAppSelector((state) => state.adminUpload);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');
@@ -92,7 +90,6 @@ const ProductsPages: NextPage = () => {
   ]);
 
   const handleSubmit = async (data: any) => {
-    // 處理新增產品的邏輯
     dispatch(addProductAsync(data));
     dispatch(resetAdminUpload());
   };
@@ -117,6 +114,13 @@ const ProductsPages: NextPage = () => {
       dispatch(bulkUploadProductsAsync(formData));
     }
     onClose();
+  };
+
+  const handleDownloadSample = () => {
+    const link = document.createElement('a');
+    link.href = '/samples/sample-upload.xlsx';
+    link.download = 'sample-upload.xlsx';
+    link.click();
   };
 
   useEffect(() => {
@@ -146,13 +150,16 @@ const ProductsPages: NextPage = () => {
         </TabsLayout>
 
         {/* 批量上傳模態框 */}
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} size='xl'>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>批量上傳產品</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <input type='file' onChange={handleFileChange} />
+              <Button mt={4} colorScheme='teal' onClick={handleDownloadSample}>
+                下載範例檔案
+              </Button>
             </ModalBody>
             <ModalFooter>
               <Button colorScheme='blue' onClick={handleFileUpload}>
