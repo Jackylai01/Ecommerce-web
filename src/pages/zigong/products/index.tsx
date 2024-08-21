@@ -1,15 +1,4 @@
-import {
-  Button,
-  IconButton,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { useDisclosure } from '@chakra-ui/react';
 import { ProductFormContent } from '@components/Form/FormCRUD/ProductsContent';
 import AddButton from '@components/Icons/AddFormIcon';
 import LoadingLayout from '@components/Layout/LoadingLayout';
@@ -19,15 +8,11 @@ import { ProductsConfig } from '@fixtures/Tabs-configs';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { resetProductState } from '@reducers/admin/products';
-import {
-  addProductAsync,
-  bulkUploadProductsAsync,
-} from '@reducers/admin/products/actions';
+import { addProductAsync } from '@reducers/admin/products/actions';
 import { resetAdminUpload } from '@reducers/admin/upload';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import { AiOutlineUpload } from 'react-icons/ai';
 
 const ProductTableContainer = dynamic(
   () => import('@components/Layout/AdminLayout/Products'),
@@ -52,7 +37,6 @@ const ProductsPages: NextPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');
   const [modalTitle, setModalTitle] = useState<string>('新增產品');
-  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (addProductSuccess) {
@@ -98,30 +82,7 @@ const ProductsPages: NextPage = () => {
     setIsModalOpen(false);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-    }
-  };
-
   /** 處理批量上傳產品的API */
-  const handleFileUpload = () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      dispatch(bulkUploadProductsAsync(formData));
-    }
-    onClose();
-  };
-
-  const handleDownloadSample = () => {
-    const link = document.createElement('a');
-    link.href = '/samples/sample-upload.xlsx';
-    link.download = 'sample-upload.xlsx';
-    link.click();
-  };
 
   useEffect(() => {
     return () => {
@@ -137,40 +98,9 @@ const ProductsPages: NextPage = () => {
           formContent={<ProductFormContent />}
           onSubmit={handleSubmit}
         />
-        <IconButton
-          icon={<AiOutlineUpload />}
-          aria-label='Upload products'
-          colorScheme='blue'
-          ml={4}
-          onClick={onOpen}
-        />
-
         <TabsLayout tabsConfig={ProductsConfig}>
           <ProductTableContainer />
         </TabsLayout>
-
-        {/* 批量上傳模態框 */}
-        <Modal isOpen={isOpen} onClose={onClose} size='xl'>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>批量上傳產品</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <input type='file' onChange={handleFileChange} />
-              <Button mt={4} colorScheme='teal' onClick={handleDownloadSample}>
-                下載範例檔案
-              </Button>
-            </ModalBody>
-            <ModalFooter>
-              <Button colorScheme='blue' onClick={handleFileUpload}>
-                上傳
-              </Button>
-              <Button variant='ghost' onClick={onClose}>
-                取消
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
 
         <MessageModal
           title={modalTitle}
