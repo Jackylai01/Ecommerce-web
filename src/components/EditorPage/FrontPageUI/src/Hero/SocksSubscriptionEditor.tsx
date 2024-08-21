@@ -19,6 +19,8 @@ import {
 } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import { iconsMap } from '@fixtures/icons';
+import { baseQuillToolbar } from '@fixtures/quill-configs';
+import { parseGradient } from '@helpers/gradient';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { updateBlock } from '@reducers/admin/design-pages';
 import { uploadImageAsync } from '@reducers/admin/design-pages/actions';
@@ -28,16 +30,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SketchPicker } from 'react-color';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-
-const baseQuillToolbar = [
-  [{ header: [1, 2, false] }],
-  ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
-  [{ color: [] }],
-  [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-  ['link'],
-  [{ align: [] }],
-  ['clean'],
-];
 
 interface SocksSubscriptionEditorProps {
   index: number;
@@ -57,12 +49,6 @@ interface IconTextBlock {
   icon: keyof typeof iconsMap;
   context: string;
 }
-
-const parseGradient = (gradient: string) => {
-  const regex = /linear-gradient\(to right, ([^,]+), ([^)]+)\)/;
-  const match = gradient.match(regex);
-  return match ? [match[1].trim(), match[2].trim()] : ['#fbbf24', '#f97316'];
-};
 
 const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
   index,

@@ -17,3 +17,15 @@ export const modules = {
     },
   },
 };
+
+/** 頁面設計用 */
+
+const baseQuillToolbar = [
+  [{ header: [1, 2, false] }],
+  ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
+  [{ color: [] }],
+  [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+  ['link'],
+  [{ align: [] }],
+  ['clean'],
+];

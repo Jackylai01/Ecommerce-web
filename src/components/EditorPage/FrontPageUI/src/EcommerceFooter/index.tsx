@@ -18,6 +18,8 @@ import {
 } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import { mediaIconsMap } from '@fixtures/icons';
+import { baseQuillToolbar } from '@fixtures/quill-configs';
+import { parseGradient } from '@helpers/gradient';
 import { updateBlock } from '@reducers/admin/design-pages';
 import { Edit2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -27,16 +29,6 @@ import { FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-
-const baseQuillToolbar = [
-  [{ header: [1, 2, false] }],
-  ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
-  [{ color: [] }],
-  [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-  ['link'],
-  [{ align: [] }],
-  ['clean'],
-];
 
 interface FooterEditorProps {
   element: Component;
@@ -51,12 +43,6 @@ interface IconTextBlock {
   href: string;
   alt: string;
 }
-
-const parseGradient = (gradient: string) => {
-  const regex = /linear-gradient\(to right, ([^,]+), ([^)]+)\)/;
-  const match = gradient.match(regex);
-  return match ? [match[1].trim(), match[2].trim()] : ['#fbbf24', '#f97316'];
-};
 
 const EcommerceFooter: React.FC<FooterEditorProps> = ({
   element,

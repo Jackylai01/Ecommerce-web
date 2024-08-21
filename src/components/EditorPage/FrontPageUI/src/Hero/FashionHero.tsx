@@ -8,6 +8,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
+import { baseQuillToolbar } from '@fixtures/quill-configs';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useEditModeNavigation from '@hooks/useEditModeNavigation';
 import { updateBlock } from '@reducers/admin/design-pages';
@@ -16,16 +17,6 @@ import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-
-const baseQuillToolbar = [
-  [{ header: [1, 2, false] }],
-  ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
-  [{ color: [] }],
-  [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-  ['link'],
-  [{ align: [] }],
-  ['clean'],
-];
 
 interface FashionHeroEditorProps {
   index: number;
