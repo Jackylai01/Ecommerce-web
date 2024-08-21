@@ -114,7 +114,6 @@ export const componentLibrary: Record<string, Component> = {
       },
     ],
   },
-
   socks_subscription: {
     type: 'socks-subscription',
     name: 'Socks Subscription',
@@ -480,6 +479,92 @@ export const componentLibrary: Record<string, Component> = {
         className: 'modern-footer__copyright',
         context: '&copy; 2024 您的電商網站名稱. 保留所有權利。',
         editable: true,
+      },
+    ],
+  },
+  enhanced_shopping_highlights: {
+    type: 'shopping-highlights',
+    name: 'Enhanced Shopping Highlights',
+    className: 'shopping-highlights',
+    style: {
+      backgroundColor: '#ffffff',
+    },
+    elements: [
+      {
+        id: 'title',
+        tagName: 'h2',
+        context: '產品列表',
+        className: 'shopping-highlights__title',
+        style: {
+          textAlign: 'center',
+          margin: '20px 0',
+        },
+      },
+      {
+        id: 'product_grid',
+        tagName: 'main',
+        className: 'shopping-highlights__grid',
+        elements: [
+          {
+            id: 'product_item',
+            tagName: 'section',
+            className: 'shopping-highlights__item',
+            elements: [
+              {
+                id: 'product_image_container',
+                tagName: 'article',
+                className: 'shopping-highlights__image-container',
+                elements: [
+                  {
+                    id: 'product_image',
+                    tagName: 'img',
+                    src: '',
+                    alt: '封面圖片',
+                    className: 'shopping-highlights__image',
+                  },
+                ],
+              },
+              {
+                id: 'product_content',
+                tagName: 'section',
+                className: 'shopping-highlights__content',
+                elements: [
+                  {
+                    id: 'product_title',
+                    tagName: 'h3',
+                    context: '',
+                    className: 'shopping-highlights__product-title',
+                  },
+                  {
+                    id: 'product_description',
+                    tagName: 'p',
+                    context: '',
+                    className: 'shopping-highlights__description',
+                  },
+                  {
+                    id: 'product_footer',
+                    tagName: 'aside',
+                    className: 'shopping-highlights__footer',
+                    elements: [
+                      {
+                        id: 'product_price',
+                        tagName: 'span',
+                        context: '',
+                        className: 'shopping-highlights__price',
+                      },
+                      {
+                        id: 'add_to_cart_button',
+                        tagName: 'button',
+                        className: 'add-to-cart-button',
+                        context: 'Add to Cart',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       },
     ],
   },

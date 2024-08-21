@@ -4,6 +4,7 @@ import { QueryParams } from '@models/entities/shared/query';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   apiAddProduct,
+  apiBulkUploadProducts,
   apiDeleteAllProducts,
   apiDeleteProduct,
   apiDeleteProductImage,
@@ -22,6 +23,7 @@ export enum ProductAction {
   deleteAllProducts = 'deleteAllProducts',
   updateProductStatus = 'updateProductStatus',
   deleteProductImage = 'deleteProductImage',
+  bulkUploadProducts = 'bulkUploadProducts',
 }
 
 export const getAllProductsAsync = createAsyncThunk(
@@ -85,5 +87,13 @@ export const deleteProductImageAsync = createAsyncThunk(
   async ({ productId, imageId }: { productId: string; imageId: string }) => {
     const response = await apiDeleteProductImage(productId, imageId);
     return { productId, imageId, data: response.result.data };
+  },
+);
+
+export const bulkUploadProductsAsync = createAsyncThunk(
+  `${ReducerName.PRODUCT}/${ProductAction.bulkUploadProducts}`,
+  async (formData: FormData) => {
+    const response = await apiBulkUploadProducts(formData);
+    return response.result.data;
   },
 );

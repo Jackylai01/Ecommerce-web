@@ -1,0 +1,114 @@
+.shopping-highlights {
+  padding: 2rem;
+  background: linear-gradient(to right, #e9d7fe, #ffd6e7);
+  min-height: 100vh;
+
+  &__title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    gap: 2rem;
+  }
+
+  &__item {
+    background-color: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  &__image-container {
+    position: relative;
+  }
+
+  &__image {
+    width: 100%;
+    height: 12rem;
+    object-fit: cover;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+
+    &--visible {
+      opacity: 1;
+    }
+  }
+
+  &__overlay-text {
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  &__content {
+    padding: 1.5rem;
+  }
+
+  &__product-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+
+  &__description {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #7f22a6;
+  }
+
+  &__button {
+    padding: 0.5rem 1rem;
+    background: linear-gradient(to right, #7f22a6, #ec4899);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background 0.3s;
+
+    &:hover {
+      background: linear-gradient(to right, #6b21a8, #db2777);
+    }
+  }
+}

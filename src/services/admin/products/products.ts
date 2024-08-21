@@ -2,6 +2,7 @@ import { formatQueryString } from '@helpers/query';
 import { PagingQuery } from '@models/entities/shared/pagination';
 import { Product } from '@models/entities/shared/products';
 import {
+  ApiListResult,
   ApiPaginationResult,
   ApiResult,
   deleteRequest,
@@ -72,4 +73,11 @@ export const apiDeleteProductImage = async (
   return deleteRequest<ApiResult<any>>(
     `/products/${productId}/image/${encodedPublicId}`,
   );
+};
+
+/**
+ * 批量上傳產品
+ */
+export const apiBulkUploadProducts = async (formData: FormData) => {
+  return postRequest<ApiListResult<any>>('/products/bulk-upload', formData);
 };

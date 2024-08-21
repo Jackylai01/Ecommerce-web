@@ -8,6 +8,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   ProductAction,
   addProductAsync,
+  bulkUploadProductsAsync,
   deleteAllProductsAsync,
   deleteProductAsync,
   deleteProductImageAsync,
@@ -104,6 +105,13 @@ const productSlice = createSlice({
         state.productDetails.images = state.productDetails.images.filter(
           (image) => image.imageId !== imageId,
         );
+      }
+    });
+    builder.addCase(bulkUploadProductsAsync.fulfilled, (state, action) => {
+      if (action.payload && Array.isArray(action.payload)) {
+        state.list = state.list
+          ? [...state.list, ...action.payload]
+          : action.payload;
       }
     });
     asyncMatcher(builder, ReducerName.PRODUCT);

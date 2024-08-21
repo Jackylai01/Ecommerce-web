@@ -31,6 +31,7 @@ const categorizedComponents: any = {
     'background_image',
     'footer_a',
     'modern_footer',
+    'enhanced_shopping_highlights',
   ],
 };
 

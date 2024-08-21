@@ -9,6 +9,7 @@ import SocksSubscriptionEditor from './src/Hero/SocksSubscriptionEditor';
 import ModernFooter from './src/modernFooter';
 import NavbarEditor from './src/navbar/NavbarEditor';
 import NavbarEditorSecond from './src/navbar/NavbarEditorSecond';
+import EnhancedShoppingHighlights from './src/prodcutsList';
 import ProductGridEditor from './src/ProductGrid';
 
 interface EditorComponentFactoryProps {
@@ -95,6 +96,14 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
       return (
         <ModernFooter
           index={index}
+          element={component}
+          isEdit={isEdit}
+          onBlur={onBlur}
+        />
+      );
+    case 'shopping-highlights':
+      return (
+        <EnhancedShoppingHighlights
           element={component}
           isEdit={isEdit}
           onBlur={onBlur}
