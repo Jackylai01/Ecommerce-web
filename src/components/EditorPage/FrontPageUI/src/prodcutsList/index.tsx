@@ -21,7 +21,6 @@ const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  // 從 Redux 中提取產品列表和分頁資料
   const {
     list: productsList,
     metadata,
@@ -74,6 +73,10 @@ const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
                       element.elements?.find((e) => e.id === 'product_image')
                         ?.className
                     }
+                    boxSize='full'
+                    objectFit='cover'
+                    maxHeight='18rem' // Constraint to ensure no overflow
+                    borderRadius='lg' // Adds rounded corners to the image
                   />
                 </Box>
                 <Box
@@ -118,9 +121,9 @@ const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
                     >
                       {item.price}
                     </Box>
-                    <AddToCartButton product={item} />
                   </Box>
                 </Box>
+                <AddToCartButton product={item} />
               </Box>
             ))}
           </Box>
