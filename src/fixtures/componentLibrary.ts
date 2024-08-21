@@ -14,6 +14,7 @@ export interface Component {
     width?: number;
     height?: number;
     imageAlignment?: string;
+    color?: string;
   };
 }
 
@@ -488,6 +489,8 @@ export const componentLibrary: Record<string, Component> = {
     className: 'shopping-highlights',
     style: {
       backgroundColor: '#ffffff',
+      backgroundGradient: 'linear-gradient(to right, #333333, #666666)',
+      color: '#000000',
     },
     elements: [
       {

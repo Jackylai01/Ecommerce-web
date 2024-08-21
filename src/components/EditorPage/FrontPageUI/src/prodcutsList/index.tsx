@@ -1,25 +1,65 @@
-import { Box, Image } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  IconButton,
+  Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { AddToCartButton } from '@components/Cart/AddToCartButton';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import Pagination from '@components/Pagination';
 import { Component } from '@fixtures/componentLibrary';
+import { parseGradient } from '@helpers/gradient';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+
+import { updateBlock } from '@reducers/admin/design-pages';
 import { publicProductsListAsync } from '@reducers/public/products/actions';
-import { useEffect } from 'react';
+import { Edit2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { SketchPicker } from 'react-color';
 
 interface EnhancedShoppingHighlightsProps {
+  index: number;
   element: Component;
   isEdit: boolean;
   onBlur: () => void;
 }
 
 const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
+  index,
   element,
   isEdit,
   onBlur,
 }) => {
   const dispatch = useAppDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [backgroundType, setBackgroundType] = useState<
+    'solid' | 'gradient' | 'color'
+  >(
+    element.style?.backgroundGradient
+      ? 'gradient'
+      : element.style?.backgroundColor
+      ? 'color'
+      : 'solid',
+  );
+  const initialGradient = element.style?.backgroundGradient
+    ? parseGradient(element.style.backgroundGradient)
+    : ['#fbbf24', '#f97316'];
+
+  const [gradientStart, setGradientStart] = useState(initialGradient[0]);
+  const [gradientEnd, setGradientEnd] = useState(initialGradient[1]);
+
+  const [backgroundColor, setBackgroundColor] = useState(
+    element.style?.backgroundColor || '#ffffff',
+  );
+  const [textColor, setTextColor] = useState(element.style?.color || '#000000');
 
   const {
     list: productsList,
@@ -32,12 +72,112 @@ const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
     dispatch(publicProductsListAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
+  const handleBackgroundChange = (
+    type: 'solid' | 'gradient',
+    color: string,
+  ) => {
+    if (type === 'solid') {
+      setBackgroundColor(color);
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundColor: color,
+              backgroundGradient: '', // 清除漸層背景
+            },
+          },
+        }),
+      );
+    } else if (type === 'gradient') {
+      const newGradient = `linear-gradient(to right, ${gradientStart}, ${color})`;
+      setGradientEnd(color);
+
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundGradient: newGradient,
+              backgroundColor: '',
+            },
+          },
+        }),
+      );
+    }
+  };
+
+  const handleBackgroundSave = () => {
+    if (backgroundType === 'solid') {
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundColor,
+              backgroundGradient: '', // 清除漸層背景
+            },
+          },
+        }),
+      );
+    } else if (backgroundType === 'gradient') {
+      const newBackgroundGradient = `linear-gradient(to right, ${gradientStart}, ${gradientEnd})`;
+
+      dispatch(
+        updateBlock({
+          index,
+          block: {
+            ...element,
+            style: {
+              ...element.style,
+              backgroundColor: '', // 清除單色背景
+              backgroundGradient: newBackgroundGradient,
+            },
+          },
+        }),
+      );
+    }
+    onClose(); // 關閉彈窗
+  };
+
+  const handleColorChange = (color: string) => {
+    setTextColor(color);
+    dispatch(
+      updateBlock({
+        index,
+        block: {
+          ...element,
+          style: {
+            ...element.style,
+            color: color,
+          },
+        },
+      }),
+    );
+  };
+
   return (
     <LoadingLayout isLoading={productsListLoading}>
-      <Box className={element.className} style={element.style}>
+      <Box
+        className={element.className}
+        style={{
+          background:
+            backgroundType === 'gradient'
+              ? `linear-gradient(to right, ${gradientStart}, ${gradientEnd})`
+              : backgroundColor,
+          color: textColor,
+        }}
+      >
         <Box
           as='h2'
           className={element.elements?.find((e) => e.id === 'title')?.className}
+          style={{ color: textColor }}
         >
           {element.elements?.find((e) => e.id === 'title')?.context ||
             '產品列表'}
@@ -57,6 +197,7 @@ const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
                   element.elements?.find((e) => e.id === 'product_item')
                     ?.className
                 }
+                style={{ color: textColor }} // 套用全域的文字顏色
               >
                 <Box
                   as='article'
@@ -75,8 +216,8 @@ const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
                     }
                     boxSize='full'
                     objectFit='cover'
-                    maxHeight='18rem' // Constraint to ensure no overflow
-                    borderRadius='lg' // Adds rounded corners to the image
+                    maxHeight='18rem'
+                    borderRadius='lg'
                   />
                 </Box>
                 <Box
@@ -85,6 +226,7 @@ const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
                     element.elements?.find((e) => e.id === 'product_content')
                       ?.className
                   }
+                  style={{ color: textColor }} // 套用全域的文字顏色
                 >
                   <Box
                     as='h3'
@@ -92,6 +234,7 @@ const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
                       element.elements?.find((e) => e.id === 'product_title')
                         ?.className
                     }
+                    style={{ color: textColor }}
                   >
                     {item.name}
                   </Box>
@@ -130,6 +273,88 @@ const EnhancedShoppingHighlights: React.FC<EnhancedShoppingHighlightsProps> = ({
         )}
         {metadata && <Pagination metadata={metadata} />}
       </Box>
+
+      {isEdit && (
+        <IconButton
+          icon={<Edit2 />}
+          aria-label='設定背景'
+          onClick={onOpen}
+          variant='outline'
+          zIndex='100'
+          position='absolute'
+          left='100px'
+          top='10%'
+        />
+      )}
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>設定背景</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Box display='flex' mb={2}>
+              <Button
+                mr={2}
+                onClick={() => setBackgroundType('solid')}
+                isActive={backgroundType === 'solid'}
+              >
+                單色
+              </Button>
+              <Button
+                mr={2}
+                onClick={() => setBackgroundType('gradient')}
+                isActive={backgroundType === 'gradient'}
+              >
+                漸層
+              </Button>
+              <Button
+                onClick={() => setBackgroundType('color')}
+                isActive={backgroundType === 'color'}
+              >
+                文字顏色
+              </Button>
+            </Box>
+
+            {backgroundType === 'solid' && (
+              <SketchPicker
+                color={backgroundColor}
+                onChangeComplete={(color) =>
+                  handleBackgroundChange('solid', color.hex)
+                }
+              />
+            )}
+
+            {backgroundType === 'gradient' && (
+              <Box>
+                <Box>起始顏色</Box>
+                <SketchPicker
+                  color={gradientStart}
+                  onChangeComplete={(color) => setGradientStart(color.hex)}
+                />
+                <Box mt={2}>結束顏色</Box>
+                <SketchPicker
+                  color={gradientEnd}
+                  onChangeComplete={(color) =>
+                    handleBackgroundChange('gradient', color.hex)
+                  }
+                />
+              </Box>
+            )}
+
+            {backgroundType === 'color' && (
+              <SketchPicker
+                color={textColor}
+                onChangeComplete={(color) => handleColorChange(color.hex)}
+              />
+            )}
+
+            <Button mt={4} onClick={handleBackgroundSave}>
+              確認
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </LoadingLayout>
   );
 };

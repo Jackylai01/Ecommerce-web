@@ -104,6 +104,7 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
     case 'shopping-highlights':
       return (
         <EnhancedShoppingHighlights
+          index={index}
           element={component}
           isEdit={isEdit}
           onBlur={onBlur}

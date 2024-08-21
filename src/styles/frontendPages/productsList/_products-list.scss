@@ -1,12 +1,12 @@
 .shopping-highlights {
   padding: 2rem;
+  margin: 1rem;
 
   &__title {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
     margin-bottom: 2rem;
-    color: #333;
   }
 
   &__grid {
@@ -64,7 +64,6 @@
   }
 
   &__overlay-text {
-    color: #fff;
     font-size: 1.25rem;
     font-weight: bold;
   }
@@ -77,13 +76,12 @@
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: #333;
+    margin-top: 5rem;
   }
 
   &__description {
     font-size: 1rem;
-    color: #666;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
   }
 
   &__footer {
