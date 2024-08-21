@@ -157,7 +157,6 @@ const AdminEditPageLayout: React.FC = () => {
     createDesignPageSuccess,
     createDesignPageError,
     toast,
-    currentRoute,
     dispatch,
   ]);
 
