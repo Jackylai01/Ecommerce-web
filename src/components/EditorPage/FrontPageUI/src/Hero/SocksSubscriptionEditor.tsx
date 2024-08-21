@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { Component } from '@fixtures/componentLibrary';
 import { iconsMap } from '@fixtures/icons';
-import { baseQuillToolbar } from '@fixtures/quill-configs';
+import { contentQuillToolbar } from '@fixtures/quill-configs';
 import { parseGradient } from '@helpers/gradient';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { updateBlock } from '@reducers/admin/design-pages';
@@ -248,7 +248,7 @@ const SocksSubscriptionEditor: React.FC<SocksSubscriptionEditorProps> = ({
     <ReactQuill
       className={className}
       theme='bubble'
-      modules={{ toolbar: baseQuillToolbar }}
+      modules={{ toolbar: contentQuillToolbar }}
       placeholder={placeholder}
       value={content[elIndex]?.context || ''}
       onChange={(value) => handleChange(elIndex, 'context', value)}

@@ -1,4 +1,5 @@
 const colorList = [
+  '#000000', // 黑色
   '#f8f8f4', // 亮白
   '#197879', // 深青绿
   '#00b050', // 绿
@@ -35,13 +36,7 @@ export const contentQuillToolbar = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
   ['bold', 'italic', 'underline', 'strike', 'blockquote'],
   [{ color: colorList }],
-  [
-    { align: [] },
-    { list: 'ordered' },
-    { list: 'bullet' },
-    { indent: '-1' },
-    { indent: '+1' },
-  ],
+  [{ size: ['small', false, 'large', 'huge'] }],
   ['link'],
   ['clean'],
 ];
