@@ -4,6 +4,10 @@ import {
   apiCreatePayments,
   apiGetPaymentStatus,
   apiGetShipmentData,
+  apiLinePayConfirm,
+  apiLinePayRequest,
+  apiLinePayStatusAsync,
+  apiPublicCancelPaymentOrder,
   apiPublicCreateOrder,
   apiPublicHandleClientReply,
   apiPublicRedirectToLogisticsSelection,
@@ -17,6 +21,9 @@ export enum PaymentAsyncAction {
   getPaymentNotify = 'getPaymentNotify',
   getShipmentData = 'getShipmentData',
   getPaymentStatus = 'getPaymentStatus',
+  linePayRequest = 'linePayRequest',
+  linePayConfirm = 'linePayConfirm',
+  getLinePayStatus = 'getLinePayStatus',
 }
 
 export const createOrderAsync = createAsyncThunk(
@@ -51,6 +58,7 @@ export const handleClientReplyAsync = createAsyncThunk(
   },
 );
 
+/** 綠界金流付款 */
 export const createPaymentAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.createPayment}`,
   async (data: any) => {
@@ -71,6 +79,54 @@ export const getPaymentStatusAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.getPaymentStatus}`,
   async (MerchantTradeNo: string) => {
     const response = await apiGetPaymentStatus(MerchantTradeNo);
+    return response.result.data;
+  },
+);
+
+/**
+ * 發起 LinePay 付款請求
+ */
+export const linePayRequestAsync = createAsyncThunk(
+  `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.linePayRequest}`,
+
+  async (body: any) => {
+    const response = await apiLinePayRequest(body);
+    return response.result.data;
+  },
+);
+
+/**
+ * 確認 LinePay 支付
+ */
+export const linePayConfirmAsync = createAsyncThunk(
+  `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.linePayConfirm}`,
+  async ({
+    transactionId,
+    orderId,
+  }: {
+    transactionId: string;
+    orderId: string;
+  }) => {
+    const response = await apiLinePayConfirm(transactionId, orderId);
+    return response.result;
+  },
+);
+
+/**
+ *  LinePay 支付失敗取消訂單
+ */
+export const linePayCancelPaymentOrderAsync = createAsyncThunk(
+  `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.linePayConfirm}`,
+  async (orderId: string) => {
+    const response = await apiPublicCancelPaymentOrder(orderId);
+    return response.result.data;
+  },
+);
+
+export const getLinePayStatusAsync = createAsyncThunk(
+  `${ReducerName.PUBLIC_PAYMENTS}/${PaymentAsyncAction.getLinePayStatus}`,
+  async (orderId: string) => {
+    const response = await apiLinePayStatusAsync(orderId);
     return response.result.data;
   },
 );

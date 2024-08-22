@@ -32,6 +32,7 @@ import {
   createOrderAsync,
   createPaymentAsync,
   getShipmentDataAsync,
+  linePayRequestAsync,
   redirectToLogisticsSelectionAsync,
 } from '@reducers/public/payments/actions';
 import { NextPage } from 'next';
@@ -77,6 +78,7 @@ const CheckoutPage: NextPage = () => {
     logisticsSelection,
     shipmentData: shipmentDataFromState,
     payment,
+    linePayRequest,
     status: {
       createOrderSuccess,
       createOrderLoading,
@@ -87,6 +89,9 @@ const CheckoutPage: NextPage = () => {
       createPaymentFailed,
       createPaymentLoading,
       redirectToLogisticsSelectionLoading,
+      linePayRequestFailed,
+      linePayRequestLoading,
+      linePayRequestSuccess,
     },
     error: { createOrderError },
   } = useAppSelector((state) => state.publicPayments);
@@ -293,21 +298,47 @@ const CheckoutPage: NextPage = () => {
 
   const handlePaymentSubmit = async () => {
     if (order) {
-      const orderDiscountCode =
-        order.discountCodes && order.discountCodes.length > 0
-          ? order.discountCodes[0]
-          : '';
+      try {
+        const discountCode =
+          order.discountCodes && order.discountCodes.length > 0
+            ? order.discountCodes[0]
+            : '';
 
-      const paymentData = {
-        orderId: order._id,
-        TradeDesc: `購買於 我的商店 - 訂單編號 ${order._id}`,
-        ItemName: order.products.map((item: any) => item.name).join('#'),
-        ChoosePayment: 'ALL',
-        TotalAmount: total,
-        discountCodes: orderDiscountCode,
-        freeShipping: freeShipping,
-      };
-      await dispatch(createPaymentAsync(paymentData));
+        const freeShipping = order.freeShipping || false;
+        // 根據選擇的支付方式，處理相應的金流
+        if (order.paymentMethod === 'LinePay') {
+          const linePayData = {
+            orderId: order._id,
+            freeShipping: freeShipping,
+          };
+
+          // 發起 LinePay 付款請求
+          dispatch(linePayRequestAsync(linePayData));
+          if (linePayRequestSuccess && linePayRequest) {
+            window.location.href = linePayRequest;
+          }
+        } else if (formData.paymentMethod === 'EcPay') {
+          const paymentData = {
+            orderId: order._id,
+            TradeDesc: `購買於 我的商店 - 訂單編號 ${order._id}`,
+            ItemName: order.products.map((item: any) => item.name).join('#'),
+            ChoosePayment: 'ALL',
+            TotalAmount: total, // 計算過折扣和免運費後的最終金額
+            discountCodes: discountCode,
+            freeShipping: freeShipping,
+          };
+
+          dispatch(createPaymentAsync(paymentData));
+        }
+      } catch (error) {
+        console.error('Payment request error:', error);
+        toast({
+          title: '付款請求失敗',
+          description: '請重試',
+          status: 'error',
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -582,7 +613,8 @@ const CheckoutPage: NextPage = () => {
         redirectToLogisticsSelectionLoading ||
         createPaymentLoading ||
         getPaymentNotifyLoading ||
-        userShoppingCreditsLoading // 添加購物金狀態的加載
+        userShoppingCreditsLoading ||
+        linePayRequestLoading
       }
       loadingText='處理中...請稍後'
     >

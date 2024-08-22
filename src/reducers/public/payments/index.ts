@@ -7,9 +7,12 @@ import {
   PaymentAsyncAction,
   createOrderAsync,
   createPaymentAsync,
+  getLinePayStatusAsync,
   getPaymentStatusAsync,
   getShipmentDataAsync,
   handleClientReplyAsync,
+  linePayConfirmAsync,
+  linePayRequestAsync,
   redirectToLogisticsSelectionAsync,
 } from './actions';
 
@@ -20,6 +23,9 @@ type PaymentState = ApiState<PaymentAsyncAction> & {
   payment: any;
   shipmentData: any;
   paymentStatus: any;
+  linePayRequest: any;
+  linePayConfirm: any;
+  linePayStatus: any;
 };
 
 const initialState: PaymentState = {
@@ -29,6 +35,9 @@ const initialState: PaymentState = {
   payment: null,
   shipmentData: null,
   paymentStatus: null,
+  linePayRequest: null,
+  linePayConfirm: null,
+  linePayStatus: null,
   ...newApiState<PaymentState>(PaymentAsyncAction),
 };
 
@@ -62,6 +71,15 @@ const paymentSlice = createSlice({
     });
     builder.addCase(getPaymentStatusAsync.fulfilled, (state, action) => {
       state.paymentStatus = action.payload;
+    });
+    builder.addCase(linePayRequestAsync.fulfilled, (state, action) => {
+      state.linePayRequest = action.payload;
+    });
+    builder.addCase(linePayConfirmAsync.fulfilled, (state, action) => {
+      state.linePayConfirm = action.payload;
+    });
+    builder.addCase(getLinePayStatusAsync.fulfilled, (state, action) => {
+      state.linePayStatus = action.payload;
     });
 
     asyncMatcher(builder, ReducerName.PUBLIC_PAYMENTS);

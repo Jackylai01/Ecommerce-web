@@ -57,3 +57,32 @@ export const apiGetShipmentData = async (uniqueId: string) =>
  */
 export const apiGetPaymentStatus = async (MerchantTradeNo: string) =>
   postRequest<ApiResult<any>>(`/ecpay/payment-status/${MerchantTradeNo}`);
+
+/**
+ * 發起 LinePay 付款請求
+ */
+export const apiLinePayRequest = async (body: any) =>
+  postRequest<ApiResult<any>>('/linepay/request', body);
+
+/**
+ * 確認 LinePay 支付
+ */
+export const apiLinePayConfirm = async (
+  transactionId: string,
+  orderId: string,
+) =>
+  postRequest<ApiResult<any>>('/linepay/confirm', { transactionId, orderId });
+
+/**
+ *  LinePay 付款失敗取消訂單API
+ */
+
+export const apiPublicCancelPaymentOrder = async (orderId: string) =>
+  getRequest<ApiResult<any>>(`/linepay/cancel/${orderId}`);
+
+/**
+ *  LinePay 呼叫付款成功後的訂單資訊
+ */
+
+export const apiLinePayStatusAsync = async (orderId: string) =>
+  postRequest<ApiResult<any>>(`/linepay/status/${orderId}`);
