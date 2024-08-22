@@ -314,9 +314,6 @@ const CheckoutPage: NextPage = () => {
 
           // 發起 LinePay 付款請求
           dispatch(linePayRequestAsync(linePayData));
-          if (linePayRequestSuccess && linePayRequest) {
-            window.location.href = linePayRequest;
-          }
         } else if (formData.paymentMethod === 'EcPay') {
           const paymentData = {
             orderId: order._id,
@@ -540,6 +537,12 @@ const CheckoutPage: NextPage = () => {
     useShoppingCredit,
     shoppingCredits,
   ]);
+
+  useEffect(() => {
+    if (linePayRequestSuccess && linePayRequest) {
+      window.location.href = linePayRequest;
+    }
+  }, [linePayRequestSuccess, linePayRequest]);
 
   useEffect(() => {
     if (createPaymentSuccess && payment) {

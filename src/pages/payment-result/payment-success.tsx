@@ -10,37 +10,23 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
+import { onlyDate, onlyTime } from '@helpers/date';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { getPaymentStatusAsync } from '@reducers/public/payments/actions';
+import { getLinePayStatusAsync } from '@reducers/public/payments/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+
 const PaymentSuccess = () => {
   const router = useRouter();
-  const { MerchantTradeNo } = router.query;
+  const { orderId } = router.query;
   const [animate, setAnimate] = useState(false);
   const dispatch = useAppDispatch();
   const {
+    linePayStatus,
     paymentStatus,
     status: { getPaymentStatusLoading },
   } = useAppSelector((state) => state.publicPayments);
-
-  useEffect(() => {
-    localStorage.removeItem('logisticsSelection');
-    localStorage.removeItem('order');
-    localStorage.removeItem('paymentForm');
-  }, []);
-
-  useEffect(() => {
-    if (!router.isReady) return;
-    if (MerchantTradeNo) {
-      dispatch(getPaymentStatusAsync(MerchantTradeNo as string));
-    }
-  }, [MerchantTradeNo, dispatch]);
-
-  useEffect(() => {
-    setAnimate(true);
-  }, []);
 
   const bgColor = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
@@ -51,6 +37,112 @@ const PaymentSuccess = () => {
   const valueColor = useColorModeValue('blue.500', 'blue.300');
   const buttonBgColor = useColorModeValue('blue.500', 'blue.300');
   const buttonHoverBgColor = useColorModeValue('blue.600', 'blue.400');
+
+  useEffect(() => {
+    localStorage.removeItem('logisticsSelection');
+    localStorage.removeItem('order');
+    localStorage.removeItem('paymentForm');
+  }, []);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (orderId) {
+      dispatch(getLinePayStatusAsync(orderId as string));
+    }
+  }, [orderId, dispatch]);
+
+  useEffect(() => {
+    setAnimate(true);
+  }, []);
+
+  const renderPaymentDetails = () => {
+    const provider =
+      paymentStatus?.paymentProvider || linePayStatus?.paymentProvider;
+
+    if (provider === 'EcPay') {
+      return (
+        <VStack spacing='15px' align='stretch'>
+          <HStack
+            justifyContent='space-between'
+            alignItems='center'
+            py='10px'
+            borderBottom={`1px solid ${borderColor}`}
+          >
+            <Text color={labelColor} fontWeight='500'>
+              訂單編號
+            </Text>
+            <Text fontWeight='600' color={valueColor}>
+              {paymentStatus?.MerchantTradeNo}
+            </Text>
+          </HStack>
+          <HStack
+            justifyContent='space-between'
+            alignItems='center'
+            py='10px'
+            borderBottom={`1px solid ${borderColor}`}
+          >
+            <Text color={labelColor} fontWeight='500'>
+              付款金額
+            </Text>
+            <Text fontWeight='600' color={valueColor}>
+              ${paymentStatus?.TotalAmount}
+            </Text>
+          </HStack>
+          <HStack justifyContent='space-between' alignItems='center' py='10px'>
+            <Text color={labelColor} fontWeight='500'>
+              付款日期
+            </Text>
+            <Text fontWeight='600' color={valueColor}>
+              {onlyDate(paymentStatus?.MerchantTradeDate) +
+                onlyTime(paymentStatus?.MerchantTradeDate)}
+              {paymentStatus?.MerchantTradeDate}
+            </Text>
+          </HStack>
+        </VStack>
+      );
+    } else if (provider === 'LinePay') {
+      return (
+        <VStack spacing='15px' align='stretch'>
+          <HStack
+            justifyContent='space-between'
+            alignItems='center'
+            py='10px'
+            borderBottom={`1px solid ${borderColor}`}
+          >
+            <Text color={labelColor} fontWeight='500'>
+              訂單編號
+            </Text>
+            <Text fontWeight='600' color={valueColor}>
+              {linePayStatus?.orderId}
+            </Text>
+          </HStack>
+          <HStack
+            justifyContent='space-between'
+            alignItems='center'
+            py='10px'
+            borderBottom={`1px solid ${borderColor}`}
+          >
+            <Text color={labelColor} fontWeight='500'>
+              付款金額
+            </Text>
+            <Text fontWeight='600' color={valueColor}>
+              ${linePayStatus?.TotalAmount}
+            </Text>
+          </HStack>
+          <HStack justifyContent='space-between' alignItems='center' py='10px'>
+            <Text color={labelColor} fontWeight='500'>
+              付款日期
+            </Text>
+            <Text fontWeight='600' color={valueColor}>
+              {onlyDate(linePayStatus?.createdAt) +
+                onlyTime(linePayStatus?.createdAt)}
+            </Text>
+          </HStack>
+        </VStack>
+      );
+    }
+    return null;
+  };
 
   return (
     <LoadingLayout isLoading={getPaymentStatusLoading}>
@@ -115,46 +207,7 @@ const PaymentSuccess = () => {
           transition='opacity 0.6s ease-out, transform 0.6s ease-out'
           transitionDelay='0.3s'
         >
-          <VStack spacing='15px' align='stretch'>
-            <HStack
-              justifyContent='space-between'
-              alignItems='center'
-              py='10px'
-              borderBottom={`1px solid ${borderColor}`}
-            >
-              <Text color={labelColor} fontWeight='500'>
-                訂單編號
-              </Text>
-              <Text fontWeight='600' color={valueColor}>
-                {paymentStatus?.MerchantTradeNo}
-              </Text>
-            </HStack>
-            <HStack
-              justifyContent='space-between'
-              alignItems='center'
-              py='10px'
-              borderBottom={`1px solid ${borderColor}`}
-            >
-              <Text color={labelColor} fontWeight='500'>
-                付款金額
-              </Text>
-              <Text fontWeight='600' color={valueColor}>
-                ${paymentStatus?.TotalAmount}
-              </Text>
-            </HStack>
-            <HStack
-              justifyContent='space-between'
-              alignItems='center'
-              py='10px'
-            >
-              <Text color={labelColor} fontWeight='500'>
-                付款日期
-              </Text>
-              <Text fontWeight='600' color={valueColor}>
-                {paymentStatus?.MerchantTradeDate}
-              </Text>
-            </HStack>
-          </VStack>
+          {renderPaymentDetails()}
         </Box>
         <Button
           bg={buttonBgColor}
