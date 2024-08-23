@@ -13,7 +13,10 @@ import LoadingLayout from '@components/Layout/LoadingLayout';
 import { onlyDate, onlyTime } from '@helpers/date';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { getLinePayStatusAsync } from '@reducers/public/payments/actions';
+import {
+  getLinePayStatusAsync,
+  getPaymentStatusAsync,
+} from '@reducers/public/payments/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -48,6 +51,7 @@ const PaymentSuccess = () => {
     if (!router.isReady) return;
     if (orderId) {
       dispatch(getLinePayStatusAsync(orderId as string));
+      dispatch(getPaymentStatusAsync(orderId as string));
     }
   }, [orderId, dispatch]);
 

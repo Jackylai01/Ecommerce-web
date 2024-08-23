@@ -2,7 +2,7 @@ import { Box, Flex, Image } from '@chakra-ui/react';
 import { testImage } from '@fixtures/componentLibrary';
 import { NextPage } from 'next';
 
-const TextPage: NextPage = () => {
+const BannerPage: NextPage = () => {
   return (
     <Box as='main' className='banner-main'>
       <Box as='h1' className='banner-main__title'>
@@ -46,4 +46,4 @@ const TextPage: NextPage = () => {
   );
 };
 
-export default TextPage;
+export default BannerPage;

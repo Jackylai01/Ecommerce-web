@@ -15,9 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const result = await response.text();
       if (result === '1|OK') {
         const { MerchantTradeNo } = paymentData;
-        res.redirect(
-          `/payment-result/payment-success?MerchantTradeNo=${MerchantTradeNo}`,
-        );
+        res.redirect(`/payment-result/payment-success/${MerchantTradeNo}`);
       } else {
         res.redirect('/payment-result/payment-failure');
       }
