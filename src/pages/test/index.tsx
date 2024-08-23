@@ -9,7 +9,7 @@ const TextPage: NextPage = () => {
         PECENT PROJECTS
       </Box>
       <Flex as='article' className='banner-main__article'>
-        <Box>
+        <Box as='section' className='banner-main__left'>
           <Image src={testImage} className='banner-main__image-box' />
           <Box as='h2' className='banner-main__heading'>
             PECENT PROJECTS
@@ -19,7 +19,7 @@ const TextPage: NextPage = () => {
             consequatur ad praesentium eius architecto nostrum, quisquam omnis
           </Box>
         </Box>
-        <Box as='section' className='banner-main__section'>
+        <Box as='section' className='banner-main__right'>
           <Box>
             <Image src={testImage} className='banner-main__small-image-box' />
             <Box as='h2' className='banner-main__heading'>
