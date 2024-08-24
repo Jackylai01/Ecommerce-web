@@ -46,4 +46,5 @@ export enum ReducerName {
   ADMIN_SHOPPING_CREDITS_TYPE = 'adminShoppingCreditsType',
   PUBLIC_ARTICLES = 'publicArticles',
   PUBLIC_DASHBOARD = 'publicDashboard',
+  PUBLIC_DESIGN_PAGES = 'publicDesignPages',
 }
