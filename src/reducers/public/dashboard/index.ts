@@ -13,16 +13,24 @@ import {
 
 type DashboardState = ApiState<DashboardAsyncAction> & {
   todayEarnings: number | null;
+  yesterdayEarnings: number | null;
   todayRegistrations: number | null;
+  yesterdayRegistrations: number | null;
   totalSales: number | null;
+  yesterdaySales: number | null;
   todayLogins: number | null;
+  yesterdayLogins: number | null;
 };
 
 const initialState: DashboardState = {
   todayEarnings: null,
+  yesterdayEarnings: null,
   todayRegistrations: null,
+  yesterdayRegistrations: null,
   totalSales: null,
+  yesterdaySales: null,
   todayLogins: null,
+  yesterdayLogins: null,
   ...newApiState<DashboardState>(DashboardAsyncAction),
 };
 
@@ -34,16 +42,20 @@ const dashboardSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getTodayEarningsAsync.fulfilled, (state, action) => {
-      state.todayEarnings = action.payload;
+      state.todayEarnings = action.payload.todayEarnings;
+      state.yesterdayEarnings = action.payload.yesterdayEarnings;
     });
     builder.addCase(getTodayRegistrationsAsync.fulfilled, (state, action) => {
-      state.todayRegistrations = action.payload;
+      state.todayRegistrations = action.payload.todayRegistrations;
+      state.yesterdayRegistrations = action.payload.yesterdayRegistrations;
     });
     builder.addCase(getTotalSalesAsync.fulfilled, (state, action) => {
-      state.totalSales = action.payload;
+      state.totalSales = action.payload.totalSalesAmountToday;
+      state.yesterdaySales = action.payload.totalSalesAmountYesterday;
     });
     builder.addCase(getTodayLoginsAsync.fulfilled, (state, action) => {
-      state.todayLogins = action.payload;
+      state.todayLogins = action.payload.todayLoginsCount;
+      state.yesterdayLogins = action.payload.yesterdayLoginsCount;
     });
 
     asyncMatcher(builder, ReducerName.PUBLIC_DASHBOARD);

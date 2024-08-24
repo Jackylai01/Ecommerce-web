@@ -34,16 +34,31 @@ const LineChart = dynamic(() => import('@components/Charts/LineChart'), {
   ssr: false,
 });
 
+// 計算百分比變化
+const calculatePercentageChange = (
+  todayValue: number,
+  yesterdayValue: number,
+) => {
+  if (yesterdayValue === 0) return todayValue > 0 ? 100 : 0;
+  return ((todayValue - yesterdayValue) / yesterdayValue) * 100;
+};
+
 const Dashboard = () => {
   const dispatch = useAppDispatch();
   const { colorMode } = useAdminColorMode();
   const iconBoxInside = colorMode === 'light' ? 'white' : 'white';
 
-  // 使用 useAppSelector 獲取 Redux 狀態中的數據
-  const { todayLogins, todayEarnings, todayRegistrations, totalSales } =
-    useAppSelector((state) => state.publicDashboard);
+  const {
+    todayEarnings,
+    yesterdayEarnings,
+    todayLogins,
+    yesterdayLogins,
+    todayRegistrations,
+    yesterdayRegistrations,
+    totalSales,
+    yesterdaySales,
+  } = useAppSelector((state) => state.publicDashboard);
 
-  // 在組件加載時調用 redux actions
   useEffect(() => {
     dispatch(getTodayEarningsAsync());
     dispatch(getTodayLoginsAsync());
@@ -56,26 +71,38 @@ const Dashboard = () => {
       <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing='24px'>
         <MiniStatistics
           title={"Today's Moneys"}
-          amount={`$${todayEarnings ?? 0}`} // 使用 Redux 獲取的數據
-          percentage={55}
+          amount={`$${todayEarnings ?? 0}`}
+          percentage={calculatePercentageChange(
+            todayEarnings ?? 0,
+            yesterdayEarnings ?? 0,
+          )}
           icon={<WalletIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
         />
         <MiniStatistics
           title={"Today's Users"}
-          amount={todayLogins ?? 0} // 使用 Redux 獲取的數據
-          percentage={5}
+          amount={todayLogins ?? 0}
+          percentage={calculatePercentageChange(
+            todayLogins ?? 0,
+            yesterdayLogins ?? 0,
+          )}
           icon={<GlobeIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
         />
         <MiniStatistics
           title={'New Clients'}
-          amount={`+${todayRegistrations ?? 0}`} // 使用 Redux 獲取的數據
-          percentage={-14}
+          amount={`+${todayRegistrations ?? 0}`}
+          percentage={calculatePercentageChange(
+            todayRegistrations ?? 0,
+            yesterdayRegistrations ?? 0,
+          )}
           icon={<DocumentIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
         />
         <MiniStatistics
           title={'Total Sales'}
-          amount={`$${totalSales ?? 0}`} // 使用 Redux 獲取的數據
-          percentage={8}
+          amount={`$${totalSales ?? 0}`}
+          percentage={calculatePercentageChange(
+            totalSales ?? 0,
+            yesterdaySales ?? 0,
+          )}
           icon={<CartIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
         />
       </SimpleGrid>
