@@ -40,8 +40,6 @@ const ProductList = () => {
     }
   }, [selectedCategory, dispatch]);
 
-  console.log(products);
-
   return (
     <Box bg='gray.50' minH='100vh'>
       <Container maxW='7xl' py='8'>
