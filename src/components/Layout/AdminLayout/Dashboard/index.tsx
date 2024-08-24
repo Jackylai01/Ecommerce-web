@@ -70,7 +70,7 @@ const Dashboard = () => {
     <Flex flexDirection='column' pt={{ base: '120px', md: '75px' }}>
       <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing='24px'>
         <MiniStatistics
-          title={"Today's Moneys"}
+          title={'今日份營收'}
           amount={`$${todayEarnings ?? 0}`}
           percentage={calculatePercentageChange(
             todayEarnings ?? 0,
@@ -79,7 +79,7 @@ const Dashboard = () => {
           icon={<WalletIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
         />
         <MiniStatistics
-          title={"Today's Users"}
+          title={'今日會員總登入數'}
           amount={todayLogins ?? 0}
           percentage={calculatePercentageChange(
             todayLogins ?? 0,
@@ -88,7 +88,7 @@ const Dashboard = () => {
           icon={<GlobeIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
         />
         <MiniStatistics
-          title={'New Clients'}
+          title={'今日份新加入會員數'}
           amount={`+${todayRegistrations ?? 0}`}
           percentage={calculatePercentageChange(
             todayRegistrations ?? 0,
@@ -97,7 +97,7 @@ const Dashboard = () => {
           icon={<DocumentIcon h={'24px'} w={'24px'} color={iconBoxInside} />}
         />
         <MiniStatistics
-          title={'Total Sales'}
+          title={'商城總銷售'}
           amount={`$${totalSales ?? 0}`}
           percentage={calculatePercentageChange(
             totalSales ?? 0,

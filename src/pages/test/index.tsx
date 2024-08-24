@@ -17,7 +17,10 @@ import { useEffect, useState } from 'react';
 
 const ProductList = () => {
   const dispatch = useAppDispatch();
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<{
+    categoryId: string;
+    slug: string;
+  } | null>(null);
 
   // 從 Redux 取得類別和產品列表
   const { list: categories } = useAppSelector((state) => state.publicCategory);
@@ -44,18 +47,27 @@ const ProductList = () => {
               categories.map((category: any) => (
                 <Button
                   key={category._id}
-                  onClick={() => setSelectedCategory(category._id)}
+                  onClick={() =>
+                    setSelectedCategory({
+                      categoryId: category._id,
+                      slug: category.slug,
+                    })
+                  }
                   w='full'
                   justifyContent='space-between'
                   variant='ghost'
                   colorScheme={
-                    selectedCategory === category._id ? 'blue' : 'gray'
+                    selectedCategory?.categoryId === category._id
+                      ? 'blue'
+                      : 'gray'
                   }
                   rightIcon={
                     <ChevronRight
                       size={16}
                       className={
-                        selectedCategory === category._id ? 'rotate-90' : ''
+                        selectedCategory?.categoryId === category._id
+                          ? 'rotate-90'
+                          : ''
                       }
                     />
                   }
