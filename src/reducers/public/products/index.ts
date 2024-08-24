@@ -45,7 +45,7 @@ const publicProductSlice = createSlice({
       state.detail = action.payload;
     });
     builder.addCase(getProductsByCategoryAsync.fulfilled, (state, action) => {
-      state.categoryProducts = action.payload;
+      state.categoryProducts = action.payload.products;
     });
 
     asyncMatcher(builder, ReducerName.PUBLIC_PRODUCTS);

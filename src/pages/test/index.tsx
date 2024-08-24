@@ -24,7 +24,9 @@ const ProductList = () => {
 
   // 從 Redux 取得類別和產品列表
   const { list: categories } = useAppSelector((state) => state.publicCategory);
-  const { list: products } = useAppSelector((state) => state.publicProducts);
+  const { categoryProducts: products } = useAppSelector(
+    (state) => state.publicProducts,
+  );
 
   // 初次渲染時加載類別列表
   useEffect(() => {
@@ -37,6 +39,8 @@ const ProductList = () => {
       dispatch(getProductsByCategoryAsync(selectedCategory));
     }
   }, [selectedCategory, dispatch]);
+
+  console.log(products);
 
   return (
     <Box bg='gray.50' minH='100vh'>
