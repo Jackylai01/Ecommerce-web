@@ -32,10 +32,6 @@ const SalesOrderList = () => {
     dispatch(getSalesOrdersAsync({ page: 1, limit: 10, search }));
   }, [dispatch, search]);
 
-  useEffect(() => {
-    console.log('Sales Orders List:', salesOrdersList);
-  }, [salesOrdersList]);
-
   return (
     <Box
       bg='white'

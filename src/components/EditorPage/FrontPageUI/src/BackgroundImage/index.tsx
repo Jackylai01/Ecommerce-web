@@ -61,9 +61,6 @@ const BackgroundImageEditor: React.FC<BackgroundImageEditorProps> = ({
     elementId: string,
   ) => {
     const elementUuid = products[elIndex].elementUuid;
-    console.log(elIndex);
-    console.log(elementId);
-    console.log(elementUuid);
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       dispatch(uploadImageAsync({ file, index, elementUuid, elementId }));

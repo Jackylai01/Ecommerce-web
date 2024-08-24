@@ -32,7 +32,6 @@ const ArticleDetail: React.FC = () => {
     if (typeof fullPath === 'string') {
       const [id, slug] = fullPath.split('-');
       if (id && slug) {
-        console.log(`ID: ${id}, Slug: ${slug}`);
         dispatch(getArticleByIdAsync(`${id}-${slug}`));
       }
     }

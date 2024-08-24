@@ -48,7 +48,7 @@ const ShipmentTestPage = () => {
         container.innerHTML = htmlContent;
         document.body.appendChild(container);
         const form = container.querySelector('form');
-        console.log('Form Element:', form); // 打印表單元素
+
         if (form) {
           form.submit();
         }
