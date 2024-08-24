@@ -33,7 +33,7 @@ const Sidebar = ({ routes, sidebarVariant, currentPath }: SidebarType) => {
         >
           <SidebarContent
             routes={routes}
-            logoText={'PURITY UI DASHBOARD'}
+            logoText={'測試後台管理系統'}
             display='none'
             sidebarVariant={sidebarVariant}
             currentPath={currentPath}

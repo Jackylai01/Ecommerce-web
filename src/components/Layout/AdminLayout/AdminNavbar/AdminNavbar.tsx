@@ -110,7 +110,7 @@ const AdminNavbar = ({ fixed, secondary, onOpen }: AdminNavbarType) => {
           <Breadcrumb>
             <BreadcrumbItem color={mainText}>
               <BreadcrumbLink href='#' color={secondaryText}>
-                Pages
+                頁面
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem color={mainText}>
