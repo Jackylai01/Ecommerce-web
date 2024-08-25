@@ -118,7 +118,13 @@ const AdminEditPageLayout: React.FC = () => {
 
   const onSubmit = () => {
     const formData = new FormData();
-    formData.append('route', currentRoute);
+
+    // 去除路由名稱開頭的 `/`
+    const normalizedRoute = currentRoute.startsWith('/')
+      ? currentRoute.slice(1)
+      : currentRoute;
+
+    formData.append('route', normalizedRoute);
 
     const blocks = components.map((component: any) => ({
       ...component,
