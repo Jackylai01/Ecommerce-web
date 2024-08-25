@@ -2,6 +2,7 @@ import { ReducerName } from '@enums/reducer-name';
 import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
+import { Metadata } from '@models/entities/shared/pagination';
 import { NewsItem } from '@models/responses/news';
 import { createSlice } from '@reduxjs/toolkit';
 import {
@@ -15,11 +16,13 @@ import {
 
 type NewsItemState = ApiState<NewsItemAction> & {
   list: NewsItem[] | null;
+  metadata: Metadata | null;
   itemDetails: NewsItem | null;
 };
 
 const initialState: NewsItemState = {
   list: null,
+  metadata: null,
   itemDetails: null,
   ...newApiState<NewsItemState>(NewsItemAction),
 };
@@ -33,6 +36,7 @@ export const newsItemSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getAllNewsItemsAsync.fulfilled, (state, action) => {
       state.list = action.payload.data;
+      state.metadata = action.payload.metadata;
     });
     builder.addCase(getNewsItemByIdAsync.fulfilled, (state, action) => {
       state.itemDetails = action.payload;

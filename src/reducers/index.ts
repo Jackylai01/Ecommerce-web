@@ -6,6 +6,8 @@ import adminERPReports from './admin/admin-erp/reports';
 import adminERPSalesOrder from './admin/admin-erp/salesOrder';
 import adminERPSuppliers from './admin/admin-erp/supplier';
 import adminMembershipLevel from './admin/admin-membership-level';
+import adminNews from './admin/admin-news';
+import adminNewsCategories from './admin/admin-news-categorys';
 import adminRefunds from './admin/admin-refunds';
 import adminAuth from './admin/auth';
 import adminClientUsers from './admin/client-users';
@@ -84,6 +86,8 @@ const appReducer = {
   publicArticles,
   publicDashboard,
   publicDesignPage,
+  adminNewsCategories,
+  adminNews,
 };
 
 export default appReducer;

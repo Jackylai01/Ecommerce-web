@@ -3,7 +3,7 @@ export interface NewsItem {
   title: string;
   content: string;
   date: string;
-  category: {
+  category?: {
     _id: string;
     name: string;
   };
@@ -11,8 +11,6 @@ export interface NewsItem {
     imageUrl: string;
     imageId: string;
   };
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface ApiPaginationResult<T> {
