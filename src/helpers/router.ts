@@ -4,6 +4,7 @@ import {
   ADMIN_PREVIEW_ROUTE,
   ADMIN_ROUTE,
   CLIENT_ROUTE,
+  PUBLIC_CMS_ROUTE,
   PUBLIC_ROUTE,
 } from '@fixtures/constants';
 import { routeToChinese } from '@models/entities/shared/query';
@@ -20,18 +21,21 @@ export const toPageLayoutType = (pathname: string) => {
   }
 
   if (pathname.startsWith(`/${CLIENT_ROUTE}/auth`)) {
-    return PageLayoutType.CLIENT; // 如果 URL 的開頭是 client 的 auth 路由，則頁面佈局類型為 CLIENT_PUBLIC
+    return PageLayoutType.CLIENT;
   }
 
   if (pathname.startsWith(`/${PUBLIC_ROUTE}/auth`)) {
-    return PageLayoutType.CLIENT_PUBLIC; // 如果 URL 的開頭是 public 的 auth 路由，則頁面佈局類型為 CLIENT_PUBLIC
+    return PageLayoutType.CLIENT_PUBLIC;
   }
 
   if (pathname.startsWith(`/${ADMIN_EDIT_PAGES_ROUTE}/edit`)) {
-    return PageLayoutType.ADMIN_EDIT; // 如果 URL 的開頭是 pages 的 edit 路由，則頁面佈局類型為 ADMIN_EDIT
+    return PageLayoutType.ADMIN_EDIT;
+  }
+  if (pathname.startsWith(`/${PUBLIC_CMS_ROUTE}`)) {
+    return PageLayoutType.PUBLIC_CMS_ROUTE;
   }
   if (pathname.startsWith(`/${ADMIN_PREVIEW_ROUTE}`)) {
-    return PageLayoutType.ADMIN_PREVIEW_PAGE; // 如果 URL 的開頭是 pages 的 edit 路由，則頁面佈局類型為 ADMIN_EDIT
+    return PageLayoutType.ADMIN_PREVIEW_PAGE;
   }
 
   const mainRoute = getMainRoute(pathname);
@@ -44,6 +48,8 @@ export const toPageLayoutType = (pathname: string) => {
       return PageLayoutType.CLIENT;
     case ADMIN_PREVIEW_ROUTE:
       return PageLayoutType.ADMIN_PREVIEW_PAGE;
+    case PUBLIC_CMS_ROUTE:
+      return PageLayoutType.PUBLIC_CMS_ROUTE;
     case ADMIN_EDIT_PAGES_ROUTE:
       return PageLayoutType.ADMIN_EDIT;
     default:

@@ -34,6 +34,7 @@ import layout from './layout';
 import publicArticles from './public/articles';
 import publicCategory from './public/categories';
 import publicDashboard from './public/dashboard';
+import publicDesignPage from './public/design-pages';
 import publicDiscounts from './public/discounts';
 import publicFavorites from './public/favorite';
 import publicPayments from './public/payments';
@@ -82,6 +83,7 @@ const appReducer = {
   adminArticlesCategories,
   publicArticles,
   publicDashboard,
+  publicDesignPage,
 };
 
 export default appReducer;
