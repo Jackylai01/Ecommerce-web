@@ -47,4 +47,6 @@ export enum ReducerName {
   PUBLIC_ARTICLES = 'publicArticles',
   PUBLIC_DASHBOARD = 'publicDashboard',
   PUBLIC_DESIGN_PAGES = 'publicDesignPages',
+  ADMIN_NEWS_CATEGORY = 'adminNewsCategory',
+  ADMIN_NEWS_ITEMS = 'adminNewsItems',
 }
