@@ -11,6 +11,7 @@ export interface NewsItem {
     imageUrl: string;
     imageId: string;
   };
+  blocks: any;
 }
 
 export interface ApiPaginationResult<T> {

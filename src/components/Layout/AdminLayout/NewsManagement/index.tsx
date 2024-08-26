@@ -10,14 +10,14 @@ import {
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 
-import { Metadata } from '@models/entities/shared/pagination';
 import { Category } from '@models/entities/shared/products';
 import { NewsItem } from '@models/responses/news';
 
-import CategoryModal from '@components/Modal/ArticleCategoryModal';
+import NewsCategoryModal from '@components/Modal/NewsCategoryModal';
 import NewsModal from '@components/Modal/NewsModal';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { useNotification } from '@hooks/useNotification';
 import {
   deleteNewsCategoryAsync,
   getAllNewsCategoriesAsync,
@@ -39,21 +39,6 @@ export default function NewsManagement() {
 
   const dispatch = useAppDispatch();
 
-  const defaultMetadata: Metadata = {
-    count: 0,
-    page: 1,
-    last: 1,
-    limit: 10,
-    sort: {},
-    links: {
-      first: '',
-      previous: '',
-      current: '',
-      next: '',
-      last: '',
-    },
-  };
-
   const {
     list: news = [],
     metadata: newsMetadata,
@@ -70,8 +55,11 @@ export default function NewsManagement() {
       deleteNewsItemLoading,
       deleteNewsItemFailed,
       deleteNewsItemSuccess,
+      editNewsItemLoading,
+      editNewsItemFailed,
+      editNewsItemSuccess,
     },
-    error: { addNewsItemError, getAllNewsItemsError, getNewsItemByIdError },
+    error: { addNewsItemError, deleteNewsItemError, editNewsItemError },
   } = useAppSelector((state) => state.adminNews);
 
   const {
@@ -81,20 +69,17 @@ export default function NewsManagement() {
       addNewsCategoryFailed,
       addNewsCategoryLoading,
       addNewsCategorySuccess,
-      getAllNewsCategoriesFailed,
-      getAllNewsCategoriesLoading,
-      getAllNewsCategoriesSuccess,
-      getNewsCategoryByIdFailed,
-      getNewsCategoryByIdLoading,
-      getNewsCategoryByIdSuccess,
       deleteNewsCategoryFailed,
       deleteNewsCategoryLoading,
       deleteNewsCategorySuccess,
+      editNewsCategoryLoading,
+      editNewsCategoryFailed,
+      editNewsCategorySuccess,
     },
     error: {
-      getAllNewsCategoriesError,
-      getNewsCategoryByIdError,
+      editNewsCategoryError,
       addNewsCategoryError,
+      deleteNewsCategoryError,
     },
   } = useAppSelector((state) => state.adminNewsCategories);
 
@@ -112,6 +97,7 @@ export default function NewsManagement() {
       imageUrl: '',
       imageId: '',
     },
+    blocks: [],
   };
 
   const defaultCategory: Category = {
@@ -150,13 +136,70 @@ export default function NewsManagement() {
     );
   };
 
+  useNotification({
+    success: addNewsItemSuccess,
+    error: addNewsItemFailed,
+    successTitle: '新增成功',
+    successDescription: '新增最新消息建立成功',
+    errorTitle: '新增最新消息失敗',
+    errorDescription: addNewsItemError,
+  });
+
+  useNotification({
+    success: editNewsItemSuccess,
+    error: editNewsItemFailed,
+    successTitle: '編輯成功',
+    successDescription: '編輯最新消息成功',
+    errorTitle: '編輯最新消息失敗',
+    errorDescription: editNewsItemError,
+  });
+
+  useNotification({
+    success: deleteNewsItemSuccess,
+    error: deleteNewsItemFailed,
+    successTitle: '刪除成功',
+    successDescription: '刪除最新消息成功',
+    errorTitle: '刪除最新消息失敗',
+    errorDescription: deleteNewsItemError,
+  });
+
+  useNotification({
+    success: addNewsCategorySuccess,
+    error: addNewsCategoryFailed,
+    successTitle: '新增成功',
+    successDescription: '新增最新消息類別建立成功',
+    errorTitle: '新增最新消息類別失敗',
+    errorDescription: addNewsCategoryError,
+  });
+
+  useNotification({
+    success: editNewsCategorySuccess,
+    error: editNewsCategoryFailed,
+    successTitle: '編輯成功',
+    successDescription: '編輯最新消息類別建立成功',
+    errorTitle: '編輯最新消息類別失敗',
+    errorDescription: editNewsCategoryError,
+  });
+  deleteNewsCategorySuccess;
+
+  useNotification({
+    success: deleteNewsCategorySuccess,
+    error: deleteNewsCategoryFailed,
+    successTitle: '刪除成功',
+    successDescription: '刪除最新消息類別建立成功',
+    errorTitle: '刪除最新消息類別失敗',
+    errorDescription: deleteNewsCategoryError,
+  });
+
   return (
     <LoadingLayout
       isLoading={
         addNewsCategoryLoading ||
         deleteNewsItemLoading ||
         deleteNewsCategoryLoading ||
-        addNewsItemLoading
+        addNewsItemLoading ||
+        editNewsItemLoading ||
+        editNewsCategoryLoading
       }
     >
       <Box py='2rem' w='100%'>
@@ -204,7 +247,7 @@ export default function NewsManagement() {
           />
         )}
         {modalType === 'category' && currentCategory && (
-          <CategoryModal
+          <NewsCategoryModal
             isOpen={isOpen}
             onClose={onClose}
             category={currentCategory}

@@ -12,16 +12,17 @@ import {
   ModalOverlay,
   Select,
 } from '@chakra-ui/react';
+import NewsCustomBlocks from '@components/Layout/AdminLayout/NewsManagement/NewsBlocks';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { NewsItem } from '@models/responses/news';
 import {
-  addNewsCategoryAsync,
-  editNewsCategoryAsync,
-} from '@reducers/admin/admin-news-categorys/actions';
+  addNewsItemAsync,
+  editNewsItemAsync,
+} from '@reducers/admin/admin-news/actions';
 
 import { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 type NewsModalProps = {
   isOpen: boolean;
@@ -37,12 +38,14 @@ export default function NewsModal({
   isEditing,
 }: NewsModalProps) {
   const dispatch = useAppDispatch();
+  const { uploadedImages } = useAppSelector((state) => state.adminUpload);
   const methods = useForm({
     defaultValues: {
       title: news?.title || '',
       category: news?.category || '',
-      date: news?.date || '',
+      content: news?.content || '',
       coverImage: null,
+      blocks: news?.blocks || [],
     },
   });
 
@@ -55,33 +58,61 @@ export default function NewsModal({
       methods.reset({
         title: news.title || '',
         category: news.category || '',
-        date: news.date || '',
+        content: news.content || '',
+        blocks: news.blocks || [],
       });
     }
   }, [news, methods]);
 
   const onSubmit = async (data: any) => {
     const formData = new FormData();
+
+    // 如果 blocks 存在，則將它們轉換成 JSON 並添加到表單數據中
+    let updatedContentBlocks = [...data.blocks];
+
+    uploadedImages.forEach((image) => {
+      const newBlock = {
+        className: 'image-selectable',
+        elements: [
+          {
+            tagName: 'img',
+            src: image.imageUrl,
+            imageId: image.imageId,
+          },
+        ],
+      };
+      updatedContentBlocks.push(newBlock);
+    });
+
     formData.append('title', data.title);
-    formData.append('category', data.category);
-    formData.append('date', data.date);
+
+    formData.append('category', data.category?._id || data.category);
+
+    formData.append('content', data.content);
+    formData.append('blocks', JSON.stringify(updatedContentBlocks));
 
     if (data.coverImage && data.coverImage[0]) {
       formData.append('coverImage', data.coverImage[0]);
     }
 
+    // 提交表單數據
     if (isEditing && news?._id) {
-      dispatch(editNewsCategoryAsync({ newsId: news._id, body: formData }));
+      dispatch(editNewsItemAsync({ newsItemId: news?._id, body: formData }));
     } else {
-      dispatch(addNewsCategoryAsync(formData));
+      dispatch(addNewsItemAsync(formData));
     }
   };
 
   return (
     <FormProvider {...methods}>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered
+        closeOnOverlayClick={false}
+      >
         <ModalOverlay />
-        <ModalContent maxW='90%'>
+        <ModalContent maxW='100%'>
           <ModalHeader>
             {isEditing ? '編輯最新消息' : '新增最新消息'}
           </ModalHeader>
@@ -98,11 +129,27 @@ export default function NewsModal({
               </FormControl>
 
               <FormControl mb='1.5rem'>
-                <FormLabel htmlFor='date'>日期</FormLabel>
+                <FormLabel htmlFor='content'>描述</FormLabel>
                 <Input
-                  id='date'
-                  type='date'
-                  {...methods.register('date', { required: '此欄位為必填' })}
+                  id='content'
+                  type='text'
+                  {...methods.register('content', { required: '此欄位為必填' })}
+                  placeholder='輸入最新消息的描述短句'
+                />
+              </FormControl>
+
+              <FormControl mb='1.5rem'>
+                <Controller
+                  name='blocks'
+                  control={methods.control}
+                  render={({ field }) => (
+                    <NewsCustomBlocks
+                      name='blocks'
+                      label='文章內容'
+                      blocks={field.value}
+                      setBlocks={field.onChange}
+                    />
+                  )}
                 />
               </FormControl>
 
