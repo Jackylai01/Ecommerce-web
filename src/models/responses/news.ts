@@ -2,11 +2,8 @@ export interface NewsItem {
   _id: string;
   title: string;
   content: string;
-  date: string;
-  category?: {
-    _id: string;
-    name: string;
-  };
+  createdAt: string;
+  category?: any;
   coverImage: {
     imageUrl: string;
     imageId: string;

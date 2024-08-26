@@ -26,7 +26,7 @@ import { useEffect, useState } from 'react';
 
 const NewsItemCard = ({
   title,
-  date,
+  createdAt,
   content,
   category,
   coverImage,
@@ -68,7 +68,7 @@ const NewsItemCard = ({
           {content}
         </Text>
         <Flex align='center' justify='space-between'>
-          <Text fontSize='sm'>{new Date(date).toLocaleDateString()}</Text>
+          <Text fontSize='sm'>{new Date(createdAt).toLocaleDateString()}</Text>
           <Button
             as='a'
             href='#'
@@ -100,7 +100,6 @@ const NewsTabs = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    // 根據選擇的類別拉取該類別的最新消息
     if (activeCategory !== 'all') {
       dispatch(
         getNewsByCategoryAsync({
@@ -116,7 +115,7 @@ const NewsTabs = () => {
   const filteredNews =
     activeCategory === 'all'
       ? newsList
-      : newsList?.filter((item) => item.category?._id === activeCategory);
+      : newsList?.filter((item) => item.category === activeCategory);
 
   return (
     <LoadingLayout isLoading={status.getAllPublicNewsLoading}>

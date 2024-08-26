@@ -62,7 +62,7 @@ const NewsList: React.FC<NewsListProps> = ({
               <Tr key={item._id}>
                 <Td>{item.title}</Td>
                 <Td>{item.category?.name || '無類別'}</Td>{' '}
-                <Td>{new Date(item.date).toLocaleDateString()}</Td>
+                <Td>{new Date(item.createdAt).toLocaleDateString()}</Td>
                 <Td>
                   <Image
                     src={item.coverImage?.imageUrl || ''}
