@@ -4,6 +4,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'post') {
     const paymentData = req.body;
 
+    console.log(req.method);
     try {
       const response = await fetch(
         'https://ecommerce-api2023.onrender.com/api/ecpay/notify',
