@@ -86,7 +86,7 @@ export default function NewsManagement() {
     _id: '',
     title: '',
     content: '',
-    date: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
     coverImage: {
       imageUrl: '',
       imageId: '',
