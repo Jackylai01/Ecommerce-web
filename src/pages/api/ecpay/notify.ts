@@ -5,13 +5,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const paymentData = req.body;
 
     try {
-      const response = await fetch('http://localhost:3001/api/ecpay/notify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'https://ecommerce-api2023.onrender.com/api/ecpay/notify',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(paymentData),
         },
-        body: JSON.stringify(paymentData),
-      });
+      );
       const result = await response.text();
       if (result === '1|OK') {
         const { MerchantTradeNo } = paymentData;
