@@ -56,7 +56,7 @@ export default function NewsManagement() {
 
   const {
     list: news = [],
-    metadata: newsMetadata = defaultMetadata,
+    metadata: newsMetadata,
     status: {
       addNewsItemFailed,
       addNewsItemLoading,
@@ -76,7 +76,7 @@ export default function NewsManagement() {
 
   const {
     list: categories = [],
-    metadata: newsCategoriesMetadata = defaultMetadata,
+    metadata: newsCategoriesMetadata,
     status: {
       addNewsCategoryFailed,
       addNewsCategoryLoading,

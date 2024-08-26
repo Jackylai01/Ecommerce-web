@@ -5,6 +5,7 @@ import {
   FaFileAlt,
   FaFileInvoiceDollar,
   FaHome,
+  FaNewspaper,
   FaShoppingCart,
   FaUser,
   FaUsers,
@@ -16,6 +17,7 @@ import ArticleManagement from '@components/Layout/AdminLayout/ArticleManagement'
 import Billing from '@components/Layout/AdminLayout/Billing';
 import Dashboard from '@components/Layout/AdminLayout/Dashboard';
 import DiscountTableContainer from '@components/Layout/AdminLayout/Discount';
+import NewsManagement from '@components/Layout/AdminLayout/NewsManagement';
 import Profile from '@components/Layout/AdminLayout/Profile';
 import Tables from '@components/Layout/AdminLayout/Tables';
 import { ADMIN_EDIT_PAGES_ROUTE, ADMIN_ROUTE } from '@fixtures/constants';
@@ -70,6 +72,13 @@ const dashRoutes = [
     name: '購物金管理',
     icon: FaShoppingCart,
     component: ShoppingCreditsManagement,
+    layout: `/${ADMIN_ROUTE}`,
+  },
+  {
+    path: '/news',
+    name: '最新消息管理',
+    icon: FaNewspaper,
+    component: NewsManagement,
     layout: `/${ADMIN_ROUTE}`,
   },
   {

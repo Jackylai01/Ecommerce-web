@@ -39,6 +39,7 @@ import publicDashboard from './public/dashboard';
 import publicDesignPage from './public/design-pages';
 import publicDiscounts from './public/discounts';
 import publicFavorites from './public/favorite';
+import publicNews from './public/news';
 import publicPayments from './public/payments';
 import publicProducts from './public/products';
 import publicShipment from './public/shipment';
@@ -88,6 +89,7 @@ const appReducer = {
   publicDesignPage,
   adminNewsCategories,
   adminNews,
+  publicNews,
 };
 
 export default appReducer;
