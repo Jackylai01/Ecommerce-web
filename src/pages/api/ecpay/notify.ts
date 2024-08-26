@@ -8,7 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const response = await fetch(
         'https://ecommerce-api2023.onrender.com/api/ecpay/notify',
         {
-          method: 'POST',
+          method: 'get',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -16,6 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         },
       );
       const result = await response.text();
+
       if (result === '1|OK') {
         const { MerchantTradeNo } = paymentData;
         res.redirect(`/payment-result/payment-success/${MerchantTradeNo}`);
