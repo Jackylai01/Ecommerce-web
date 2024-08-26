@@ -1,9 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'post') {
+  if (req.method === 'POST') {
     const paymentData = req.body;
-
     console.log(req.method);
     try {
       const response = await fetch(
