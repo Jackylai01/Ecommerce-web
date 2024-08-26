@@ -27,7 +27,7 @@ import {
   getAllNewsItemsAsync,
 } from '@reducers/admin/admin-news/actions';
 import { useEffect, useState } from 'react';
-import CategoryList from '../ArticleManagement/CategoryList';
+import NewsCategoryList from './NewsCategorys';
 import NewsList from './NewsList';
 
 export default function NewsManagement() {
@@ -46,12 +46,6 @@ export default function NewsManagement() {
       addNewsItemFailed,
       addNewsItemLoading,
       addNewsItemSuccess,
-      getAllNewsItemsLoading,
-      getAllNewsItemsFailed,
-      getAllNewsItemsSuccess,
-      getNewsItemByIdFailed,
-      getNewsItemByIdLoading,
-      getNewsItemByIdSuccess,
       deleteNewsItemLoading,
       deleteNewsItemFailed,
       deleteNewsItemSuccess,
@@ -225,7 +219,7 @@ export default function NewsManagement() {
               />
             </TabPanel>
             <TabPanel>
-              <CategoryList
+              <NewsCategoryList
                 categories={categories}
                 metadata={newsCategoriesMetadata}
                 searchTerm={searchTerm}
