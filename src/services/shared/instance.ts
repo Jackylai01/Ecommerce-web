@@ -2,7 +2,7 @@ import { ADMIN_API_ROUTE } from '@fixtures/constants';
 import { loadAdminToken, loadClientToken } from '@helpers/token';
 import axios from 'axios';
 
-export const BASE_API_URL = 'http://localhost:3001/api';
+export const BASE_API_URL = 'https://ecommerce-api2023.onrender.com/api';
 export const ACCESS_TOKEN_NAME = 'atn';
 
 const instance = axios.create({
