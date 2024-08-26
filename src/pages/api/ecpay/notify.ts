@@ -8,7 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const response = await fetch(
         'https://ecommerce-api2023.onrender.com/api/ecpay/notify',
         {
-          method: 'get',
+          method: 'post',
           headers: {
             'Content-Type': 'application/json',
           },
