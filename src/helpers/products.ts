@@ -33,6 +33,10 @@ export const navItems: NavItem[] = [
     label: 'Blog',
     href: '/blog',
   },
+  {
+    label: 'News',
+    href: '/news',
+  },
 ];
 
 export const fakeCategories = [
