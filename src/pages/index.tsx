@@ -46,7 +46,9 @@ const HomePage: NextPage = () => {
 
             <AlertDialogBody>
               嗨這裡是測試用的網站，後台連結如下:
-              <Link href='/zigong'>前往後台</Link>
+              <Button>
+                <Link href='/zigong'>前往後台</Link>
+              </Button>
               <Box>測式帳號:sn185672@gmail.com</Box>
               <Box>測式密碼:12345678</Box>
             </AlertDialogBody>
