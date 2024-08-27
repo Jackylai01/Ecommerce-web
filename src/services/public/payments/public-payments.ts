@@ -56,7 +56,7 @@ export const apiGetShipmentData = async (uniqueId: string) =>
  * 前台-回傳付款成功金流結果
  */
 export const apiGetPaymentStatus = async (MerchantTradeNo: string) =>
-  postRequest<ApiResult<any>>(`/ecpay/payment-status/${MerchantTradeNo}`);
+  getRequest<ApiResult<any>>(`/ecpay/payment-status/${MerchantTradeNo}`);
 
 /**
  * 發起 LinePay 付款請求
