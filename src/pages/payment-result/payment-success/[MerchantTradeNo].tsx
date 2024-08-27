@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react';
 
 const PaymentSuccess = () => {
   const router = useRouter();
-  const { orderId } = router.query;
+  const { MerchantTradeNo } = router.query;
   const [animate, setAnimate] = useState(false);
   const dispatch = useAppDispatch();
   const {
@@ -49,11 +49,11 @@ const PaymentSuccess = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    if (orderId) {
-      dispatch(getLinePayStatusAsync(orderId as string));
-      dispatch(getPaymentStatusAsync(orderId as string));
+    if (MerchantTradeNo) {
+      dispatch(getLinePayStatusAsync(MerchantTradeNo as string));
+      dispatch(getPaymentStatusAsync(MerchantTradeNo as string));
     }
-  }, [orderId, dispatch]);
+  }, [MerchantTradeNo, dispatch]);
 
   useEffect(() => {
     setAnimate(true);
