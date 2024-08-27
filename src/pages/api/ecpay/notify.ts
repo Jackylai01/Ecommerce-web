@@ -21,11 +21,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const { MerchantTradeNo } = paymentData;
         res.redirect(302, `/payment-result/payment-success/${MerchantTradeNo}`);
       } else {
-        res.redirect(302, '/payment-result/payment-failure');
+        const { MerchantTradeNo } = paymentData;
+        res.redirect(302, `/payment-result/payment-failure/${MerchantTradeNo}`);
       }
     } catch (error) {
       console.error('Error processing payment:', error);
-      res.redirect('/payment-failure');
+      res.redirect(404, '/payment-result/payment-failure');
     }
   } else {
     res.status(405).send('Method Not Allowed');
