@@ -7,6 +7,7 @@ import {
   AlertDialogOverlay,
   Box,
   Button,
+  Link,
   useDisclosure,
 } from '@chakra-ui/react';
 import { Footer } from '@components/Footer';
@@ -45,7 +46,7 @@ const HomePage: NextPage = () => {
 
             <AlertDialogBody>
               嗨這裡是測試用的網站，後台連結如下:
-              https://ecommerce-web-tawny.vercel.app/zigong
+              <Link href='/zigong'>前往後台</Link>
               <Box>測式帳號:sn185672@gmail.com</Box>
               <Box>測式密碼:12345678</Box>
             </AlertDialogBody>
