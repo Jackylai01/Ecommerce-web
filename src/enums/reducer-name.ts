@@ -50,4 +50,6 @@ export enum ReducerName {
   ADMIN_NEWS_CATEGORY = 'adminNewsCategory',
   ADMIN_NEWS_ITEMS = 'adminNewsItems',
   PUBLIC_NEWS = 'publicNews',
+  ADMIN_PERMISSION = 'adminPermission',
+  ADMIN_ROLES = 'adminRoles',
 }

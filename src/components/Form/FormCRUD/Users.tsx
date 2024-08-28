@@ -1,13 +1,19 @@
-import { VStack } from '@chakra-ui/react';
+it import { FormControl, FormLabel, Select, VStack } from '@chakra-ui/react';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { getAllRolesAsync } from '@reducers/admin/admin-roles/actions';
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
-
 import TextInput from './Field/TextInput';
-import ToggleSwitch from './Field/ToggleSwitch';
-
-interface UsersType {}
 
 export const UsersForm = () => {
   const { setValue } = useFormContext();
+  const dispatch = useAppDispatch();
+  const { list: roles } = useAppSelector((state) => state.adminRoles);
+
+  useEffect(() => {
+    dispatch(getAllRolesAsync());
+  }, [dispatch]);
 
   return (
     <VStack spacing={4} align='flex-start'>
@@ -25,14 +31,19 @@ export const UsersForm = () => {
         placeholder='請輸入電子信箱'
         isRequired
       />
-      <ToggleSwitch
-        name='role'
-        label='角色狀態'
-        onValue='admin'
-        offValue='staff'
-        onLabel='管理員'
-        offLabel='員工'
-      />
+      <FormControl id='roles'>
+        <FormLabel>選擇角色</FormLabel>
+        <Select
+          placeholder='選擇角色'
+          onChange={(e) => setValue('roles', e.target.value)}
+        >
+          {roles?.map((role: any) => (
+            <option key={role._id} value={role._id}>
+              {role.name}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
     </VStack>
   );
 };

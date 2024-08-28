@@ -1,8 +1,6 @@
 import {
   Box,
   Button,
-  Flex,
-  Switch,
   Table,
   Tbody,
   Text,
@@ -28,7 +26,6 @@ import {
   adminDeleteUserAsync,
   adminGetAllUsersAsync,
   adminGetUserProfileAsync,
-  adminToggleUserRoleAsync,
 } from '@reducers/admin/auth/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -90,30 +87,7 @@ const Authors = ({ title, captions }: AuthorsProps) => {
   const renderCell = [
     (user: IUser) => <Text>{user.username}</Text>,
     (user: IUser) => <Text>{user.email}</Text>,
-    (user: IUser) => (
-      <Flex align='center' justify='flex-start' gap='2' textAlign='center'>
-        <Text>
-          {user.roles.map((role) => roleMapping[role] || role).join(', ')}
-        </Text>
-        <Switch
-          isChecked={user.roles.includes('admin')}
-          onChange={() =>
-            handleRoleChange(
-              user._id,
-              user.roles.includes('admin') ? 'staff' : 'admin',
-            )
-          }
-          sx={{
-            '.chakra-switch__track': {
-              boxShadow: colorMode === 'light' ? '0 0 0 1px #afafaf' : 'none',
-            },
-            '.chakra-switch__thumb': {
-              bg: user.roles.includes('admin') ? 'white' : 'gray.300',
-            },
-          }}
-        />
-      </Flex>
-    ),
+
     (user: IUser) => <Text>{user.city}</Text>,
     (user: IUser) => (
       <Box display='flex' gap='1'>
@@ -133,10 +107,6 @@ const Authors = ({ title, captions }: AuthorsProps) => {
 
   const handleGetUser = (id: string) => {
     dispatch(adminGetUserProfileAsync(id));
-  };
-
-  const handleRoleChange = (userId: string, newRole: string) => {
-    dispatch(adminToggleUserRoleAsync({ userId, newRole: newRole }));
   };
 
   const handleCloseModal = () => {

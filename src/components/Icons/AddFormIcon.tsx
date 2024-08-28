@@ -22,6 +22,7 @@ import {
 } from '@reducers/admin/product-tags';
 import { resetProductDetails, resetProductId } from '@reducers/admin/products';
 import { bulkUploadProductsAsync } from '@reducers/admin/products/actions';
+import { useRouter } from 'next/router';
 import { FC, ReactNode, useState } from 'react';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
 import { AiOutlineUpload } from 'react-icons/ai';
@@ -37,6 +38,8 @@ const AddButton: FC<AddButtonProps<any>> = ({
   formContent,
   onSubmit,
 }) => {
+  const router = useRouter();
+  const isProductPage = router.pathname === '/product';
   const [file, setFile] = useState<File | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -72,6 +75,7 @@ const AddButton: FC<AddButtonProps<any>> = ({
       setFile(selectedFile);
     }
   };
+
   const handleDownloadSample = () => {
     const link = document.createElement('a');
     link.href = '/samples/sample-upload.xlsx';
@@ -109,40 +113,52 @@ const AddButton: FC<AddButtonProps<any>> = ({
         zIndex={1}
       />
 
-      <IconButton
-        icon={<AiOutlineUpload />}
-        aria-label='Upload products'
-        colorScheme='blue'
-        ml={4}
-        onClick={onUploadModalOpen}
-        position='absolute'
-        right={uploadFileMarginRight}
-        top={uploadFileTopPosition}
-        zIndex={1}
-      />
+      {isProductPage && (
+        <>
+          <IconButton
+            icon={<AiOutlineUpload />}
+            aria-label='Upload products'
+            colorScheme='blue'
+            ml={4}
+            onClick={onUploadModalOpen}
+            position='absolute'
+            right={uploadFileMarginRight}
+            top={uploadFileTopPosition}
+            zIndex={1}
+          />
 
-      <Modal isOpen={isUploadModalOpen} onClose={onUploadModalClose} size='xl'>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>批量上傳產品</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <input type='file' onChange={handleFileChange} />
+          <Modal
+            isOpen={isUploadModalOpen}
+            onClose={onUploadModalClose}
+            size='xl'
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>批量上傳產品</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <input type='file' onChange={handleFileChange} />
 
-            <Button mt={4} colorScheme='teal' onClick={handleDownloadSample}>
-              下載範例檔案
-            </Button>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme='blue' onClick={handleFileUpload}>
-              上傳
-            </Button>
-            <Button variant='ghost' onClick={onUploadModalClose}>
-              取消
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+                <Button
+                  mt={4}
+                  colorScheme='teal'
+                  onClick={handleDownloadSample}
+                >
+                  下載範例檔案
+                </Button>
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme='blue' onClick={handleFileUpload}>
+                  上傳
+                </Button>
+                <Button variant='ghost' onClick={onUploadModalClose}>
+                  取消
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </>
+      )}
       <FormModal
         isOpen={isOpen}
         onClose={onClose}

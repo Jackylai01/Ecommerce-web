@@ -1,4 +1,5 @@
 import { TabItem } from '@models/entities/shared/Tabs';
+import { FaUserShield } from 'react-icons/fa';
 import { MdCategory, MdList, MdLocalOffer, MdSearch } from 'react-icons/md';
 
 export const ProductsConfig: TabItem[] = [
@@ -29,6 +30,11 @@ export const UsersConfig: TabItem[] = [
     label: '會員管理',
     path: '/zigong/member',
     icon: MdCategory,
+  },
+  {
+    label: '角色管理',
+    path: '/zigong/roles',
+    icon: FaUserShield,
   },
 ];
 

@@ -131,6 +131,7 @@ const Login = () => {
                     type='text'
                     placeholder='Your email address'
                     size='lg'
+                    defaultValue='sn185672@gmail.com'
                     color={textColor}
                   />
                   <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>
@@ -142,6 +143,7 @@ const Login = () => {
                       required: 'This is required',
                     })}
                     borderRadius='15px'
+                    defaultValue='12345678'
                     mb='36px'
                     fontSize='sm'
                     type='password'

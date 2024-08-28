@@ -51,8 +51,8 @@ const HomePage: NextPage = () => {
               </Button>
               <Box>測式帳號:sn185672@gmail.com</Box>
               <Box>測式密碼:12345678</Box>
+              <Box>如果網頁有Loading 的狀況請稍等30秒左右</Box>
             </AlertDialogBody>
-
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
                 關閉
