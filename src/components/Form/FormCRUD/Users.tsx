@@ -1,4 +1,4 @@
-it import { FormControl, FormLabel, Select, VStack } from '@chakra-ui/react';
+import { FormControl, FormLabel, Select, VStack } from '@chakra-ui/react';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { getAllRolesAsync } from '@reducers/admin/admin-roles/actions';
