@@ -444,48 +444,54 @@ const RoleManagement = () => {
             </CardHeader>
             <CardBody>
               <VStack spacing={2}>
-                {roles?.map((role: any) => (
-                  <Box key={role?._id} w='full'>
-                    <Button
-                      variant={
-                        expandedRoleId === role?._id ? 'solid' : 'outline'
-                      }
-                      leftIcon={<FaUser />}
-                      w='full'
-                      onClick={() =>
-                        setExpandedRoleId(
-                          expandedRoleId === role?._id ? null : role?._id,
-                        )
-                      }
-                    >
-                      {role?.name}
-                      <ChevronDownIcon
-                        ml='auto'
-                        transform={
-                          expandedRoleId === role?._id
-                            ? 'rotate(180deg)'
-                            : 'rotate(0deg)'
-                        }
-                        transition='transform 0.2s'
-                      />
-                    </Button>
-                    <Collapse in={expandedRoleId === role?._id} animateOpacity>
-                      <Box mt={4} p={4} borderWidth='1px' rounded='lg'>
-                        <Heading as='h3' size='sm' mb={4}>
-                          權限列表
-                        </Heading>
-                        {renderRolePermissions(role)}
+                {roles?.map(
+                  (role: any) =>
+                    role?._id && (
+                      <Box key={role._id} w='full'>
                         <Button
-                          mt={4}
-                          colorScheme='red'
-                          onClick={() => handleDeleteRole(role?._id)}
+                          variant={
+                            expandedRoleId === role._id ? 'solid' : 'outline'
+                          }
+                          leftIcon={<FaUser />}
+                          w='full'
+                          onClick={() =>
+                            setExpandedRoleId(
+                              expandedRoleId === role._id ? null : role._id,
+                            )
+                          }
                         >
-                          刪除角色
+                          {role.name}
+                          <ChevronDownIcon
+                            ml='auto'
+                            transform={
+                              expandedRoleId === role._id
+                                ? 'rotate(180deg)'
+                                : 'rotate(0deg)'
+                            }
+                            transition='transform 0.2s'
+                          />
                         </Button>
+                        <Collapse
+                          in={expandedRoleId === role._id}
+                          animateOpacity
+                        >
+                          <Box mt={4} p={4} borderWidth='1px' rounded='lg'>
+                            <Heading as='h3' size='sm' mb={4}>
+                              權限列表
+                            </Heading>
+                            {renderRolePermissions(role)}
+                            <Button
+                              mt={4}
+                              colorScheme='red'
+                              onClick={() => handleDeleteRole(role._id)}
+                            >
+                              刪除角色
+                            </Button>
+                          </Box>
+                        </Collapse>
                       </Box>
-                    </Collapse>
-                  </Box>
-                ))}
+                    ),
+                )}
               </VStack>
             </CardBody>
           </Card>
