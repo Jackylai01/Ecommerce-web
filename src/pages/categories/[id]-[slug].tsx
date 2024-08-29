@@ -1,10 +1,10 @@
 import { Hero } from '@components/Hero/Hero';
 import LoadingLayout from '@components/Layout/LoadingLayout';
-import { AllProducts } from '@components/Products';
+import { CategoryProducts } from '@components/Products/CategoryProducts';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { IBreadcrumbItem } from '@models/requests/products';
-import { getCategoryByIdAsync } from '@reducers/public/categories/actions';
+import { getCategoryByIdAsync } from '@reducers/public/categories/actions'; // 确保你有这个 action
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -50,7 +50,7 @@ const CategoryPage = () => {
           btnLink='/categories'
         />
       )}
-      <AllProducts products={products || []} breadcrumbItems={items} />
+      <CategoryProducts breadcrumbItems={items} products={products} />
     </LoadingLayout>
   );
 };
