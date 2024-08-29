@@ -23,6 +23,7 @@ import Pagination from '@components/Pagination';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { ShoppingCredit } from '@models/responses/shoppingCredit';
+import { resetShoppingCreditsState } from '@reducers/admin/shoppingCredits';
 import {
   deleteExpiredShoppingCreditsAsync,
   deleteShoppingCreditAsync,
@@ -136,7 +137,6 @@ const AllShoppingCreditsTab = () => {
     deleteExpiredShoppingCreditsError,
     updateShoppingCreditStatusFailed,
     updateShoppingCreditStatusSuccess,
-    search,
     statusFilter,
   ]);
 
@@ -175,6 +175,12 @@ const AllShoppingCreditsTab = () => {
       }),
     );
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetShoppingCreditsState());
+    };
+  }, [dispatch]);
 
   return (
     <LoadingLayout isLoading={deleteShoppingCreditLoading}>
@@ -269,7 +275,7 @@ const AllShoppingCreditsTab = () => {
                         {credit?.amount}
                       </Td>
                       <Td className='tables-container__body-cell'>
-                        {credit?.type}
+                        {credit?.creditType?.name || '未知類型'}
                       </Td>
                       <Td className='tables-container__body-cell'>
                         <Badge

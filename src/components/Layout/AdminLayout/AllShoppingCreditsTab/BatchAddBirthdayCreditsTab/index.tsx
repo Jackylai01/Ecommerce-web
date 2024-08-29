@@ -18,6 +18,7 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
+import LoadingLayout from '@components/Layout/LoadingLayout';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { adminGetAllClientUsersAsync } from '@reducers/admin/client-users/actions';
@@ -123,95 +124,101 @@ const BatchAddBirthdayCreditsTab = () => {
   ]);
 
   return (
-    <Box p={4} borderWidth={1} borderRadius='lg' boxShadow='lg'>
-      <VStack spacing={4}>
-        <Box as='form' w='full' onSubmit={handleSubmit(onSubmit)}>
-          <FormControl id='amount' mb='4'>
-            <FormLabel>金額</FormLabel>
+    <LoadingLayout isLoading={addBirthdayShoppingCreditsLoading}>
+      <Box p={4} borderWidth={1} borderRadius='lg' boxShadow='lg'>
+        <VStack spacing={4}>
+          <Box as='form' w='full' onSubmit={handleSubmit(onSubmit)}>
+            <FormControl id='amount' mb='4'>
+              <FormLabel>金額</FormLabel>
+              <Input
+                type='number'
+                {...register('amount', { valueAsNumber: true })}
+              />
+            </FormControl>
+            <FormControl id='expiryDate' mb='4'>
+              <FormLabel>到期日</FormLabel>
+              <Input type='date' {...register('expiryDate')} />
+            </FormControl>
+            <Button type='submit' colorScheme='teal' w='full'>
+              批量發放生日購物金
+            </Button>
+          </Box>
+          <InputGroup>
             <Input
-              type='number'
-              {...register('amount', { valueAsNumber: true })}
+              placeholder='搜尋用戶'
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              shadow='sm'
+              borderRadius='10px 20px 20px 10px'
             />
-          </FormControl>
-          <FormControl id='expiryDate' mb='4'>
-            <FormLabel>到期日</FormLabel>
-            <Input type='date' {...register('expiryDate')} />
-          </FormControl>
-          <Button type='submit' colorScheme='teal' w='full'>
-            批量發放生日購物金
-          </Button>
-        </Box>
-        <InputGroup>
-          <Input
-            placeholder='搜尋用戶'
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            shadow='sm'
-            borderRadius='10px 20px 20px 10px'
-          />
-          <InputRightElement>
-            <IconButton
-              aria-label='Search users'
-              icon={<FaSearch />}
-              onClick={handleSearch}
-              colorScheme='teal'
-              borderLeftRadius={0}
-            />
-          </InputRightElement>
-        </InputGroup>
-        <Box w='100%' className='tables-container'>
-          <Table variant='simple' size='md' className='tables-container__table'>
-            <Thead>
-              <Tr>
-                <Th className='tables-container__header-cell tables-container__sticky-column'>
-                  <Checkbox
-                    isChecked={selectedUsers.length === users?.length}
-                    onChange={handleSelectAll}
-                    borderColor='teal.500'
-                  />
-                </Th>
-
-                <Th>用戶名</Th>
-                <Th>電子郵件</Th>
-                <Th>生日</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {getAllClientUsersLoading ? (
+            <InputRightElement>
+              <IconButton
+                aria-label='Search users'
+                icon={<FaSearch />}
+                onClick={handleSearch}
+                colorScheme='teal'
+                borderLeftRadius={0}
+              />
+            </InputRightElement>
+          </InputGroup>
+          <Box w='100%' className='tables-container'>
+            <Table
+              variant='simple'
+              size='md'
+              className='tables-container__table'
+            >
+              <Thead>
                 <Tr>
-                  <Td colSpan={5} textAlign='center'>
-                    <Spinner />
-                  </Td>
+                  <Th className='tables-container__header-cell tables-container__sticky-column'>
+                    <Checkbox
+                      isChecked={selectedUsers.length === users?.length}
+                      onChange={handleSelectAll}
+                      borderColor='teal.500'
+                    />
+                  </Th>
+
+                  <Th>用戶名</Th>
+                  <Th>電子郵件</Th>
+                  <Th>生日</Th>
                 </Tr>
-              ) : (
-                users?.map((user) => (
-                  <Tr key={user._id}>
-                    <Td className='tables-container__header-cell tables-container__sticky-column'>
-                      <Checkbox
-                        isChecked={selectedUsers.includes(user._id!)}
-                        onChange={() => handleSelectUser(user._id!)}
-                        borderColor='teal.500'
-                      />
-                    </Td>
-                    <Td className='tables-container__body-cell'>
-                      {user.username}
-                    </Td>
-                    <Td className='tables-container__body-cell'>
-                      {user.email}
-                    </Td>
-                    <Td className='tables-container__body-cell'>
-                      {user.birthday
-                        ? new Date(user.birthday).toLocaleDateString()
-                        : '無'}
+              </Thead>
+              <Tbody>
+                {getAllClientUsersLoading ? (
+                  <Tr>
+                    <Td colSpan={5} textAlign='center'>
+                      <Spinner />
                     </Td>
                   </Tr>
-                ))
-              )}
-            </Tbody>
-          </Table>
-        </Box>
-      </VStack>
-    </Box>
+                ) : (
+                  users?.map((user) => (
+                    <Tr key={user._id}>
+                      <Td className='tables-container__header-cell tables-container__sticky-column'>
+                        <Checkbox
+                          isChecked={selectedUsers.includes(user._id!)}
+                          onChange={() => handleSelectUser(user._id!)}
+                          borderColor='teal.500'
+                        />
+                      </Td>
+                      <Td className='tables-container__body-cell'>
+                        {user.username}
+                      </Td>
+                      <Td className='tables-container__body-cell'>
+                        {user.email}
+                      </Td>
+                      <Td className='tables-container__body-cell'>
+                        {user.birthday
+                          ? new Date(user.birthday).toLocaleDateString()
+                          : '無'}
+                      </Td>
+                    </Tr>
+                  ))
+                )}
+              </Tbody>
+            </Table>
+          </Box>
+        </VStack>
+      </Box>
+    </LoadingLayout>
   );
 };
 

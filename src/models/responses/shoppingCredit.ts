@@ -9,6 +9,7 @@ export interface ShoppingCredit {
   expiryDate?: Date;
   createdAt: Date;
   updatedAt: Date;
+  creditType: any;
 }
 
 export interface User {
