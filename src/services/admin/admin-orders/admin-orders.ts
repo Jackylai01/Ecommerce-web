@@ -14,7 +14,7 @@ import {
  */
 export const apiAdminGetOrders = async (query: PagingQuery) =>
   getRequest<ApiPaginationResult<ordersResponse>>(
-    formatQueryString('/orders', query),
+    formatQueryString('/zigong/orders', query),
   );
 
 /**
@@ -22,7 +22,7 @@ export const apiAdminGetOrders = async (query: PagingQuery) =>
  */
 
 export const apiAdminGetOrdersDetails = async (orderId: string) =>
-  getRequest<ApiResult<OrderDetail>>(`/orders/details/${orderId}`);
+  getRequest<ApiResult<OrderDetail>>(`/zigong/orders/details/${orderId}`);
 
 /**
  * 更新訂單的狀態
@@ -31,4 +31,7 @@ export const apiAdminGetOrdersDetails = async (orderId: string) =>
 export const apiAdminUpdateOrderStatus = async (
   orderId: string,
   status: string,
-) => postRequest<ApiResult<any>>(`/orders/updateStatus/${orderId}`, { status });
+) =>
+  postRequest<ApiResult<any>>(`/zigong/orders/updateStatus/${orderId}`, {
+    status,
+  });
