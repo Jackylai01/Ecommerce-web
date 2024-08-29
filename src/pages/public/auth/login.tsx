@@ -139,6 +139,7 @@ const Login: NextPage = () => {
               <Input
                 type='email'
                 placeholder='請輸入您的信箱'
+                defaultValue='sn185672@gmail.com'
                 {...register('email', { required: '請填入正確信箱' })}
               />
               {errors.email && (
@@ -151,6 +152,7 @@ const Login: NextPage = () => {
                 <Input
                   type={showPassword ? 'text' : 'password'}
                   placeholder='請輸入您的密碼'
+                  defaultValue='12345678'
                   {...register('password', {
                     required: '請填入密碼',
                   })}
