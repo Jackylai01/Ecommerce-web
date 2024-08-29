@@ -74,7 +74,36 @@ const ProductsPages: NextPage = () => {
   ]);
 
   const handleSubmit = async (data: any) => {
-    dispatch(addProductAsync(data));
+    const formData = new FormData();
+
+    formData.append('name', data.name);
+    formData.append('description', data.description);
+    formData.append('price', data.price);
+    formData.append('minimumPurchase', data.minimumPurchase);
+    formData.append('maximumPurchase', data.maximumPurchase);
+    formData.append('cost', data.cost);
+    formData.append('stock', data.stock);
+    formData.append('status', data.status);
+    formData.append('category', data.category);
+
+    // 處理封面圖片
+    if (data.coverImage) {
+      formData.append('coverImage', data.coverImage);
+    }
+
+    // 處理產品圖片
+    if (data.images && data.images.length > 0) {
+      data.images.forEach((image: File) => {
+        formData.append('images', image);
+      });
+    }
+
+    if (data.tags && data.tags.length > 0) {
+      data.tags.forEach((tag: string) => formData.append('tags[]', tag));
+    }
+
+    // 發送請求
+    dispatch(addProductAsync(formData));
     dispatch(resetAdminUpload());
   };
 

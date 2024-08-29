@@ -17,35 +17,35 @@ import {
 
 export const apiGetCategories = async (query: PagingQuery) =>
   getRequest<ApiPaginationResult<Category>>(
-    formatQueryString('/categories', query),
+    formatQueryString('/zigong/categories', query),
   );
 
 /**
  * 根據id 取得產品類別
  */
 export const apiGetCategoryById = async (id: string) => {
-  return getRequest<ApiListResult<Category>>(`/categories/${id}`);
+  return getRequest<ApiListResult<Category>>(`/zigong/categories/${id}`);
 };
 
 /**
  * 新增產品類別
  */
 export const apiAddCategory = async (body: FormData) => {
-  return postRequest<ApiResult<any>>('/categories', body);
+  return postRequest<ApiResult<any>>('/zigong/categories', body);
 };
 
 /**
  * 更新產品類別
  */
 export const apiUpdateCategory = async (id: string, body: FormData) => {
-  return putRequest<ApiResult<any>>(`/categories/${id}`, body);
+  return putRequest<ApiResult<any>>(`/zigong/categories/${id}`, body);
 };
 
 /**
  * 刪除產品類別
  */
 export const apiDeleteCategory = async (id: string) => {
-  return deleteRequest<ApiResult<any>>(`/categories/${id}`);
+  return deleteRequest<ApiResult<any>>(`/zigong/categories/${id}`);
 };
 
 /**
@@ -57,6 +57,6 @@ export const apiDeleteCategoryImage = async (
 ) => {
   const encodedPublicId = encodeURIComponent(imageId);
   return deleteRequest<ApiResult<any>>(
-    `/categories/${categoryId}/image/${encodedPublicId}`,
+    `/zigong/categories/${categoryId}/image/${encodedPublicId}`,
   );
 };

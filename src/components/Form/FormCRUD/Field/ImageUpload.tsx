@@ -56,13 +56,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
       setFilePreviews(filesArray);
 
+      // 確保將上傳的圖片文件設置到表單數據中
       setValue(
         name,
         multiple ? filesArray.map((f) => f.file) : filesArray[0].file,
+        { shouldValidate: true, shouldDirty: true },
       );
     }
   };
-
   const handleRemoveImage = (
     index: number,
     isFilePreview: boolean,

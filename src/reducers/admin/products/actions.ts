@@ -45,7 +45,7 @@ export const getProductByIdAsync = createAsyncThunk(
 
 export const addProductAsync = createAsyncThunk(
   `${ReducerName.PRODUCT}/${ProductAction.addProduct}`,
-  async (body: any) => {
+  async (body: FormData) => {
     const response = await apiAddProduct(body);
     return response.result.data;
   },
