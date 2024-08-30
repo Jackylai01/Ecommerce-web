@@ -1,24 +1,31 @@
-import { useEffect, useState } from 'react';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { getSalesOverviewAsync } from '@reducers/admin/admin-statistics/actions';
+import { useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { lineChartData, lineChartOptions } from 'src/variables/charts';
-
-interface ChartDataItem {
-  name: string;
-  data: number[];
-}
+import { lineChartOptions } from 'src/variables/charts';
 
 const LineChart = () => {
-  const [chartData, setChartData] = useState<ChartDataItem[]>([]);
-  const [chartOptions, setChartOptions] = useState({});
+  const dispatch = useAppDispatch();
+  const { salesOverview } = useAppSelector((state) => state.adminStatistics);
 
   useEffect(() => {
-    setChartData(lineChartData);
-    setChartOptions(lineChartOptions);
-  }, []);
+    dispatch(getSalesOverviewAsync());
+  }, [dispatch]);
+
+  const chartData = [
+    {
+      name: 'Sales',
+      data:
+        salesOverview && salesOverview.length > 0
+          ? salesOverview.map((data: any) => data.totalSales)
+          : Array(12).fill(0),
+    },
+  ];
 
   return (
     <ReactApexChart
-      options={chartOptions}
+      options={lineChartOptions}
       series={chartData}
       type='area'
       width='100%'

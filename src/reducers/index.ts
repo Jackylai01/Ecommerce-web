@@ -11,6 +11,7 @@ import adminNewsCategories from './admin/admin-news-categorys';
 import adminPermissions from './admin/admin-permissions';
 import adminRefunds from './admin/admin-refunds';
 import adminRoles from './admin/admin-roles';
+import adminStatistics from './admin/admin-statistics';
 import adminAuth from './admin/auth';
 import adminClientUsers from './admin/client-users';
 import customPage from './admin/custom-page';
@@ -45,6 +46,7 @@ import publicNews from './public/news';
 import publicPayments from './public/payments';
 import publicProducts from './public/products';
 import publicShipment from './public/shipment';
+
 const appReducer = {
   layout,
   crudLayout,
@@ -93,6 +95,7 @@ const appReducer = {
   adminNews,
   publicNews,
   adminPermissions,
+  adminStatistics,
 };
 
 export default appReducer;

@@ -12,18 +12,6 @@ export const barChartOptions = {
     },
   },
   tooltip: {
-    style: {
-      backgroundColor: 'red',
-      fontSize: '12px',
-      fontFamily: undefined,
-    },
-    onDatasetHover: {
-      style: {
-        backgroundColor: 'red',
-        fontSize: '12px',
-        fontFamily: undefined,
-      },
-    },
     theme: 'dark',
   },
   xaxis: {
@@ -45,7 +33,6 @@ export const barChartOptions = {
   },
   yaxis: {
     show: true,
-    color: '#fff',
     labels: {
       show: true,
       style: {
@@ -58,7 +45,7 @@ export const barChartOptions = {
     show: false,
   },
   fill: {
-    colors: '#fff',
+    colors: ['#fff'],
   },
   dataLabels: {
     enabled: false,
@@ -83,18 +70,7 @@ export const barChartOptions = {
   ],
 };
 
-export const lineChartData = [
-  {
-    name: 'Mobile apps',
-    data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-  },
-  {
-    name: 'Websites',
-    data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
-  },
-];
-
-export const lineChartOptions = {
+export const lineChartOptions: ApexCharts.ApexOptions = {
   chart: {
     toolbar: {
       show: false,
@@ -110,7 +86,7 @@ export const lineChartOptions = {
     curve: 'smooth',
   },
   xaxis: {
-    type: 'datetime',
+    type: 'category',
     categories: [
       'Jan',
       'Feb',
@@ -152,8 +128,6 @@ export const lineChartOptions = {
       shade: 'light',
       type: 'vertical',
       shadeIntensity: 0.5,
-      gradientToColors: undefined, // optional, if not defined - uses the shades of same color in series
-      inverseColors: true,
       opacityFrom: 0.8,
       opacityTo: 0,
       stops: [],

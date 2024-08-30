@@ -52,4 +52,5 @@ export enum ReducerName {
   PUBLIC_NEWS = 'publicNews',
   ADMIN_PERMISSION = 'adminPermission',
   ADMIN_ROLES = 'adminRoles',
+  ADMIN_STATISTICS = 'adminStatistics',
 }

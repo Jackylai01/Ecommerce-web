@@ -7,6 +7,10 @@ import {
   StatsIcon,
   WalletIcon,
 } from '@components/Icons/Icons';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { getActiveUsersStatisticsAsync } from '@reducers/admin/admin-statistics/actions';
+import { useEffect } from 'react';
 import { useAdminColorMode } from 'src/context/colorMode';
 import ChartStatistics from './ChartStatistics';
 
@@ -17,12 +21,21 @@ interface ActiveUsersType {
 }
 
 const ActiveUsers = ({ title, percentage, chart }: ActiveUsersType) => {
+  const dispatch = useAppDispatch();
+  const { activeUsersStatistics } = useAppSelector(
+    (state) => state.adminStatistics,
+  );
+
+  useEffect(() => {
+    dispatch(getActiveUsersStatisticsAsync());
+  }, [dispatch]);
+
   const { colorMode } = useAdminColorMode();
   const iconBoxInside = colorMode === 'light' ? 'white' : 'white';
   const textColor = colorMode === 'light' ? 'gray.700' : 'white';
 
   return (
-    <Card p='16px'>
+    <Card p='1.5rem'>
       <CardBody>
         <Flex direction='column' w='100%'>
           {chart}
@@ -30,39 +43,29 @@ const ActiveUsers = ({ title, percentage, chart }: ActiveUsersType) => {
             <Text fontSize='lg' color={textColor} fontWeight='bold' mb='6px'>
               {title}
             </Text>
-            <Text fontSize='md' fontWeight='medium' color='gray.400'>
-              <Text
-                as='span'
-                color={percentage > 0 ? 'green.400' : 'red.400'}
-                fontWeight='bold'
-              >
-                {percentage > 0 ? `+${percentage}%` : `-${percentage}%`}
-              </Text>{' '}
-              than last week
-            </Text>
           </Flex>
           <SimpleGrid gap={{ sm: '12px' }} columns={4}>
             <ChartStatistics
               title={'Users'}
-              amount={'32,984'}
-              percentage={20}
+              amount={activeUsersStatistics?.activeUsers || 'N/A'}
+              percentage={activeUsersStatistics?.percentage || 0}
               icon={<WalletIcon h={'15px'} w={'15px'} color={iconBoxInside} />}
             />
             <ChartStatistics
               title={'Clicks'}
-              amount={'2.42m'}
+              amount={activeUsersStatistics?.clicks || 'N/A'}
               percentage={80}
               icon={<RocketIcon h={'15px'} w={'15px'} color={iconBoxInside} />}
             />
             <ChartStatistics
               title={'Sales'}
-              amount={'2,400$'}
+              amount={activeUsersStatistics?.totalSales || 'N/A'}
               percentage={30}
               icon={<CartIcon h={'15px'} w={'15px'} color={iconBoxInside} />}
             />
             <ChartStatistics
               title={'Items'}
-              amount={'320'}
+              amount={activeUsersStatistics?.totalItems || 'N/A'}
               percentage={40}
               icon={<StatsIcon h={'15px'} w={'15px'} color={iconBoxInside} />}
             />

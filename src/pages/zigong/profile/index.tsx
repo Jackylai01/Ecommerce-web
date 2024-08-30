@@ -3,7 +3,7 @@ import Conversations from '@components/Layout/AdminLayout/Profile/components/Con
 import Header from '@components/Layout/AdminLayout/Profile/components/Header';
 import PlatformSettings from '@components/Layout/AdminLayout/Profile/components/PlatformSettings';
 import ProfileInformation from '@components/Layout/AdminLayout/Profile/components/ProfileInformation';
-import Projects from '@components/Layout/AdminLayout/Profile/components/Projects';
+
 import { useAdminColorMode } from 'src/context/colorMode';
 
 const ProfilePages = () => {
@@ -41,7 +41,6 @@ const ProfilePages = () => {
         />
         <Conversations title={'Conversations'} />
       </Grid>
-      <Projects title={'Projects'} description={'Architects design houses'} />
     </Flex>
   );
 };
