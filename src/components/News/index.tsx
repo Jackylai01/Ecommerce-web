@@ -22,9 +22,11 @@ import {
   getNewsByCategoryAsync,
 } from '@reducers/public/news/actions';
 import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const NewsItemCard = ({
+  _id,
   title,
   createdAt,
   content,
@@ -69,17 +71,18 @@ const NewsItemCard = ({
         </Text>
         <Flex align='center' justify='space-between'>
           <Text fontSize='sm'>{new Date(createdAt).toLocaleDateString()}</Text>
-          <Button
-            as='a'
-            href='#'
-            size='sm'
-            colorScheme='blue'
-            variant='link'
-            rightIcon={<ArrowRight />}
-            _hover={{ textDecoration: 'none', color: 'blue.300' }}
-          >
-            閱讀更多
-          </Button>
+          <Link href={`/news/${_id}`} passHref>
+            <Button
+              as='a'
+              size='sm'
+              colorScheme='blue'
+              variant='link'
+              rightIcon={<ArrowRight />}
+              _hover={{ textDecoration: 'none', color: 'blue.300' }}
+            >
+              閱讀更多
+            </Button>
+          </Link>
         </Flex>
       </Box>
     </Box>
