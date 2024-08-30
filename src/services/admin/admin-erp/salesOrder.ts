@@ -14,24 +14,26 @@ import { SalesOrderResponse } from '@models/responses/salesOrder.res';
 // 獲取全部銷售訂單
 export const apiGetSalesOrders = async (query: PagingQuery) =>
   getRequest<ApiPaginationResult<SalesOrderResponse>>(
-    formatQueryString('/erp/sales-orders', query),
+    formatQueryString('/zigong/erp/sales-orders', query),
   );
 
 // 創建銷售訂單
 export const apiCreateSalesOrder = async (data: any) =>
-  postRequest<ApiResult<SalesOrderResponse>>('/erp/sales-orders', data);
+  postRequest<ApiResult<SalesOrderResponse>>('/zigong/erp/sales-orders', data);
 
 // 獲取特定銷售訂單詳情
 export const apiGetSalesOrderById = async (orderId: string) =>
-  getRequest<ApiResult<SalesOrderResponse>>(`/erp/sales-orders/${orderId}`);
+  getRequest<ApiResult<SalesOrderResponse>>(
+    `/zigong/erp/sales-orders/${orderId}`,
+  );
 
 // 更新銷售訂單
 export const apiUpdateSalesOrder = async (orderId: string, data: any) =>
   putRequest<ApiResult<SalesOrderResponse>>(
-    `/erp/sales-orders/${orderId}`,
+    `/zigong/erp/sales-orders/${orderId}`,
     data,
   );
 
 // 刪除銷售訂單
 export const apiDeleteSalesOrder = async (orderId: string) =>
-  deleteRequest<ApiResult<null>>(`/erp/sales-orders/${orderId}`);
+  deleteRequest<ApiResult<null>>(`/zigong/erp/sales-orders/${orderId}`);

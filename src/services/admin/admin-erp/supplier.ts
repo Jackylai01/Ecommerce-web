@@ -12,9 +12,9 @@ import { Supplier, SupplierResponse } from '@models/responses/supplier';
 // 獲取全部進貨訂單
 export const apiGetSuppliers = async (query: PagingQuery) =>
   getRequest<ApiPaginationResult<SupplierResponse>>(
-    formatQueryString('/erp/supplier', query),
+    formatQueryString('/zigong/erp/supplier', query),
   );
 
 // 創建進貨訂單
 export const apiCreateSuppliers = async (data: Supplier) =>
-  postRequest<ApiResult<SupplierResponse>>('/erp/supplier', data);
+  postRequest<ApiResult<SupplierResponse>>('/zigong/erp/supplier', data);

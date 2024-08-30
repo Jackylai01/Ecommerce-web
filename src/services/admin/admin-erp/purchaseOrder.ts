@@ -17,23 +17,26 @@ import {
 // 獲取全部進貨訂單
 export const apiGetPurchaseOrders = async (data: PagingQuery) =>
   getRequest<ApiPaginationResult<PurchaseOrderResponse>>(
-    formatQueryString('/erp/purchase-orders', data),
+    formatQueryString('/zigong/erp/purchase-orders', data),
   );
 
 // 創建進貨訂單
 export const apiCreatePurchaseOrder = async (data: PurchaseOrder) =>
-  postRequest<ApiResult<PurchaseOrder>>('/erp/purchase-orders', data);
+  postRequest<ApiResult<PurchaseOrder>>('/zigong/erp/purchase-orders', data);
 
 // 獲取特定進貨訂單詳情
 export const apiGetPurchaseOrderById = async (orderId: string) =>
   getRequest<ApiResult<PurchaseOrderResponse>>(
-    `/erp/purchase-orders/${orderId}`,
+    `/zigong/erp/purchase-orders/${orderId}`,
   );
 
 // 更新進貨訂單
 export const apiUpdatePurchaseOrder = async (orderId: string, data: any) =>
-  putRequest<ApiResult<PurchaseOrder>>(`/erp/purchase-orders/${orderId}`, data);
+  putRequest<ApiResult<PurchaseOrder>>(
+    `/zigong/erp/purchase-orders/${orderId}`,
+    data,
+  );
 
 // 刪除進貨訂單
 export const apiDeletePurchaseOrder = async (orderId: string) =>
-  deleteRequest<ApiResult<null>>(`/erp/purchase-orders/${orderId}`);
+  deleteRequest<ApiResult<null>>(`/zigong/erp/purchase-orders/${orderId}`);
