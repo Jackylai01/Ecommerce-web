@@ -37,7 +37,7 @@ export const apiAdminUsersLogin = async (body: LoginRequest) => {
  * 後台-管理員刷新Token
  */
 export const apiAdminUsersTokenRefresh = async () =>
-  postRequest<ApiResult<AuthResponse>>('/zigong/refresh');
+  postRequest<ApiResult<AuthResponse>>('/zigong/refreshToken');
 
 /**
  * 後台-管理員登出
