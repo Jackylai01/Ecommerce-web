@@ -9,22 +9,25 @@ import {
   Text,
 } from '@chakra-ui/react';
 import Pagination from '@components/Pagination';
-import useAppSelector from '@hooks/useAppSelector';
+import { Metadata } from '@models/entities/shared/pagination';
+import { ArticlePublicResponse } from '@models/responses/article.res';
 import { Calendar, User } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-const BlogPostGrid: React.FC = () => {
-  const router = useRouter();
-  const { list: posts, metadata } = useAppSelector(
-    (state) => state.publicArticles,
-  );
+interface BlogPostGridProps {
+  articles: ArticlePublicResponse[];
+  metadata: Metadata | null;
+}
 
-  if (!posts || posts.length === 0) return null;
+const BlogPostGrid: React.FC<BlogPostGridProps> = ({ articles, metadata }) => {
+  const router = useRouter();
+
+  if (!articles || articles.length === 0) return null;
 
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
-      {posts.map((post, index) => (
+      {articles.map((post, index) => (
         <Box
           key={index}
           bg='white'

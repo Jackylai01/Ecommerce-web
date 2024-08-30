@@ -9,13 +9,16 @@ import {
   Tag,
   Text,
 } from '@chakra-ui/react';
-import useAppSelector from '@hooks/useAppSelector';
+import { ArticlePublicResponse } from '@models/responses/article.res';
 import { BookOpen, Calendar, Clock, User } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-const FeaturedPost: React.FC = () => {
-  const { trendingArticles } = useAppSelector((state) => state.publicArticles);
+interface FeaturedPostProps {
+  trendingArticles: ArticlePublicResponse[] | null;
+}
+
+const FeaturedPost: React.FC<FeaturedPostProps> = ({ trendingArticles }) => {
   const router = useRouter();
 
   if (!trendingArticles || trendingArticles.length === 0) return null;

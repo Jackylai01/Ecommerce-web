@@ -7,27 +7,19 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import useAppDispatch from '@hooks/useAppDispatch';
-import useAppSelector from '@hooks/useAppSelector';
 import {
-  getArticleCategoriesAsync,
-  getTrendingArticlesAsync,
-} from '@reducers/public/articles/actions';
-
+  ArticleCategoryPublicResponse,
+  ArticlePublicResponse,
+} from '@models/responses/article.res';
 import { Tag as TagIcon, TrendingUp } from 'lucide-react';
-import React, { useEffect } from 'react';
+import React from 'react';
 
-const Sidebar: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { trendingArticles, categories } = useAppSelector(
-    (state) => state.publicArticles,
-  );
+interface SidebarProps {
+  trendingArticles: ArticlePublicResponse[] | null;
+  categories: ArticleCategoryPublicResponse[] | null;
+}
 
-  useEffect(() => {
-    dispatch(getTrendingArticlesAsync());
-    dispatch(getArticleCategoriesAsync());
-  }, [dispatch]);
-
+const Sidebar: React.FC<SidebarProps> = ({ trendingArticles, categories }) => {
   return (
     <Stack spacing={8}>
       <Box bg='white' borderRadius='lg' shadow='md' p={6}>
@@ -43,36 +35,40 @@ const Sidebar: React.FC = () => {
           熱門文章
         </Heading>
         <VStack spacing={4}>
-          {trendingArticles?.map((post, index) => (
-            <Box
-              key={index}
-              borderBottom='1px'
-              borderColor='gray.200'
-              pb={2}
-              w='full'
-              _last={{ borderBottom: 'none' }}
-            >
-              <Button
-                as='a'
-                href='#'
-                variant='link'
-                color='gray.700'
-                _hover={{ color: 'purple.600' }}
-                display='flex'
-                alignItems='start'
+          {Array.isArray(trendingArticles) ? (
+            trendingArticles.map((post, index) => (
+              <Box
+                key={index}
+                borderBottom='1px'
+                borderColor='gray.200'
+                pb={2}
+                w='full'
+                _last={{ borderBottom: 'none' }}
               >
-                <Text
-                  fontSize='2xl'
-                  fontWeight='bold'
-                  color='purple.200'
-                  mr={3}
+                <Button
+                  as='a'
+                  href='#'
+                  variant='link'
+                  color='gray.700'
+                  _hover={{ color: 'purple.600' }}
+                  display='flex'
+                  alignItems='start'
                 >
-                  {index + 1}
-                </Text>
-                <Text>{post.title}</Text>
-              </Button>
-            </Box>
-          ))}
+                  <Text
+                    fontSize='2xl'
+                    fontWeight='bold'
+                    color='purple.200'
+                    mr={3}
+                  >
+                    {index + 1}
+                  </Text>
+                  <Text>{post.title}</Text>
+                </Button>
+              </Box>
+            ))
+          ) : (
+            <Text>暫無熱門文章</Text>
+          )}
         </VStack>
       </Box>
       <Box bg='white' borderRadius='lg' shadow='md' p={6}>
