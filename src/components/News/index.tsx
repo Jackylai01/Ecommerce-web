@@ -13,17 +13,10 @@ import {
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import { testImage } from '@fixtures/componentLibrary';
-import useAppDispatch from '@hooks/useAppDispatch';
-import useAppSelector from '@hooks/useAppSelector';
 import { NewsItem } from '@models/responses/news';
-import {
-  getAllPublicNewsAsync,
-  getAllPublicNewsCategoriesAsync,
-  getNewsByCategoryAsync,
-} from '@reducers/public/news/actions';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const NewsItemCard = ({
   _id,
@@ -89,31 +82,16 @@ const NewsItemCard = ({
   );
 };
 
-const NewsTabs = () => {
-  const dispatch = useAppDispatch();
-  const { newsList, categories, metadata, status } = useAppSelector(
-    (state) => state.publicNews,
-  );
+interface NewsTabsProps {
+  newsList: NewsItem[];
+  categories: any[];
+}
+
+const NewsTabs: React.FC<NewsTabsProps> = ({ newsList, categories }) => {
   const [activeCategory, setActiveCategory] = useState('all');
 
-  useEffect(() => {
-    // 拉取所有的最新消息及類別資料
-    dispatch(getAllPublicNewsAsync({ page: 1, limit: 10 }));
-    dispatch(getAllPublicNewsCategoriesAsync());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (activeCategory !== 'all') {
-      dispatch(
-        getNewsByCategoryAsync({
-          categoryId: activeCategory,
-          query: { page: 1, limit: 10 },
-        }),
-      );
-    } else {
-      dispatch(getAllPublicNewsAsync({ page: 1, limit: 10 }));
-    }
-  }, [activeCategory, dispatch]);
+  // 確保 categories 是一個陣列
+  const validCategories = Array.isArray(categories) ? categories : [];
 
   const filteredNews =
     activeCategory === 'all'
@@ -121,7 +99,7 @@ const NewsTabs = () => {
       : newsList?.filter((item) => item.category === activeCategory);
 
   return (
-    <LoadingLayout isLoading={status.getAllPublicNewsLoading}>
+    <LoadingLayout isLoading={false}>
       <Box bg='gray.100' minH='100vh' py={16}>
         <Box maxW='7xl' mx='auto' px={4}>
           <Box position='relative' mb={16} textAlign='center'>
@@ -156,7 +134,7 @@ const NewsTabs = () => {
             >
               全部
             </Button>
-            {categories?.map((category) => (
+            {validCategories.map((category) => (
               <Button
                 key={category._id}
                 onClick={() => setActiveCategory(category._id)}

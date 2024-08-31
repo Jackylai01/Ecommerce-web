@@ -7,32 +7,17 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import useAppDispatch from '@hooks/useAppDispatch';
-import useAppSelector from '@hooks/useAppSelector';
+import { NewsItem } from '@models/responses/news';
+import { apiGetPublicNewsItemById } from '@services/public/news/news';
+import { GetServerSideProps, NextPage } from 'next';
+import { ParsedUrlQuery } from 'querystring';
 
-import { getPublicNewsItemByIdAsync } from '@reducers/public/news/actions';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+interface NewsDetailProps {
+  newsItem: NewsItem;
+}
 
-const NewsDetail = () => {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-  const { id } = router.query;
-  const { newsItemDetails, status } = useAppSelector(
-    (state) => state.publicNews,
-  );
-
-  useEffect(() => {
-    if (id) {
-      dispatch(getPublicNewsItemByIdAsync(id as string));
-    }
-  }, [id, dispatch]);
-
-  if (status.getPublicNewsItemByIdLoading) {
-    return <Text>加載中...</Text>;
-  }
-
-  if (!newsItemDetails) {
+const NewsDetail: NextPage<NewsDetailProps> = ({ newsItem }) => {
+  if (!newsItem) {
     return <Text>找不到該新聞內容。</Text>;
   }
 
@@ -46,34 +31,66 @@ const NewsDetail = () => {
         mb='20px'
       >
         <Heading as='h1' size='xl' color='gray.800'>
-          {newsItemDetails.title}
+          {newsItem.title}
         </Heading>
         <HStack spacing={2} mt={2} color='gray.600' fontSize='sm'>
           <Text>
-            發布日期：{new Date(newsItemDetails.createdAt).toLocaleDateString()}
+            發布日期：{new Date(newsItem.createdAt).toLocaleDateString()}
           </Text>
           <Text>|</Text>
-          <Text>分類：{newsItemDetails.category?.name || '未分類'}</Text>
+          <Text>分類：{newsItem.category?.name || '未分類'}</Text>
         </HStack>
       </Box>
 
       <VStack as='article' spacing={4} align='stretch'>
-        <Text>{newsItemDetails.content}</Text>
+        <Text>{newsItem.content}</Text>
 
-        {newsItemDetails.coverImage?.imageUrl && (
+        {newsItem.coverImage?.imageUrl && (
           <Image
-            src={newsItemDetails.coverImage.imageUrl}
-            alt={newsItemDetails.title}
+            src={newsItem.coverImage.imageUrl}
+            alt={newsItem.title}
             borderRadius='md'
           />
         )}
 
-        {newsItemDetails.blocks?.map((block: any, index: number) => (
+        {newsItem.blocks?.map((block: any, index: number) => (
           <Text key={index}>{block.content}</Text>
         ))}
       </VStack>
     </Container>
   );
+};
+
+interface Params extends ParsedUrlQuery {
+  id: string;
+}
+
+export const getServerSideProps: GetServerSideProps<
+  NewsDetailProps,
+  Params
+> = async (context) => {
+  const { params } = context;
+
+  if (!params || !params.id) {
+    return {
+      notFound: true,
+    };
+  }
+
+  try {
+    const newsResponse = await apiGetPublicNewsItemById(params.id);
+
+    return {
+      props: {
+        newsItem: newsResponse.result.data,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching news item:', error);
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default NewsDetail;

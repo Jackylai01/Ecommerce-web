@@ -1,4 +1,3 @@
-import { ChevronRightIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -12,30 +11,28 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { testImage } from '@fixtures/componentLibrary';
 import { useState } from 'react';
 import { FaFacebook, FaShoppingCart, FaYoutube } from 'react-icons/fa';
 
 const categories = [
   {
     name: 'Online Store',
-    image: '/api/placeholder/800/600',
-    color: 'blue.500',
+    image: testImage,
   },
   {
     name: 'Local Business',
-    image: '/api/placeholder/800/600',
-    color: 'green.500',
+    image: testImage,
   },
-  { name: 'Portfolio', image: '/api/placeholder/800/600', color: 'purple.500' },
-  { name: 'Restaurant', image: '/api/placeholder/800/600', color: 'red.500' },
-  { name: 'Services', image: '/api/placeholder/800/600', color: 'yellow.500' },
+  { name: 'Portfolio', image: testImage },
+  { name: 'Restaurant', image: testImage },
+  { name: 'Services', image: testImage },
   {
     name: 'Personal & CV',
-    image: '/api/placeholder/800/600',
-    color: 'pink.500',
+    image: testImage,
   },
-  { name: 'Courses', image: '/api/placeholder/800/600', color: 'indigo.500' },
-  { name: 'Memberships', image: '/api/placeholder/800/600', color: 'teal.500' },
+  { name: 'Courses', image: testImage },
+  { name: 'Memberships', image: testImage },
 ];
 
 const DynamicCategoryShowcase = () => {
@@ -81,11 +78,6 @@ const DynamicCategoryShowcase = () => {
               px={6}
               cursor='pointer'
               transition='all 0.3s'
-              bg={
-                activeCategory.name === category.name
-                  ? category.color
-                  : 'transparent'
-              }
               color={
                 activeCategory.name === category.name ? 'white' : 'gray.800'
               }
@@ -97,15 +89,6 @@ const DynamicCategoryShowcase = () => {
               }}
               onMouseEnter={() => setActiveCategory(category)}
             >
-              <ChevronRightIcon
-                mr={3}
-                transition='transform 0.3s'
-                transform={
-                  activeCategory.name === category.name
-                    ? 'rotate(90deg)'
-                    : undefined
-                }
-              />
               <Text fontWeight='medium'>{category.name}</Text>
             </ListItem>
           ))}
@@ -133,7 +116,6 @@ const DynamicCategoryShowcase = () => {
             left={0}
             right={0}
             bottom={0}
-            bg={activeCategory.color}
             opacity={0.6}
           />
           <Flex
@@ -168,7 +150,7 @@ const DynamicCategoryShowcase = () => {
               rounded='full'
               color='white'
               fontWeight='semibold'
-              bg={activeCategory.color}
+              bg='blackAlpha.800'
               _hover={{ opacity: 0.9 }}
               transition='opacity 0.3s'
             >
