@@ -10,7 +10,7 @@ import {
   apiGetArticleCategories,
   apiGetTrendingArticles,
 } from '@services/public/articles/public-articles';
-import { TEST_API_URL } from '@services/shared/instance';
+import { BASE_API_URL } from '@services/shared/instance';
 import { Calendar, User } from 'lucide-react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
@@ -43,7 +43,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
     datePublished: article.createdAt,
     image: article.coverImage?.imageUrl,
     articleBody: article.content,
-    url: `${TEST_API_URL}/${router.asPath}`,
+    url: `${BASE_API_URL}/${router.asPath}`,
   };
 
   const pageTitle = Array.isArray(article.title)
@@ -61,7 +61,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
           content={article.excerpt || article.title}
         />
         <meta property='og:image' content={article.coverImage?.imageUrl} />
-        <meta property='og:url' content={`${TEST_API_URL}/${router.asPath}`} />
+        <meta property='og:url' content={`${BASE_API_URL}/${router.asPath}`} />
         <script type='application/ld+json'>
           {JSON.stringify(structuredData)}
         </script>
