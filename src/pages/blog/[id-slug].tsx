@@ -10,7 +10,7 @@ import {
   apiGetArticleCategories,
   apiGetTrendingArticles,
 } from '@services/public/articles/public-articles';
-import { BASE_API_URL } from '@services/shared/instance';
+import { TEST_API_URL } from '@services/shared/instance';
 import { Calendar, User } from 'lucide-react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
@@ -31,6 +31,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
 }) => {
   const router = useRouter();
 
+  // 结构化数据
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -42,13 +43,17 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
     datePublished: article.createdAt,
     image: article.coverImage?.imageUrl,
     articleBody: article.content,
-    url: `${BASE_API_URL}/${router.asPath}`,
+    url: `${TEST_API_URL}/${router.asPath}`,
   };
+
+  const pageTitle = Array.isArray(article.title)
+    ? article.title.join(' ')
+    : article.title;
 
   return (
     <>
       <Head>
-        <title>{article.title} - 詳細內容推薦</title>
+        <title>{`${pageTitle} - 詳細內容推薦`}</title>
         <meta name='description' content={article.excerpt || article.title} />
         <meta property='og:title' content={article.title} />
         <meta
@@ -56,7 +61,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
           content={article.excerpt || article.title}
         />
         <meta property='og:image' content={article.coverImage?.imageUrl} />
-        <meta property='og:url' content={`${BASE_API_URL}/${router.asPath}`} />
+        <meta property='og:url' content={`${TEST_API_URL}/${router.asPath}`} />
         <script type='application/ld+json'>
           {JSON.stringify(structuredData)}
         </script>
@@ -126,38 +131,41 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
 
-  // 檢查 `params` 和 `params['id-slug']` 是否存在
+  // 檢查 params 是否包含正確的參數名稱
   if (!params || !params['id-slug']) {
+    console.error('Missing params:', params);
     return {
       notFound: true,
     };
   }
 
   const fullPath = params['id-slug'] as string;
-
-  // 再次檢查 `fullPath` 是否為字符串並且包含 "-"
-  if (typeof fullPath !== 'string' || !fullPath.includes('-')) {
-    return {
-      notFound: true,
-    };
-  }
-
   const [id, slug] = fullPath.split('-');
 
   if (!id || !slug) {
+    console.error('Invalid id or slug:', { id, slug });
     return {
       notFound: true,
     };
   }
 
   try {
-    const articleResponse = await apiGetArticleById(`${id}-${slug}`);
+    const articleResponse = await apiGetArticleById(
+      `${encodeURIComponent(id)}-${encodeURIComponent(slug)}`,
+    );
     const trendingResponse = await apiGetTrendingArticles();
     const categoriesResponse = await apiGetArticleCategories();
 
-    const article = articleResponse.result;
-    const trendingArticles = trendingResponse.result || [];
-    const categories = categoriesResponse.result || [];
+    if (!articleResponse || !articleResponse.result) {
+      console.error('No article found for ID:', id);
+      return {
+        notFound: true,
+      };
+    }
+
+    const article = articleResponse.result.data;
+    const trendingArticles = trendingResponse.result.data || [];
+    const categories = categoriesResponse.result.data || [];
 
     return {
       props: {
@@ -167,10 +175,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } catch (error) {
-    console.error(error);
+    console.error('Error during SSR:', error);
     return {
       notFound: true,
     };
   }
 };
+
 export default ArticleDetail;

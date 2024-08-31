@@ -19,7 +19,9 @@ export const apiGetArticles = async (query: PagingQuery) =>
  * 前台-取得單篇文章詳情
  */
 export const apiGetArticleById = async (idSlug: string) =>
-  getRequest<ApiResult<ArticlePublicResponse>>(`/public/articles/${idSlug}`);
+  getRequest<ApiResult<ArticlePublicResponse>>(
+    `/public/articles/${encodeURIComponent(idSlug)}`,
+  );
 
 /**
  * 前台-取得熱門文章

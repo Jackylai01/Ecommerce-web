@@ -12,13 +12,13 @@ export const TEST_API_URL = 'http://localhost:3001/api';
 export const ACCESS_TOKEN_NAME = 'atn';
 
 const instance = axios.create({
-  baseURL: BASE_API_URL,
+  baseURL: TEST_API_URL,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 });
 
 export const formInstance = axios.create({
-  baseURL: BASE_API_URL,
+  baseURL: TEST_API_URL,
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   withCredentials: true,
 });

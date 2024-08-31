@@ -35,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ trendingArticles, categories }) => {
           熱門文章
         </Heading>
         <VStack spacing={4}>
-          {Array.isArray(trendingArticles) ? (
+          {Array.isArray(trendingArticles) && trendingArticles.length > 0 ? (
             trendingArticles.map((post, index) => (
               <Box
                 key={index}
@@ -84,23 +84,27 @@ const Sidebar: React.FC<SidebarProps> = ({ trendingArticles, categories }) => {
           文章分類
         </Heading>
         <VStack spacing={2} align='start'>
-          {categories?.map((category, index) => (
-            <Button
-              key={index}
-              as='a'
-              variant='link'
-              color='gray.600'
-              _hover={{ color: 'purple.600' }}
-              display='flex'
-              alignItems='center'
-              href={`/blog/category/${category.name}`}
-            >
-              <Text as='span' mr={2}>
-                •
-              </Text>
-              {category.name}
-            </Button>
-          ))}
+          {Array.isArray(categories) && categories.length > 0 ? (
+            categories.map((category, index) => (
+              <Button
+                key={index}
+                as='a'
+                variant='link'
+                color='gray.600'
+                _hover={{ color: 'purple.600' }}
+                display='flex'
+                alignItems='center'
+                href={`/blog/category/${category.name}`}
+              >
+                <Text as='span' mr={2}>
+                  •
+                </Text>
+                {category.name}
+              </Button>
+            ))
+          ) : (
+            <Text>暫無分類</Text>
+          )}
         </VStack>
       </Box>
     </Stack>
