@@ -125,7 +125,23 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
-  const fullPath = params?.['id-slug'] as string;
+
+  // 檢查 `params` 和 `params['id-slug']` 是否存在
+  if (!params || !params['id-slug']) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const fullPath = params['id-slug'] as string;
+
+  // 再次檢查 `fullPath` 是否為字符串並且包含 "-"
+  if (typeof fullPath !== 'string' || !fullPath.includes('-')) {
+    return {
+      notFound: true,
+    };
+  }
+
   const [id, slug] = fullPath.split('-');
 
   if (!id || !slug) {
@@ -134,21 +150,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const articleResponse = await apiGetArticleById(`${id}-${slug}`);
-  const trendingResponse = await apiGetTrendingArticles();
-  const categoriesResponse = await apiGetArticleCategories();
+  try {
+    const articleResponse = await apiGetArticleById(`${id}-${slug}`);
+    const trendingResponse = await apiGetTrendingArticles();
+    const categoriesResponse = await apiGetArticleCategories();
 
-  const article = articleResponse.result;
-  const trendingArticles = trendingResponse.result || [];
-  const categories = categoriesResponse.result || [];
+    const article = articleResponse.result;
+    const trendingArticles = trendingResponse.result || [];
+    const categories = categoriesResponse.result || [];
 
-  return {
-    props: {
-      article,
-      trendingArticles,
-      categories,
-    },
-  };
+    return {
+      props: {
+        article,
+        trendingArticles,
+        categories,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      notFound: true,
+    };
+  }
 };
-
 export default ArticleDetail;
