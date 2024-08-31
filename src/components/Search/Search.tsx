@@ -1,42 +1,45 @@
 import { SearchIcon } from '@chakra-ui/icons';
 import {
   Box,
-  Flex,
-  Image,
   Input,
   InputGroup,
   InputLeftElement,
-  Tag,
-  Text,
   useBreakpointValue,
   useOutsideClick,
 } from '@chakra-ui/react';
-import { IProduct } from '@models/requests/products';
-import Link from 'next/link';
+import useAppDispatch from '@hooks/useAppDispatch';
+import { publicProductsListAsync } from '@reducers/public/products/actions';
+import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 
-interface SearchedProductListProps {
-  products: IProduct[];
-}
-
 export const Search = ({ isMobileSearch }: { isMobileSearch?: boolean }) => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const ref = useRef<any>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [products, setProducts] = useState<IProduct[]>([]);
 
-  const isMobile = useBreakpointValue({ base: true, md: false }); // 檢查是否為手機模式
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   useOutsideClick({
     ref: ref,
     handler: () => {
       setIsModalOpen(false);
-      setProducts([]);
     },
   });
 
-  // 如果當前為手機模式且不是從 Drawer 中渲染，則不顯示
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+    if (e.target.value.trim()) {
+      dispatch(
+        publicProductsListAsync({ page: 1, limit: 10, search: e.target.value }),
+      ).then(() => {
+        router.push(`/products?search=${encodeURIComponent(e.target.value)}`);
+      });
+      setIsModalOpen(false);
+    }
+  };
+
   if (isMobile && !isMobileSearch) {
     return null;
   }
@@ -55,64 +58,10 @@ export const Search = ({ isMobileSearch }: { isMobileSearch?: boolean }) => {
           borderColor='gray.400'
           value={searchText}
           onClick={() => setIsModalOpen(true)}
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={handleSearchChange}
           color='black'
         />
       </InputGroup>
-
-      {isModalOpen && (
-        <Box
-          pos='absolute'
-          bg='gray.100'
-          shadow='md'
-          padding='0.5rem'
-          w='100%'
-          boxSizing='border-box'
-          maxH='1000px'
-          overflowY='auto'
-          color='black'
-        >
-          {products.length === 0 ? (
-            isLoading ? (
-              <>Loading...</>
-            ) : (
-              <> No Products Found</>
-            )
-          ) : (
-            <SearchedProductList products={products} />
-          )}
-        </Box>
-      )}
     </Box>
-  );
-};
-
-const SearchedProductList = ({ products }: SearchedProductListProps) => {
-  return (
-    <>
-      {products.map((product) => (
-        <Link key={product._id} href={`/products/${product.slug}`}>
-          <Box
-            borderBottomWidth='1px'
-            borderBottomColor='gray.200'
-            p='2'
-            _hover={{ bgColor: 'gray.100' }}
-          >
-            <Flex align='center'>
-              <Image
-                alt={product.name}
-                src={product.mainImage}
-                boxSize='24px'
-                mr='10px'
-              />
-              <Text color='black'>{product.name}</Text>
-            </Flex>
-            <Flex justify='flex-end'>
-              <Tag size='sm'>{product.category.name}</Tag>
-            </Flex>
-          </Box>
-        </Link>
-      ))}
-    </>
   );
 };

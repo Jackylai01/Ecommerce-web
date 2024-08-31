@@ -12,12 +12,13 @@ export enum PublicListAsyncAction {
   productsList = 'productsList',
   productsDetail = 'productsDetail',
   getProductsByCategory = 'getProductsByCategory',
+  searchProductsByName = 'searchProductsByName',
 }
 
 export const publicProductsListAsync = createAsyncThunk(
   `${ReducerName.PUBLIC_PRODUCTS}/${PublicListAsyncAction.productsList}`,
-  async ({ page, limit }: QueryParams) => {
-    const query: PagingQuery = { page, limit };
+  async ({ page, limit, search }: QueryParams) => {
+    const query: PagingQuery = { page, limit, search }; // 添加 search 到 query 中
     const response = await apiPublicProductsList(query);
     return response.result;
   },

@@ -8,6 +8,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { IBreadcrumbItem } from '@models/requests/products';
 import { resetPublicProductState } from '@reducers/public/products';
 import { publicProductsListAsync } from '@reducers/public/products/actions';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 interface AllProductsProps {
@@ -19,6 +20,8 @@ const itemsPerPage = 10;
 
 export const AllProducts = ({ breadcrumbItems }: AllProductsProps) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { search } = router.query;
   const {
     list: productsList,
     metadata,
@@ -27,12 +30,18 @@ export const AllProducts = ({ breadcrumbItems }: AllProductsProps) => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    dispatch(publicProductsListAsync({ page, limit: itemsPerPage }));
+    dispatch(
+      publicProductsListAsync({
+        page,
+        limit: itemsPerPage,
+        search: search as string,
+      }),
+    );
 
     return () => {
       dispatch(resetPublicProductState());
     };
-  }, [dispatch, page]);
+  }, [dispatch, page, search]);
 
   const hasProducts = productsList && productsList.length > 0;
 
