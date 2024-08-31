@@ -9,15 +9,11 @@ import {
   List,
   ListItem,
   Text,
+  useBreakpointValue,
   useColorModeValue,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import {
-  FaFacebook,
-  FaInstagram,
-  FaShoppingCart,
-  FaYoutube,
-} from 'react-icons/fa';
+import { FaFacebook, FaShoppingCart, FaYoutube } from 'react-icons/fa';
 
 const categories = [
   {
@@ -46,12 +42,24 @@ const DynamicCategoryShowcase = () => {
   const [activeCategory, setActiveCategory] = useState(categories[0]);
   const bg = useColorModeValue('gray.100', 'gray.900');
 
+  // 控制不同屏幕大小時的寬度比例
+  const boxWidth = useBreakpointValue({ base: '100%', md: '33%' });
+  const imageBoxWidth = useBreakpointValue({ base: '100%', md: '67%' });
+  const flexDirection =
+    useBreakpointValue<'row' | 'column'>({ base: 'column', md: 'row' }) ||
+    'row';
+
   return (
-    <Flex height='100vh' bg={bg} p={8}>
+    <Flex
+      height={{ base: 'auto', md: '100vh' }}
+      bg={bg}
+      p={8}
+      flexDirection={flexDirection}
+    >
       <Box
-        width='33%'
+        width={boxWidth}
         bg='white'
-        roundedLeft='3xl'
+        rounded={{ base: 'none', md: '3xl' }}
         shadow='xl'
         overflow='hidden'
       >
@@ -104,13 +112,14 @@ const DynamicCategoryShowcase = () => {
         </List>
       </Box>
       <Box
-        width='67%'
+        width={imageBoxWidth}
         bg='white'
-        roundedRight='3xl'
+        rounded={{ base: 'none', md: '3xl' }}
         shadow='xl'
         overflow='hidden'
+        mt={{ base: 4, md: 0 }}
       >
-        <Box position='relative' height='67%'>
+        <Box position='relative' height={{ base: 'auto', md: '67%' }}>
           <Image
             src={activeCategory.image}
             alt={activeCategory.name}
@@ -167,15 +176,18 @@ const DynamicCategoryShowcase = () => {
             </Button>
             <Flex>
               <IconButton
-                as={FaInstagram}
+                icon={<FaShoppingCart />}
+                position='fixed'
+                top={8}
+                right={8}
                 size='lg'
-                color='gray.500'
-                _hover={{ color: 'gray.700' }}
+                color='gray.600'
+                _hover={{ color: 'gray.800' }}
                 cursor='pointer'
-                aria-label='Instagram'
+                aria-label='Shopping Cart'
               />
               <IconButton
-                as={FaYoutube}
+                icon={<FaYoutube />}
                 size='lg'
                 color='gray.500'
                 _hover={{ color: 'gray.700' }}
@@ -183,7 +195,7 @@ const DynamicCategoryShowcase = () => {
                 aria-label='YouTube'
               />
               <IconButton
-                as={FaFacebook}
+                icon={<FaFacebook />}
                 size='lg'
                 color='gray.500'
                 _hover={{ color: 'gray.700' }}
@@ -194,17 +206,6 @@ const DynamicCategoryShowcase = () => {
           </Flex>
         </Box>
       </Box>
-      <IconButton
-        as={FaShoppingCart}
-        position='fixed'
-        top={8}
-        right={8}
-        size='lg'
-        color='gray.600'
-        _hover={{ color: 'gray.800' }}
-        cursor='pointer'
-        aria-label='Shopping Cart'
-      />
     </Flex>
   );
 };
