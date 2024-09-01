@@ -3,7 +3,8 @@ import { asyncMatcher } from '@helpers/extra-reducers';
 import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
 import { Metadata } from '@models/entities/shared/pagination';
-import { Faq } from '@models/responses/Faq.res';
+
+import { Faq } from '@models/responses/faq.res';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   addFaqAsync,

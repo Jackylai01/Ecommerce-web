@@ -1,7 +1,7 @@
 import { formatQueryString } from '@helpers/query';
 import { PagingQuery } from '@models/entities/shared/pagination';
 
-import { Faq } from '@models/responses/Faq.res';
+import { Faq } from '@models/responses/faq.res';
 import {
   ApiPaginationResult,
   ApiResult,

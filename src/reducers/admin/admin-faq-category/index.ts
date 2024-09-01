@@ -4,7 +4,7 @@ import { newApiState } from '@helpers/initial-state';
 import { ApiState } from '@models/api/api-state';
 import { Metadata } from '@models/entities/shared/pagination';
 
-import { FaqCategory } from '@models/responses/Faq.res';
+import { FaqCategory } from '@models/responses/faq.res';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   addFaqCategoryAsync,
