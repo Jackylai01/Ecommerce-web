@@ -53,4 +53,6 @@ export enum ReducerName {
   ADMIN_PERMISSION = 'adminPermission',
   ADMIN_ROLES = 'adminRoles',
   ADMIN_STATISTICS = 'adminStatistics',
+  ADMIN_FAQ = 'adminFaq',
+  ADMIN_FAQ_CATEGORY = 'adminFaqCategory',
 }

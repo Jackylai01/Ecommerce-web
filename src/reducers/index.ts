@@ -1,10 +1,14 @@
 import adminArticles from './admin/admin-articles';
-import adminArticlesCategories from './admin/admin-articles-category';
+import {
+  default as adminArticlesCategories,
+  default as adminFaqCategory,
+} from './admin/admin-articles-category';
 import adminERPInventory from './admin/admin-erp/inventory';
 import adminERPPurchaseOrder from './admin/admin-erp/purchaseOrder';
 import adminERPReports from './admin/admin-erp/reports';
 import adminERPSalesOrder from './admin/admin-erp/salesOrder';
 import adminERPSuppliers from './admin/admin-erp/supplier';
+import adminFaq from './admin/admin-faq';
 import adminMembershipLevel from './admin/admin-membership-level';
 import adminNews from './admin/admin-news';
 import adminNewsCategories from './admin/admin-news-categorys';
@@ -96,6 +100,8 @@ const appReducer = {
   publicNews,
   adminPermissions,
   adminStatistics,
+  adminFaq,
+  adminFaqCategory,
 };
 
 export default appReducer;
