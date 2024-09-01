@@ -32,6 +32,7 @@ const categorizedComponents: any = {
     'footer_a',
     'modern_footer',
     'enhanced_shopping_highlights',
+    'dynamic_category_showcase',
   ],
 };
 

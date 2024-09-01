@@ -489,7 +489,7 @@ export const componentLibrary: Record<string, Component> = {
     className: 'shopping-highlights',
     style: {
       backgroundColor: '#ffffff',
-      backgroundGradient: 'linear-gradient(to right, #333333, #666666)',
+      backgroundGradient: 'linear-gradient(to right, #fbbf24,#f97316)',
       color: '#000000',
     },
     elements: [
@@ -568,6 +568,37 @@ export const componentLibrary: Record<string, Component> = {
             ],
           },
         ],
+      },
+    ],
+  },
+  dynamic_category_showcase: {
+    type: 'dynamic-category-showcase',
+    name: 'Dynamic Category Showcase',
+    className: 'dynamic-category-showcase',
+    style: {
+      backgroundColor: '#ffffff',
+    },
+    elements: [
+      {
+        id: 'category-1',
+        tagName: 'img',
+        src: testImage,
+        context: 'Online Store',
+        className: 'category-image',
+      },
+      {
+        id: 'category-2',
+        tagName: 'img',
+        src: testImage,
+        context: 'Local Business',
+        className: 'category-image',
+      },
+      {
+        id: 'category-3',
+        tagName: 'img',
+        src: testImage,
+        context: 'Portfolio',
+        className: 'category-image',
       },
     ],
   },

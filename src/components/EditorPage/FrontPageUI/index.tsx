@@ -3,6 +3,7 @@ import { Component } from '@fixtures/componentLibrary';
 import React from 'react';
 
 import BackgroundImageEditor from './src/BackgroundImage';
+import DynamicCategoryShowcase from './src/DynamicCategoryShowcase';
 import EcommerceFooter from './src/EcommerceFooter';
 import FashionHeroEditor from './src/Hero/FashionHero';
 import SocksSubscriptionEditor from './src/Hero/SocksSubscriptionEditor';
@@ -104,6 +105,15 @@ const EditorComponentFactory: React.FC<EditorComponentFactoryProps> = ({
     case 'shopping-highlights':
       return (
         <EnhancedShoppingHighlights
+          index={index}
+          element={component}
+          isEdit={isEdit}
+          onBlur={onBlur}
+        />
+      );
+    case 'dynamic-category-showcase':
+      return (
+        <DynamicCategoryShowcase
           index={index}
           element={component}
           isEdit={isEdit}

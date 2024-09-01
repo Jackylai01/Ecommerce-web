@@ -12,9 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { Footer } from '@components/Footer';
 import { Banner } from '@components/Home/Banner';
-import { FeaturedProducts } from '@components/Home/FeaturedProducts';
 import { TopCategories } from '@components/Home/TopCategories';
-import { fakeProducts } from '@helpers/products';
 import type { NextPage } from 'next';
 import { useEffect, useRef } from 'react';
 import 'swiper/css';
@@ -61,12 +59,9 @@ const HomePage: NextPage = () => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-
       {/* 首頁內容 */}
       <Banner />
       <TopCategories />
-      <FeaturedProducts title='Best Deals For You' products={fakeProducts} />
-      <FeaturedProducts title='Best Deals For You' products={fakeProducts} />
       <Footer />
     </Box>
   );
