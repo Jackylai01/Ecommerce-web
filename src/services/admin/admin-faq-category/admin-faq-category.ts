@@ -15,33 +15,33 @@ import {
  */
 export const apiGetFaqCategories = async (query: PagingQuery) =>
   getRequest<ApiPaginationResult<FaqCategory>>(
-    formatQueryString('/faq/categories', query),
+    formatQueryString('/zigong/faq-category', query),
   );
 
 /**
  * 根據ID取得FAQ類別
  */
 export const apiGetFaqCategoryById = async (id: string) => {
-  return getRequest<ApiResult<FaqCategory>>(`/faq/categories/${id}`);
+  return getRequest<ApiResult<FaqCategory>>(`/zigong/faq-category/${id}`);
 };
 
 /**
  * 新增FAQ類別
  */
 export const apiAddFaqCategory = async (body: any) => {
-  return postRequest<ApiResult<FaqCategory>>('/faq/categories', body);
+  return postRequest<ApiResult<FaqCategory>>('/zigong/faq-category', body);
 };
 
 /**
  * 更新FAQ類別
  */
 export const apiUpdateFaqCategory = async (id: string, body: any) => {
-  return putRequest<ApiResult<FaqCategory>>(`/faq/categories/${id}`, body);
+  return putRequest<ApiResult<FaqCategory>>(`/zigong/faq-category/${id}`, body);
 };
 
 /**
  * 刪除FAQ類別
  */
 export const apiDeleteFaqCategory = async (id: string) => {
-  return deleteRequest<ApiResult<FaqCategory>>(`/faq/categories/${id}`);
+  return deleteRequest<ApiResult<FaqCategory>>(`/zigong/faq-category/${id}`);
 };

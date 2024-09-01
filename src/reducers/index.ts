@@ -1,14 +1,12 @@
 import adminArticles from './admin/admin-articles';
-import {
-  default as adminArticlesCategories,
-  default as adminFaqCategory,
-} from './admin/admin-articles-category';
+import adminArticlesCategories from './admin/admin-articles-category';
 import adminERPInventory from './admin/admin-erp/inventory';
 import adminERPPurchaseOrder from './admin/admin-erp/purchaseOrder';
 import adminERPReports from './admin/admin-erp/reports';
 import adminERPSalesOrder from './admin/admin-erp/salesOrder';
 import adminERPSuppliers from './admin/admin-erp/supplier';
 import adminFaq from './admin/admin-faq';
+import adminFaqCategory from './admin/admin-faq-category';
 import adminMembershipLevel from './admin/admin-membership-level';
 import adminNews from './admin/admin-news';
 import adminNewsCategories from './admin/admin-news-categorys';
@@ -45,6 +43,7 @@ import publicCategory from './public/categories';
 import publicDashboard from './public/dashboard';
 import publicDesignPage from './public/design-pages';
 import publicDiscounts from './public/discounts';
+import publicFaq from './public/faq';
 import publicFavorites from './public/favorite';
 import publicNews from './public/news';
 import publicPayments from './public/payments';
@@ -102,6 +101,7 @@ const appReducer = {
   adminStatistics,
   adminFaq,
   adminFaqCategory,
+  publicFaq,
 };
 
 export default appReducer;

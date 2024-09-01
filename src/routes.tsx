@@ -6,6 +6,7 @@ import {
   FaFileInvoiceDollar,
   FaHome,
   FaNewspaper,
+  FaQuestionCircle,
   FaShoppingCart,
   FaUser,
   FaUsers,
@@ -22,6 +23,7 @@ import Profile from '@components/Layout/AdminLayout/Profile';
 import Tables from '@components/Layout/AdminLayout/Tables';
 import { ADMIN_EDIT_PAGES_ROUTE, ADMIN_ROUTE } from '@fixtures/constants';
 import InventorySystem from '@pages/zigong/erp/inventory';
+import FaqManagement from '@pages/zigong/faq';
 import ShoppingCreditsManagement from '@pages/zigong/shopping-credits';
 
 const dashRoutes = [
@@ -72,6 +74,13 @@ const dashRoutes = [
     name: '購物金管理',
     icon: FaShoppingCart,
     component: ShoppingCreditsManagement,
+    layout: `/${ADMIN_ROUTE}`,
+  },
+  {
+    path: '/faq',
+    name: '常見問答管理',
+    icon: FaQuestionCircle,
+    component: FaqManagement,
     layout: `/${ADMIN_ROUTE}`,
   },
   {

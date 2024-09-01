@@ -37,6 +37,10 @@ export const navItems: NavItem[] = [
     label: 'News',
     href: '/news',
   },
+  {
+    label: 'Faq',
+    href: '/faq',
+  },
 ];
 
 export const fakeCategories = [

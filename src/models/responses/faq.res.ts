@@ -6,10 +6,7 @@ export interface FaqCategory {
 
 export interface Faq {
   _id: string;
-  // 問題
   question: string;
-  // 解答
   answer: string;
-  // 分類，例如：“訂單”，“付款”等
-  category: string;
+  category?: any;
 }
