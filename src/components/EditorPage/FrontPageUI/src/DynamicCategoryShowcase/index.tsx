@@ -21,6 +21,7 @@ import {
 } from '@chakra-ui/react';
 import { Component, testImage } from '@fixtures/componentLibrary';
 import useAppDispatch from '@hooks/useAppDispatch';
+import Link from 'next/link';
 
 import { updateBlock } from '@reducers/admin/design-pages';
 import { uploadImageAsync } from '@reducers/admin/design-pages/actions';
@@ -47,8 +48,7 @@ const DynamicCategoryShowcase: React.FC<DynamicCategoryShowcaseProps> = ({
   const [backgroundColor, setBackgroundColor] = useState(
     element.style?.backgroundColor || '#ffffff',
   );
-  const [buttonText, setButtonText] = useState('Explore Now');
-  const [buttonLink, setButtonLink] = useState('#');
+
   const dispatch = useAppDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -187,7 +187,7 @@ const DynamicCategoryShowcase: React.FC<DynamicCategoryShowcaseProps> = ({
 
   return (
     <Flex
-      height='auto'
+      height={{ base: 'auto', md: '100vh' }}
       bg={bg}
       p={8}
       flexDirection={flexDirection}
@@ -246,7 +246,11 @@ const DynamicCategoryShowcase: React.FC<DynamicCategoryShowcaseProps> = ({
                   />
                 </Flex>
               ) : (
-                <Text fontWeight='medium'>{category.context}</Text>
+                <Link href={category.href || '#'}>
+                  <a>
+                    <Text fontWeight='medium'>{category.context}</Text>
+                  </a>
+                </Link>
               )}
             </ListItem>
           ))}
@@ -271,7 +275,7 @@ const DynamicCategoryShowcase: React.FC<DynamicCategoryShowcaseProps> = ({
             alt={activeCategory?.context || 'Category Image'}
             objectFit='cover'
             width='100%'
-            height='auto'
+            height='100%'
           />
           {isEdit && (
             <IconButton
