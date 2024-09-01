@@ -1,7 +1,7 @@
 import { CustomPageTemplate } from '@models/entities/custom-page-template';
 
 const testText =
-  'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Totam magni, aliquid veritatis at unde dolorem quod dolor, sapiente, non architecto nam maiores ullam repellat earum praesentium ut. Amet, repudiandae provident.';
+  '在一個遙遠的國度，住著一群勤勞的村民。他們日出而作，日落而息，過著簡單而充實的生活。這個村莊四周環繞著青山綠水，村民們與自然和諧共處，年復一年，四季分明，生機盎然。儘管生活樸實無華，但村民們對未來充滿了希望，並且每天都在努力創造更美好的明天。';
 const testTitle = '標題文字';
 
 export const testImage =
