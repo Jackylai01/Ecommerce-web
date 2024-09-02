@@ -45,10 +45,11 @@ const HomePage: NextPage = () => {
             <AlertDialogBody>
               嗨這裡是測試用的網站，後台連結如下:
               <Button>
-                <Link href='/zigong'>前往後台</Link>
+                <Link href='/zigong'>前往管理員後台</Link>
               </Button>
-              <Box>測式帳號:sn185672@gmail.com</Box>
-              <Box>測式密碼:12345678</Box>
+              <Button>
+                <Link href='/public/auth/login'>前往個人會員後台</Link>
+              </Button>
               <Box>如果網頁有Loading 的狀況請稍等30秒左右</Box>
             </AlertDialogBody>
             <AlertDialogFooter>
