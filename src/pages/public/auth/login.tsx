@@ -79,6 +79,8 @@ const Login: NextPage = () => {
       });
     }
 
+    router.push('/client');
+
     if (loginFailed && loginError) {
       toast({
         title: '登入失敗',
