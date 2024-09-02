@@ -45,6 +45,7 @@ import publicDesignPage from './public/design-pages';
 import publicDiscounts from './public/discounts';
 import publicFaq from './public/faq';
 import publicFavorites from './public/favorite';
+import publicMessage from './public/messages';
 import publicNews from './public/news';
 import publicPayments from './public/payments';
 import publicProducts from './public/products';
@@ -102,6 +103,7 @@ const appReducer = {
   adminFaq,
   adminFaqCategory,
   publicFaq,
+  publicMessage,
 };
 
 export default appReducer;
