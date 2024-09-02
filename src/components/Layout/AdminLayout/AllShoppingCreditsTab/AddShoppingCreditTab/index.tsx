@@ -83,7 +83,6 @@ const AddShoppingCreditTab = () => {
     addShoppingCreditError,
   ]);
 
-  console.log(shoppingCreditTypes);
   return (
     <LoadingLayout isLoading={addShoppingCreditLoading}>
       <Box p={4} borderWidth={1} borderRadius='lg' boxShadow='lg'>
