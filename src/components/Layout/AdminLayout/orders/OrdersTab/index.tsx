@@ -2,7 +2,6 @@ import {
   Badge,
   Box,
   Button,
-  Flex,
   Grid,
   Heading,
   Input,
@@ -30,7 +29,7 @@ import {
   updateOrderStatusAsync,
 } from '@reducers/admin/orders/actions';
 import React, { useEffect, useRef, useState } from 'react';
-import { FaFilter, FaPlus } from 'react-icons/fa';
+import { FaFilter } from 'react-icons/fa';
 import { useAdminColorMode } from 'src/context/colorMode';
 import OrdersDetail from '../OrdersDetail';
 
@@ -160,11 +159,6 @@ const OrdersTab = () => {
 
   return (
     <Box borderRadius='16px' boxShadow='md' overflow='hidden' minH='450px'>
-      <Flex justify='flex-end' align='center' mb='8'>
-        <Button leftIcon={<FaPlus />} colorScheme='purple' size='lg'>
-          新增交易
-        </Button>
-      </Flex>
       <Box
         bg={bgColor}
         borderRadius='16px'
