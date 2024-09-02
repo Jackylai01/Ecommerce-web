@@ -9,6 +9,7 @@ import {
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
+import Card from '@components/Card/Card';
 import { ProductCategoryForm } from '@components/Form/FormCRUD/ProductCategory';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import ConfirmationModal from '@components/Modal/ConfirmationModal';
@@ -167,56 +168,69 @@ const ProductCategories = () => {
           getProductsCategoryByIdLoading || deleteProductsCategoryLoading
         }
       >
-        <Box as='main' overflowX='auto' w='full' minWidth='800px'>
-          <Table variant='simple' color={textColor} size='sm'>
-            <Thead>
-              <Tr>
-                {captions.map((caption, idx) => (
-                  <Th color='gray.400' key={idx}>
-                    {caption}
-                  </Th>
-                ))}
-              </Tr>
-            </Thead>
-            <Tbody>
-              {ProductCategoryList &&
-                Array.isArray(ProductCategoryList) &&
-                ProductCategoryList.map(
-                  (categories) =>
-                    categories && (
-                      <TablesTableRow
-                        key={categories._id}
-                        row={categories}
-                        renderCell={renderCell}
-                      />
-                    ),
-                )}
-            </Tbody>
-          </Table>
-        </Box>
-        <ConfirmationModal
-          isOpen={isOpen}
-          onClose={onClose}
-          title='確認要刪除?'
-          onConfirm={deleteRow}
-        >
-          {modalContent}
-        </ConfirmationModal>
-        <MessageModal
-          title='刪除產品類別'
-          isActive={isMessageModalOpen}
-          error={deleteProductsCategoryError}
-          onClose={onMessageModalClose}
-        >
-          {deleteProductsCategorySuccess && <Box>產品類別已成功刪除。</Box>}
-          {deleteProductsCategoryError && (
-            <Box color='red.500'>{deleteProductsCategoryError}</Box>
-          )}
-        </MessageModal>
+        <Card>
+          <Box as='main' overflowX='auto' w='full'>
+            <Table
+              variant='simple'
+              color={textColor}
+              size='sm'
+              className='tables-container__table'
+            >
+              <Thead>
+                <Tr>
+                  {captions.map((caption, idx) => (
+                    <Th
+                      color='gray.400'
+                      key={idx}
+                      className={`tables-container__header-cell ${
+                        idx === 0 ? 'tables-container__sticky-column' : ''
+                      }`}
+                    >
+                      {caption}
+                    </Th>
+                  ))}
+                </Tr>
+              </Thead>
+              <Tbody>
+                {ProductCategoryList &&
+                  Array.isArray(ProductCategoryList) &&
+                  ProductCategoryList.map(
+                    (categories) =>
+                      categories && (
+                        <TablesTableRow
+                          key={categories._id}
+                          row={categories}
+                          renderCell={renderCell}
+                        />
+                      ),
+                  )}
+              </Tbody>
+            </Table>
+          </Box>
+          <ConfirmationModal
+            isOpen={isOpen}
+            onClose={onClose}
+            title='確認要刪除?'
+            onConfirm={deleteRow}
+          >
+            {modalContent}
+          </ConfirmationModal>
+          <MessageModal
+            title='刪除產品類別'
+            isActive={isMessageModalOpen}
+            error={deleteProductsCategoryError}
+            onClose={onMessageModalClose}
+          >
+            {deleteProductsCategorySuccess && <Box>產品類別已成功刪除。</Box>}
+            {deleteProductsCategoryError && (
+              <Box color='red.500'>{deleteProductsCategoryError}</Box>
+            )}
+          </MessageModal>
 
-        {metadata && ProductCategoryList?.length !== 0 && (
-          <Pagination metadata={metadata} />
-        )}
+          {metadata && ProductCategoryList?.length !== 0 && (
+            <Pagination metadata={metadata} />
+          )}
+        </Card>
       </LoadingLayout>
       <FormModal
         isOpen={isEditModalOpen}

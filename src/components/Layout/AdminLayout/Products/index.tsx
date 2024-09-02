@@ -229,7 +229,12 @@ const ProductTableContainer = () => {
       <LoadingLayout isLoading={getAllProductsLoading || deleteProductLoading}>
         <Card>
           <Box as='main' overflowX='auto' w='full'>
-            <Table variant='simple' color={bgColor} size='sm'>
+            <Table
+              variant='simple'
+              color={bgColor}
+              size='sm'
+              className='tables-container__table'
+            >
               <Thead>
                 <Tr>
                   {captions.map((caption, idx) => (
@@ -238,6 +243,9 @@ const ProductTableContainer = () => {
                       key={idx}
                       minWidth='120px'
                       whiteSpace='nowrap'
+                      className={`tables-container__header-cell ${
+                        idx === 0 ? 'tables-container__sticky-column' : ''
+                      }`}
                     >
                       {caption}
                     </Th>

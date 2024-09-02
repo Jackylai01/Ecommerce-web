@@ -39,7 +39,6 @@ export class ProfileResponse {
   postalCode!: string;
   expirationDate: Date | null = null;
   profileImage!: any;
-  roles!: string;
   emailVerificationToken!: string;
   membershipLevel: any;
 }

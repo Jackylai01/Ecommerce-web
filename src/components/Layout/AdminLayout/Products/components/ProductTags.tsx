@@ -144,12 +144,23 @@ const ProductTags = () => {
       <LoadingLayout
         isLoading={getProductsTagsByIdLoading || deleteProductsTagsLoading}
       >
-        <Box as='main' overflowX='auto' w='full' minWidth='800px'>
-          <Table variant='simple' color={textColor} size='sm'>
+        <Box as='main' overflowX='auto' w='full'>
+          <Table
+            variant='simple'
+            color={textColor}
+            size='sm'
+            className='tables-container__table'
+          >
             <Thead>
               <Tr>
                 {captions.map((caption, idx) => (
-                  <Th color='gray.400' key={idx}>
+                  <Th
+                    color='gray.400'
+                    key={idx}
+                    className={`tables-container__header-cell ${
+                      idx === 0 ? 'tables-container__sticky-column' : ''
+                    }`}
+                  >
                     {caption}
                   </Th>
                 ))}

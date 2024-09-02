@@ -227,11 +227,21 @@ const Members = ({ title, captions }: AuthorsProps) => {
           </CardHeader>
           <CardBody>
             <Box overflowX='auto' w='full'>
-              <Table variant='simple' color={titleColor} size='sm'>
+              <Table
+                variant='simple'
+                color={titleColor}
+                size='sm'
+                className='tables-container__table'
+              >
                 <Thead>
                   <Tr>
                     {captions.map((caption, idx) => (
-                      <Th key={idx} minWidth='200px'>
+                      <Th
+                        key={idx}
+                        className={`tables-container__header-cell ${
+                          idx === 0 ? 'tables-container__sticky-column' : ''
+                        }`}
+                      >
                         {caption}
                       </Th>
                     ))}

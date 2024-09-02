@@ -3,6 +3,7 @@ import {
   Button,
   Table,
   Tbody,
+  Td,
   Text,
   Th,
   Thead,
@@ -16,7 +17,6 @@ import ConfirmationModal from '@components/Modal/ConfirmationModal';
 import MessageModal from '@components/Modal/MessageModal';
 import TablesModal from '@components/Modal/TablesModal';
 import Pagination from '@components/Pagination';
-import { TablesTableRow } from '@components/Tables/TablesTableRow';
 
 import { profileUsers } from '@helpers/tables';
 import useAppDispatch from '@hooks/useAppDispatch';
@@ -46,18 +46,7 @@ interface IUser {
   username: string;
   email: string;
   city: string;
-  roles: string[];
 }
-
-const roleMapping: { [key: string]: string } = {
-  admin: '管理員',
-  staff: '員工',
-};
-
-const roleOptions = {
-  admin: '管理員',
-  staff: '員工',
-};
 
 const Authors = ({ title, captions }: AuthorsProps) => {
   const dispatch = useAppDispatch();
@@ -87,7 +76,6 @@ const Authors = ({ title, captions }: AuthorsProps) => {
   const renderCell = [
     (user: IUser) => <Text>{user.username}</Text>,
     (user: IUser) => <Text>{user.email}</Text>,
-
     (user: IUser) => <Text>{user.city}</Text>,
     (user: IUser) => (
       <Box display='flex' gap='1'>
@@ -155,6 +143,15 @@ const Authors = ({ title, captions }: AuthorsProps) => {
     setIsTablesModalOpen(false);
   }, []);
 
+  // 將 ProfileResponse 轉換為 IUser
+  const convertToIUser = (profile: ProfileResponse): IUser => ({
+    _id: profile._id,
+    profileImage: profile.profileImage,
+    username: profile.username,
+    email: profile.email,
+    city: profile.city,
+  });
+
   return (
     <>
       <LoadingLayout isLoading={deleteUserLoading}>
@@ -166,24 +163,47 @@ const Authors = ({ title, captions }: AuthorsProps) => {
           </CardHeader>
           <CardBody>
             <Box overflowX='auto' w='full'>
-              <Table variant='simple' color={textColor} size='sm'>
+              <Table
+                variant='simple'
+                color={textColor}
+                size='sm'
+                className='tables-container__table'
+              >
                 <Thead>
                   <Tr>
                     {captions.map((caption, idx) => (
-                      <Th key={idx} minWidth='200px'>
+                      <Th
+                        key={idx}
+                        className={`tables-container__header-cell ${
+                          idx === 0 ? 'tables-container__sticky-column' : ''
+                        }`}
+                        minWidth='200px'
+                      >
                         {caption}
                       </Th>
                     ))}
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {list?.map((user, index) => (
-                    <TablesTableRow
-                      key={index}
-                      row={user}
-                      renderCell={renderCell}
-                    />
-                  ))}
+                  {list?.map((profile, index) => {
+                    const user = convertToIUser(profile);
+                    return (
+                      <Tr key={index}>
+                        {renderCell.map((render, cellIndex) => (
+                          <Td
+                            key={cellIndex}
+                            className={`tables-container__body-cell ${
+                              cellIndex === 0
+                                ? 'tables-container__sticky-column'
+                                : ''
+                            }`}
+                          >
+                            {render(user)}
+                          </Td>
+                        ))}
+                      </Tr>
+                    );
+                  })}
                 </Tbody>
               </Table>
             </Box>

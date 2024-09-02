@@ -20,6 +20,9 @@ export function TablesTableRow({ row, renderCell }: TablesTableRowProps) {
           verticalAlign='middle'
           minWidth='120px'
           whiteSpace='nowrap'
+          className={`tables-container__body-cell ${
+            index === 0 ? 'tables-container__sticky-column' : ''
+          }`}
         >
           {cell(row)}
         </Td>
