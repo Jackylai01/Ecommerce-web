@@ -38,4 +38,8 @@ export class ClientUser extends BaseUserEntity {
 
   /** 生日 */
   birthday?: Date;
+
+  /** 是否為黑名單 */
+
+  isBlacklisted?: boolean;
 }

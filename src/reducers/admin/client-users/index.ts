@@ -9,18 +9,22 @@ import {
   AdminClientUsersAsyncAction,
   adminDeleteClientUserAsync,
   adminGetAllClientUsersAsync,
+  adminGetBlocksClientUsersAsync,
   adminGetClientUserAsync,
+  adminUpdateBlacklistStatusAsync,
 } from './actions';
 
 type AdminClientUsersState = ApiState<AdminClientUsersAsyncAction> & {
   list: ClientUser[] | null;
   detail: ClientUser | null;
+  blocksUsers: ClientUser[] | null;
   metadata: Metadata | null;
 };
 
 const initialState: AdminClientUsersState = {
   list: null,
   detail: null,
+  blocksUsers: null,
   metadata: null,
   ...newApiState<AdminClientUsersState>(AdminClientUsersAsyncAction),
 };
@@ -43,6 +47,29 @@ const adminClientUsersSlice = createSlice({
     builder.addCase(adminDeleteClientUserAsync.fulfilled, (state) => {
       state.detail = null;
     });
+
+    builder.addCase(
+      adminUpdateBlacklistStatusAsync.fulfilled,
+      (state, action) => {
+        if (state.detail && state.detail._id === action.meta.arg.id) {
+          state.detail.isBlacklisted = action.meta.arg.isBlacklisted;
+        }
+        if (state.list) {
+          const userIndex = state.list.findIndex(
+            (user) => user._id === action.meta.arg.id,
+          );
+          if (userIndex !== -1) {
+            state.list[userIndex].isBlacklisted = action.meta.arg.isBlacklisted;
+          }
+        }
+      },
+    );
+    builder.addCase(
+      adminGetBlocksClientUsersAsync.fulfilled,
+      (state, action) => {
+        state.blocksUsers = action.payload.data;
+      },
+    );
 
     asyncMatcher(builder, ReducerName.ADMIN_CLIENT_USERS);
   },

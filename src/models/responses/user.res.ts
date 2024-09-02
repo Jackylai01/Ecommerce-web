@@ -26,6 +26,7 @@ export class UserInfo {
   phoneNumber!: string;
   currentSessionId!: string;
   membershipLevel!: any;
+  isBlacklisted!: boolean;
 }
 
 export class ProfileResponse {

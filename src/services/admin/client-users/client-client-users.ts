@@ -7,6 +7,7 @@ import {
   deleteRequest,
   getRequest,
   postRequest,
+  putRequest,
 } from '../../shared/api';
 
 /**
@@ -44,3 +45,24 @@ export const apiClientNotifyAllUsers = async () =>
  */
 export const apiClientNotifySelectedUsers = async (id: any) =>
   postRequest<ApiResult<any>>(`/zigong/client-users/notify-selected`, id);
+
+/**
+ * 後台-更新會員黑名單狀態
+ * @param id 會員ID
+ * @param isBlacklisted 是否加入黑名單
+ */
+export const apiClientUpdateBlacklistStatus = async (
+  id: string,
+  isBlacklisted: boolean,
+) =>
+  putRequest<ApiResult<any>>(`/zigong/client-users/${id}/blacklist`, {
+    isBlacklisted,
+  });
+
+/**
+ * 後台-查詢黑名單用戶
+ */
+export const apiClientListBlocksUsers = async (query: PagingQuery) =>
+  getRequest<ApiPaginationResult<ClientUser>>(
+    formatQueryString('/zigong/client-users/block-client', query),
+  );

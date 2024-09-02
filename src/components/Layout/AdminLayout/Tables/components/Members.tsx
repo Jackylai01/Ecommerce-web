@@ -6,8 +6,10 @@ import {
   Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react';
 import Card from '@components/Card/Card';
 import CardBody from '@components/Card/CardBody';
@@ -22,10 +24,13 @@ import { clientUsersTables } from '@helpers/tables';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { ClientUser } from '@models/entities/client-user';
+import { resetAdminClientUsers } from '@reducers/admin/client-users';
 import {
   adminDeleteClientUserAsync,
   adminGetAllClientUsersAsync,
-  adminGetClientUserAsync,
+  adminGetBlocksClientUsersAsync,
+  adminGetClientUserAsync, // 新增這行來導入新的 action
+  adminUpdateBlacklistStatusAsync,
 } from '@reducers/admin/client-users/actions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -48,6 +53,7 @@ interface IClientUser {
   city: string;
   roles: string[];
   birthday: Date;
+  isBlacklisted: boolean;
 }
 
 const Members = ({ title, captions }: AuthorsProps) => {
@@ -55,6 +61,7 @@ const Members = ({ title, captions }: AuthorsProps) => {
   const router = useRouter();
   const titleColor = useColorModeValue('gray.700', 'white');
   const textColor = useColorModeValue('white', 'white');
+  const toast = useToast();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -66,13 +73,17 @@ const Members = ({ title, captions }: AuthorsProps) => {
     list,
     detail,
     metadata,
+    blocksUsers, // 黑名單用戶列表
     status: {
       deleteClientUserFailed,
       deleteClientUserLoading,
       deleteClientUserSuccess,
       adminDetailClientUserProfileSuccess,
+      updateBlacklistStatusFailed,
+      updateBlacklistStatusLoading,
+      updateBlacklistStatusSuccess,
     },
-    error: { deleteClientUserError },
+    error: { deleteClientUserError, updateBlacklistStatusError },
   } = useAppSelector((state) => state.adminClientUsers);
 
   const renderCell = [
@@ -99,12 +110,28 @@ const Members = ({ title, captions }: AuthorsProps) => {
         >
           刪除
         </Button>
+        <Tooltip
+          label={user.isBlacklisted ? '移除黑名單' : '加入黑名單'}
+          aria-label='黑名單切換'
+        >
+          <Button
+            size='sm'
+            colorScheme={user.isBlacklisted ? 'red' : 'green'}
+            onClick={() => handleBlacklistToggle(user._id, !user.isBlacklisted)}
+          >
+            {user.isBlacklisted ? '移除黑名單' : '加入黑名單'}
+          </Button>
+        </Tooltip>
       </Box>
     ),
   ];
 
   const handleGetUser = (id: string) => {
     dispatch(adminGetClientUserAsync(id));
+  };
+
+  const handleBlacklistToggle = (id: string, isBlacklisted: boolean) => {
+    dispatch(adminUpdateBlacklistStatusAsync({ id, isBlacklisted }));
   };
 
   const handleCloseModal = () => {
@@ -144,8 +171,36 @@ const Members = ({ title, captions }: AuthorsProps) => {
   }, [deleteClientUserSuccess, deleteClientUserFailed]);
 
   useEffect(() => {
+    if (updateBlacklistStatusSuccess) {
+      toast({
+        title: '黑名單狀態更新成功',
+        description: '用戶的黑名單狀態已更新。',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+
+    if (updateBlacklistStatusFailed) {
+      toast({
+        title: '黑名單狀態更新失敗',
+        description: updateBlacklistStatusError || '更新黑名單狀態時發生錯誤。',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [
+    updateBlacklistStatusSuccess,
+    updateBlacklistStatusFailed,
+    toast,
+    updateBlacklistStatusError,
+  ]);
+
+  useEffect(() => {
     const page = parseInt(router.query.page as string) || 1;
     dispatch(adminGetAllClientUsersAsync({ page, limit: 10 }));
+    dispatch(adminGetBlocksClientUsersAsync({ page, limit: 10 })); // 新增這行來獲取黑名單用戶
   }, [dispatch, router.query.page]);
 
   useEffect(() => {
@@ -153,9 +208,17 @@ const Members = ({ title, captions }: AuthorsProps) => {
     setIsTablesModalOpen(false);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      dispatch(resetAdminClientUsers());
+    };
+  }, [dispatch]);
+
   return (
     <>
-      <LoadingLayout isLoading={deleteClientUserLoading}>
+      <LoadingLayout
+        isLoading={deleteClientUserLoading || updateBlacklistStatusLoading}
+      >
         <Card>
           <CardHeader p='6px 0px 22px 0px'>
             <Text fontSize='xl' color={titleColor} fontWeight='bold'>

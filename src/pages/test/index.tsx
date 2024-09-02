@@ -1,4 +1,5 @@
 import { Box, Flex, Image } from '@chakra-ui/react';
+import { testImage } from '@fixtures/componentLibrary';
 import { useEffect, useRef, useState } from 'react';
 
 const DualScrollingImageList: React.FC = () => {
@@ -42,12 +43,12 @@ const DualScrollingImageList: React.FC = () => {
   }, [topDirection, bottomDirection]);
 
   const images = [
-    '/api/placeholder/200/150',
-    '/api/placeholder/200/150',
-    '/api/placeholder/200/150',
-    '/api/placeholder/200/150',
-    '/api/placeholder/200/150',
-    '/api/placeholder/200/150',
+    testImage,
+    testImage,
+    testImage,
+    testImage,
+    testImage,
+    testImage,
   ];
 
   return (

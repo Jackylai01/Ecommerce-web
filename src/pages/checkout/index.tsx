@@ -260,6 +260,17 @@ const CheckoutPage: NextPage = () => {
       });
       return;
     }
+
+    if (userInfo.isBlacklisted) {
+      toast({
+        title: '購買受限',
+        description: '您的帳號已被列入黑名單，無法進行購買',
+        status: 'error',
+        isClosable: true,
+      });
+      return;
+    }
+
     setIsOrderButtonDisabled(true);
 
     // 合併 savedDiscountCode 和 selectedDiscounts
