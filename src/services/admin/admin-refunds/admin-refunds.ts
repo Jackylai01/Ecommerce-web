@@ -12,14 +12,17 @@ import {
 /** 獲取所有待審核的退貨申請 */
 export const apiGetPendingRefundRequests = async (query: PagingQuery) =>
   getRequest<ApiPaginationResult<refundsResponse>>(
-    formatQueryString('/refunds/pending-requests', query),
+    formatQueryString('/zigong/refunds/pending-requests', query),
   );
 
 /** 商家批准退貨請求 */
 export const apiAdminApproveReturnRequest = async (refundId: string) => {
-  return postRequest<ApiResult<refundsResponse>>('/refunds/approve-return', {
-    refundId,
-  });
+  return postRequest<ApiResult<refundsResponse>>(
+    '/zigong/refunds/approve-return',
+    {
+      refundId,
+    },
+  );
 };
 
 /** 商家拒絕退貨請求 */
@@ -29,17 +32,20 @@ export const apiAdminRejectReturnRequest = async (
   emailSubject: string,
   emailBody: string,
 ) => {
-  return postRequest<ApiResult<refundsResponse>>('/refunds/reject-return', {
-    refundId,
-    emailSubject,
-    emailBody,
-  });
+  return postRequest<ApiResult<refundsResponse>>(
+    '/zigong/refunds/reject-return',
+    {
+      refundId,
+      emailSubject,
+      emailBody,
+    },
+  );
 };
 
 /** 封存退貨申請訂單 */
 
 export const apiArchiveReturnRequest = async (refundId: string) => {
-  return postRequest<ApiResult<refundsResponse>>('/refunds/archive', {
+  return postRequest<ApiResult<refundsResponse>>('/zigong/refunds/archive', {
     refundId,
   });
 };

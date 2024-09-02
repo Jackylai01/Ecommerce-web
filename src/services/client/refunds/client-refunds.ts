@@ -10,7 +10,7 @@ export const apiRequestReturn = async (formData: FormData) => {
     'Content-Type': 'multipart/form-data',
   };
   return postRequest<ApiResult<any>>(
-    `/refunds/request-return`,
+    `/client/refunds/request-return`,
     formData,
     headers,
   );
