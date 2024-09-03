@@ -42,7 +42,7 @@ const HomePage: NextPage = () => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              嗨這裡是測試用的網站，後台連結如下:
+              <h1> 嗨這裡是測試用的網站，後台連結如下:</h1>
               <Button>
                 <Link href='/zigong'>前往管理員後台</Link>
               </Button>
@@ -59,7 +59,7 @@ const HomePage: NextPage = () => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-      {/* 首頁內容 */}
+
       <Banner />
       <TopCategories />
       <Footer />
