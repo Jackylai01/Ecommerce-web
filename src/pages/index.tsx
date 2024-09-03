@@ -30,7 +30,9 @@ const HomePage: NextPage = () => {
 
   return (
     <Box>
-      {/* 通知彈跳視窗 */}
+      <Box as='h1' display='none'>
+        測式
+      </Box>
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}

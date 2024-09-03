@@ -68,6 +68,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
+        <html lang='zh-Hant' />
         <title>電子商務系統</title>
       </Head>
       <ChakraProvider theme={theme}>
