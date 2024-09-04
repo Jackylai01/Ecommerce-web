@@ -3,7 +3,9 @@ import {
   loadAdminToken,
   loadClientToken,
   removeAdminToken,
+  removeClientToken,
   saveAdminToken,
+  saveClientToken,
 } from '@helpers/token';
 import axios from 'axios';
 
@@ -66,7 +68,7 @@ instance.interceptors.response.use(
       res: response,
       status: response.status,
       result: response.data,
-    } as any;
+    };
   },
   async (error) => {
     const originalRequest = error.config;
@@ -75,9 +77,14 @@ instance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // 使用 axios.post 來刷新 token
+        // 根據是否包含 ADMIN_API_ROUTE 來判斷使用哪個 refresh token 路徑
+        const isAdmin = originalRequest.url?.includes(ADMIN_API_ROUTE);
+        const refreshTokenUrl = isAdmin
+          ? `${BASE_API_URL}/zigong/refreshToken`
+          : `${BASE_API_URL}/client/refreshToken`;
+
         const response = await axios.post(
-          `${BASE_API_URL}/zigong/refreshToken`,
+          refreshTokenUrl,
           {},
           { withCredentials: true },
         );
@@ -85,10 +92,12 @@ instance.interceptors.response.use(
         const newToken = response.data.accessToken;
 
         if (newToken) {
-          // 保存新的 token
-          const tokenData = loadAdminToken();
+          // 根據角色保存新的 token
+          const tokenData = isAdmin ? loadAdminToken() : loadClientToken();
           if (tokenData) {
-            saveAdminToken({ ...tokenData, accessToken: newToken });
+            isAdmin
+              ? saveAdminToken({ ...tokenData, accessToken: newToken })
+              : saveClientToken({ ...tokenData, accessToken: newToken });
           }
 
           // 更新原始請求中的 Authorization 標頭
@@ -98,17 +107,8 @@ instance.interceptors.response.use(
           return instance(originalRequest);
         }
       } catch (refreshError) {
-        // 清除本地的 adminToken
         removeAdminToken();
-
-        // 確保 refreshError 的類型已知
-        if (
-          axios.isAxiosError(refreshError) &&
-          (refreshError.response?.status === 403 ||
-            refreshError.response?.status === 401)
-        ) {
-          window.location.href = '/zigong/auth/login';
-        }
+        removeClientToken();
       }
     }
 
