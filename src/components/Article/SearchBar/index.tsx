@@ -1,20 +1,20 @@
 import { Box, Icon, Input } from '@chakra-ui/react';
-import useAppDispatch from '@hooks/useAppDispatch';
-import { getArticlesListAsync } from '@reducers/public/articles/actions';
 import { Search } from 'lucide-react';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
 
-    // 發送搜尋請求
-    dispatch(
-      getArticlesListAsync({ page: 1, limit: 10, search: e.target.value }),
-    );
+    // 更新 URL 查詢參數，觸發 SSR
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, search: e.target.value, page: 1 },
+    });
   };
 
   return (

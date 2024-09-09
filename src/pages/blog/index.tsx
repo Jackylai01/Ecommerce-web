@@ -62,8 +62,13 @@ const BlogHomepage: React.FC<BlogHomepageProps> = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const articlesResponse = await apiGetArticles({ page: 1, limit: 10 });
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { query } = context;
+  const page = query.page ? parseInt(query.page as string) : 1;
+  const limit = query.limit ? parseInt(query.limit as string) : 10;
+  const search = query.search || '';
+
+  const articlesResponse = await apiGetArticles({ page, limit, search });
   const trendingResponse = await apiGetTrendingArticles();
   const categoriesResponse = await apiGetArticleCategories();
 
@@ -80,4 +85,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
   };
 };
+
 export default BlogHomepage;
