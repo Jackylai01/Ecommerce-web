@@ -39,10 +39,9 @@ const Sidebar: React.FC<SidebarProps> = ({ trendingArticles, categories }) => {
             trendingArticles.map((post, index) => (
               <Box
                 key={index}
-                borderBottom='1px'
                 borderColor='gray.200'
                 pb={2}
-                w='full'
+                w='100%'
                 _last={{ borderBottom: 'none' }}
               >
                 <Button
@@ -53,16 +52,24 @@ const Sidebar: React.FC<SidebarProps> = ({ trendingArticles, categories }) => {
                   _hover={{ color: 'purple.600' }}
                   display='flex'
                   alignItems='start'
+                  overflow='hidden'
                 >
                   <Text
                     fontSize='2xl'
                     fontWeight='bold'
                     color='purple.200'
-                    mr={3}
+                    flexShrink={0}
                   >
                     {index + 1}
                   </Text>
-                  <Text>{post.title}</Text>
+                  <Text
+                    flex={1}
+                    overflow='hidden'
+                    textOverflow='ellipsis'
+                    whiteSpace='nowrap'
+                  >
+                    {post.title}
+                  </Text>
                 </Button>
               </Box>
             ))
