@@ -7,6 +7,7 @@ import {
   AlertDialogOverlay,
   Box,
   Button,
+  Image,
   Link,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -62,6 +63,19 @@ const HomePage: NextPage = () => {
 
       <Banner />
       <TopCategories />
+      <Box
+        bgImage='https://res.cloudinary.com/dlm0ieiyt/image/upload/v1724263331/ecommerce-carrefour/con_odwyxu.png'
+        w='100%'
+      >
+        <Link href='/'>
+          <Image
+            src='https://res.cloudinary.com/dlm0ieiyt/image/upload/v1724263331/ecommerce-carrefour/con_odwyxu.png'
+            maxH='680px'
+            w='100%'
+            objectFit='cover'
+          />
+        </Link>
+      </Box>
       <Footer />
     </Box>
   );
