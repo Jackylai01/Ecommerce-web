@@ -2,8 +2,6 @@
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 
-// bg = 'center / cover no-repeat url(/banner-img1.jpg)';
-
 export const Banner = () => {
   return (
     <Box minH='600px' w='100%'>
@@ -33,7 +31,6 @@ export const Banner = () => {
             py='1rem'
             maxW='600px'
             color='black'
-            mx='auto'
           >
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
             autem voluptatem iure illo optio obcaecati accusantium fugiat
