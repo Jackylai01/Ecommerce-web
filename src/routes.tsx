@@ -1,4 +1,5 @@
 import {
+  FaAssistiveListeningSystems,
   FaBoxOpen,
   FaDollarSign,
   FaEdit,
@@ -14,6 +15,7 @@ import {
 
 import { PayPalIcon } from '@components/Icons/Icons';
 import AdminEditPageLayout from '@components/Layout/AdminEditLayout';
+import AdminSettings from '@components/Layout/AdminLayout/AdminSettings';
 import ArticleManagement from '@components/Layout/AdminLayout/ArticleManagement';
 import Billing from '@components/Layout/AdminLayout/Billing';
 import Dashboard from '@components/Layout/AdminLayout/Dashboard';
@@ -118,6 +120,13 @@ const dashRoutes = [
         layout: `/${ADMIN_ROUTE}`,
       },
     ],
+  },
+  {
+    path: '/admin-system',
+    name: '系統設定',
+    icon: FaAssistiveListeningSystems,
+    component: AdminSettings,
+    layout: `/${ADMIN_ROUTE}`,
   },
   {
     path: '/design-store',
