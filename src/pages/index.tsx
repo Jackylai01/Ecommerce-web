@@ -11,9 +11,11 @@ import {
   Link,
   useDisclosure,
 } from '@chakra-ui/react';
+import Carousel from '@components/Carouse';
 import { Footer } from '@components/Footer';
 import { Banner } from '@components/Home/Banner';
 import { TopCategories } from '@components/Home/TopCategories';
+import { images, size } from '@fixtures/Carousel';
 import type { NextPage } from 'next';
 import { useEffect, useRef } from 'react';
 import 'swiper/css';
@@ -24,7 +26,6 @@ const HomePage: NextPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
 
-  // 當進入頁面時自動打開彈跳視窗
   useEffect(() => {
     onOpen();
   }, [onOpen]);
@@ -62,11 +63,9 @@ const HomePage: NextPage = () => {
       </AlertDialog>
 
       <Banner />
+      <Carousel images={images} size={size} />
       <TopCategories />
-      <Box
-        bgImage='https://res.cloudinary.com/dlm0ieiyt/image/upload/v1724263331/ecommerce-carrefour/con_odwyxu.png'
-        w='100%'
-      >
+      <Box>
         <Link href='/'>
           <Image
             src='https://res.cloudinary.com/dlm0ieiyt/image/upload/v1724263331/ecommerce-carrefour/con_odwyxu.png'
