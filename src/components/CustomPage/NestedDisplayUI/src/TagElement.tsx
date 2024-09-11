@@ -1,4 +1,4 @@
-import { baseQuillToolbar } from '@fixtures/quill-configs';
+import { contentQuillToolbar } from '@fixtures/quill-configs';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { updateElementContent } from '@reducers/admin/custom-page';
 import dynamic from 'next/dynamic';
@@ -41,7 +41,7 @@ const TagElement = ({ element, isEdit, onBlur }: ElementProps) => {
       <ReactQuill
         className={element.className}
         theme='bubble'
-        modules={{ toolbar: baseQuillToolbar }}
+        modules={{ toolbar: contentQuillToolbar }}
         placeholder='请输入内容'
         value={content}
         onChange={handleChange}
