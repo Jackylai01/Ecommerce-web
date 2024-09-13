@@ -13,6 +13,7 @@ import adminNewsCategories from './admin/admin-news-categorys';
 import adminPermissions from './admin/admin-permissions';
 import adminRefunds from './admin/admin-refunds';
 import adminRoles from './admin/admin-roles';
+import adminSetting from './admin/admin-settings';
 import adminStatistics from './admin/admin-statistics';
 import adminAuth from './admin/auth';
 import adminClientUsers from './admin/client-users';
@@ -104,6 +105,7 @@ const appReducer = {
   adminFaqCategory,
   publicFaq,
   publicMessage,
+  adminSetting,
 };
 
 export default appReducer;

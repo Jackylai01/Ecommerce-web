@@ -1,52 +1,116 @@
 import {
   Box,
-  Button,
-  FormControl,
-  FormLabel,
   Heading,
   IconButton,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
+  Select,
   SimpleGrid,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Bell, FileText, Settings, Users } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import LoadingLayout from '@components/Layout/LoadingLayout';
+import FormModal from '@components/Modal/FormModal';
+import MessageModal from '@components/Modal/MessageModal';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { resetSettingStatus } from '@reducers/admin/admin-settings';
+import {
+  setInvoiceIssuingModeAsync,
+  setShoppingModeAsync,
+} from '@reducers/admin/admin-settings/actions';
+
+import { Settings } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 const AdminSettings = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [activeCard, setActiveCard] = useState<any>(null);
-  const [isClient, setIsClient] = useState(false);
+  const [activeSetting, setActiveSetting] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const {
+    status: {
+      setInvoiceIssuingModeFailed,
+      setInvoiceIssuingModeLoading,
+      setInvoiceIssuingModeSuccess,
+      setShoppingModeFailed,
+      setShoppingModeLoading,
+      setShoppingModeSuccess,
+    },
+    error: { setInvoiceIssuingModeError, setShoppingModeError },
+  } = useAppSelector((state) => state.adminSetting);
 
-  useEffect(() => {
-    setIsClient(true); // 只在客戶端渲染
-  }, []);
+  const methods = useForm();
+  const { register, handleSubmit } = methods;
+
+  const [invoiceMode, setInvoiceMode] = useState<'immediate' | 'delayed'>(
+    'immediate',
+  );
+  const [shoppingMode, setShoppingMode] = useState<
+    'memberOnly' | 'guestAllowed'
+  >('memberOnly');
 
   const cards = [
-    { title: '用戶管理', icon: Users, color: 'blue.50' },
-    { title: '系統設置', icon: Settings, color: 'green.50' },
-    { title: '內容管理', icon: FileText, color: 'yellow.50' },
-    { title: '通知設置', icon: Bell, color: 'purple.50' },
+    { title: '發票設定', key: 'invoice', icon: Settings, color: 'green.50' },
+    { title: '購物設定', key: 'shopping', icon: Settings, color: 'yellow.50' },
   ];
 
-  const handleCardClick = (card: any) => {
-    setActiveCard(card);
+  const handleCardClick = (key: string) => {
+    setActiveSetting(key);
     onOpen();
   };
 
+  const onSubmit = (data: any) => {
+    if (activeSetting === 'invoice') {
+      dispatch(setInvoiceIssuingModeAsync(data.invoiceMode));
+    } else if (activeSetting === 'shopping') {
+      dispatch(setShoppingModeAsync(data.shoppingMode));
+    }
+    onClose();
+  };
+
+  const getFormContent = () => {
+    if (activeSetting === 'invoice') {
+      return (
+        <Select
+          {...register('invoiceMode')}
+          defaultValue={invoiceMode}
+          onChange={(e) =>
+            setInvoiceMode(e.target.value as 'immediate' | 'delayed')
+          }
+        >
+          <option value='immediate'>即時</option>
+          <option value='delayed'>延遲</option>
+        </Select>
+      );
+    } else if (activeSetting === 'shopping') {
+      return (
+        <Select
+          {...register('shoppingMode')}
+          defaultValue={shoppingMode}
+          onChange={(e) =>
+            setShoppingMode(e.target.value as 'memberOnly' | 'guestAllowed')
+          }
+        >
+          <option value='memberOnly'>註冊會員結帳</option>
+          <option value='guestAllowed'>訪客購買</option>
+        </Select>
+      );
+    }
+    return null;
+  };
+
+  const closeMessageModal = () => {
+    dispatch(resetSettingStatus());
+  };
+
   return (
-    <Box minH='100vh' bg='gray.50' p={8}>
-      <Heading as='h1' size='xl' mb={8} color='gray.800' fontWeight='light'>
-        管理後台
-      </Heading>
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6}>
-        {isClient &&
-          cards.map((card, index) => (
+    <LoadingLayout
+      isLoading={setInvoiceIssuingModeLoading || setShoppingModeLoading}
+    >
+      <Box minH='100vh' bg='gray.50' p={8}>
+        <Heading as='h1' size='xl' mb={8} color='gray.800' fontWeight='light'>
+          系統設置
+        </Heading>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6}>
+          {cards.map((card, index) => (
             <Box
               key={index}
               bg={card.color}
@@ -55,7 +119,7 @@ const AdminSettings = () => {
               boxShadow='sm'
               _hover={{ boxShadow: 'md', cursor: 'pointer' }}
               transition='all 0.3s'
-              onClick={() => handleCardClick(card)}
+              onClick={() => handleCardClick(card.key)}
               textAlign='center'
             >
               <IconButton
@@ -71,29 +135,38 @@ const AdminSettings = () => {
               </Heading>
             </Box>
           ))}
-      </SimpleGrid>
+        </SimpleGrid>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent maxW='425px'>
-          <ModalHeader>{activeCard?.title}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <FormControl mb={4}>
-              <FormLabel>名稱</FormLabel>
-              <Input placeholder='輸入名稱' />
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>描述</FormLabel>
-              <Input placeholder='輸入描述' />
-            </FormControl>
-            <Button colorScheme='blue' w='full' onClick={onClose}>
-              保存
-            </Button>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </Box>
+        <FormModal
+          isOpen={isOpen}
+          onClose={onClose}
+          onSubmit={handleSubmit(onSubmit)}
+          title={activeSetting === 'invoice' ? '發票設定' : '購物設定'}
+        >
+          {getFormContent()}
+        </FormModal>
+
+        {/* 發票設定訊息彈窗 */}
+        <MessageModal
+          title='發票設定'
+          isActive={setInvoiceIssuingModeSuccess || setInvoiceIssuingModeFailed}
+          error={setInvoiceIssuingModeError}
+          onClose={closeMessageModal}
+        >
+          {setInvoiceIssuingModeSuccess && <Box>發票模式已成功更新</Box>}
+        </MessageModal>
+
+        {/* 購物設定訊息彈窗 */}
+        <MessageModal
+          title='購物設定'
+          isActive={setShoppingModeSuccess || setShoppingModeFailed}
+          error={setShoppingModeError}
+          onClose={closeMessageModal}
+        >
+          {setShoppingModeSuccess && <Box>購物模式已成功更新</Box>}
+        </MessageModal>
+      </Box>
+    </LoadingLayout>
   );
 };
 
