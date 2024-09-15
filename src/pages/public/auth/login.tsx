@@ -115,7 +115,6 @@ const Login: NextPage = () => {
 
   // Google 登入的處理函數
   const handleGoogleLogin = () => {
-    // 觸發 Google OAuth 流程，重定向到後端的 /auth/google
     window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`;
   };
 

@@ -1,10 +1,14 @@
+import { Box, Spinner, Text } from '@chakra-ui/react';
 import { saveClientToken } from '@helpers/token'; // Helper to save token
+import useAppDispatch from '@hooks/useAppDispatch';
+import { setClientUserInfo } from '@reducers/client/auth';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 const LoginSuccess = () => {
   const router = useRouter();
   const { token, userInfo } = router.query;
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (token && userInfo) {
@@ -13,6 +17,10 @@ const LoginSuccess = () => {
         const parsedUserInfo = JSON.parse(
           decodeURIComponent(userInfo as string),
         );
+
+        if (parsedUserInfo) {
+          dispatch(setClientUserInfo(parsedUserInfo));
+        }
 
         // 構建完整的 AuthResponse 對象
         const authResponse = {
@@ -28,15 +36,27 @@ const LoginSuccess = () => {
         // 保存完整的 AuthResponse 對象
         saveClientToken(authResponse);
 
-        // 導向首頁
-        router.push('/');
+        window.location.href = '/';
       } catch (error) {
         console.error('Error parsing user info:', error);
       }
     }
-  }, [token, userInfo, router]);
+  }, [token, userInfo, router, dispatch]);
 
-  return <div>登入成功，正在重定向...</div>;
+  return (
+    <Box
+      display='flex'
+      flexDirection='column'
+      alignItems='center'
+      justifyContent='center'
+      height='100vh'
+    >
+      <Spinner size='xl' color='teal.500' />
+      <Text mt={4} fontSize='lg'>
+        登入成功，正在重定向...
+      </Text>
+    </Box>
+  );
 };
 
 export default LoginSuccess;
