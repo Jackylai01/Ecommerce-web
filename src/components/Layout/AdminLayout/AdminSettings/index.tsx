@@ -30,11 +30,8 @@ const AdminSettings = () => {
       setInvoiceIssuingModeFailed,
       setInvoiceIssuingModeLoading,
       setInvoiceIssuingModeSuccess,
-      setShoppingModeFailed,
-      setShoppingModeLoading,
-      setShoppingModeSuccess,
     },
-    error: { setInvoiceIssuingModeError, setShoppingModeError },
+    error: { setInvoiceIssuingModeError },
   } = useAppSelector((state) => state.adminSetting);
 
   const methods = useForm();
@@ -43,13 +40,9 @@ const AdminSettings = () => {
   const [invoiceMode, setInvoiceMode] = useState<'immediate' | 'delayed'>(
     'immediate',
   );
-  const [shoppingMode, setShoppingMode] = useState<
-    'memberOnly' | 'guestAllowed'
-  >('memberOnly');
 
   const cards = [
     { title: '發票設定', key: 'invoice', icon: Settings, color: 'green.50' },
-    { title: '購物設定', key: 'shopping', icon: Settings, color: 'yellow.50' },
   ];
 
   const handleCardClick = (key: string) => {
@@ -80,19 +73,6 @@ const AdminSettings = () => {
           <option value='delayed'>延遲</option>
         </Select>
       );
-    } else if (activeSetting === 'shopping') {
-      return (
-        <Select
-          {...register('shoppingMode')}
-          defaultValue={shoppingMode}
-          onChange={(e) =>
-            setShoppingMode(e.target.value as 'memberOnly' | 'guestAllowed')
-          }
-        >
-          <option value='memberOnly'>註冊會員結帳</option>
-          <option value='guestAllowed'>訪客購買</option>
-        </Select>
-      );
     }
     return null;
   };
@@ -102,9 +82,7 @@ const AdminSettings = () => {
   };
 
   return (
-    <LoadingLayout
-      isLoading={setInvoiceIssuingModeLoading || setShoppingModeLoading}
-    >
+    <LoadingLayout isLoading={setInvoiceIssuingModeLoading}>
       <Box minH='100vh' bg='gray.50' p={8}>
         <Heading as='h1' size='xl' mb={8} color='gray.800' fontWeight='light'>
           系統設置
@@ -154,16 +132,6 @@ const AdminSettings = () => {
           onClose={closeMessageModal}
         >
           {setInvoiceIssuingModeSuccess && <Box>發票模式已成功更新</Box>}
-        </MessageModal>
-
-        {/* 購物設定訊息彈窗 */}
-        <MessageModal
-          title='購物設定'
-          isActive={setShoppingModeSuccess || setShoppingModeFailed}
-          error={setShoppingModeError}
-          onClose={closeMessageModal}
-        >
-          {setShoppingModeSuccess && <Box>購物模式已成功更新</Box>}
         </MessageModal>
       </Box>
     </LoadingLayout>

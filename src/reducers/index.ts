@@ -40,6 +40,7 @@ import fileSelect from './file-select';
 import iconSelect from './icon-select';
 import layout from './layout';
 import publicArticles from './public/articles';
+import publicAuth from './public/auth';
 import publicCategory from './public/categories';
 import publicDashboard from './public/dashboard';
 import publicDesignPage from './public/design-pages';
@@ -106,6 +107,7 @@ const appReducer = {
   publicFaq,
   publicMessage,
   adminSetting,
+  publicAuth,
 };
 
 export default appReducer;

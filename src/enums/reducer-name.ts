@@ -57,4 +57,5 @@ export enum ReducerName {
   ADMIN_FAQ_CATEGORY = 'adminFaqCategory',
   PUBLIC_FAQS = 'publicFaqs',
   PUBLIC_MESSAGES = 'publicMessages',
+  PUBLIC_AUTH = 'publicAuth',
 }

@@ -30,6 +30,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { FaGoogle } from 'react-icons/fa';
 
 const Login: NextPage = () => {
   const router = useRouter();
@@ -112,6 +113,12 @@ const Login: NextPage = () => {
     }
   };
 
+  // Google 登入的處理函數
+  const handleGoogleLogin = () => {
+    // 觸發 Google OAuth 流程，重定向到後端的 /auth/google
+    window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`;
+  };
+
   return (
     <LoadingLayout isLoading={loginLoading}>
       <Flex as='main' h='70vh' alignItems='center' justifyContent='center'>
@@ -175,6 +182,15 @@ const Login: NextPage = () => {
             </FormControl>
             <Button type='submit' colorScheme='blue' width='full' mb={4}>
               登入
+            </Button>
+            <Button
+              leftIcon={<FaGoogle />}
+              colorScheme='red'
+              width='full'
+              mb={4}
+              onClick={handleGoogleLogin}
+            >
+              使用 Google 登入
             </Button>
             <Flex justifyContent='space-between' fontSize='sm' color='gray.600'>
               <Link onClick={onOpen}>忘記密碼?</Link>
