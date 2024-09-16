@@ -58,4 +58,5 @@ export enum ReducerName {
   PUBLIC_FAQS = 'publicFaqs',
   PUBLIC_MESSAGES = 'publicMessages',
   PUBLIC_AUTH = 'publicAuth',
+  ADMIN_STORE_SETTING = 'adminStoreSetting',
 }

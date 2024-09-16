@@ -15,6 +15,7 @@ import adminRefunds from './admin/admin-refunds';
 import adminRoles from './admin/admin-roles';
 import adminSetting from './admin/admin-settings';
 import adminStatistics from './admin/admin-statistics';
+import adminStoreSetting from './admin/admin-store-setting';
 import adminAuth from './admin/auth';
 import adminClientUsers from './admin/client-users';
 import customPage from './admin/custom-page';
@@ -108,6 +109,7 @@ const appReducer = {
   publicMessage,
   adminSetting,
   publicAuth,
+  adminStoreSetting,
 };
 
 export default appReducer;

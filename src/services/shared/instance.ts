@@ -14,13 +14,13 @@ export const TEST_API_URL = 'http://localhost:3001/api';
 export const ACCESS_TOKEN_NAME = 'atn';
 
 const instance = axios.create({
-  baseURL: BASE_API_URL,
+  baseURL: TEST_API_URL,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 });
 
 export const formInstance = axios.create({
-  baseURL: BASE_API_URL,
+  baseURL: TEST_API_URL,
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   withCredentials: true,
 });
@@ -80,8 +80,8 @@ instance.interceptors.response.use(
         // 根據是否包含 ADMIN_API_ROUTE 來判斷使用哪個 refresh token 路徑
         const isAdmin = originalRequest.url?.includes(ADMIN_API_ROUTE);
         const refreshTokenUrl = isAdmin
-          ? `${BASE_API_URL}/zigong/refreshToken`
-          : `${BASE_API_URL}/client/refreshToken`;
+          ? `${TEST_API_URL}/zigong/refreshToken`
+          : `${TEST_API_URL}/client/refreshToken`;
 
         const response = await axios.post(
           refreshTokenUrl,
