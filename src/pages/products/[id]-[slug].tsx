@@ -127,6 +127,7 @@ const ProductDetails = () => {
         mx='auto'
         p='2rem'
         gap='20'
+        maxWidth='1680px'
       >
         <GridItem p='1rem' pos='relative'>
           <AddToWishlistButton product={product} />
@@ -212,7 +213,7 @@ const ProductDetails = () => {
           )}
         </GridItem>
       </Grid>
-      <Box mt='4'>
+      <Box mt='4' maxWidth='1200px' mx='auto'>
         {product.detailDescription.map((block: any, index: number) => (
           <Box key={index} className={block.className} mb='4'>
             {block.elements.map((element: any, elemIndex: number) => {
@@ -226,7 +227,6 @@ const ProductDetails = () => {
                   />
                 );
               } else {
-                // 處理其他標籤
                 const Tag = element.tagName;
                 return (
                   <Tag key={elemIndex}>
