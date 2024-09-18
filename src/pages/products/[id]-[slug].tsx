@@ -8,8 +8,14 @@ import {
   GridItem,
   Heading,
   Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
   Stack,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { AddToWishlistButton } from '@components/AddToWishlistButton';
 import { AddToCartButton } from '@components/Cart/AddToCartButton';
@@ -42,6 +48,9 @@ const ProductDetails = () => {
   const [selectedUpsellProducts, setSelectedUpsellProducts] = useState<any[]>(
     [],
   );
+  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -106,6 +115,11 @@ const ProductDetails = () => {
       ? router.query['id]-[slug'].split('-').slice(1).join('-')
       : ''; // 解析 slug
 
+  const handleImageClick = (imageUrl: string) => {
+    setSelectedImage(imageUrl); // 設定選中的圖片
+    onOpen(); // 打開 Modal
+  };
+
   return (
     <>
       <CustomBreadcrumb
@@ -131,6 +145,7 @@ const ProductDetails = () => {
       >
         <GridItem p='1rem' pos='relative'>
           <AddToWishlistButton product={product} />
+
           {product.coverImage?.imageUrl ? (
             <Image
               src={product.coverImage.imageUrl}
@@ -142,7 +157,8 @@ const ProductDetails = () => {
               <Text>圖片無法顯示</Text>
             </Box>
           )}
-          <Flex>
+
+          <Flex mt='4'>
             {product.images?.length !== 0 &&
               product.images?.map((image: any, i: number) =>
                 image?.imageUrl ? (
@@ -156,6 +172,8 @@ const ProductDetails = () => {
                     shadow='sm'
                     borderWidth='1px'
                     borderColor='gray.100'
+                    cursor='pointer'
+                    onClick={() => handleImageClick(image.imageUrl)}
                   />
                 ) : (
                   <Box key={i} textAlign='center'>
@@ -242,6 +260,20 @@ const ProductDetails = () => {
           </Box>
         ))}
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose} size='full'>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody>
+            <Image
+              src={selectedImage}
+              alt='Selected product image'
+              mx='auto'
+              maxH='90vh'
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
