@@ -22,6 +22,7 @@ const ProductTableContainer = dynamic(
 const ProductsPages: NextPage = () => {
   const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { uploadedImages } = useAppSelector((state) => state.adminUpload);
   const {
     status: {
       addProductSuccess,
@@ -74,6 +75,28 @@ const ProductsPages: NextPage = () => {
   ]);
 
   const handleSubmit = async (data: any) => {
+    let detailDescription = data.detailDescription || [];
+
+    const existingImageIds = new Set(
+      detailDescription.flatMap((block: any) =>
+        block.elements.map((el: any) => el.imageId),
+      ),
+    );
+
+    const newImageElements = uploadedImages
+      .filter((img) => !existingImageIds.has(img.imageId))
+      .map((image) => ({
+        className: 'image-selectable',
+        elements: [
+          {
+            tagName: 'img',
+            src: image.imageUrl,
+            imageId: image.imageId,
+          },
+        ],
+      }));
+    detailDescription = [...detailDescription, ...newImageElements];
+
     const formData = new FormData();
 
     formData.append('name', data.name);
@@ -85,7 +108,7 @@ const ProductsPages: NextPage = () => {
     formData.append('stock', data.stock);
     formData.append('status', data.status);
     formData.append('category', data.category);
-
+    formData.append('detailDescription', JSON.stringify(detailDescription));
     // 處理封面圖片
     if (data.coverImage) {
       formData.append('coverImage', data.coverImage);
