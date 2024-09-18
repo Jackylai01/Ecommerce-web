@@ -252,11 +252,11 @@ const InventoryDashboard = () => {
               <Tbody>
                 {inventoryMovements?.map((item, index) => (
                   <Tr key={index}>
-                    <Td>{item.product.name}</Td>
-                    <Td>{translateType(item.type)}</Td>
-                    <Td>{item.quantity}</Td>
-                    <Td>{item.reason}</Td>
-                    <Td>{onlyDate(item.date)}</Td>
+                    <Td>{item?.product?.name}</Td>
+                    <Td>{translateType(item?.type)}</Td>
+                    <Td>{item?.quantity}</Td>
+                    <Td>{item?.reason}</Td>
+                    <Td>{onlyDate(item?.date)}</Td>
                   </Tr>
                 ))}
               </Tbody>

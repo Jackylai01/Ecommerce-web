@@ -314,10 +314,10 @@ const InventoryOverview = () => {
                   bg='gray.50'
                   _hover={{ bg: 'gray.100', transform: 'scale(1.02)' }}
                 >
-                  <Td>{new Date(item.orderDate).toLocaleDateString()}</Td>
-                  <Td>{productItem.product.name}</Td>
-                  <Td>{productItem.quantity}</Td>
-                  <Td>{item.supplier.name}</Td>
+                  <Td>{new Date(item?.orderDate).toLocaleDateString()}</Td>
+                  <Td>{productItem?.product?.name}</Td>
+                  <Td>{productItem?.quantity}</Td>
+                  <Td>{item?.supplier?.name}</Td>
                 </Tr>
               )),
             )}
