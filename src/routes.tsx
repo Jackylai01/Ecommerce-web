@@ -130,7 +130,7 @@ const dashRoutes = [
   },
   {
     path: '/design-store',
-    name: '設計店面',
+    name: '一頁式商店設計',
     icon: FaEdit,
     component: AdminEditPageLayout,
     layout: `/${ADMIN_EDIT_PAGES_ROUTE}`,
