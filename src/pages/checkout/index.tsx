@@ -62,7 +62,6 @@ const CheckoutPage: NextPage = () => {
     country: '',
     phone: '',
     email: '',
-    carrierType: '',
     carrierNum: '',
     taxId: '',
     donateCode: '',
