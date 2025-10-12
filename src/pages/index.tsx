@@ -5,7 +5,6 @@ import { FeaturedCategories } from '@components/Home/FeaturedCategories';
 import { TrendingProducts } from '@components/Home/TrendingProducts';
 import { PromotionBanner } from '@components/Home/PromotionBanner';
 import { NewArrivals } from '@components/Home/NewArrivals';
-import { Newsletter } from '@components/Home/Newsletter';
 import type { NextPage } from 'next';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -28,9 +27,6 @@ const HomePage: NextPage = () => {
 
       {/* New Arrivals - 新品上市 */}
       <NewArrivals />
-
-      {/* Newsletter - 訂閱電子報 */}
-      <Newsletter />
 
       {/* Footer - 頁尾 */}
       <Footer />

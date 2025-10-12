@@ -3,74 +3,68 @@ import {
   Button,
   Container,
   Flex,
-  Grid,
   Heading,
-  Icon,
   Image,
   Text,
   VStack,
-  Badge,
   HStack,
-  useColorModeValue,
+  SimpleGrid,
+  Icon,
+  Badge,
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { FiHeart, FiShoppingCart, FiStar } from 'react-icons/fi';
+import { useState } from 'react';
 
-const trendingProducts = [
+const products = [
   {
     id: 1,
-    name: '經典皮革手提包',
+    name: '經典牛仔外套',
     price: 2999,
     originalPrice: 3999,
+    image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&h=600&fit=crop',
     rating: 4.8,
     reviews: 234,
-    image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&h=500&fit=crop',
-    badge: '熱銷',
-    discount: '-25%',
+    discount: 25,
+    badge: '限時特價',
   },
   {
     id: 2,
-    name: '極簡設計運動鞋',
-    price: 1899,
-    originalPrice: 2499,
-    rating: 4.9,
-    reviews: 567,
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=500&fit=crop',
-    badge: '新品',
-    discount: '-24%',
+    name: '純棉休閒T恤',
+    price: 799,
+    originalPrice: 1200,
+    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&h=600&fit=crop',
+    rating: 4.6,
+    reviews: 189,
+    discount: 33,
+    badge: '熱銷',
   },
   {
     id: 3,
-    name: '都市風格外套',
-    price: 3499,
-    originalPrice: 4999,
-    rating: 4.7,
-    reviews: 189,
-    image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=500&fit=crop',
-    badge: '限時',
-    discount: '-30%',
+    name: '時尚運動鞋',
+    price: 3599,
+    originalPrice: 4500,
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&h=600&fit=crop',
+    rating: 4.9,
+    reviews: 456,
+    discount: 20,
+    badge: '新品',
   },
   {
     id: 4,
-    name: '時尚太陽眼鏡',
-    price: 899,
-    originalPrice: 1299,
-    rating: 4.6,
-    reviews: 423,
-    image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=500&fit=crop',
+    name: '簡約後背包',
+    price: 1899,
+    originalPrice: 2600,
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&h=600&fit=crop',
+    rating: 4.7,
+    reviews: 312,
+    discount: 27,
     badge: '推薦',
-    discount: '-31%',
   },
 ];
 
 export const TrendingProducts = () => {
-  const cardBg = useColorModeValue('white', 'gray.800');
-  const badgeColors: Record<string, string> = {
-    熱銷: 'red',
-    新品: 'green',
-    限時: 'orange',
-    推薦: 'purple',
-  };
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   return (
     <Box py={{ base: '60px', md: '80px', lg: '100px' }} bg='gray.50'>
@@ -83,175 +77,206 @@ export const TrendingProducts = () => {
           flexDirection={{ base: 'column', md: 'row' }}
           gap='20px'
         >
-          <VStack align={{ base: 'center', md: 'flex-start' }} spacing='12px'>
+          <VStack align={{ base: 'center', md: 'flex-start' }} spacing='8px'>
             <Heading
               as='h2'
               fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}
-              fontWeight='bold'
-              color='gray.800'
+              fontWeight='900'
+              color='gray.900'
             >
-              本週熱銷商品
+              熱銷商品
             </Heading>
             <Text fontSize={{ base: 'md', lg: 'lg' }} color='gray.600'>
-              精選最受歡迎的商品，限時優惠中
+              本週最受歡迎的精選商品
             </Text>
           </VStack>
-
           <Link href='/products'>
             <Button
-              size='lg'
+              as='a'
               variant='outline'
-              colorScheme='purple'
-              borderRadius='full'
+              borderColor='gray.300'
+              borderWidth='2px'
+              color='gray.700'
               px='32px'
+              h='48px'
+              fontWeight='600'
+              borderRadius='full'
+              _hover={{
+                bg: 'gray.100',
+                borderColor: 'gray.400',
+              }}
             >
-              查看全部
+              查看全部商品
             </Button>
           </Link>
         </Flex>
 
         {/* 商品網格 */}
-        <Grid
-          templateColumns={{
-            base: '1fr',
-            sm: 'repeat(2, 1fr)',
-            lg: 'repeat(4, 1fr)',
-          }}
-          gap={{ base: '20px', md: '24px' }}
+        <SimpleGrid
+          columns={{ base: 1, sm: 2, lg: 4 }}
+          spacing={{ base: '24px', md: '28px' }}
         >
-          {trendingProducts.map((product) => (
-            <Link href={`/products/${product.id}`} key={product.id}>
-              <Box
-                bg={cardBg}
-                borderRadius='16px'
-                overflow='hidden'
-                position='relative'
-                cursor='pointer'
-                transition='all 0.3s'
-                boxShadow='sm'
-                _hover={{
+          {products.map((product) => (
+            <Box
+              key={product.id}
+              bg='white'
+              borderRadius='20px'
+              overflow='hidden'
+              transition='all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              boxShadow='sm'
+              onMouseEnter={() => setHoveredId(product.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              role='group'
+              sx={{
+                '&:hover': {
                   transform: 'translateY(-8px)',
-                  boxShadow: '2xl',
-                }}
-                h='100%'
-              >
-                {/* 圖片區域 */}
-                <Box position='relative' h='300px' overflow='hidden' bg='gray.100'>
+                  boxShadow: '0 12px 32px rgba(0,0,0,0.1)',
+                },
+              }}
+            >
+              {/* 圖片區域 */}
+              <Box position='relative' overflow='hidden' h='300px'>
+                <Link href={`/products/${product.id}`}>
                   <Image
                     src={product.image}
                     alt={product.name}
                     w='100%'
                     h='100%'
                     objectFit='cover'
-                    transition='transform 0.3s'
-                    _hover={{ transform: 'scale(1.1)' }}
-                    loading='lazy'
+                    transition='transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                    sx={{
+                      '.group:hover &': {
+                        transform: 'scale(1.1)',
+                      },
+                    }}
                   />
+                </Link>
 
-                  {/* 標籤 */}
-                  <Badge
-                    position='absolute'
-                    top='12px'
-                    left='12px'
-                    colorScheme={badgeColors[product.badge]}
-                    px='12px'
-                    py='4px'
-                    borderRadius='full'
-                    fontSize='xs'
+                {/* 折扣標籤 */}
+                <Badge
+                  position='absolute'
+                  top='16px'
+                  left='16px'
+                  bg='red.500'
+                  color='white'
+                  px='12px'
+                  py='6px'
+                  borderRadius='full'
+                  fontSize='xs'
+                  fontWeight='700'
+                  boxShadow='md'
+                >
+                  -{product.discount}%
+                </Badge>
+
+                {/* 右上角標籤 */}
+                <Badge
+                  position='absolute'
+                  top='16px'
+                  right='16px'
+                  bg='orange.400'
+                  color='white'
+                  px='12px'
+                  py='6px'
+                  borderRadius='full'
+                  fontSize='xs'
+                  fontWeight='700'
+                  boxShadow='md'
+                >
+                  {product.badge}
+                </Badge>
+
+                {/* 懸停時的快速操作按鈕 */}
+                <Flex
+                  position='absolute'
+                  bottom='0'
+                  left='0'
+                  right='0'
+                  p='16px'
+                  gap='8px'
+                  opacity={hoveredId === product.id ? 1 : 0}
+                  transform={hoveredId === product.id ? 'translateY(0)' : 'translateY(20px)'}
+                  transition='all 0.3s'
+                >
+                  <Button
+                    flex='1'
+                    bg='orange.400'
+                    color='white'
+                    h='44px'
+                    leftIcon={<FiShoppingCart />}
                     fontWeight='600'
+                    _hover={{
+                      bg: 'orange.500',
+                    }}
                   >
-                    {product.badge}
-                  </Badge>
-
-                  {/* 折扣標籤 */}
-                  <Badge
-                    position='absolute'
-                    top='12px'
-                    right='12px'
-                    colorScheme='red'
-                    px='12px'
-                    py='4px'
-                    borderRadius='full'
-                    fontSize='xs'
-                    fontWeight='600'
+                    加入購物車
+                  </Button>
+                  <Button
+                    bg='white'
+                    color='gray.700'
+                    h='44px'
+                    minW='44px'
+                    p='0'
+                    _hover={{
+                      bg: 'gray.100',
+                    }}
                   >
-                    {product.discount}
-                  </Badge>
+                    <Icon as={FiHeart} boxSize='20px' />
+                  </Button>
+                </Flex>
+              </Box>
 
-                  {/* 懸停按鈕 */}
-                  <HStack
-                    position='absolute'
-                    bottom='12px'
-                    left='50%'
-                    transform='translateX(-50%)'
-                    opacity='0'
-                    _groupHover={{ opacity: 1 }}
-                    transition='opacity 0.3s'
-                    spacing='8px'
-                  >
-                    <Button
-                      size='sm'
-                      colorScheme='white'
-                      bg='white'
-                      color='gray.800'
-                      leftIcon={<FiShoppingCart />}
-                      _hover={{ bg: 'gray.100' }}
-                    >
-                      加入購物車
-                    </Button>
-                    <Button
-                      size='sm'
-                      colorScheme='white'
-                      bg='white'
-                      color='red.500'
-                      _hover={{ bg: 'gray.100' }}
-                    >
-                      <Icon as={FiHeart} />
-                    </Button>
-                  </HStack>
-                </Box>
+              {/* 商品資訊 */}
+              <VStack align='flex-start' p='20px' spacing='12px'>
+                {/* 評分 */}
+                <HStack spacing='4px'>
+                  <Icon as={FiStar} color='orange.400' fill='orange.400' boxSize='16px' />
+                  <Text fontSize='sm' fontWeight='600' color='gray.700'>
+                    {product.rating}
+                  </Text>
+                  <Text fontSize='sm' color='gray.500'>
+                    ({product.reviews})
+                  </Text>
+                </HStack>
 
-                {/* 商品資訊 */}
-                <VStack align='flex-start' p='16px' spacing='12px'>
-                  <Text
+                {/* 商品名稱 */}
+                <Link href={`/products/${product.id}`}>
+                  <Heading
+                    as='h3'
                     fontSize='md'
-                    fontWeight='600'
-                    color='gray.800'
+                    fontWeight='700'
+                    color='gray.900'
                     noOfLines={2}
-                    h='48px'
+                    _hover={{
+                      color: 'orange.500',
+                    }}
+                    transition='color 0.2s'
                   >
                     {product.name}
+                  </Heading>
+                </Link>
+
+                {/* 價格 */}
+                <HStack spacing='12px' align='baseline'>
+                  <Text
+                    fontSize='2xl'
+                    fontWeight='900'
+                    color='orange.500'
+                  >
+                    NT$ {product.price.toLocaleString()}
                   </Text>
-
-                  {/* 評分 */}
-                  <HStack spacing='4px'>
-                    <Icon as={FiStar} color='yellow.400' fill='yellow.400' />
-                    <Text fontSize='sm' fontWeight='600' color='gray.700'>
-                      {product.rating}
-                    </Text>
-                    <Text fontSize='xs' color='gray.500'>
-                      ({product.reviews})
-                    </Text>
-                  </HStack>
-
-                  {/* 價格 */}
-                  <HStack spacing='8px' align='baseline'>
-                    <Text fontSize='xl' fontWeight='bold' color='purple.600'>
-                      NT$ {product.price.toLocaleString()}
-                    </Text>
-                    <Text
-                      fontSize='sm'
-                      color='gray.400'
-                      textDecoration='line-through'
-                    >
-                      NT$ {product.originalPrice.toLocaleString()}
-                    </Text>
-                  </HStack>
-                </VStack>
-              </Box>
-            </Link>
+                  <Text
+                    fontSize='md'
+                    color='gray.400'
+                    textDecoration='line-through'
+                  >
+                    NT$ {product.originalPrice.toLocaleString()}
+                  </Text>
+                </HStack>
+              </VStack>
+            </Box>
           ))}
-        </Grid>
+        </SimpleGrid>
       </Container>
     </Box>
   );

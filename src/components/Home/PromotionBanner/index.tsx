@@ -7,110 +7,181 @@ import {
   Text,
   Image,
   Stack,
+  HStack,
+  VStack,
+  Icon,
 } from '@chakra-ui/react';
 import Link from 'next/link';
-import { FiArrowRight } from 'react-icons/fi';
+import { FiArrowRight, FiClock, FiGift } from 'react-icons/fi';
 
 export const PromotionBanner = () => {
   return (
-    <Box py={{ base: '60px', md: '80px', lg: '100px' }} bg='white'>
+    <Box py={{ base: '60px', md: '80px', lg: '100px' }} bg='white' position='relative'>
       <Container maxW='container.xl'>
         <Flex
           direction={{ base: 'column', lg: 'row' }}
-          bg='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-          borderRadius='24px'
+          bgGradient='linear(135deg, orange.400 0%, pink.500 100%)'
+          borderRadius='32px'
           overflow='hidden'
-          boxShadow='2xl'
+          boxShadow='0 20px 60px rgba(251, 146, 60, 0.3)'
+          position='relative'
         >
+          {/* 裝飾性圓形 */}
+          <Box
+            position='absolute'
+            top='-50px'
+            right='-50px'
+            w='200px'
+            h='200px'
+            borderRadius='full'
+            bg='whiteAlpha.200'
+            filter='blur(60px)'
+            display={{ base: 'none', lg: 'block' }}
+          />
+          <Box
+            position='absolute'
+            bottom='-30px'
+            left='-30px'
+            w='150px'
+            h='150px'
+            borderRadius='full'
+            bg='whiteAlpha.200'
+            filter='blur(50px)'
+            display={{ base: 'none', lg: 'block' }}
+          />
+
           {/* 左側內容 */}
           <Stack
-            spacing='24px'
+            spacing='28px'
             p={{ base: '40px', md: '60px', lg: '80px' }}
             flex='1'
             justify='center'
             color='white'
+            position='relative'
+            zIndex='1'
           >
-            <Box
-              bg='whiteAlpha.300'
-              px='16px'
-              py='8px'
-              borderRadius='full'
-              fontSize='sm'
-              fontWeight='600'
-              w='fit-content'
-              backdropFilter='blur(10px)'
-            >
-              ⚡ 限時優惠
-            </Box>
+            {/* 標籤 */}
+            <HStack spacing='12px'>
+              <Box
+                bg='whiteAlpha.300'
+                px='16px'
+                py='8px'
+                borderRadius='full'
+                fontSize='sm'
+                fontWeight='700'
+                backdropFilter='blur(10px)'
+                border='1px solid'
+                borderColor='whiteAlpha.400'
+              >
+                <HStack spacing='6px'>
+                  <Icon as={FiGift} boxSize='16px' />
+                  <Text>限時優惠</Text>
+                </HStack>
+              </Box>
+            </HStack>
 
-            <Heading
-              as='h2'
-              fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}
-              fontWeight='bold'
-              lineHeight='1.2'
-            >
-              夏季大促銷
-              <Text as='span' display='block' color='yellow.300'>
-                全場 5 折起
-              </Text>
-            </Heading>
+            {/* 標題 */}
+            <VStack align='flex-start' spacing='12px'>
+              <Heading
+                as='h2'
+                fontSize={{ base: '3xl', md: '4xl', lg: '5xl' }}
+                fontWeight='900'
+                lineHeight='1.1'
+              >
+                週年慶大促銷
+              </Heading>
+              <Heading
+                as='h3'
+                fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}
+                fontWeight='900'
+                color='yellow.300'
+                textShadow='0 2px 10px rgba(0,0,0,0.2)'
+              >
+                全館 5 折起
+              </Heading>
+            </VStack>
 
-            <Text fontSize={{ base: 'md', lg: 'lg' }} color='whiteAlpha.900' maxW='500px'>
-              精選商品限時特價，全館滿千免運，再享會員專屬折扣！
-              活動只到本週日，錯過再等一年！
+            {/* 描述 */}
+            <Text
+              fontSize={{ base: 'md', lg: 'lg' }}
+              color='whiteAlpha.900'
+              maxW='500px'
+              lineHeight='1.8'
+            >
+              精選商品限時特價，全館滿千免運！
+              會員專屬額外折扣，活動只到本週日！
             </Text>
 
-            <Stack direction={{ base: 'column', sm: 'row' }} spacing='16px'>
+            {/* CTA 按鈕 */}
+            <HStack spacing='16px' pt='8px'>
               <Link href='/products?sale=true'>
                 <Button
                   size='lg'
                   bg='white'
-                  color='purple.600'
-                  px='32px'
-                  h='56px'
+                  color='orange.500'
+                  px='40px'
+                  h='60px'
+                  fontSize='md'
+                  fontWeight='700'
                   rightIcon={<FiArrowRight />}
+                  borderRadius='full'
+                  boxShadow='0 8px 20px rgba(0,0,0,0.15)'
                   _hover={{
                     transform: 'translateY(-2px)',
-                    boxShadow: 'xl',
+                    boxShadow: '0 12px 28px rgba(0,0,0,0.2)',
+                    bg: 'gray.50',
                   }}
                   transition='all 0.3s'
                 >
                   立即搶購
                 </Button>
               </Link>
-            </Stack>
+            </HStack>
 
-            {/* 倒數計時（裝飾用） */}
-            <Flex gap='16px' pt='16px'>
-              {[
-                { value: '02', label: '天' },
-                { value: '14', label: '時' },
-                { value: '32', label: '分' },
-                { value: '18', label: '秒' },
-              ].map((time, index) => (
-                <Box
-                  key={index}
-                  bg='whiteAlpha.200'
-                  px='16px'
-                  py='12px'
-                  borderRadius='12px'
-                  textAlign='center'
-                  backdropFilter='blur(10px)'
-                >
-                  <Text fontSize='2xl' fontWeight='bold'>
-                    {time.value}
-                  </Text>
-                  <Text fontSize='xs'>{time.label}</Text>
-                </Box>
-              ))}
-            </Flex>
+            {/* 倒數計時 */}
+            <Box pt='8px'>
+              <HStack spacing='4px' mb='12px'>
+                <Icon as={FiClock} boxSize='18px' />
+                <Text fontSize='sm' fontWeight='600' opacity='0.9'>
+                  活動倒數
+                </Text>
+              </HStack>
+              <Flex gap='12px' flexWrap='wrap'>
+                {[
+                  { value: '02', label: '天' },
+                  { value: '14', label: '時' },
+                  { value: '32', label: '分' },
+                  { value: '18', label: '秒' },
+                ].map((time, index) => (
+                  <Box
+                    key={index}
+                    bg='whiteAlpha.300'
+                    backdropFilter='blur(10px)'
+                    px='20px'
+                    py='14px'
+                    borderRadius='16px'
+                    textAlign='center'
+                    border='1px solid'
+                    borderColor='whiteAlpha.400'
+                    minW='70px'
+                  >
+                    <Text fontSize='3xl' fontWeight='900' lineHeight='1'>
+                      {time.value}
+                    </Text>
+                    <Text fontSize='xs' mt='4px' opacity='0.9' fontWeight='600'>
+                      {time.label}
+                    </Text>
+                  </Box>
+                ))}
+              </Flex>
+            </Box>
           </Stack>
 
           {/* 右側圖片 */}
           <Box
             flex='1'
             position='relative'
-            minH={{ base: '300px', lg: '400px' }}
+            minH={{ base: '300px', lg: '500px' }}
             display={{ base: 'none', lg: 'block' }}
           >
             <Image
@@ -120,6 +191,15 @@ export const PromotionBanner = () => {
               h='100%'
               objectFit='cover'
               loading='lazy'
+            />
+            {/* 圖片上的漸層遮罩 */}
+            <Box
+              position='absolute'
+              top='0'
+              left='0'
+              right='0'
+              bottom='0'
+              bgGradient='linear(to-r, rgba(251, 146, 60, 0.3), transparent)'
             />
           </Box>
         </Flex>

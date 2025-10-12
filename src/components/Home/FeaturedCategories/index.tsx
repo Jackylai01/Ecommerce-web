@@ -1,46 +1,48 @@
 import {
   Box,
   Container,
-  Grid,
   Heading,
   Image,
   Text,
   VStack,
-  useColorModeValue,
+  SimpleGrid,
+  Icon,
 } from '@chakra-ui/react';
 import Link from 'next/link';
+import { FiArrowRight } from 'react-icons/fi';
 
 const categories = [
   {
-    name: '女裝',
-    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=500&fit=crop',
-    itemCount: '2,500+ 件商品',
-    color: 'pink.400',
+    id: 1,
+    name: '女裝系列',
+    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&h=600&fit=crop',
+    count: '2,500+ 商品',
+    color: 'pink.500',
   },
   {
-    name: '男裝',
-    image: 'https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=400&h=500&fit=crop',
-    itemCount: '1,800+ 件商品',
-    color: 'blue.400',
+    id: 2,
+    name: '男裝系列',
+    image: 'https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=500&h=600&fit=crop',
+    count: '1,800+ 商品',
+    color: 'blue.500',
   },
   {
-    name: '配件',
-    image: 'https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=400&h=500&fit=crop',
-    itemCount: '3,200+ 件商品',
-    color: 'purple.400',
+    id: 3,
+    name: '精選配件',
+    image: 'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=500&h=600&fit=crop',
+    count: '3,200+ 商品',
+    color: 'purple.500',
   },
   {
-    name: '鞋類',
-    image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=500&fit=crop',
-    itemCount: '1,500+ 件商品',
-    color: 'orange.400',
+    id: 4,
+    name: '鞋履專區',
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&h=600&fit=crop',
+    count: '1,500+ 商品',
+    color: 'orange.500',
   },
 ];
 
 export const FeaturedCategories = () => {
-  const cardBg = useColorModeValue('white', 'gray.800');
-  const hoverBg = useColorModeValue('gray.50', 'gray.700');
-
   return (
     <Box py={{ base: '60px', md: '80px', lg: '100px' }} bg='white'>
       <Container maxW='container.xl'>
@@ -49,73 +51,65 @@ export const FeaturedCategories = () => {
           <Heading
             as='h2'
             fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}
-            fontWeight='bold'
-            color='gray.800'
+            fontWeight='900'
+            color='gray.900'
           >
             熱門分類
           </Heading>
           <Text fontSize={{ base: 'md', lg: 'lg' }} color='gray.600' maxW='600px'>
-            探索我們精心挑選的商品分類，找到最適合你的風格
+            探索我們精心挑選的商品類別，找到最適合你的風格
           </Text>
         </VStack>
 
         {/* 分類網格 */}
-        <Grid
-          templateColumns={{
-            base: '1  fr',
-            sm: 'repeat(2, 1fr)',
-            lg: 'repeat(4, 1fr)',
-          }}
-          gap={{ base: '20px', md: '24px', lg: '30px' }}
+        <SimpleGrid
+          columns={{ base: 1, sm: 2, lg: 4 }}
+          spacing={{ base: '20px', md: '24px' }}
         >
-          {categories.map((category, index) => (
-            <Link href={`/categories/${category.name}`} key={index}>
+          {categories.map((category) => (
+            <Link href={`/categories/${category.id}`} key={category.id}>
               <Box
-                bg={cardBg}
-                borderRadius='20px'
-                overflow='hidden'
                 position='relative'
+                borderRadius='24px'
+                overflow='hidden'
                 cursor='pointer'
-                transition='all 0.3s'
-                boxShadow='md'
+                h={{ base: '350px', md: '400px' }}
+                bg='gray.100'
+                transition='all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
                 _hover={{
-                  transform: 'translateY(-8px)',
-                  boxShadow: '2xl',
-                  bg: hoverBg,
+                  transform: 'translateY(-12px)',
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
                 }}
-                h='100%'
+                role='group'
               >
-                {/* 圖片容器 */}
+                {/* 背景圖片 */}
+                <Image
+                  src={category.image}
+                  alt={category.name}
+                  w='100%'
+                  h='100%'
+                  objectFit='cover'
+                  transition='transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+                  _groupHover={{
+                    transform: 'scale(1.08)',
+                  }}
+                />
+
+                {/* 漸層遮罩 */}
                 <Box
-                  position='relative'
-                  h={{ base: '280px', md: '320px' }}
-                  overflow='hidden'
-                >
-                  <Image
-                    src={category.image}
-                    alt={category.name}
-                    w='100%'
-                    h='100%'
-                    objectFit='cover'
-                    transition='transform 0.3s'
-                    _hover={{
-                      transform: 'scale(1.1)',
-                    }}
-                    loading='lazy'
-                  />
+                  position='absolute'
+                  top='0'
+                  left='0'
+                  right='0'
+                  bottom='0'
+                  bgGradient='linear(to-b, transparent 0%, transparent 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.8) 100%)'
+                  transition='all 0.4s'
+                  _groupHover={{
+                    bgGradient: 'linear(to-b, transparent 0%, transparent 30%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.9) 100%)',
+                  }}
+                />
 
-                  {/* 漸層遮罩 */}
-                  <Box
-                    position='absolute'
-                    bottom='0'
-                    left='0'
-                    right='0'
-                    h='50%'
-                    bgGradient='linear(to-t, blackAlpha.800, transparent)'
-                  />
-                </Box>
-
-                {/* 文字內容 */}
+                {/* 內容區域 */}
                 <VStack
                   position='absolute'
                   bottom='0'
@@ -124,40 +118,84 @@ export const FeaturedCategories = () => {
                   p='24px'
                   align='flex-start'
                   spacing='8px'
+                  color='white'
+                  zIndex='1'
                 >
+                  <Text
+                    fontSize='xs'
+                    fontWeight='600'
+                    color='white'
+                    opacity='0.9'
+                    letterSpacing='wider'
+                    textTransform='uppercase'
+                  >
+                    {category.count}
+                  </Text>
                   <Heading
                     as='h3'
                     fontSize={{ base: 'xl', md: '2xl' }}
-                    fontWeight='bold'
+                    fontWeight='900'
                     color='white'
+                    mb='8px'
                   >
                     {category.name}
                   </Heading>
-                  <Text fontSize='sm' color='whiteAlpha.900'>
-                    {category.itemCount}
-                  </Text>
+
+                  {/* 查看更多按鈕 */}
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    gap='8px'
+                    color='white'
+                    fontWeight='600'
+                    fontSize='sm'
+                    opacity='0.9'
+                    transition='all 0.3s'
+                    _groupHover={{
+                      opacity: '1',
+                      gap: '12px',
+                    }}
+                  >
+                    <Text>探索更多</Text>
+                    <Icon
+                      as={FiArrowRight}
+                      boxSize='18px'
+                      transition='transform 0.3s'
+                      _groupHover={{
+                        transform: 'translateX(4px)',
+                      }}
+                    />
+                  </Box>
                 </VStack>
 
-                {/* 角標裝飾 */}
+                {/* 頂部裝飾標籤 */}
                 <Box
                   position='absolute'
-                  top='16px'
-                  right='16px'
+                  top='20px'
+                  right='20px'
                   bg={category.color}
                   color='white'
                   px='12px'
                   py='6px'
                   borderRadius='full'
                   fontSize='xs'
-                  fontWeight='600'
-                  boxShadow='md'
+                  fontWeight='700'
+                  boxShadow='0 4px 12px rgba(0,0,0,0.15)'
+                  zIndex='2'
+                  opacity='0'
+                  transform='translateY(-10px)'
+                  transition='all 0.3s'
+                  _groupHover={{
+                    opacity: '1',
+                    transform: 'translateY(0)',
+                  }}
                 >
-                  熱銷
+                  HOT
                 </Box>
               </Box>
             </Link>
           ))}
-        </Grid>
+        </SimpleGrid>
       </Container>
     </Box>
   );
