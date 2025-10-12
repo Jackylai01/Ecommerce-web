@@ -34,6 +34,7 @@ const AdminLayout = ({ children }: Props) => {
   const [fixed, setFixed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const {
     userInfo,
@@ -121,13 +122,20 @@ const AdminLayout = ({ children }: Props) => {
             routes={routes}
             sidebarVariant={sidebarVariant}
             currentPath={router.pathname}
+            isCollapsed={isSidebarCollapsed}
+            onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
           />
         </Box>
         <MainPanel
           w={{
             base: '100%',
-            xl: 'calc(100% - 275px)',
+            xl: isSidebarCollapsed ? 'calc(100% - 90px)' : 'calc(100% - 275px)',
           }}
+          ml={{
+            base: '0',
+            xl: isSidebarCollapsed ? '90px' : '275px',
+          }}
+          transition='all 0.3s ease'
           mt='5rem'
         >
           <Box as='article'>

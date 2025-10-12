@@ -1,19 +1,27 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
 import {
+  Box,
   Button,
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
+  DrawerHeader,
   DrawerOverlay,
   Flex,
+  Icon,
+  IconButton,
   Stack,
+  Text,
   useDisclosure,
+  VStack,
+  Divider,
 } from '@chakra-ui/react';
-import IconBox from '@components/Icons/IconBox';
+import { CreativeTimLogo } from '@components/Icons/Icons';
 import NextLink from 'next/link';
 import React, { useRef } from 'react';
+import { useRouter } from 'next/router';
 import { useAdminColorMode } from 'src/context/colorMode';
+import { FiX } from 'react-icons/fi';
 
 interface SidebarResponsiveProps {
   routes: any[];
@@ -29,36 +37,68 @@ const SidebarResponsive: React.FC<SidebarResponsiveProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const { colorMode } = useAdminColorMode();
-  let hamburgerColor = colorMode === 'light' ? 'gray.500' : 'gray.200';
+  const router = useRouter();
+
+  const hamburgerColor = colorMode === 'light' ? 'gray.500' : 'gray.200';
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.900';
+  const activeColor = colorMode === 'light' ? 'teal.600' : 'teal.300';
+  const inactiveColor = colorMode === 'light' ? 'gray.600' : 'gray.400';
+  const activeBg = colorMode === 'light' ? 'teal.50' : 'teal.900';
+  const hoverBg = colorMode === 'light' ? 'gray.50' : 'gray.800';
+
+  const isActiveRoute = (href: string) => {
+    return router.pathname === href;
+  };
 
   const renderLink = (route: any, key: number) => {
     const IconComponent = route.icon;
     const href = `${route.layout}${route.path}`;
+    const isActive = isActiveRoute(href);
 
     return (
-      <NextLink href={href} passHref key={key}>
+      <NextLink href={href} key={key}>
         <Button
           as='a'
-          display='flex'
-          alignItems='center'
+          w='100%'
           justifyContent='flex-start'
-          mb='2'
-          py='2'
-          bg={route.active ? 'teal.300' : 'transparent'}
-          color={route.active ? 'white' : 'gray.400'}
-          _hover={{ bg: 'teal.300' }}
-          leftIcon={
-            IconComponent && (
-              <IconBox
-                color='white'
-                bg={route.active ? 'teal.300' : 'transparent'}
-              >
-                <IconComponent />
-              </IconBox>
-            )
-          }
+          alignItems='center'
+          bg={isActive ? activeBg : 'transparent'}
+          mb='4px'
+          py='14px'
+          px='16px'
+          borderRadius='12px'
+          borderLeft={isActive ? '4px solid' : '4px solid transparent'}
+          borderLeftColor={isActive ? 'teal.500' : 'transparent'}
+          transition='all 0.2s'
+          onClick={onClose}
+          _hover={{
+            bg: hoverBg,
+            transform: 'translateX(4px)',
+            textDecoration: 'none',
+          }}
+          _active={{
+            bg: 'inherit',
+            transform: 'none',
+          }}
+          _focus={{ boxShadow: 'none' }}
         >
-          {route.name}
+          <Flex alignItems='center' w='100%'>
+            {IconComponent && (
+              <Icon
+                as={IconComponent}
+                color={isActive ? activeColor : inactiveColor}
+                boxSize='20px'
+                mr='12px'
+              />
+            )}
+            <Text
+              color={isActive ? activeColor : inactiveColor}
+              fontSize='sm'
+              fontWeight={isActive ? '600' : '400'}
+            >
+              {route.name}
+            </Text>
+          </Flex>
         </Button>
       </NextLink>
     );
@@ -68,10 +108,22 @@ const SidebarResponsive: React.FC<SidebarResponsiveProps> = ({
     return routes.map((route: any, key: number) => {
       if (route.category) {
         return (
-          <React.Fragment key={key}>
-            <div>{route.name}</div>
-            {route.views && createLinks(route.views)}{' '}
-          </React.Fragment>
+          <Box key={key} mb='20px'>
+            <Text
+              color={activeColor}
+              fontWeight='bold'
+              mb='12px'
+              px='16px'
+              fontSize='xs'
+              textTransform='uppercase'
+              letterSpacing='wider'
+            >
+              {route.name}
+            </Text>
+            <VStack spacing='4px' align='stretch'>
+              {route.views && createLinks(route.views)}
+            </VStack>
+          </Box>
         );
       } else {
         return renderLink(route, key);
@@ -89,12 +141,66 @@ const SidebarResponsive: React.FC<SidebarResponsiveProps> = ({
         placement='left'
         onClose={onClose}
         finalFocusRef={btnRef}
+        size='full'
       >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerBody>
-            <Stack spacing='1' mt='4'>
+        <DrawerOverlay bg='blackAlpha.600' backdropFilter='blur(4px)' />
+        <DrawerContent bg={bgColor} maxW='85vw'>
+          <DrawerHeader
+            borderBottomWidth='1px'
+            borderBottomColor={colorMode === 'light' ? 'gray.200' : 'gray.700'}
+            pb='16px'
+            pt='20px'
+          >
+            <Flex justifyContent='space-between' alignItems='center'>
+              <Flex alignItems='center'>
+                <CreativeTimLogo
+                  w='32px'
+                  h='32px'
+                  me='10px'
+                  color={activeColor}
+                />
+                <Text
+                  fontSize='md'
+                  fontWeight='600'
+                  color={activeColor}
+                >
+                  {logoText}
+                </Text>
+              </Flex>
+              <IconButton
+                aria-label='Close menu'
+                icon={<FiX />}
+                onClick={onClose}
+                size='sm'
+                borderRadius='full'
+                variant='ghost'
+                color={inactiveColor}
+                _hover={{
+                  bg: hoverBg,
+                }}
+              />
+            </Flex>
+          </DrawerHeader>
+          <DrawerBody
+            pt='24px'
+            px='16px'
+            css={{
+              '&::-webkit-scrollbar': {
+                width: '4px',
+              },
+              '&::-webkit-scrollbar-track': {
+                background: 'transparent',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: colorMode === 'light' ? '#CBD5E0' : '#4A5568',
+                borderRadius: '4px',
+              },
+              '&::-webkit-scrollbar-thumb:hover': {
+                background: colorMode === 'light' ? '#A0AEC0' : '#718096',
+              },
+            }}
+          >
+            <Stack spacing='8px'>
               {createLinks(routes)}
             </Stack>
           </DrawerBody>

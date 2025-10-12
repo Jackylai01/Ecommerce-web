@@ -1,13 +1,12 @@
 import {
   Box,
   Button,
-  Link as ChakraLink,
   Flex,
   Icon,
   Stack,
   Text,
+  Tooltip,
 } from '@chakra-ui/react';
-import IconBox from '@components/Icons/IconBox';
 import { CreativeTimLogo } from '@components/Icons/Icons';
 import { ADMIN_ROUTE } from '@fixtures/constants';
 import Link from 'next/link';
@@ -21,20 +20,23 @@ interface SideBarContentType {
   display?: string;
   sidebarVariant?: any;
   currentPath: string;
+  isCollapsed?: boolean;
 }
 
 const SidebarContent = ({
   logoText,
   routes,
   currentPath,
+  isCollapsed = false,
 }: SideBarContentType) => {
   const router = useRouter();
   const { colorMode } = useAdminColorMode();
 
-  const activeBg = colorMode === 'light' ? 'white' : 'gray.700';
-  const inactiveBg = colorMode === 'light' ? 'gray.500' : 'gray.700';
-  const activeColor = colorMode === 'light' ? 'gray.700' : 'white';
-  const inactiveColor = colorMode === 'light' ? 'gray.400' : 'gray.400';
+  const activeBg = colorMode === 'light' ? 'teal.50' : 'teal.900';
+  const inactiveBg = colorMode === 'light' ? 'transparent' : 'transparent';
+  const activeColor = colorMode === 'light' ? 'teal.600' : 'teal.300';
+  const inactiveColor = colorMode === 'light' ? 'gray.600' : 'gray.400';
+  const hoverBg = colorMode === 'light' ? 'gray.50' : 'gray.800';
 
   const activeRoute = (routePath: string) => {
     if (
@@ -67,34 +69,47 @@ const SidebarContent = ({
     if (prop.category) {
       return (
         <div key={prop.name}>
-          <Text
-            color={activeColor}
-            fontWeight='bold'
-            mb={{ xl: '12px' }}
-            mx='auto'
-            py='12px'
-            fontSize='20px'
-          >
-            {prop.name}
-          </Text>
-          {prop.views.map((viewProp: any, viewKey: number) => (
-            <Link
-              href={viewProp.layout + viewProp.path}
-              passHref
-              key={`view-${viewKey}`}
+          {!isCollapsed && (
+            <Text
+              color={activeColor}
+              fontWeight='bold'
+              mb={{ xl: '12px' }}
+              mx='auto'
+              py='12px'
+              fontSize='sm'
+              textTransform='uppercase'
+              letterSpacing='wider'
             >
-              <ChakraLink w='100%'>
+              {prop.name}
+            </Text>
+          )}
+          {prop.views.map((viewProp: any, viewKey: number) => {
+            const viewIsActive = activeRoute(viewProp.layout + viewProp.path);
+            const menuButton = (
+              <Link
+                href={viewProp.layout + viewProp.path}
+                key={`view-${viewKey}`}
+              >
                 <Button
+                  as='a'
                   boxSize='initial'
-                  justifyContent='flex-start'
+                  justifyContent={isCollapsed ? 'center' : 'flex-start'}
                   alignItems='center'
-                  bg={isActive ? 'teal.300' : 'transparent'}
-                  color={isActive ? 'white' : 'gray.400'}
-                  mb={{ xl: '12px' }}
+                  bg={viewIsActive ? activeBg : inactiveBg}
+                  mb={{ xl: '8px' }}
                   mx={{ xl: 'auto' }}
-                  ps={{ sm: '10px', xl: '16px' }}
+                  px={isCollapsed ? '0' : '16px'}
                   py='12px'
-                  borderRadius='15px'
+                  w='100%'
+                  borderRadius='12px'
+                  borderLeft={viewIsActive ? '4px solid' : '4px solid transparent'}
+                  borderLeftColor={viewIsActive ? 'teal.500' : 'transparent'}
+                  transition='all 0.2s'
+                  _hover={{
+                    bg: hoverBg,
+                    transform: 'translateX(4px)',
+                    textDecoration: 'none',
+                  }}
                   _active={{
                     bg: 'inherit',
                     transform: 'none',
@@ -102,113 +117,163 @@ const SidebarContent = ({
                   }}
                   _focus={{ boxShadow: 'none' }}
                 >
-                  <Flex>
-                    <IconBox
-                      bg={
-                        activeRoute(viewProp.layout + viewProp.path)
-                          ? 'teal.300'
-                          : inactiveBg
-                      }
-                      color='white'
-                      h='30px'
-                      w='30px'
-                      me='12px'
-                    >
-                      <Icon as={viewProp.icon} />
-                    </IconBox>
-                    <Text
-                      color={
-                        activeRoute(viewProp.layout + viewProp.path)
-                          ? activeColor
-                          : inactiveColor
-                      }
-                      my='auto'
-                      fontSize='sm'
-                    >
-                      {viewProp.name}
-                    </Text>
+                  <Flex alignItems='center' w='100%'>
+                    <Icon
+                      as={viewProp.icon}
+                      color={viewIsActive ? activeColor : inactiveColor}
+                      boxSize='20px'
+                      mr={isCollapsed ? '0' : '12px'}
+                    />
+                    {!isCollapsed && (
+                      <Text
+                        color={viewIsActive ? activeColor : inactiveColor}
+                        fontSize='sm'
+                        fontWeight={viewIsActive ? '600' : '400'}
+                      >
+                        {viewProp.name}
+                      </Text>
+                    )}
                   </Flex>
                 </Button>
-              </ChakraLink>
-            </Link>
-          ))}
+              </Link>
+            );
+
+            return isCollapsed ? (
+              <Tooltip
+                key={`view-${viewKey}`}
+                label={viewProp.name}
+                placement='right'
+                hasArrow
+              >
+                {menuButton}
+              </Tooltip>
+            ) : menuButton;
+          })}
         </div>
       );
     }
 
-    return (
-      <Link href={prop.layout + prop.path} passHref key={key}>
-        <ChakraLink w='100%'>
-          <Button
-            boxSize='initial'
-            justifyContent='flex-start'
-            alignItems='center'
-            bg={activeRoute(prop.layout + prop.path) ? activeBg : 'transparent'}
-            mb={{ xl: '12px' }}
-            mx={{ xl: 'auto' }}
-            ps={{ sm: '10px', xl: '16px' }}
-            py='12px'
-            borderRadius='15px'
-            _active={{
-              bg: 'inherit',
-              transform: 'none',
-              borderColor: 'transparent',
-            }}
-            _focus={{ boxShadow: 'none' }}
-          >
-            <Flex>
-              <IconBox
-                bg={
-                  activeRoute(prop.layout + prop.path) ? 'teal.300' : inactiveBg
-                }
-                color='white'
-                h='30px'
-                w='30px'
-                me='12px'
-              >
-                <Icon as={prop.icon} />
-              </IconBox>
+    const menuButton = (
+      <Link href={prop.layout + prop.path} key={key}>
+        <Button
+          as='a'
+          boxSize='initial'
+          justifyContent={isCollapsed ? 'center' : 'flex-start'}
+          alignItems='center'
+          bg={isActive ? activeBg : inactiveBg}
+          mb={{ xl: '8px' }}
+          mx={{ xl: 'auto' }}
+          px={isCollapsed ? '0' : '16px'}
+          py='12px'
+          w='100%'
+          borderRadius='12px'
+          borderLeft={isActive ? '4px solid' : '4px solid transparent'}
+          borderLeftColor={isActive ? 'teal.500' : 'transparent'}
+          transition='all 0.2s'
+          _hover={{
+            bg: hoverBg,
+            transform: 'translateX(4px)',
+            textDecoration: 'none',
+          }}
+          _active={{
+            bg: 'inherit',
+            transform: 'none',
+            borderColor: 'transparent',
+          }}
+          _focus={{ boxShadow: 'none' }}
+        >
+          <Flex alignItems='center' w='100%'>
+            <Icon
+              as={prop.icon}
+              color={isActive ? activeColor : inactiveColor}
+              boxSize='20px'
+              mr={isCollapsed ? '0' : '12px'}
+            />
+            {!isCollapsed && (
               <Text
-                color={
-                  activeRoute(prop.layout + prop.path)
-                    ? activeColor
-                    : inactiveColor
-                }
-                my='auto'
+                color={isActive ? activeColor : inactiveColor}
                 fontSize='sm'
+                fontWeight={isActive ? '600' : '400'}
               >
                 {prop.name}
               </Text>
-            </Flex>
-          </Button>
-        </ChakraLink>
+            )}
+          </Flex>
+        </Button>
       </Link>
     );
+
+    return isCollapsed ? (
+      <Tooltip
+        key={key}
+        label={prop.name}
+        placement='right'
+        hasArrow
+      >
+        {menuButton}
+      </Tooltip>
+    ) : menuButton;
   });
 
   return (
     <>
-      <Box pt={'25px'} mb='12px'>
-        <Link href='/' passHref>
-          <ChakraLink
+      <Box pt={'25px'} mb='20px'>
+        <Link href='/'>
+          <Box
+            as='a'
             display='flex'
             lineHeight='100%'
-            mb='30px'
+            mb='20px'
             fontWeight='bold'
-            justifyContent='center'
+            justifyContent={isCollapsed ? 'center' : 'flex-start'}
             alignItems='center'
             fontSize='11px'
+            transition='all 0.3s'
+            cursor='pointer'
+            _hover={{ opacity: 0.8 }}
           >
-            <CreativeTimLogo w='32px' h='32px' me='10px' color={activeColor} />
-            <Text fontSize='xs' mt='3px' lineHeight='1.5' color={activeColor}>
-              {logoText}
-            </Text>
-          </ChakraLink>
+            <CreativeTimLogo
+              w={isCollapsed ? '28px' : '32px'}
+              h={isCollapsed ? '28px' : '32px'}
+              me={isCollapsed ? '0' : '10px'}
+              color={activeColor}
+            />
+            {!isCollapsed && (
+              <Text
+                fontSize='sm'
+                mt='3px'
+                lineHeight='1.5'
+                color={activeColor}
+                fontWeight='600'
+              >
+                {logoText}
+              </Text>
+            )}
+          </Box>
         </Link>
         <Separator />
       </Box>
-      <Box maxH='calc(100vh - 150px)' overflowY='auto' pr={4}>
-        <Stack direction='column'>{links}</Stack>
+      <Box
+        maxH='calc(100vh - 150px)'
+        overflowY='auto'
+        pr={isCollapsed ? '10px' : '4'}
+        css={{
+          '&::-webkit-scrollbar': {
+            width: '4px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: 'transparent',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: colorMode === 'light' ? '#CBD5E0' : '#4A5568',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            background: colorMode === 'light' ? '#A0AEC0' : '#718096',
+          },
+        }}
+      >
+        <Stack direction='column' spacing='4px'>{links}</Stack>
       </Box>
     </>
   );
