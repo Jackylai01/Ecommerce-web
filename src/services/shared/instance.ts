@@ -9,9 +9,14 @@ import {
 } from '@helpers/token';
 import axios from 'axios';
 
-export const BASE_API_URL = 'https://ecommerce-api2023.onrender.com/api';
-export const TEST_API_URL = 'http://localhost:3001/api';
-export const ACCESS_TOKEN_NAME = 'atn';
+const getApiUrl = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:3001/api';
+  }
+  return 'https://ecommerce-api2023.onrender.com/api';
+};
+
+export const BASE_API_URL = getApiUrl();
 
 const instance = axios.create({
   baseURL: BASE_API_URL,
