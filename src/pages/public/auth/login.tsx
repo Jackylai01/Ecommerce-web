@@ -6,6 +6,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Heading,
   Input,
   InputGroup,
   InputRightElement,
@@ -16,8 +17,14 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
+  VStack,
+  HStack,
+  Divider,
   useDisclosure,
   useToast,
+  Image,
+  Icon,
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import useAppDispatch from '@hooks/useAppDispatch';
@@ -31,6 +38,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaGoogle } from 'react-icons/fa';
+import { FiMail, FiLock, FiArrowLeft } from 'react-icons/fi';
 
 const Login: NextPage = () => {
   const router = useRouter();
@@ -74,6 +82,7 @@ const Login: NextPage = () => {
     if (loginSuccess) {
       toast({
         title: '登入成功',
+        description: '歡迎回來！',
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -113,115 +122,280 @@ const Login: NextPage = () => {
     }
   };
 
-  // Google 登入的處理函數
   const handleGoogleLogin = () => {
     window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`;
   };
 
   return (
     <LoadingLayout isLoading={loginLoading}>
-      <Flex as='main' h='70vh' alignItems='center' justifyContent='center'>
+      <Flex minH='100vh' bg='gray.50'>
+        {/* 左側圖片區域 - 桌面版顯示 */}
         <Box
-          as='form'
-          width={{ base: '90%', md: '50%', lg: '40%' }}
-          boxShadow='lg'
-          borderRadius='lg'
+          flex='1'
+          bg='linear-gradient(135deg, rgba(251, 146, 60, 0.9), rgba(236, 72, 153, 0.9))'
+          display={{ base: 'none', lg: 'flex' }}
+          alignItems='center'
+          justifyContent='center'
+          position='relative'
           overflow='hidden'
-          mt={{ base: '0', md: '2rem' }}
-          onSubmit={handleSubmit(onSubmit)}
+        >
+          {/* 背景圖片 */}
+          <Image
+            src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=1200&fit=crop'
+            alt='購物背景'
+            position='absolute'
+            w='100%'
+            h='100%'
+            objectFit='cover'
+            opacity='0.3'
+          />
+
+          {/* 內容 */}
+          <VStack
+            spacing='24px'
+            zIndex='1'
+            color='white'
+            maxW='500px'
+            px='40px'
+            textAlign='center'
+          >
+            <Heading fontSize='4xl' fontWeight='900'>
+              歡迎回到
+              <Text as='span' display='block'>
+                時尚購物天堂
+              </Text>
+            </Heading>
+            <Text fontSize='lg' lineHeight='1.8'>
+              探索最新時尚趨勢，享受極致購物體驗。
+              超過 10,000+ 精選商品等你來選購！
+            </Text>
+            <HStack spacing='40px' pt='20px'>
+              <VStack>
+                <Text fontSize='3xl' fontWeight='bold'>
+                  10K+
+                </Text>
+                <Text fontSize='sm'>精選商品</Text>
+              </VStack>
+              <VStack>
+                <Text fontSize='3xl' fontWeight='bold'>
+                  50K+
+                </Text>
+                <Text fontSize='sm'>滿意顧客</Text>
+              </VStack>
+              <VStack>
+                <Text fontSize='3xl' fontWeight='bold'>
+                  4.9
+                </Text>
+                <Text fontSize='sm'>用戶評分</Text>
+              </VStack>
+            </HStack>
+          </VStack>
+        </Box>
+
+        {/* 右側表單區域 */}
+        <Flex
+          flex={{ base: '1', lg: '0 0 550px' }}
+          alignItems='center'
+          justifyContent='center'
+          p={{ base: '24px', md: '40px' }}
           bg='white'
         >
-          <Flex as='article' direction='column' p={8}>
-            <Box textAlign='center' mb={8}>
-              <Box as='h1' fontSize='2xl' fontWeight='bold'>
-                歡迎回來
-              </Box>
-              <Box as='p' color='gray.600'>
-                請登入您的帳號以繼續
-              </Box>
-            </Box>
-            <FormControl id='email' mb={4} isInvalid={!!errors.email}>
-              <FormLabel>信箱</FormLabel>
-              <Input
-                type='email'
-                placeholder='請輸入您的信箱'
-                defaultValue='sn185672@gmail.com'
-                {...register('email', { required: '請填入正確信箱' })}
-              />
-              {errors.email && (
-                <FormErrorMessage>{errors.email.message}</FormErrorMessage>
-              )}
-            </FormControl>
-            <FormControl id='password' mb={4} isInvalid={!!errors.password}>
-              <FormLabel>密碼</FormLabel>
-              <InputGroup>
-                <Input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder='請輸入您的密碼'
-                  defaultValue='12345678'
-                  {...register('password', {
-                    required: '請填入密碼',
-                  })}
-                />
-                <InputRightElement width='4.5rem'>
-                  <Button
-                    h='1.75rem'
-                    size='sm'
-                    onClick={handlePasswordVisibility}
-                    bg='none'
-                    _hover={{ bg: 'transparent' }}
-                  >
-                    {showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              {errors.password && (
-                <FormErrorMessage>{errors.password.message}</FormErrorMessage>
-              )}
-            </FormControl>
-            <Button type='submit' colorScheme='blue' width='full' mb={4}>
-              登入
-            </Button>
+          <Box w='100%' maxW='450px'>
+            {/* 返回首頁 */}
             <Button
-              leftIcon={<FaGoogle />}
-              colorScheme='red'
-              width='full'
-              mb={4}
-              onClick={handleGoogleLogin}
+              variant='ghost'
+              leftIcon={<FiArrowLeft />}
+              mb='32px'
+              onClick={() => router.push('/')}
+              color='gray.600'
+              _hover={{ bg: 'gray.50' }}
             >
-              使用 Google 登入
+              返回首頁
             </Button>
-            <Flex justifyContent='space-between' fontSize='sm' color='gray.600'>
-              <Link onClick={onOpen}>忘記密碼?</Link>
-              <Link onClick={() => router.push(`/public/auth/register`)}>
-                尚未註冊?
-              </Link>
-            </Flex>
-          </Flex>
-        </Box>
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
+
+            {/* 標題 */}
+            <VStack align='flex-start' spacing='8px' mb='40px'>
+              <Heading fontSize='3xl' fontWeight='900' color='gray.900'>
+                登入帳號
+              </Heading>
+              <Text fontSize='md' color='gray.600'>
+                還沒有帳號？
+                <Link
+                  color='orange.500'
+                  fontWeight='600'
+                  ml='4px'
+                  onClick={() => router.push('/public/auth/register')}
+                >
+                  立即註冊
+                </Link>
+              </Text>
+            </VStack>
+
+            {/* 表單 */}
+            <Box as='form' onSubmit={handleSubmit(onSubmit)}>
+              <VStack spacing='20px'>
+                {/* Email */}
+                <FormControl isInvalid={!!errors.email}>
+                  <FormLabel color='gray.700' fontWeight='600'>
+                    電子信箱
+                  </FormLabel>
+                  <InputGroup size='lg'>
+                    <InputRightElement pointerEvents='none'>
+                      <Icon as={FiMail} color='gray.400' />
+                    </InputRightElement>
+                    <Input
+                      type='email'
+                      placeholder='your@email.com'
+                      borderRadius='lg'
+                      borderColor='gray.200'
+                      _hover={{ borderColor: 'gray.300' }}
+                      _focus={{
+                        borderColor: 'orange.400',
+                        boxShadow: '0 0 0 1px var(--chakra-colors-orange-400)',
+                      }}
+                      defaultValue='sn185672@gmail.com'
+                      {...register('email', { required: '請填入電子信箱' })}
+                    />
+                  </InputGroup>
+                  {errors.email && (
+                    <FormErrorMessage>{errors.email.message}</FormErrorMessage>
+                  )}
+                </FormControl>
+
+                {/* Password */}
+                <FormControl isInvalid={!!errors.password}>
+                  <FormLabel color='gray.700' fontWeight='600'>
+                    密碼
+                  </FormLabel>
+                  <InputGroup size='lg'>
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder='請輸入密碼'
+                      borderRadius='lg'
+                      borderColor='gray.200'
+                      _hover={{ borderColor: 'gray.300' }}
+                      _focus={{
+                        borderColor: 'orange.400',
+                        boxShadow: '0 0 0 1px var(--chakra-colors-orange-400)',
+                      }}
+                      defaultValue='12345678'
+                      {...register('password', { required: '請填入密碼' })}
+                    />
+                    <InputRightElement width='4.5rem'>
+                      <Button
+                        h='1.75rem'
+                        size='sm'
+                        onClick={handlePasswordVisibility}
+                        variant='ghost'
+                      >
+                        {showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                  {errors.password && (
+                    <FormErrorMessage>{errors.password.message}</FormErrorMessage>
+                  )}
+                </FormControl>
+
+                {/* 忘記密碼 */}
+                <Flex w='100%' justify='flex-end'>
+                  <Link
+                    fontSize='sm'
+                    color='orange.500'
+                    fontWeight='600'
+                    onClick={onOpen}
+                  >
+                    忘記密碼？
+                  </Link>
+                </Flex>
+
+                {/* 登入按鈕 */}
+                <Button
+                  type='submit'
+                  size='lg'
+                  w='100%'
+                  h='56px'
+                  bgGradient='linear(to-r, orange.400, pink.400)'
+                  color='white'
+                  fontWeight='700'
+                  borderRadius='lg'
+                  _hover={{
+                    bgGradient: 'linear(to-r, orange.500, pink.500)',
+                    transform: 'translateY(-2px)',
+                    boxShadow: 'lg',
+                  }}
+                  transition='all 0.3s'
+                >
+                  登入
+                </Button>
+
+                {/* 分隔線 */}
+                <HStack w='100%' my='8px'>
+                  <Divider />
+                  <Text fontSize='sm' color='gray.500' whiteSpace='nowrap'>
+                    或使用
+                  </Text>
+                  <Divider />
+                </HStack>
+
+                {/* Google 登入 */}
+                <Button
+                  leftIcon={<FaGoogle />}
+                  size='lg'
+                  w='100%'
+                  h='56px'
+                  variant='outline'
+                  borderColor='gray.200'
+                  borderWidth='2px'
+                  fontWeight='600'
+                  borderRadius='lg'
+                  _hover={{
+                    bg: 'gray.50',
+                    borderColor: 'gray.300',
+                  }}
+                  onClick={handleGoogleLogin}
+                >
+                  使用 Google 登入
+                </Button>
+              </VStack>
+            </Box>
+          </Box>
+        </Flex>
+
+        {/* 忘記密碼 Modal */}
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalOverlay backdropFilter='blur(4px)' />
+          <ModalContent mx='16px' borderRadius='xl'>
             <ModalHeader>重設密碼</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
               <form onSubmit={handleSubmitForget(ForgetSubmit)}>
-                <FormControl isInvalid={!!errorsForget.email}>
-                  <FormLabel>電子郵件</FormLabel>
-                  <Input
-                    type='email'
-                    placeholder='請輸入您的信箱'
-                    {...registerForget('email', { required: '請輸入電子信箱' })}
-                  />
-                  {errorsForget.email && (
-                    <FormErrorMessage>
-                      {errorsForget.email.message}
-                    </FormErrorMessage>
-                  )}
-                </FormControl>
-                <Button mt={4} colorScheme='blue' type='submit'>
-                  送出
-                </Button>
+                <VStack spacing='20px'>
+                  <FormControl isInvalid={!!errorsForget.email}>
+                    <FormLabel>電子郵件</FormLabel>
+                    <Input
+                      type='email'
+                      size='lg'
+                      placeholder='請輸入您的信箱'
+                      borderRadius='lg'
+                      {...registerForget('email', { required: '請輸入電子信箱' })}
+                    />
+                    {errorsForget.email && (
+                      <FormErrorMessage>
+                        {errorsForget.email.message}
+                      </FormErrorMessage>
+                    )}
+                  </FormControl>
+                  <Button
+                    w='100%'
+                    size='lg'
+                    colorScheme='orange'
+                    type='submit'
+                    borderRadius='lg'
+                  >
+                    送出
+                  </Button>
+                </VStack>
               </form>
             </ModalBody>
           </ModalContent>

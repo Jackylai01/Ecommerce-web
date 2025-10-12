@@ -1,9 +1,11 @@
-import { Box, Image, Link } from '@chakra-ui/react';
-import Carousel from '@components/Carouse';
+import { Box } from '@chakra-ui/react';
 import { Footer } from '@components/Footer';
-import { Banner } from '@components/Home/Banner';
-import { TopCategories } from '@components/Home/TopCategories';
-import { images, size } from '@fixtures/Carousel';
+import { HeroBanner } from '@components/Home/HeroBanner';
+import { FeaturedCategories } from '@components/Home/FeaturedCategories';
+import { TrendingProducts } from '@components/Home/TrendingProducts';
+import { PromotionBanner } from '@components/Home/PromotionBanner';
+import { NewArrivals } from '@components/Home/NewArrivals';
+import { Newsletter } from '@components/Home/Newsletter';
 import type { NextPage } from 'next';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -11,20 +13,26 @@ import 'swiper/css/pagination';
 
 const HomePage: NextPage = () => {
   return (
-    <Box>
-      <Banner />
-      <Carousel images={images} size={size} />
-      <TopCategories />
-      <Box>
-        <Link href='/'>
-          <Image
-            src='https://res.cloudinary.com/dlm0ieiyt/image/upload/v1724263331/ecommerce-carrefour/con_odwyxu.png'
-            maxH='680px'
-            w='100%'
-            objectFit='cover'
-          />
-        </Link>
-      </Box>
+    <Box bg='gray.50'>
+      {/* Hero Banner - 主視覺橫幅 */}
+      <HeroBanner />
+
+      {/* Featured Categories - 特色分類 */}
+      <FeaturedCategories />
+
+      {/* Trending Products - 熱門商品 */}
+      <TrendingProducts />
+
+      {/* Promotion Banner - 促銷橫幅 */}
+      <PromotionBanner />
+
+      {/* New Arrivals - 新品上市 */}
+      <NewArrivals />
+
+      {/* Newsletter - 訂閱電子報 */}
+      <Newsletter />
+
+      {/* Footer - 頁尾 */}
       <Footer />
     </Box>
   );
