@@ -1,10 +1,7 @@
 import { PageLayoutType } from '@enums/page-layout-type';
 import {
-  ADMIN_EDIT_PAGES_ROUTE,
-  ADMIN_PREVIEW_ROUTE,
   ADMIN_ROUTE,
   CLIENT_ROUTE,
-  PUBLIC_CMS_ROUTE,
   PUBLIC_ROUTE,
 } from '@fixtures/constants';
 import { routeToChinese } from '@models/entities/shared/query';
@@ -28,16 +25,6 @@ export const toPageLayoutType = (pathname: string) => {
     return PageLayoutType.CLIENT_PUBLIC;
   }
 
-  if (pathname.startsWith(`/${ADMIN_EDIT_PAGES_ROUTE}/edit`)) {
-    return PageLayoutType.ADMIN_EDIT;
-  }
-  if (pathname.startsWith(`/${PUBLIC_CMS_ROUTE}`)) {
-    return PageLayoutType.PUBLIC_CMS_ROUTE;
-  }
-  if (pathname.startsWith(`/${ADMIN_PREVIEW_ROUTE}`)) {
-    return PageLayoutType.ADMIN_PREVIEW_PAGE;
-  }
-
   const mainRoute = getMainRoute(pathname);
   switch (
     mainRoute // 根據主路由決定頁面佈局類型
@@ -46,12 +33,6 @@ export const toPageLayoutType = (pathname: string) => {
       return PageLayoutType.ADMIN;
     case CLIENT_ROUTE:
       return PageLayoutType.CLIENT;
-    case ADMIN_PREVIEW_ROUTE:
-      return PageLayoutType.ADMIN_PREVIEW_PAGE;
-    case PUBLIC_CMS_ROUTE:
-      return PageLayoutType.PUBLIC_CMS_ROUTE;
-    case ADMIN_EDIT_PAGES_ROUTE:
-      return PageLayoutType.ADMIN_EDIT;
     default:
       return PageLayoutType.CLIENT_PUBLIC;
   }

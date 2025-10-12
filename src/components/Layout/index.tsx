@@ -7,12 +7,9 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { ColorModeProvider } from 'src/context/colorMode';
 import AdminAuthLayout from './AdminAuthLayout';
-import AdminEditPageLayout from './AdminEditLayout';
 import AdminLayout from './AdminLayout';
 import ClientLayout from './ClientLayout';
 import ClientPublicLayout from './ClientPublicLayout';
-import PreviewLayout from './PreviewLayout';
-import PublicCMSLayout from './PublicCMSLaout';
 
 type Props = {
   children?: React.ReactNode;
@@ -46,17 +43,8 @@ const Layout = ({ children }: Props) => {
       {pageLayoutType === PageLayoutType.ADMIN_AUTH && (
         <AdminAuthLayout>{children}</AdminAuthLayout>
       )}
-      {pageLayoutType === PageLayoutType.PUBLIC_CMS_ROUTE && (
-        <PublicCMSLayout>{children}</PublicCMSLayout>
-      )}
       {pageLayoutType === PageLayoutType.CLIENT_PUBLIC && (
         <ClientPublicLayout>{children}</ClientPublicLayout>
-      )}
-      {pageLayoutType === PageLayoutType.ADMIN_PREVIEW_PAGE && (
-        <PreviewLayout>{children}</PreviewLayout>
-      )}
-      {pageLayoutType === PageLayoutType.ADMIN_EDIT && (
-        <AdminEditPageLayout>{children}</AdminEditPageLayout>
       )}
     </>
   );

@@ -20,7 +20,6 @@ import adminAuth from './admin/auth';
 import adminClientUsers from './admin/client-users';
 import customPage from './admin/custom-page';
 import dashBoardTheme from './admin/dash-board/themeSlice';
-import adminDesignPage from './admin/design-pages';
 import adminDiscount from './admin/discount';
 import adminOrders from './admin/orders';
 import adminPayments from './admin/payments';
@@ -44,7 +43,6 @@ import publicArticles from './public/articles';
 import publicAuth from './public/auth';
 import publicCategory from './public/categories';
 import publicDashboard from './public/dashboard';
-import publicDesignPage from './public/design-pages';
 import publicDiscounts from './public/discounts';
 import publicFaq from './public/faq';
 import publicFavorites from './public/favorite';
@@ -90,14 +88,12 @@ const appReducer = {
   adminERPReports,
   adminERPSalesOrder,
   adminERPSuppliers,
-  adminDesignPage,
   adminMembershipLevel,
   adminShoppingCreditsType,
   adminArticles,
   adminArticlesCategories,
   publicArticles,
   publicDashboard,
-  publicDesignPage,
   adminNewsCategories,
   adminNews,
   publicNews,
