@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 import ContentSelectionModal from '@components/CustomPage/ContentSelectionModal';
 import NestedDisplayUI from '@components/CustomPage/NestedDisplayUI';
+import EditorToolbar from '@components/TiptapEditor/EditorToolbar';
 import { customPageTemplates } from '@fixtures/custom-page-templates';
 import generateUUID from '@helpers/generate-uuid';
 import useAppDispatch from '@hooks/useAppDispatch';
@@ -22,6 +23,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { CustomPageTemplate } from '@models/entities/custom-page-template';
 import { setPageBlocks } from '@reducers/admin/custom-page';
 import { adminDeleteFilesAsync } from '@reducers/admin/upload/actions';
+import { EditorProvider, useEditorContext } from '@context/EditorContext';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -137,6 +139,47 @@ const ArticleCustomBlocks = ({
   };
 
   return (
+    <EditorProvider>
+      <ArticleCustomBlocksContent
+        name={name}
+        label={label}
+        blocks={blocks}
+        setBlocks={setBlocks}
+        isEdit={isEdit}
+        toggleEditMode={toggleEditMode}
+        handleAddBlock={handleAddBlock}
+        handleDeleteBlock={handleDeleteBlock}
+        handleImageUploadSuccess={handleImageUploadSuccess}
+        handleBlur={handleBlur}
+        onDragStart={onDragStart}
+        onDrop={onDrop}
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+      />
+    </EditorProvider>
+  );
+};
+
+const ArticleCustomBlocksContent = ({
+  name,
+  label,
+  blocks,
+  isEdit,
+  toggleEditMode,
+  handleAddBlock,
+  handleDeleteBlock,
+  handleImageUploadSuccess,
+  handleBlur,
+  onDragStart,
+  onDrop,
+  isOpen,
+  onOpen,
+  onClose,
+}: any) => {
+  const { activeEditor } = useEditorContext();
+
+  return (
     <VStack spacing={4} align='flex-start' w='100%' mt='2rem'>
       <HStack justify='space-between' w='100%' mb='4'>
         <Box fontSize='xl'>{label}</Box>
@@ -149,6 +192,9 @@ const ArticleCustomBlocks = ({
           {isEdit ? '退出編輯模式' : '進入編輯模式'}
         </Button>
       </HStack>
+
+      {/* 固定工具列 - 只在編輯模式顯示 */}
+      {isEdit && <EditorToolbar editor={activeEditor} />}
       {blocks?.map((block: any, index: number) => (
         <Box
           key={block.id || index}

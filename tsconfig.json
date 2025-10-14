@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],
+      "@context/*": ["src/context/*"],
       "@enums/*": ["src/enums/*"],
       "@fixtures/*": ["src/fixtures/*"],
       "@helpers/*": ["src/helpers/*"],

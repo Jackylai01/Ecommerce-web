@@ -22,6 +22,13 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@context': require('path').resolve(__dirname, 'src/context'),
+    };
+    return config;
+  },
   // don't use object format for rewrites since it's not supported yet
   // https://github.com/serverless-nextjs/serverless-next.js/issues/1003
   async rewrites() {

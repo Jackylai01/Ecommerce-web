@@ -216,3 +216,32 @@
   border-bottom: 1px solid #e2e8f0;
   border-radius: 0;
 }
+
+/* Simple Editor Styles (用於新架構) */
+.simple-editor-wrapper {
+  border: none;
+  background: transparent;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.simple-editor-wrapper .tiptap-editor {
+  border: none;
+  background: transparent;
+  padding: 0.75rem;
+  min-height: 60px;
+  max-height: 400px;
+  overflow-y: auto;
+  outline: none;
+}
+
+.simple-editor-wrapper .tiptap-editor:focus {
+  outline: none;
+  background: transparent;
+}
+
+.simple-editor-wrapper .tiptap-editor p {
+  margin: 0.25rem 0;
+}

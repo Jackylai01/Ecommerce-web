@@ -1,4 +1,4 @@
-import BubbleMenuEditor from '@components/TiptapEditor/BubbleMenuEditor';
+import SimpleEditor from '@components/TiptapEditor/SimpleEditor';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { updateElementContent } from '@reducers/admin/custom-page';
 import React, { useEffect, useState } from 'react';
@@ -35,9 +35,9 @@ const TagElement = ({ element, isEdit, onBlur }: ElementProps) => {
   }
 
   if (isEdit) {
-    // 使用 BubbleMenuEditor，選取文字時顯示浮動工具列
+    // 使用 SimpleEditor，由頂部固定工具列控制
     return (
-      <BubbleMenuEditor
+      <SimpleEditor
         content={content}
         onChange={handleChange}
         onBlur={updateContent}
