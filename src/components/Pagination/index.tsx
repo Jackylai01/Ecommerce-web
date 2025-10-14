@@ -50,11 +50,9 @@ const Pagination = ({ metadata }: { metadata: Metadata }) => {
 
   return (
     <Flex
-      mt='4'
       align='center'
       justify='center'
-      direction={{ base: 'column', md: 'row' }}
-      gap={4}
+      gap={2}
       color={PaginationColor}
     >
       <IconButton
@@ -64,19 +62,21 @@ const Pagination = ({ metadata }: { metadata: Metadata }) => {
         isDisabled={currentPage <= 1}
         size={iconSize}
         color={PaginationColor}
+        variant='outline'
       />
       <Stack
-        direction={{ base: 'column', sm: 'row' }}
+        direction='row'
         align='center'
-        spacing={2}
+        spacing={1}
       >
         {pageNumbers.map((number) => (
           <Button
             key={number}
             size={buttonSize}
             onClick={() => setPage(number)}
-            isActive={currentPage === number}
-            color={PaginationColor}
+            colorScheme={currentPage === number ? 'blue' : 'gray'}
+            variant={currentPage === number ? 'solid' : 'ghost'}
+            color={currentPage === number ? 'white' : PaginationColor}
           >
             {number}
           </Button>
@@ -89,13 +89,14 @@ const Pagination = ({ metadata }: { metadata: Metadata }) => {
         isDisabled={currentPage >= metadata.last}
         size={iconSize}
         color={PaginationColor}
+        variant='outline'
       />
       <Select
         onChange={(e) => setLimit(e.target.value)}
         value={limit.toString()}
         size={selectSize}
-        width={{ base: '100px', md: '150px' }}
-        sx={{ maxWidth: '150px' }}
+        width='80px'
+        ml={2}
         color={PaginationColor}
       >
         <option value='10' style={{ backgroundColor: BgColor }}>
@@ -108,11 +109,6 @@ const Pagination = ({ metadata }: { metadata: Metadata }) => {
           50
         </option>
       </Select>
-      <Text>
-        顯示 {Math.min((currentPage - 1) * limit + 1, metadata.count)} 至
-        {Math.min(currentPage * limit, metadata.count)} 筆，共 {metadata.count}
-        筆
-      </Text>
     </Flex>
   );
 };

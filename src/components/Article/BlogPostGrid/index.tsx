@@ -15,7 +15,7 @@ import {
 import Pagination from '@components/Pagination';
 import { Metadata } from '@models/entities/shared/pagination';
 import { ArticlePublicResponse } from '@models/responses/article.res';
-import { Calendar, Clock, ArrowRight, Eye } from 'lucide-react';
+import { Calendar, Clock, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -124,7 +124,7 @@ const BlogPostGrid: React.FC<BlogPostGridProps> = ({ articles, metadata }) => {
                       bg='whiteAlpha.900'
                       color='blue.600'
                     >
-                      {post.category.name}
+                      {post.category}
                     </Tag>
                   )}
                 </Box>
@@ -174,12 +174,6 @@ const BlogPostGrid: React.FC<BlogPostGridProps> = ({ articles, metadata }) => {
                     <Icon as={Clock} boxSize={3.5} />
                     <Text>{calculateReadingTime(post)} 分鐘</Text>
                   </HStack>
-                  {post.views && (
-                    <HStack spacing={1}>
-                      <Icon as={Eye} boxSize={3.5} />
-                      <Text>{post.views}</Text>
-                    </HStack>
-                  )}
                 </HStack>
 
                 {/* 摘要 */}

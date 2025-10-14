@@ -140,7 +140,7 @@ const FeaturedPost: React.FC<FeaturedPostProps> = ({ trendingArticles }) => {
                   letterSpacing='wide'
                   fontWeight='bold'
                 >
-                  {mainPost.category.name}
+                  {mainPost.category}
                 </Badge>
               )}
             </HStack>

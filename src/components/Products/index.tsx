@@ -5,14 +5,14 @@ import {
   Heading,
   HStack,
   Icon,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Select,
   SimpleGrid,
   Text,
   useColorModeValue,
   VStack,
-  Select,
-  InputGroup,
-  InputLeftElement,
-  Input,
 } from '@chakra-ui/react';
 import { CustomBreadcrumb } from '@components/CustomBreadcrumb';
 import LoadingLayout from '@components/Layout/LoadingLayout';
@@ -23,7 +23,7 @@ import useAppSelector from '@hooks/useAppSelector';
 import { IBreadcrumbItem } from '@models/requests/products';
 import { resetPublicProductState } from '@reducers/public/products';
 import { publicProductsListAsync } from '@reducers/public/products/actions';
-import { Search, Filter, Grid, List } from 'lucide-react';
+import { Filter, Grid, List, Search } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -181,7 +181,7 @@ export const AllProducts = ({ breadcrumbItems }: AllProductsProps) => {
           {hasProducts && metadata && (
             <Text color={mutedColor} fontSize='sm'>
               顯示 <strong>{productsList.length}</strong> 個商品，共{' '}
-              <strong>{metadata.total}</strong> 個
+              <strong>{metadata.count}</strong> 個
             </Text>
           )}
         </VStack>

@@ -1,6 +1,6 @@
 import { Box, Button, ButtonGroup, Popover, PopoverTrigger, PopoverContent, VStack, Input, Select, HStack, Divider } from '@chakra-ui/react';
 import { EditorContent, useEditor } from '@tiptap/react';
-import { BubbleMenu } from '@tiptap/react/menus';
+import { BubbleMenu } from '@tiptap/extension-bubble-menu';
 import StarterKit from '@tiptap/starter-kit';
 import React, { useEffect, useState } from 'react';
 import { TextStyle, Color, FontSize } from '@tiptap/extension-text-style';

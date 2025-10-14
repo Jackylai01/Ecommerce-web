@@ -1,20 +1,24 @@
 import { UsersForm } from '@components/Form/FormCRUD/Users';
-import AddButton from '@components/Icons/AddFormIcon';
 import RoleManagement from '@components/Layout/AdminLayout/RoleManagement';
-import Authors from '@components/Layout/AdminLayout/Tables/components/Authors';
+import UserManagementTable from '@components/Layout/AdminLayout/UserManagement/UserManagementTable';
+import TableToolbar from '@components/Layout/AdminLayout/UserManagement/TableToolbar';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import TabsLayout from '@components/Layout/TabsLayout';
-import MessageModal from '@components/Modal/MessageModal';
+import FormModal from '@components/Modal/FormModal';
 import { UsersConfig } from '@fixtures/Tabs-configs';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { adminCreateAccountsAsync } from '@reducers/admin/auth/actions';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useDisclosure, useToast, Box } from '@chakra-ui/react';
 
 const TablesPage = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const {
     status: {
       createAccountsFailed,
@@ -22,69 +26,78 @@ const TablesPage = () => {
       createAccountsSuccess,
     },
     error: { createAccountsError },
+    metadata,
   } = useAppSelector((state) => state.adminAuth);
-  const [modalContent, setModalContent] = useState<string>('');
-  const [modalTitle, setModalTitle] = useState<string>('新增使用者');
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleSubmit = (data: any) => {
     dispatch(adminCreateAccountsAsync(data));
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleAddUser = () => {
+    onOpen();
   };
 
   useEffect(() => {
     if (createAccountsSuccess) {
-      setIsModalOpen(true);
-      setModalTitle('新增使用者');
-      setModalContent('使用者新增成功！');
+      toast({
+        title: '新增成功',
+        description: '用戶已成功新增',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      onClose();
+      // 重新載入用戶列表
+      const page = parseInt(router.query.page as string) || 1;
+      window.location.reload();
     }
 
     if (createAccountsFailed) {
-      setIsModalOpen(true);
-      setModalTitle('新增使用者失敗');
-      setModalContent(createAccountsError || '發生未知錯誤');
+      toast({
+        title: '新增失敗',
+        description: createAccountsError || '發生未知錯誤',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
     }
-  }, [createAccountsFailed, createAccountsSuccess, createAccountsError]);
-
-  useEffect(() => {
-    setIsModalOpen(false);
-  }, []);
+  }, [createAccountsFailed, createAccountsSuccess, createAccountsError, toast, onClose, router.query.page]);
 
   // 確定當前路由是否為角色管理
   const isRoleManagementPage = router.pathname === '/zigong/tables/roles';
 
   return (
     <LoadingLayout isLoading={createAccountsLoading}>
-      {/* 根據當前頁面動態顯示表單 */}
-      {!isRoleManagementPage ? (
-        <>
-          <AddButton
-            formTitle='Add Users account'
-            formContent={<UsersForm />}
-            onSubmit={handleSubmit}
-          />
-          <TabsLayout tabsConfig={UsersConfig}>
-            <Authors
-              title={'帳號管理'}
-              captions={['使用者名稱', '信箱', '城市', '']}
+      <Box p={{ base: 4, md: 6 }}>
+        {/* 根據當前頁面動態顯示內容 */}
+        {!isRoleManagementPage ? (
+          <>
+            {/* 工具列 */}
+            <TableToolbar
+              onAddUser={handleAddUser}
+              totalCount={metadata?.count || 0}
             />
-          </TabsLayout>
-        </>
-      ) : (
-        <RoleManagement />
-      )}
 
-      <MessageModal
-        title={modalTitle}
-        isActive={isModalOpen}
-        error={createAccountsError}
-        onClose={handleCloseModal}
-      >
-        {modalContent}
-      </MessageModal>
+            {/* Tab 切換 */}
+            <TabsLayout tabsConfig={UsersConfig}>
+              {/* 新的用戶管理表格 */}
+              <UserManagementTable />
+            </TabsLayout>
+
+            {/* 新增用戶表單對話框 */}
+            <FormModal
+              isOpen={isOpen}
+              onClose={onClose}
+              onSubmit={handleSubmit}
+              title='新增用戶'
+            >
+              <UsersForm />
+            </FormModal>
+          </>
+        ) : (
+          <RoleManagement />
+        )}
+      </Box>
     </LoadingLayout>
   );
 };

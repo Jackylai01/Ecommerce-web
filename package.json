@@ -17,6 +17,7 @@
     "@googlemaps/react-wrapper": "^1.1.35",
     "@mantine/hooks": "^7.6.1",
     "@reduxjs/toolkit": "^1.8.5",
+    "@tiptap/extension-bubble-menu": "^3.6.6",
     "@tiptap/extension-color": "^3.6.6",
     "@tiptap/extension-highlight": "^3.6.6",
     "@tiptap/extension-image": "^3.6.6",

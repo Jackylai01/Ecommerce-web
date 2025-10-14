@@ -5,7 +5,7 @@ import { UsersConfig } from '@fixtures/Tabs-configs';
 
 const RolesPages = () => {
   return (
-    <Box>
+    <Box p={{ base: 4, md: 6 }}>
       <TabsLayout tabsConfig={UsersConfig}>
         <RoleManagement />
       </TabsLayout>
