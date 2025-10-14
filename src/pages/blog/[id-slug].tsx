@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Container,
   Divider,
@@ -8,9 +9,8 @@ import {
   Icon,
   Tag,
   Text,
-  VStack,
-  Avatar,
   useColorModeValue,
+  VStack,
 } from '@chakra-ui/react';
 import Sidebar from '@components/Article/Sidebar';
 import LoadingLayout from '@components/Layout/LoadingLayout';
@@ -24,7 +24,7 @@ import {
   apiGetTrendingArticles,
 } from '@services/public/articles/public-articles';
 import { BASE_API_URL } from '@services/shared/instance';
-import { Calendar, Clock, User, Share2, Bookmark } from 'lucide-react';
+import { Bookmark, Calendar, Clock, Share2 } from 'lucide-react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -47,7 +47,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
   // 顏色主題
   const bgGradient = useColorModeValue(
     'linear(to-b, gray.50, white)',
-    'linear(to-b, gray.900, gray.800)'
+    'linear(to-b, gray.900, gray.800)',
   );
   const cardBg = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.800', 'white');
@@ -78,9 +78,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
   const calculateReadingTime = () => {
     const textContent = article?.blocks
       ?.filter((block: any) => block.className === 'paragraph')
-      .map((block: any) =>
-        block.elements.map((el: any) => el.context).join('')
-      )
+      .map((block: any) => block.elements.map((el: any) => el.context).join(''))
       .join('');
     const wordCount = textContent?.replace(/<[^>]*>/g, '').length || 0;
     return Math.ceil(wordCount / 200);
@@ -184,7 +182,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric',
-                              }
+                              },
                             )}
                           </Text>
                         </HStack>
@@ -281,7 +279,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
                                       fontWeight: 'bold',
                                       color: accentColor,
                                     },
-                                    'a': {
+                                    a: {
                                       color: accentColor,
                                       textDecoration: 'underline',
                                       _hover: { opacity: 0.8 },
@@ -295,10 +293,10 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
                                       pl: 6,
                                       mb: 4,
                                     },
-                                    'li': {
+                                    li: {
                                       mb: 2,
                                     },
-                                    'blockquote': {
+                                    blockquote: {
                                       borderLeft: '4px solid',
                                       borderColor: accentColor,
                                       pl: 4,
@@ -309,7 +307,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
                                     },
                                   }}
                                 />
-                              )
+                              ),
                             )}
 
                           {block.className === 'image-selectable' &&
@@ -333,7 +331,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
                                     objectFit='cover'
                                   />
                                 </Box>
-                              )
+                              ),
                             )}
                         </Box>
                       ))}

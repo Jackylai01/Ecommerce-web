@@ -1,21 +1,30 @@
-import { Box, Button, ButtonGroup, Popover, PopoverTrigger, PopoverContent, VStack, Input, Select, HStack, Divider } from '@chakra-ui/react';
-import { EditorContent, useEditor } from '@tiptap/react';
-import { BubbleMenu } from '@tiptap/extension-bubble-menu';
-import StarterKit from '@tiptap/starter-kit';
-import React, { useEffect, useState } from 'react';
-import { TextStyle, Color, FontSize } from '@tiptap/extension-text-style';
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Input,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Select,
+  VStack,
+} from '@chakra-ui/react';
 import Highlight from '@tiptap/extension-highlight';
+import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
-import Table from '@tiptap/extension-table';
-import TableCell from '@tiptap/extension-table-cell';
-import TableHeader from '@tiptap/extension-table-header';
-import TableRow from '@tiptap/extension-table-row';
-import TextAlign from '@tiptap/extension-text-align';
-import Underline from '@tiptap/extension-underline';
-import Superscript from '@tiptap/extension-superscript';
 import Subscript from '@tiptap/extension-subscript';
-import HorizontalRule from '@tiptap/extension-horizontal-rule';
+import Superscript from '@tiptap/extension-superscript';
+import { Table } from '@tiptap/extension-table';
+import { TableCell } from '@tiptap/extension-table-cell';
+import { TableHeader } from '@tiptap/extension-table-header';
+import { TableRow } from '@tiptap/extension-table-row';
+import TextAlign from '@tiptap/extension-text-align';
+import { Color, FontSize, TextStyle } from '@tiptap/extension-text-style';
+import Underline from '@tiptap/extension-underline';
+import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import React, { useEffect, useState } from 'react';
 
 interface BubbleMenuEditorProps {
   content: string;
@@ -136,12 +145,14 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
   }
 
   return (
-    <Box className='tiptap-wrapper bubble-wrapper' w='100%' position='relative' overflow='visible'>
+    <Box
+      className='tiptap-wrapper bubble-wrapper'
+      w='100%'
+      position='relative'
+      overflow='visible'
+    >
       {editor && (
-        <BubbleMenu
-          editor={editor}
-          pluginKey="bubbleMenuText"
-        >
+        <Box position='sticky' top={0} zIndex={10} mb={2}>
           <Box
             bg='white'
             shadow='xl'
@@ -156,7 +167,9 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
                 onClick={() => editor.chain().focus().toggleBold().run()}
                 bg={editor.isActive('bold') ? 'blue.500' : 'white'}
                 color={editor.isActive('bold') ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('bold') ? 'blue.600' : 'gray.100' }}
+                _hover={{
+                  bg: editor.isActive('bold') ? 'blue.600' : 'gray.100',
+                }}
                 fontWeight='bold'
                 minW='40px'
               >
@@ -166,7 +179,9 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
                 onClick={() => editor.chain().focus().toggleItalic().run()}
                 bg={editor.isActive('italic') ? 'blue.500' : 'white'}
                 color={editor.isActive('italic') ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('italic') ? 'blue.600' : 'gray.100' }}
+                _hover={{
+                  bg: editor.isActive('italic') ? 'blue.600' : 'gray.100',
+                }}
                 fontStyle='italic'
                 minW='40px'
               >
@@ -176,7 +191,9 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
                 onClick={() => editor.chain().focus().toggleUnderline().run()}
                 bg={editor.isActive('underline') ? 'blue.500' : 'white'}
                 color={editor.isActive('underline') ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('underline') ? 'blue.600' : 'gray.100' }}
+                _hover={{
+                  bg: editor.isActive('underline') ? 'blue.600' : 'gray.100',
+                }}
                 textDecoration='underline'
                 minW='40px'
               >
@@ -186,7 +203,9 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
                 onClick={() => editor.chain().focus().toggleStrike().run()}
                 bg={editor.isActive('strike') ? 'blue.500' : 'white'}
                 color={editor.isActive('strike') ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('strike') ? 'blue.600' : 'gray.100' }}
+                _hover={{
+                  bg: editor.isActive('strike') ? 'blue.600' : 'gray.100',
+                }}
                 textDecoration='line-through'
                 minW='40px'
               >
@@ -198,60 +217,144 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
 
               {/* 標題 H1-H6 */}
               <Button
-                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                bg={editor.isActive('heading', { level: 1 }) ? 'purple.500' : 'white'}
-                color={editor.isActive('heading', { level: 1 }) ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('heading', { level: 1 }) ? 'purple.600' : 'gray.100' }}
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 1 }).run()
+                }
+                bg={
+                  editor.isActive('heading', { level: 1 })
+                    ? 'purple.500'
+                    : 'white'
+                }
+                color={
+                  editor.isActive('heading', { level: 1 })
+                    ? 'white'
+                    : 'gray.700'
+                }
+                _hover={{
+                  bg: editor.isActive('heading', { level: 1 })
+                    ? 'purple.600'
+                    : 'gray.100',
+                }}
                 minW='38px'
                 fontSize='md'
               >
                 H1
               </Button>
               <Button
-                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                bg={editor.isActive('heading', { level: 2 }) ? 'purple.500' : 'white'}
-                color={editor.isActive('heading', { level: 2 }) ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('heading', { level: 2 }) ? 'purple.600' : 'gray.100' }}
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 2 }).run()
+                }
+                bg={
+                  editor.isActive('heading', { level: 2 })
+                    ? 'purple.500'
+                    : 'white'
+                }
+                color={
+                  editor.isActive('heading', { level: 2 })
+                    ? 'white'
+                    : 'gray.700'
+                }
+                _hover={{
+                  bg: editor.isActive('heading', { level: 2 })
+                    ? 'purple.600'
+                    : 'gray.100',
+                }}
                 minW='38px'
                 fontSize='md'
               >
                 H2
               </Button>
               <Button
-                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                bg={editor.isActive('heading', { level: 3 }) ? 'purple.500' : 'white'}
-                color={editor.isActive('heading', { level: 3 }) ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('heading', { level: 3 }) ? 'purple.600' : 'gray.100' }}
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 3 }).run()
+                }
+                bg={
+                  editor.isActive('heading', { level: 3 })
+                    ? 'purple.500'
+                    : 'white'
+                }
+                color={
+                  editor.isActive('heading', { level: 3 })
+                    ? 'white'
+                    : 'gray.700'
+                }
+                _hover={{
+                  bg: editor.isActive('heading', { level: 3 })
+                    ? 'purple.600'
+                    : 'gray.100',
+                }}
                 minW='38px'
                 fontSize='sm'
               >
                 H3
               </Button>
               <Button
-                onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
-                bg={editor.isActive('heading', { level: 4 }) ? 'purple.500' : 'white'}
-                color={editor.isActive('heading', { level: 4 }) ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('heading', { level: 4 }) ? 'purple.600' : 'gray.100' }}
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 4 }).run()
+                }
+                bg={
+                  editor.isActive('heading', { level: 4 })
+                    ? 'purple.500'
+                    : 'white'
+                }
+                color={
+                  editor.isActive('heading', { level: 4 })
+                    ? 'white'
+                    : 'gray.700'
+                }
+                _hover={{
+                  bg: editor.isActive('heading', { level: 4 })
+                    ? 'purple.600'
+                    : 'gray.100',
+                }}
                 minW='38px'
                 fontSize='sm'
               >
                 H4
               </Button>
               <Button
-                onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
-                bg={editor.isActive('heading', { level: 5 }) ? 'purple.500' : 'white'}
-                color={editor.isActive('heading', { level: 5 }) ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('heading', { level: 5 }) ? 'purple.600' : 'gray.100' }}
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 5 }).run()
+                }
+                bg={
+                  editor.isActive('heading', { level: 5 })
+                    ? 'purple.500'
+                    : 'white'
+                }
+                color={
+                  editor.isActive('heading', { level: 5 })
+                    ? 'white'
+                    : 'gray.700'
+                }
+                _hover={{
+                  bg: editor.isActive('heading', { level: 5 })
+                    ? 'purple.600'
+                    : 'gray.100',
+                }}
                 minW='38px'
                 fontSize='xs'
               >
                 H5
               </Button>
               <Button
-                onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
-                bg={editor.isActive('heading', { level: 6 }) ? 'purple.500' : 'white'}
-                color={editor.isActive('heading', { level: 6 }) ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('heading', { level: 6 }) ? 'purple.600' : 'gray.100' }}
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 6 }).run()
+                }
+                bg={
+                  editor.isActive('heading', { level: 6 })
+                    ? 'purple.500'
+                    : 'white'
+                }
+                color={
+                  editor.isActive('heading', { level: 6 })
+                    ? 'white'
+                    : 'gray.700'
+                }
+                _hover={{
+                  bg: editor.isActive('heading', { level: 6 })
+                    ? 'purple.600'
+                    : 'gray.100',
+                }}
                 minW='38px'
                 fontSize='xs'
               >
@@ -266,7 +369,9 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
                 onClick={() => editor.chain().focus().toggleBulletList().run()}
                 bg={editor.isActive('bulletList') ? 'green.500' : 'white'}
                 color={editor.isActive('bulletList') ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('bulletList') ? 'green.600' : 'gray.100' }}
+                _hover={{
+                  bg: editor.isActive('bulletList') ? 'green.600' : 'gray.100',
+                }}
                 minW='40px'
               >
                 • 列表
@@ -275,7 +380,9 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
                 onClick={() => editor.chain().focus().toggleOrderedList().run()}
                 bg={editor.isActive('orderedList') ? 'green.500' : 'white'}
                 color={editor.isActive('orderedList') ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('orderedList') ? 'green.600' : 'gray.100' }}
+                _hover={{
+                  bg: editor.isActive('orderedList') ? 'green.600' : 'gray.100',
+                }}
                 minW='40px'
               >
                 1. 列表
@@ -289,7 +396,9 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
                 onClick={() => editor.chain().focus().toggleBlockquote().run()}
                 bg={editor.isActive('blockquote') ? 'orange.500' : 'white'}
                 color={editor.isActive('blockquote') ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('blockquote') ? 'orange.600' : 'gray.100' }}
+                _hover={{
+                  bg: editor.isActive('blockquote') ? 'orange.600' : 'gray.100',
+                }}
                 minW='40px'
               >
                 引用
@@ -298,7 +407,9 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
                 onClick={() => editor.chain().focus().toggleCode().run()}
                 bg={editor.isActive('code') ? 'gray.600' : 'white'}
                 color={editor.isActive('code') ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('code') ? 'gray.700' : 'gray.100' }}
+                _hover={{
+                  bg: editor.isActive('code') ? 'gray.700' : 'gray.100',
+                }}
                 fontFamily='monospace'
                 minW='40px'
               >
@@ -450,7 +561,11 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
                           const newColor = e.target.value;
                           setBgColor(newColor);
                           // 使用正確的 Tiptap Highlight 擴展 API
-                          editor?.chain().focus().setHighlight({ color: newColor }).run();
+                          editor
+                            ?.chain()
+                            .focus()
+                            .setHighlight({ color: newColor })
+                            .run();
                         }}
                         w='100%'
                         h='100%'
@@ -492,7 +607,9 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
                 onClick={() => editor.chain().focus().toggleSuperscript().run()}
                 bg={editor.isActive('superscript') ? 'teal.500' : 'white'}
                 color={editor.isActive('superscript') ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('superscript') ? 'teal.600' : 'gray.100' }}
+                _hover={{
+                  bg: editor.isActive('superscript') ? 'teal.600' : 'gray.100',
+                }}
                 minW='40px'
                 fontSize='xs'
               >
@@ -502,7 +619,9 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
                 onClick={() => editor.chain().focus().toggleSubscript().run()}
                 bg={editor.isActive('subscript') ? 'teal.500' : 'white'}
                 color={editor.isActive('subscript') ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive('subscript') ? 'teal.600' : 'gray.100' }}
+                _hover={{
+                  bg: editor.isActive('subscript') ? 'teal.600' : 'gray.100',
+                }}
                 minW='40px'
                 fontSize='xs'
               >
@@ -514,40 +633,88 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
 
               {/* 文字對齊 */}
               <Button
-                onClick={() => editor.chain().focus().setTextAlign('left').run()}
-                bg={editor.isActive({ textAlign: 'left' }) ? 'cyan.500' : 'white'}
-                color={editor.isActive({ textAlign: 'left' }) ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive({ textAlign: 'left' }) ? 'cyan.600' : 'gray.100' }}
+                onClick={() =>
+                  editor.chain().focus().setTextAlign('left').run()
+                }
+                bg={
+                  editor.isActive({ textAlign: 'left' }) ? 'cyan.500' : 'white'
+                }
+                color={
+                  editor.isActive({ textAlign: 'left' }) ? 'white' : 'gray.700'
+                }
+                _hover={{
+                  bg: editor.isActive({ textAlign: 'left' })
+                    ? 'cyan.600'
+                    : 'gray.100',
+                }}
                 minW='40px'
                 title='靠左對齊'
               >
                 ⇤
               </Button>
               <Button
-                onClick={() => editor.chain().focus().setTextAlign('center').run()}
-                bg={editor.isActive({ textAlign: 'center' }) ? 'cyan.500' : 'white'}
-                color={editor.isActive({ textAlign: 'center' }) ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive({ textAlign: 'center' }) ? 'cyan.600' : 'gray.100' }}
+                onClick={() =>
+                  editor.chain().focus().setTextAlign('center').run()
+                }
+                bg={
+                  editor.isActive({ textAlign: 'center' })
+                    ? 'cyan.500'
+                    : 'white'
+                }
+                color={
+                  editor.isActive({ textAlign: 'center' })
+                    ? 'white'
+                    : 'gray.700'
+                }
+                _hover={{
+                  bg: editor.isActive({ textAlign: 'center' })
+                    ? 'cyan.600'
+                    : 'gray.100',
+                }}
                 minW='40px'
                 title='置中對齊'
               >
                 ↔
               </Button>
               <Button
-                onClick={() => editor.chain().focus().setTextAlign('right').run()}
-                bg={editor.isActive({ textAlign: 'right' }) ? 'cyan.500' : 'white'}
-                color={editor.isActive({ textAlign: 'right' }) ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive({ textAlign: 'right' }) ? 'cyan.600' : 'gray.100' }}
+                onClick={() =>
+                  editor.chain().focus().setTextAlign('right').run()
+                }
+                bg={
+                  editor.isActive({ textAlign: 'right' }) ? 'cyan.500' : 'white'
+                }
+                color={
+                  editor.isActive({ textAlign: 'right' }) ? 'white' : 'gray.700'
+                }
+                _hover={{
+                  bg: editor.isActive({ textAlign: 'right' })
+                    ? 'cyan.600'
+                    : 'gray.100',
+                }}
                 minW='40px'
                 title='靠右對齊'
               >
                 ⇥
               </Button>
               <Button
-                onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-                bg={editor.isActive({ textAlign: 'justify' }) ? 'cyan.500' : 'white'}
-                color={editor.isActive({ textAlign: 'justify' }) ? 'white' : 'gray.700'}
-                _hover={{ bg: editor.isActive({ textAlign: 'justify' }) ? 'cyan.600' : 'gray.100' }}
+                onClick={() =>
+                  editor.chain().focus().setTextAlign('justify').run()
+                }
+                bg={
+                  editor.isActive({ textAlign: 'justify' })
+                    ? 'cyan.500'
+                    : 'white'
+                }
+                color={
+                  editor.isActive({ textAlign: 'justify' })
+                    ? 'white'
+                    : 'gray.700'
+                }
+                _hover={{
+                  bg: editor.isActive({ textAlign: 'justify' })
+                    ? 'cyan.600'
+                    : 'gray.100',
+                }}
                 minW='40px'
                 title='兩端對齊'
               >
@@ -571,7 +738,9 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
 
               {/* 清除格式 */}
               <Button
-                onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
+                onClick={() =>
+                  editor.chain().focus().clearNodes().unsetAllMarks().run()
+                }
                 bg='white'
                 color='red.500'
                 _hover={{ bg: 'red.50' }}
@@ -582,7 +751,7 @@ const BubbleMenuEditor: React.FC<BubbleMenuEditorProps> = ({
               </Button>
             </ButtonGroup>
           </Box>
-        </BubbleMenu>
+        </Box>
       )}
       <EditorContent editor={editor} />
     </Box>
