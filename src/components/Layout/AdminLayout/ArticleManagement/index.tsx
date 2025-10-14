@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react';
 import LoadingLayout from '@components/Layout/LoadingLayout';
 import CategoryModal from '@components/Modal/ArticleCategoryModal';
-import ArticleModal from '@components/Modal/ArticleModal';
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import { useNotification } from '@hooks/useNotification';
@@ -34,11 +33,7 @@ import CategoryList from './CategoryList';
 export default function ArticleManagement() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentArticle, setCurrentArticle] = useState<Article | null>(null);
   const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
-  const [modalType, setModalType] = useState<'article' | 'category' | null>(
-    null,
-  );
 
   const dispatch = useAppDispatch();
 
@@ -96,38 +91,14 @@ export default function ArticleManagement() {
     dispatch(getAllArticleCategoriesAsync({ page: 1, limit: 10 }));
   }, [dispatch]);
 
-  const defaultArticle: Article = {
-    _id: '',
-    title: '',
-    content: '',
-    author: '',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    comments: [],
-    tags: [],
-    excerpt: '',
-    status: 'draft',
-    isFeatured: false,
-    category: '',
-    blocks: [],
-    coverImage: null,
-  };
-
   const defaultCategory: Category = {
     _id: '',
     name: '',
     description: '',
   };
 
-  const openArticleModal = (article: Article | null = null) => {
-    setCurrentArticle(article || defaultArticle);
-    setModalType('article');
-    onOpen();
-  };
-
   const openCategoryModal = (category: Category | null = null) => {
     setCurrentCategory(category || defaultCategory);
-    setModalType('category');
     onOpen();
   };
 
@@ -237,7 +208,6 @@ export default function ArticleManagement() {
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
                 handleSearch={handleSearch}
-                openArticleModal={openArticleModal}
                 handleDeleteArticle={handleDeleteArticle}
               />
             </TabPanel>
@@ -255,15 +225,7 @@ export default function ArticleManagement() {
           </TabPanels>
         </Tabs>
 
-        {modalType === 'article' && currentArticle && (
-          <ArticleModal
-            isOpen={isOpen}
-            onClose={onClose}
-            article={currentArticle}
-            isEditing={Boolean(currentArticle?._id)}
-          />
-        )}
-        {modalType === 'category' && currentCategory && (
+        {currentCategory && (
           <CategoryModal
             isOpen={isOpen}
             onClose={onClose}

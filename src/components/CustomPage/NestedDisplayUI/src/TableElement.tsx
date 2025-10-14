@@ -8,13 +8,10 @@ import {
   Tr,
   VStack,
 } from '@chakra-ui/react';
-import { baseQuillToolbar } from '@fixtures/quill-configs';
-import dynamic from 'next/dynamic';
+import TiptapEditor from '@components/TiptapEditor';
 import { useCallback, useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ElementProps } from '..';
-
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
   const { setValue, getValues } = useFormContext();
@@ -65,20 +62,6 @@ const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
     setData((prevData) => prevData.filter((_, idx) => idx !== index));
   };
 
-  // useEffect(() => {
-  //   const initialData = element.data || [];
-  //   const columnCount = initialData[0]?.length || 3;
-
-  //   const updatedData = initialData.map((row) => {
-  //     if (row.length < columnCount) {
-  //       return [...row, ...new Array(columnCount - row.length).fill('')];
-  //     }
-  //     return row;
-  //   });
-
-  //   setData(updatedData);
-  // }, [element]);
-
   return (
     <VStack spacing={4} align='flex-start' w='100%'>
       <Table variant='simple'>
@@ -88,14 +71,14 @@ const TableElement = ({ element, isEdit, onBlur }: ElementProps) => {
               {row.map((cell, colIndex) => (
                 <Td key={colIndex}>
                   {isEdit ? (
-                    <ReactQuill
-                      theme='bubble'
-                      value={cell}
-                      modules={{ toolbar: baseQuillToolbar }}
+                    <TiptapEditor
+                      content={cell}
                       onChange={(value) =>
                         handleChange(value, rowIndex, colIndex)
                       }
                       onBlur={handleBlur}
+                      placeholder='請輸入內容'
+                      minimal={true}
                     />
                   ) : (
                     <div dangerouslySetInnerHTML={{ __html: cell }} />

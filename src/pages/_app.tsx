@@ -7,6 +7,7 @@ import useSyncFavorites from '@hooks/useSyncFavorites';
 import { adminLogoutAsync } from '@reducers/admin/auth/actions';
 import wrapper from '@store';
 import '@styles/globals.scss';
+import '@styles/tiptap.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';

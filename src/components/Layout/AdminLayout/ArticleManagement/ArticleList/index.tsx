@@ -14,6 +14,7 @@ import {
 import Pagination from '@components/Pagination';
 import { Metadata } from '@models/entities/shared/pagination';
 import { Article } from '@models/responses/article.res';
+import { useRouter } from 'next/router';
 
 interface ArticleListProps {
   articles: any;
@@ -21,7 +22,6 @@ interface ArticleListProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
   handleSearch: (searchTerm: string) => void;
-  openArticleModal: (article?: Article) => void;
   handleDeleteArticle: (articleId: string) => void;
 }
 
@@ -31,12 +31,15 @@ const ArticleList: React.FC<ArticleListProps> = ({
   searchTerm,
   setSearchTerm,
   handleSearch,
-  openArticleModal,
   handleDeleteArticle,
 }) => {
+  const router = useRouter();
   return (
     <Box bg='white' boxShadow='lg' borderRadius='12px' p='2rem' mb='2rem'>
-      <Button colorScheme='purple' onClick={() => openArticleModal()}>
+      <Button
+        colorScheme='purple'
+        onClick={() => router.push('/zigong/articles/edit')}
+      >
         + 新增文章
       </Button>
       <Box display='flex' flexDirection='row' mt='1rem'>
@@ -94,7 +97,9 @@ const ArticleList: React.FC<ArticleListProps> = ({
                     as='button'
                     colorScheme='purple'
                     size='sm'
-                    onClick={() => openArticleModal(article)}
+                    onClick={() =>
+                      router.push(`/zigong/articles/edit?id=${article._id}`)
+                    }
                   >
                     編輯
                   </Button>
@@ -102,6 +107,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
                     as='button'
                     colorScheme='red'
                     size='sm'
+                    ml={2}
                     onClick={() => handleDeleteArticle(article._id)}
                   >
                     刪除

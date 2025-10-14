@@ -1,15 +1,14 @@
-import { baseQuillToolbar, contentQuillToolbar } from '@fixtures/quill-configs';
+import TiptapEditor from '@components/TiptapEditor';
 import { CustomPageElement } from '@models/entities/custom-page-template';
-import dynamic from 'next/dynamic';
 import React, { useEffect, useRef, useState } from 'react';
 import { ElementProps } from '..';
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 type ElementItemProps = {
   element: String[];
   dataTemplate: CustomPageElement[];
   contentRemoveP: Function;
 };
+
 const Item = ({ element, dataTemplate, contentRemoveP }: ElementItemProps) => {
   const [active, setActive] = useState(false);
 
@@ -67,6 +66,16 @@ const ItemEdit = ({
     setHasSearchBar(!hasSearchBar);
   };
 
+  const handleItemChange = (
+    value: string,
+    rowIndex: number,
+    colIndex: number,
+  ) => {
+    const newData = [...itemsData];
+    newData[rowIndex][colIndex] = value;
+    setItemsData(newData);
+  };
+
   return (
     <>
       {element.className === 'dropdown-items' ? (
@@ -79,26 +88,23 @@ const ItemEdit = ({
         </button>
       ) : null}
       <ul className={element.className + ' is-edit'}>
-        {itemsData.map((item, index) => (
-          <li key={index}>
-            {dataTemplate?.map((templateElement, index) => (
-              <ReactQuill
-                key={index}
-                className={templateElement.className}
-                theme='bubble'
-                modules={{
-                  toolbar: templateElement.tagName.startsWith('h')
-                    ? baseQuillToolbar
-                    : contentQuillToolbar,
-                }}
+        {itemsData.map((item, rowIndex) => (
+          <li key={rowIndex}>
+            {dataTemplate?.map((templateElement, colIndex) => (
+              <TiptapEditor
+                key={colIndex}
+                content={item[colIndex] || ''}
+                onChange={(value) =>
+                  handleItemChange(value, rowIndex, colIndex)
+                }
                 placeholder='請輸入內容'
-                value={`<${templateElement.tagName}>${item[index]}</${templateElement.tagName}>`}
-                onChange={(value) => (item[index] = value)}
+                minimal={templateElement.tagName.startsWith('h')}
+                className={templateElement.className}
               />
             ))}
             <span
               className={`icomoon-bin ${element.className}__clear`}
-              onClick={() => deleteRow(index)}
+              onClick={() => deleteRow(rowIndex)}
             ></span>
           </li>
         ))}
@@ -130,6 +136,7 @@ const Items = (props: ElementProps) => {
       return false;
     }
   };
+
   const contentRemoveP = (value: string) =>
     /^<p>(.*?)<\/p>$/.exec(value || '')?.[1] || value;
 

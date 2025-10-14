@@ -1,10 +1,8 @@
-import { contentQuillToolbar } from '@fixtures/quill-configs';
+import BubbleMenuEditor from '@components/TiptapEditor/BubbleMenuEditor';
 import useAppDispatch from '@hooks/useAppDispatch';
 import { updateElementContent } from '@reducers/admin/custom-page';
-import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 import NestedDisplayUI, { ElementProps } from '..';
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const TagElement = ({ element, isEdit, onBlur }: ElementProps) => {
   const dispatch = useAppDispatch();
@@ -37,27 +35,25 @@ const TagElement = ({ element, isEdit, onBlur }: ElementProps) => {
   }
 
   if (isEdit) {
+    // 使用 BubbleMenuEditor，選取文字時顯示浮動工具列
     return (
-      <ReactQuill
-        className={element.className}
-        theme='bubble'
-        modules={{ toolbar: contentQuillToolbar }}
-        placeholder='请输入内容'
-        value={content}
+      <BubbleMenuEditor
+        content={content}
         onChange={handleChange}
         onBlur={updateContent}
+        placeholder='請輸入內容'
+        className={element.className}
       />
     );
   }
 
   return React.createElement(element.tagName, {
     className: element.className,
-    contentEditable: isEdit,
+    contentEditable: false,
     suppressContentEditableWarning: true,
     dangerouslySetInnerHTML: {
       __html: element.context,
     },
-    onBlur: updateContent,
   });
 };
 

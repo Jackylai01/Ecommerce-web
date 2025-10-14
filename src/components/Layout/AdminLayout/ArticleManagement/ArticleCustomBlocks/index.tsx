@@ -10,6 +10,7 @@ import {
   Icon,
   IconButton,
   VStack,
+  HStack,
   useDisclosure,
 } from '@chakra-ui/react';
 import ContentSelectionModal from '@components/CustomPage/ContentSelectionModal';
@@ -137,17 +138,17 @@ const ArticleCustomBlocks = ({
 
   return (
     <VStack spacing={4} align='flex-start' w='100%' mt='2rem'>
-      <Box fontSize='xl' mb='4'>
-        {label}
-      </Box>
-      <Button
-        leftIcon={<EditIcon />}
-        colorScheme='blue'
-        onClick={toggleEditMode}
-        bg={isEdit ? 'red.300' : 'blue.300'}
-      >
-        {isEdit ? '退出編輯模式' : '進入編輯模式'}
-      </Button>
+      <HStack justify='space-between' w='100%' mb='4'>
+        <Box fontSize='xl'>{label}</Box>
+        <Button
+          leftIcon={<EditIcon />}
+          colorScheme='blue'
+          onClick={toggleEditMode}
+          bg={isEdit ? 'red.300' : 'blue.300'}
+        >
+          {isEdit ? '退出編輯模式' : '進入編輯模式'}
+        </Button>
+      </HStack>
       {blocks?.map((block: any, index: number) => (
         <Box
           key={block.id || index}

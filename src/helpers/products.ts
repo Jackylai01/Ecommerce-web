@@ -22,23 +22,23 @@ export const calculateItemsTotal = (items: IItem[]): number => {
 
 export const navItems: NavItem[] = [
   {
-    label: 'All Products',
+    label: '產品',
     href: '/products',
   },
   {
-    label: 'Categories',
+    label: '產品選項',
     href: '/categories',
   },
   {
-    label: 'Blog',
+    label: '文章',
     href: '/blog',
   },
   {
-    label: 'News',
+    label: '最新消息',
     href: '/news',
   },
   {
-    label: 'Faq',
+    label: '常見問題',
     href: '/faq',
   },
 ];
