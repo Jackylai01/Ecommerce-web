@@ -5,7 +5,6 @@ import {
   FieldValues,
   FormProvider,
   RegisterOptions,
-  Validate,
   useForm,
 } from 'react-hook-form';
 import Field from './Field';
@@ -39,8 +38,8 @@ export type FieldConfig = Omit<
     compareObserver?: {
       observer: string;
       condition: (value: any) => boolean;
-      validate?: Validate<any, FieldValues>;
-      newValidate: Validate<any, FieldValues>;
+      validate?: (value: any) => boolean | string | Promise<boolean | string>;
+      newValidate: (value: any) => boolean | string | Promise<boolean | string>;
     };
     customDataSelect?: {
       sourceList: any[];
