@@ -16,11 +16,13 @@ import {
   apiClientResetPassword,
   apiClientUsersLogin,
   apiClientUsersLogout,
+  apiClientUsersRegister,
   apiClientUsersTokenRefresh,
 } from '@services/client/client-auth/client-users';
 
 export enum ClientAuthAsyncAction {
   login = 'login',
+  register = 'register',
   refreshToken = 'refreshToken',
   logout = 'logout',
   forgetPassword = 'forgetPassword',
@@ -34,6 +36,14 @@ export const clientLoginAsync = createAsyncThunk(
   async (data: LoginRequest) => {
     const response = await apiClientUsersLogin(data);
     saveClientToken(response.res.data);
+    return response.res.data;
+  },
+);
+
+export const clientRegisterAsync = createAsyncThunk(
+  `${ReducerName.CLIENT_AUTH}}/${ClientAuthAsyncAction.register}`,
+  async (data: any) => {
+    const response = await apiClientUsersRegister(data);
     return response.res.data;
   },
 );

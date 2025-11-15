@@ -121,7 +121,9 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({
                       letterSpacing='wide'
                       fontSize='xs'
                     >
-                      {article.category.name}
+                      {typeof article.category === 'string'
+                        ? article.category
+                        : (article.category as any)?.name || article.category}
                     </Tag>
                   </HStack>
                 )}

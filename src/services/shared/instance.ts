@@ -73,7 +73,7 @@ instance.interceptors.response.use(
       res: response,
       status: response.status,
       result: response.data,
-    };
+    } as any;
   },
   async (error) => {
     const originalRequest = error.config;

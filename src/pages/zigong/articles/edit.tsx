@@ -55,7 +55,7 @@ const ArticleEditPage = () => {
   );
   const { uploadedImages } = useAppSelector((state) => state.adminUpload);
   const {
-    details: articleDetails,
+    articleDetails,
     status: {
       addArticleLoading,
       editArticleLoading,

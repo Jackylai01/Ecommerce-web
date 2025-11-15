@@ -15,6 +15,7 @@ import {
   clientLogoutAsync,
   clientModifyProfileAsync,
   clientRefreshTokenAsync,
+  clientRegisterAsync,
 } from './actions';
 
 type ClientAuthState = ApiState<ClientAuthAsyncAction> & {
@@ -45,6 +46,9 @@ const clientAuthSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(clientLoginAsync.fulfilled, (state, action) => {
       clientAuthSlice.caseReducers.setClientUserInfo(state, action);
+    });
+    builder.addCase(clientRegisterAsync.fulfilled, (state, action) => {
+      state.createAccount = action.payload;
     });
     builder.addCase(clientRefreshTokenAsync.fulfilled, (state, action) => {
       clientAuthSlice.caseReducers.setClientUserInfo(state, action);

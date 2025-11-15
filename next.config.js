@@ -27,6 +27,8 @@ const nextConfig = {
       ...config.resolve.alias,
       '@context': require('path').resolve(__dirname, 'src/context'),
     };
+    config.externals = config.externals || {};
+    config.externals['sharp'] = 'commonjs sharp';
     return config;
   },
   // don't use object format for rewrites since it's not supported yet

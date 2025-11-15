@@ -57,10 +57,15 @@ const ChakraInput = ({
         <Input
           {...register(name, {
             required: required && `${label}為必填欄位`,
-            valueAsNumber: type === 'number',
-            pattern: pattern,
+            ...(type === 'number'
+              ? {
+                  valueAsNumber: true,
+                  min: min,
+                }
+              : {
+                  pattern: pattern,
+                }),
             validate: validate,
-            min: min,
           })}
           id={name}
           type={type}

@@ -2,6 +2,7 @@ import { fieldSetDefault } from '@helpers/field-set-default';
 import { ModuleFolderName } from '@models/requests/archive.req';
 import { InputHTMLAttributes, useEffect, useState } from 'react';
 import {
+  FieldValues,
   FormProvider,
   RegisterOptions,
   Validate,
@@ -38,8 +39,8 @@ export type FieldConfig = Omit<
     compareObserver?: {
       observer: string;
       condition: (value: any) => boolean;
-      validate?: Validate<any>;
-      newValidate: Validate<any>;
+      validate?: Validate<any, FieldValues>;
+      newValidate: Validate<any, FieldValues>;
     };
     customDataSelect?: {
       sourceList: any[];
